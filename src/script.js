@@ -38,15 +38,21 @@ const numCols = 10;
 const tiles = [];
 
 for (let i = 0; i < numRows; i++) {
-  for (let j = 0; j < numCols; j++) {
-    const tileClone = new THREE.Mesh(tileGeometry, tileMaterial.clone());
-    const xOffset = (i - numRows / 2) * (tileSize + gapSize);
-    const yOffset = (j - numCols / 2) * (tileSize + gapSize);
-    tileClone.position.set(xOffset, yOffset, 0);
-    floorContainer.add(tileClone); // Add tiles to the container
-    tiles.push(tileClone);
+    for (let j = 0; j < numCols; j++) {
+      const tileClone = new THREE.Mesh(tileGeometry, tileMaterial.clone());
+      const xOffset = (i - numRows / 2) * (tileSize + gapSize);
+      const yOffset = (j - numCols / 2) * (tileSize + gapSize);
+      tileClone.position.set(xOffset, yOffset, 0);
+  
+      // Add click event listener to each tile
+      tileClone.addEventListener('click', () => {
+        changeTileColorOnClick(tileClone);
+      });
+  
+      floorContainer.add(tileClone);
+      tiles.push(tileClone);
+    }
   }
-}
 
 // Function to change tile color and emit light
 function changeTileColorAndLight() {
@@ -59,13 +65,22 @@ function changeTileColorAndLight() {
   })
 }
 
-// Start changing tile color and emitting light every 5 seconds
-setInterval(changeTileColorAndLight, 5000)
+function changeTileColorOnClick(tile) {
+    const randomColor = new THREE.Color(0,0,255);
+    tile.material.color.copy(randomColor);
+    const tileLight = new THREE.PointLight(randomColor, 1, 2) // Create a point light with tile color
+    tileLight.position.copy(tile.position) // Position the light at the tile's position
+    scene.add(tileLight)
+  }
+  
 
-const rotationAngle = Math.PI / 2; // Example: rotate by 45 degrees (in radians)
+// Start changing tile color and emitting light every 5 seconds
+
+
+const rotationAngle = Math.PI / 2; 
 floorContainer.rotation.set(-rotationAngle, 0, 0);
 
-const translationVector = new THREE.Vector3(0.5, -5.99, -0.5); // Example: move it down by 5 units along the Y-axis
+const translationVector = new THREE.Vector3(0.5, -5.99, -0.5); 
 floorContainer.position.copy(translationVector);
 scene.add(floorContainer);
 
@@ -92,5 +107,26 @@ const animate = () => {
   renderer.render(scene, camera)
   requestAnimationFrame(animate)
 }
+
+
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+document.addEventListener('click', (event) => {
+  // Calculate mouse coordinates in normalized device coordinates (NDC)
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  // Update the raycaster
+  raycaster.setFromCamera(mouse, camera);
+
+  // Get a list of objects intersected by the raycaster
+  const intersects = raycaster.intersectObjects(tiles);
+
+  // If there are intersections, trigger the click event on the first object (tile) in the list
+  if (intersects.length > 0) {
+    intersects[0].object.dispatchEvent({ type: 'click' });
+  }
+});
 
 animate()
