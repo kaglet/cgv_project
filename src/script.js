@@ -14,7 +14,7 @@ const scene = new THREE.Scene()
 
 // Create a camera
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-camera.position.set(0, 5, 10) // Adjust camera position
+camera.position.set(60, 10, 20) // Adjust camera position
 
 // Create a renderer
 const renderer = new THREE.WebGLRenderer()
@@ -23,7 +23,7 @@ document.body.appendChild(renderer.domElement)
 
 // Create a floor tile
 const tileGeometry = new THREE.PlaneGeometry(5, 5) // 1x1 square
-const tileMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff }) // Default white color
+const tileMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff }) // Default white color
 
 // Define tile size and gap size
 const tileSize = 5 // Adjust the size of each tile
@@ -72,14 +72,37 @@ scene.add(floorContainer);
 
 // Create room walls
 const roomGeometry = new THREE.BoxGeometry(70, 60, 80)
-const roomMaterial = new THREE.MeshBasicMaterial({ color: 0x808080, side: THREE.BackSide }) // Gray color for the room
+const roomMaterial = new THREE.MeshStandardMaterial({ color: 0x808080, side: THREE.BackSide }) // Gray color for the room
 const room = new THREE.Mesh(roomGeometry, roomMaterial)
 scene.add(room)
 
 // Add lighting (point light)
-const pointLight = new THREE.PointLight(0xffffff)
-pointLight.position.set(0, 5, 0) // Adjust the position as needed
-scene.add(pointLight)
+const directionalLight = new THREE.PointLight(0xffffff,1);
+directionalLight.position.set(0, 22, 0); // Adjust the position as needed
+
+const target = new THREE.Object3D();
+target.position.copy(floorContainer.position); // Adjust the target's position as needed
+
+
+directionalLight.target = target;
+
+scene.add(directionalLight);
+//scene.add(target);
+
+//Bulb
+const bulbGeometry = new THREE.SphereGeometry(5, 16, 16);
+const bulbMaterial = new THREE.MeshStandardMaterial({
+  emissive: 0xffffee, // Emissive color to make it glow
+  emissiveIntensity: 2, // Intensity of the glow
+});
+
+
+const bulb = new THREE.Mesh(bulbGeometry, bulbMaterial);
+bulb.position.copy(directionalLight.position); // Position the bulb at the same position as the light
+
+// Add the bulb to the scene
+scene.add(bulb);
+
 
 
 
