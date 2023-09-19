@@ -3,9 +3,9 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'dat.gui'
 import woodTextureImage from './woodenfloor.jpg'; // Make sure the path to your wood texture image is correct
-import walltextureImage from './brickwall.jpg'; // Make sure the path to your wood texture image is correct
+import walltextureImage from './wall.jpg'; // Make sure the path to your wood texture image is correct
 import ceilingtextureImage from './Ceiling.jpg';
-console.log(ceilingtextureImage);
+console.log(walltextureImage);
 // Debug
 const gui = new dat.GUI()
 
@@ -35,6 +35,8 @@ const gapSize = 0.2 // Adjust the size of the gap
 const floorContainer = new THREE.Group()
 const textureLoader = new THREE.TextureLoader()
 const woodTexture = textureLoader.load(woodTextureImage)
+const walltexture = textureLoader.load(walltextureImage)
+
 
 
 //const tileMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff })
@@ -79,8 +81,9 @@ scene.add(floorContainer);
 
 // Create room walls
 const roomGeometry = new THREE.BoxGeometry(70, 60, 80)
-const roomMaterial = new THREE.MeshStandardMaterial({ color: 0x808080, side: THREE.BackSide }) // Gray color for the room
+const roomMaterial = new THREE.MeshStandardMaterial({ map: walltexture, side: THREE.BackSide }) // Gray color for the room
 const room = new THREE.Mesh(roomGeometry, roomMaterial)
+
 scene.add(room)
 
 
