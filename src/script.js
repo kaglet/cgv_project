@@ -2,6 +2,7 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'dat.gui'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 // Debug
 const gui = new dat.GUI()
@@ -11,10 +12,11 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
+scene.scale.set(3, 3, 3);
 
 // Create a camera
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-camera.position.set(0, 5, 10) // Adjust camera position
+camera.position.set(0, 5, 5) // Adjust camera position
 
 // Create a renderer
 const renderer = new THREE.WebGLRenderer()
@@ -70,6 +72,8 @@ const translationVector = new THREE.Vector3(0, -29.9, -10);
 floorContainer.position.copy(translationVector);
 scene.add(floorContainer);
 
+
+
 // Create room walls
 const roomGeometry = new THREE.BoxGeometry(70, 60, 80)
 const roomMaterial = new THREE.MeshBasicMaterial({ color: 0x808080, side: THREE.BackSide }) // Gray color for the room
@@ -81,6 +85,13 @@ const pointLight = new THREE.PointLight(0xffffff)
 pointLight.position.set(0, 5, 0) // Adjust the position as needed
 scene.add(pointLight)
 
+const loader = new GLTFLoader();
+
+loader.load('/models/silla_plegable_materiales_editables.glb', function (gltf) {
+    scene.add(gltf.scene);
+}, undefined, function (error) {
+    console.error(error);
+});
 
 
 const controls = new OrbitControls(camera, renderer.domElement)
@@ -110,23 +121,23 @@ const player = new THREE.Object3D();
 player.position.copy(camera.position);
 scene.add(player);
 
-const movementSpeed = 0.5;
+const movementSpeed = 1;
 
 
 
 // Render loop
 const animate = () => {
     if (keyboardState['w']) {
-        camera.translateZ(-0.1);
+        camera.translateZ(-movementSpeed);
     }
     if (keyboardState['s']) {
-        camera.translateZ(0.1);
+        camera.translateZ(movementSpeed);
     }
     if (keyboardState['a']) {
-        camera.translateX(-0.1);
+        camera.translateX(-movementSpeed);
     }
     if (keyboardState['d']) {
-        camera.translateX(0.1);
+        camera.translateX(movementSpeeda);
     }
 
     requestAnimationFrame(animate);
@@ -163,6 +174,7 @@ document.addEventListener('click', (event) => {
         intersects[0].object.dispatchEvent({ type: 'click' });
     }
 });
+
 
 
 
