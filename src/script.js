@@ -5,6 +5,7 @@ import * as dat from 'dat.gui'
 import woodTextureImage from './woodenfloor.jpg'; // Make sure the path to your wood texture image is correct
 import walltextureImage from './wall.jpg'; // Make sure the path to your wood texture image is correct
 import ceilingtextureImage from './Ceiling.jpg';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 console.log(walltextureImage);
 // Debug
 const gui = new dat.GUI()
@@ -106,6 +107,17 @@ const floor = new THREE.Mesh(floorGeometry, floorMaterial);
 floor.rotation.x = -Math.PI / 2; // Rotate the floor to be horizontal
 floor.position.set(0, -29.99, 0); // Set the floor position to be just below the tiles
 scene.add(floor);
+const loader = new GLTFLoader();
+
+loader.load( './Chair.glb', function ( gltf ) {
+
+	scene.add( gltf.scene );
+
+}, undefined, function ( error ) {
+
+	console.error( error );
+
+} );
 // Add lighting (point light)
 const directionalLight = new THREE.PointLight(0xffffff,1);
 directionalLight.position.set(0, 22, 0); // Adjust the position as needed
@@ -159,34 +171,38 @@ document.addEventListener('keyup', (event) => {
 });
 
 // Player position and movement speed
+
+
+
+// Render loop
 const player = new THREE.Object3D();
 player.position.copy(camera.position);
 scene.add(player);
 
 const movementSpeed = 0.5;
 
-
-
-// Render loop
 const animate = () => {
     if (keyboardState['w']) {
-        camera.translateZ(-0.1);
+        player.translateZ(-movementSpeed);
     }
     if (keyboardState['s']) {
-        camera.translateZ(0.1);
+        player.translateZ(movementSpeed);
     }
     if (keyboardState['a']) {
-        camera.translateX(-0.1);
+        player.translateX(-movementSpeed);
     }
     if (keyboardState['d']) {
-        camera.translateX(0.1);
+        player.translateX(movementSpeed);
     }
+
+    // Update the camera's position based on the player's position
+    camera.position.copy(player.position);
 
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
 };
 
-
+animate();
 
 
 document.addEventListener('keydown', (event) => {
