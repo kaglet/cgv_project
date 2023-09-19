@@ -5,6 +5,10 @@ import * as dat from 'dat.gui'
 
 import * as CANNON from 'cannon-es';
 
+import woodTextureImage from './woodenfloor.jpg'; // Make sure the path to your wood texture image is correct
+import walltextureImage from './wall.jpg'; // Make sure the path to your wood texture image is correct
+import ceilingtextureImage from './Ceiling.jpg';
+console.log(walltextureImage);
 // Debug
 const gui = new dat.GUI()
 
@@ -16,7 +20,7 @@ const scene = new THREE.Scene()
 
 // Create a camera
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-camera.position.set(0, 5, 10) // Adjust camera position
+camera.position.set(60, 10, 20) // Adjust camera position
 
 // Create a renderer
 const renderer = new THREE.WebGLRenderer()
@@ -77,18 +81,24 @@ world.addBody(boxBody);
 
 // Create a floor tile
 const tileGeometry = new THREE.PlaneGeometry(5, 5) // 1x1 square
-const tileMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff }) // Default white color
+const tileMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff }) // Default white color
 
 // Define tile size and gap size
 const tileSize = 5 // Adjust the size of each tile
 const gapSize = 0.2 // Adjust the size of the gap
 
-const floorContainer = new THREE.Group();
+const floorContainer = new THREE.Group()
+const textureLoader = new THREE.TextureLoader()
+const woodTexture = textureLoader.load(woodTextureImage)
+const walltexture = textureLoader.load(walltextureImage)
 
+
+
+//const tileMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff })
 // Duplicate tiles to create the floor with gaps
-const numRows = 10;
-const numCols = 10;
-const tiles = [];
+const numRows = 10
+const numCols = 10
+const tiles = []
 
 for (let i = 0; i < numRows; i++) {
     for (let j = 0; j < numCols; j++) {
@@ -126,14 +136,58 @@ scene.add(floorContainer);
 
 // Create room walls
 const roomGeometry = new THREE.BoxGeometry(70, 60, 80)
-const roomMaterial = new THREE.MeshBasicMaterial({ color: 0x808080, side: THREE.BackSide }) // Gray color for the room
+const roomMaterial = new THREE.MeshStandardMaterial({ map: walltexture, side: THREE.BackSide }) // Gray color for the room
 const room = new THREE.Mesh(roomGeometry, roomMaterial)
+
 scene.add(room)
 
+
+// Add ceiling texture (inside the room cube)
+const ceilingTexture = textureLoader.load(ceilingtextureImage); // Load your ceiling texture image
+const ceilingMaterial = new THREE.MeshStandardMaterial({ map: ceilingTexture });
+const ceilingGeometry = new THREE.PlaneGeometry(70, 79.9);
+const ceiling = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
+ceiling.position.set(0,29.99 , 0); // Adjust the position to be above the room cube
+ceiling.rotation.x = Math.PI / 2; // Rotate 90 degrees along the X-axis
+scene.add(ceiling);
+//const ceilingTexture = textureLoader.load(ceilingtextureImage); // Load your ceiling texture image
+//const ceilingMaterial = new THREE.MeshBasicMaterial({ map: ceilingTexture });
+//const ceilingGeometry = new THREE.PlaneGeometry(12, 12);
+const floorWidth = numRows * (tileSize + gapSize);
+const floorHeight = numCols * (tileSize + gapSize);
+const floorGeometry = new THREE.PlaneGeometry(70, 79.9);
+const floorMaterial = new THREE.MeshStandardMaterial({ map: woodTexture });
+const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+floor.rotation.x = -Math.PI / 2; // Rotate the floor to be horizontal
+floor.position.set(0, -29.99, 0); // Set the floor position to be just below the tiles
+scene.add(floor);
 // Add lighting (point light)
-const pointLight = new THREE.PointLight(0xffffff)
-pointLight.position.set(0, 5, 0) // Adjust the position as needed
-scene.add(pointLight)
+const directionalLight = new THREE.PointLight(0xffffff,1);
+directionalLight.position.set(0, 22, 0); // Adjust the position as needed
+
+const target = new THREE.Object3D();
+target.position.copy(floorContainer.position); // Adjust the target's position as needed
+
+
+directionalLight.target = target;
+
+scene.add(directionalLight);
+//scene.add(target);
+
+//Bulb
+const bulbGeometry = new THREE.SphereGeometry(5, 16, 16);
+const bulbMaterial = new THREE.MeshStandardMaterial({
+  emissive: 0xffffee, // Emissive color to make it glow
+  emissiveIntensity: 2, // Intensity of the glow
+});
+
+
+const bulb = new THREE.Mesh(bulbGeometry, bulbMaterial);
+bulb.position.copy(directionalLight.position); // Position the bulb at the same position as the light
+
+// Add the bulb to the scene
+scene.add(bulb);
+
 
 
 
