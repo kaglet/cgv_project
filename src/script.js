@@ -49,12 +49,48 @@ const numRows = 10;
 const numCols = 10;
 const tiles = [];
 
+// function changeTileColorOnClick(tile) {
+//   const changedTileColor = new THREE.Color(255,164.7,0);
+//   tile.material.color.copy(changedTileColor);
+//   const tileLight = new THREE.PointLight(changedTileColor, 1, 2) // Create a point light with tile color
+//   tileLight.position.copy(tile.position) // Position the light at the tile's position
+//   scene.add(tileLight)
+// }
+
+const glowMaterial = new THREE.ShaderMaterial({
+  uniforms: {
+    glowColor: { value: new THREE.Color(0x0000ff) }, // Set the glow color to blue
+    viewVector: { value: camera.position }
+  },
+  vertexShader: `
+    varying vec3 vNormal;
+    void main() {
+      vNormal = normalize(normalMatrix * normal);
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: `
+    uniform vec3 glowColor;
+    varying vec3 vNormal;
+    void main() {
+      vec3 normal = normalize(vNormal);
+      float intensity = dot(normal, normalize(viewVector));
+      if (intensity > 0.5) {
+        gl_FragColor = vec4(glowColor, 1.0);
+      } else {
+        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+      }
+    }
+  `,
+  side: THREE.FrontSide, // Render the front face of the geometry
+  blending: THREE.AdditiveBlending, // Additive blending for the glow effect
+  transparent: true // Make the material transparent
+});
+
+
 function changeTileColorOnClick(tile) {
-  const changedTileColor = new THREE.Color(255,164.7,0);
-  tile.material.color.copy(changedTileColor);
-  const tileLight = new THREE.PointLight(changedTileColor, 1, 2) // Create a point light with tile color
-  tileLight.position.copy(tile.position) // Position the light at the tile's position
-  scene.add(tileLight)
+  tile.originalMaterial = tile.material.clone();
+  tile.material = glowMaterial;
 }
 
 for (let i = 0; i < numRows; i++) {
@@ -73,8 +109,6 @@ for (let i = 0; i < numRows; i++) {
       tiles.push(tileClone);
     }
   }
-
-
 
 // Rotate the floor by -90 degrees around the x-axis.
 // Translate the floor by (-29.9, -10, -10) units.
@@ -100,9 +134,8 @@ const ceiling = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
 ceiling.position.set(0,29.99 , 0); // Adjust the position to be above the room cube
 ceiling.rotation.x = Math.PI / 2; // Rotate 90 degrees along the X-axis
 scene.add(ceiling);
-//const ceilingTexture = textureLoader.load(ceilingtextureImage); // Load your ceiling texture image
-//const ceilingMaterial = new THREE.MeshBasicMaterial({ map: ceilingTexture });
-//const ceilingGeometry = new THREE.PlaneGeometry(12, 12);
+
+
 const floorWidth = numRows * (tileSize + gapSize);
 const floorHeight = numCols * (tileSize + gapSize);
 const floorGeometry = new THREE.PlaneGeometry(70, 79.9);
