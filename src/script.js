@@ -22,12 +22,12 @@ renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
 
 // Create a floor tile
-const tileGeometry = new THREE.PlaneGeometry(1, 1) // 1x1 square
+const tileGeometry = new THREE.PlaneGeometry(5, 5) // 1x1 square
 const tileMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff }) // Default white color
 
 // Define tile size and gap size
-const tileSize = 1.2 // Adjust the size of each tile
-const gapSize = 0.01 // Adjust the size of the gap
+const tileSize = 5 // Adjust the size of each tile
+const gapSize = 0.2 // Adjust the size of the gap
 
 
 const floorContainer = new THREE.Group();
@@ -54,16 +54,7 @@ for (let i = 0; i < numRows; i++) {
     }
   }
 
-// Function to change tile color and emit light
-function changeTileColorAndLight() {
-  tiles.forEach((tile) => {
-    const randomColor = new THREE.Color(Math.random(), Math.random(), Math.random())
-    tile.material.color.copy(randomColor) // Change tile color
-    const tileLight = new THREE.PointLight(randomColor, 1, 2) // Create a point light with tile color
-    tileLight.position.copy(tile.position) // Position the light at the tile's position
-    scene.add(tileLight)
-  })
-}
+
 
 function changeTileColorOnClick(tile) {
     const randomColor = new THREE.Color(0,0,255);
@@ -80,13 +71,13 @@ function changeTileColorOnClick(tile) {
 const rotationAngle = Math.PI / 2; 
 floorContainer.rotation.set(-rotationAngle, 0, 0);
 
-const translationVector = new THREE.Vector3(0.5, -5.99, -0.5); 
+const translationVector = new THREE.Vector3(0, -29.9, -10); 
 floorContainer.position.copy(translationVector);
 scene.add(floorContainer);
 
 
 // Create room walls
-const roomGeometry = new THREE.BoxGeometry(12, 12, 12)
+const roomGeometry = new THREE.BoxGeometry(70, 60, 80)
 const roomMaterial = new THREE.MeshBasicMaterial({ color: 0x808080, side: THREE.BackSide }) // Gray color for the room
 const room = new THREE.Mesh(roomGeometry, roomMaterial)
 scene.add(room)
