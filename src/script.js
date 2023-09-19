@@ -117,12 +117,16 @@ for (let i = 0; i < numRows; i++) {
     }
 }
 
+
 function changeTileColorOnClick(tile) {
     const randomColor = new THREE.Color(0, 0, 255);
     tile.material.color.copy(randomColor);
-    const tileLight = new THREE.PointLight(randomColor, 1, 2) // Create a point light with tile color
-    tileLight.position.copy(tile.position) // Position the light at the tile's position
-    scene.add(tileLight)
+    tile.material.emissive = randomColor; // Use the same color as the tile color for emissive
+    tile.material.emissiveIntensity = 100.0;
+    const tileLight = new THREE.PointLight(randomColor, 1.0, 10.0, 5.0); 
+    tileLight.power = 6.0;
+    tileLight.position.copy(tile.position); // Position the light at the tile's position
+    scene.add(tileLight);
 }
 
 // Start changing tile color and emitting light every 5 seconds
@@ -163,22 +167,19 @@ floor.position.set(0, -29.99, 0); // Set the floor position to be just below the
 scene.add(floor);
 // Add lighting (point light)
 const directionalLight = new THREE.PointLight(0xffffff,1);
-directionalLight.position.set(0, 22, 0); // Adjust the position as needed
+directionalLight.position.set(0, 23, 0); // Adjust the position as needed
 
 const target = new THREE.Object3D();
 target.position.copy(floorContainer.position); // Adjust the target's position as needed
 
 
-directionalLight.target = target;
-
 scene.add(directionalLight);
-//scene.add(target);
 
 //Bulb
 const bulbGeometry = new THREE.SphereGeometry(5, 16, 16);
 const bulbMaterial = new THREE.MeshStandardMaterial({
   emissive: 0xffffee, // Emissive color to make it glow
-  emissiveIntensity: 2, // Intensity of the glow
+  emissiveIntensity: 3, // Intensity of the glow
 });
 
 
@@ -187,7 +188,6 @@ bulb.position.copy(directionalLight.position); // Position the bulb at the same 
 
 // Add the bulb to the scene
 scene.add(bulb);
-
 
 
 
