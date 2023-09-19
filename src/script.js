@@ -5,10 +5,13 @@ import * as dat from 'dat.gui'
 
 // Tool for debug
 const gui = new dat.GUI();
+import * as CANNON from 'cannon-es';
+
 import woodTextureImage from './woodenfloor.jpg'; // Make sure the path to your wood texture image is correct
-import walltextureImage from './brickwall.jpg'; // Make sure the path to your wood texture image is correct
+import walltextureImage from './wall.jpg'; // Make sure the path to your wood texture image is correct
 import ceilingtextureImage from './Ceiling.jpg';
 console.log(ceilingtextureImage);
+console.log(walltextureImage);
 
 // Create canvas in html doc for rendering.
 const canvas = document.querySelector('canvas.webgl');
@@ -27,11 +30,63 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
+//Physics
+
+const world = new CANNON.World({
+  gravity: new CANNON.Vec3(0,-9.81,0)
+});
+
+const timeStep = 1/60;
+
+const boxGeo = new THREE.BoxGeometry(2, 2, 2);
+const boxMat = new THREE.MeshBasicMaterial({
+	color: 0x00ff00,
+	wireframe: true
+});
+const boxMesh = new THREE.Mesh(boxGeo, boxMat);
+scene.add(boxMesh);
+
+
+
+
+
+//Creating the ground
+const groundGeo = new THREE.PlaneGeometry(70, 80);
+const groundMat = new THREE.MeshBasicMaterial({ 
+	color: 0xffffff,
+	side: THREE.DoubleSide,
+	wireframe: true 
+ });
+const groundMesh = new THREE.Mesh(groundGeo, groundMat);
+scene.add(groundMesh);
+
+
+const groundBody = new CANNON.Body({
+  shape: new CANNON.Plane(),
+  //mass: 10
+  // shape: new CANNON.Box(new CANNON.Vec3(15, 15, 0.1)),
+   type: CANNON.Body.STATIC,
+  // material: groundPhysMat
+});
+world.addBody(groundBody);
+groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
+groundBody.position.y -= 30;
+
+const boxBody = new CANNON.Body({
+  mass: 1,
+  shape: new CANNON.Box(new CANNON.Vec3(1, 1, 1)),
+  position: new CANNON.Vec3(1, 20, 0),
+//  material: boxPhysMat
+});
+world.addBody(boxBody);
+
+
+
 // Define the geometry and material for a floor tile.
 // Create a group to hold the floor tiles.
 // Create a grid of tiles with gaps between them, and add a click event listener to each tile. The color of each tile changes to blue when clicked.
-const tileGeometry = new THREE.PlaneGeometry(5, 5); // 1x1 square
-const tileMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff }); // Default white color
+const tileGeometry = new THREE.PlaneGeometry(5, 5) // 1x1 square
+const tileMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff }) // Default white color
 
 // Define tile size and gap size
 const tileSize = 5 // Adjust the size of each tile
@@ -41,6 +96,8 @@ const gapSize = 0.2 // Adjust the size of the gap
 const floorContainer = new THREE.Group()
 const textureLoader = new THREE.TextureLoader()
 const woodTexture = textureLoader.load(woodTextureImage)
+const walltexture = textureLoader.load(walltextureImage)
+
 
 
 //const tileMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff })
@@ -121,8 +178,9 @@ scene.add(floorContainer);
 
 // Create room walls using a BoxGeometry and a gray MeshBasicMaterial. These walls are added to the scene.
 const roomGeometry = new THREE.BoxGeometry(70, 60, 80)
-const roomMaterial = new THREE.MeshStandardMaterial({ color: 0x808080, side: THREE.BackSide }) // Gray color for the room
+const roomMaterial = new THREE.MeshStandardMaterial({ map: walltexture, side: THREE.BackSide }) // Gray color for the room
 const room = new THREE.Mesh(roomGeometry, roomMaterial)
+
 scene.add(room)
 
 
@@ -180,12 +238,119 @@ const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = true
 controls.dampingFactor = 0.05
 
-// Start a render loop that continuously updates the scene and camera using requestAnimationFrame.
+// Player position and movement speed
+const keyboardState = {
+    w: false,
+    s: false,
+    a: false,
+    d: false,
+};
+
+document.addEventListener('keydown', (event) => {
+    const key = event.key.toLowerCase();
+    keyboardState[key] = true;
+});
+
+document.addEventListener('keyup', (event) => {
+    const key = event.key.toLowerCase();
+    keyboardState[key] = false;
+});
+
+
+const playerShape = new CANNON.Sphere(1); // Adjust the player's shape
+const playerBody = new CANNON.Body({
+  mass: 5, // Adjust the mass as needed
+  shape: playerShape,
+});
+world.addBody(playerBody);
+playerBody.linearDamping = 0.8;
+
+// Player position and movement speed
+const player = new THREE.Object3D();
+player.position.copy(camera.position);
+scene.add(player);
+
+const movementSpeed = 0.1;
+
+
+// Set the initial position of the player (same as the camera)
+playerBody.position.copy(new CANNON.Vec3(camera.position.x, camera.position.y, camera.position.z));
+
+// // Add variables to track the previous mouse position
+// let prevMouseX = 0;
+// let prevMouseY = 0;
+
+// // Listen for mousemove events to handle camera panning
+// document.addEventListener('mousemove', (event) => {
+//     const mouseDeltaX = event.clientX - prevMouseX;
+//     const mouseDeltaY = event.clientY - prevMouseY;
+
+//     // Adjust the camera position based on the mouse movement
+//     const sensitivity = 0.001; // Adjust the sensitivity as needed
+//     camera.rotation.y -= mouseDeltaX * sensitivity;
+//     camera.rotation.x -= mouseDeltaY * sensitivity;
+
+//     // Limit the vertical rotation to prevent camera flipping
+//     const maxVerticalAngle = Math.PI / 8; // Adjust as needed
+//     camera.rotation.x = Math.max(-maxVerticalAngle, Math.min(maxVerticalAngle, camera.rotation.x));
+
+//     // Update the previous mouse position
+//     prevMouseX = event.clientX;
+//     prevMouseY = event.clientY;
+// });
+
+
+// Render loop
 const animate = () => {
-  controls.update()
-  renderer.render(scene, camera)
-  requestAnimationFrame(animate)
-}
+   // Update the player's position based on the Cannon.js body
+  camera.position.set(playerBody.position.x, playerBody.position.y, playerBody.position.z);
+
+  // Handle player movement
+  if (keyboardState['w']) {
+    // Move forward
+    const forwardVector = new CANNON.Vec3(0, 0, -movementSpeed);
+    playerBody.velocity.vadd(forwardVector, playerBody.velocity);
+  }
+  if (keyboardState['s']) {
+    // Move backward
+    const backwardVector = new CANNON.Vec3(0, 0, movementSpeed);
+    playerBody.velocity.vadd(backwardVector, playerBody.velocity);
+  }
+  if (keyboardState['a']) {
+    // Move left
+    const leftVector = new CANNON.Vec3(-movementSpeed, 0, 0);
+    playerBody.velocity.vadd(leftVector, playerBody.velocity);
+  }
+  if (keyboardState['d']) {
+    // Move right
+    const rightVector = new CANNON.Vec3(movementSpeed, 0, 0);
+    playerBody.velocity.vadd(rightVector, playerBody.velocity);
+  }
+
+    requestAnimationFrame(animate);
+
+    world.step(timeStep);
+    
+    boxMesh.position.copy(boxBody.position);
+    boxMesh.quaternion.copy(boxBody.quaternion);
+
+    groundMesh.position.copy(groundBody.position);
+    groundMesh.quaternion.copy(groundBody.quaternion);
+
+
+    renderer.render(scene, camera);
+};
+
+
+
+
+document.addEventListener('keydown', (event) => {
+    keyboardState[event.key] = true;
+});
+
+document.addEventListener('keyup', (event) => {
+    keyboardState[event.key] = false;
+});
 
 // Set up raycasting to detect mouse clicks on the tiles.
 // When a click event occurs, the code calculates the intersection point between the ray and the tiles and triggers a click event on the first intersected tile.
@@ -209,4 +374,4 @@ document.addEventListener('click', (event) => {
   }
 });
 
-animate()
+animate();
