@@ -233,28 +233,28 @@ const movementSpeed = 0.1;
 // Set the initial position of the player (same as the camera)
 playerBody.position.copy(new CANNON.Vec3(camera.position.x, camera.position.y, camera.position.z));
 
-// Add variables to track the previous mouse position
-let prevMouseX = 0;
-let prevMouseY = 0;
+// // Add variables to track the previous mouse position
+// let prevMouseX = 0;
+// let prevMouseY = 0;
 
-// Listen for mousemove events to handle camera panning
-document.addEventListener('mousemove', (event) => {
-    const mouseDeltaX = event.clientX - prevMouseX;
-    const mouseDeltaY = event.clientY - prevMouseY;
+// // Listen for mousemove events to handle camera panning
+// document.addEventListener('mousemove', (event) => {
+//     const mouseDeltaX = event.clientX - prevMouseX;
+//     const mouseDeltaY = event.clientY - prevMouseY;
 
-    // Adjust the camera position based on the mouse movement
-    const sensitivity = 0.001; // Adjust the sensitivity as needed
-    camera.rotation.y -= mouseDeltaX * sensitivity;
-    camera.rotation.x -= mouseDeltaY * sensitivity;
+//     // Adjust the camera position based on the mouse movement
+//     const sensitivity = 0.001; // Adjust the sensitivity as needed
+//     camera.rotation.y -= mouseDeltaX * sensitivity;
+//     camera.rotation.x -= mouseDeltaY * sensitivity;
 
-    // Limit the vertical rotation to prevent camera flipping
-    const maxVerticalAngle = Math.PI / 8; // Adjust as needed
-    camera.rotation.x = Math.max(-maxVerticalAngle, Math.min(maxVerticalAngle, camera.rotation.x));
+//     // Limit the vertical rotation to prevent camera flipping
+//     const maxVerticalAngle = Math.PI / 8; // Adjust as needed
+//     camera.rotation.x = Math.max(-maxVerticalAngle, Math.min(maxVerticalAngle, camera.rotation.x));
 
-    // Update the previous mouse position
-    prevMouseX = event.clientX;
-    prevMouseY = event.clientY;
-});
+//     // Update the previous mouse position
+//     prevMouseX = event.clientX;
+//     prevMouseY = event.clientY;
+// });
 
 
 // Render loop
