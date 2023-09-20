@@ -20,7 +20,7 @@ const scene = new THREE.Scene()
 
 // Create a camera
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-camera.position.set(60, 10, 20) // Adjust camera position
+camera.position.set(0, 0, 0); // Adjust camera position
 
 // Create a renderer
 const renderer = new THREE.WebGLRenderer()
@@ -214,7 +214,7 @@ document.addEventListener('keyup', (event) => {
 });
 
 
-const playerShape = new CANNON.Sphere(1); // Adjust the player's shape
+const playerShape = new CANNON.Sphere(4); // Adjust the player's shape
 const playerBody = new CANNON.Body({
   mass: 5, // Adjust the mass as needed
   shape: playerShape,
