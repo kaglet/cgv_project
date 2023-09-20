@@ -2,6 +2,9 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'dat.gui'
+
+import * as CANNON from 'cannon-es';
+
 import woodTextureImage from './woodenfloor.jpg'; // Make sure the path to your wood texture image is correct
 import walltextureImage from './wall.jpg'; // Make sure the path to your wood texture image is correct
 import ceilingtextureImage from './Ceiling.jpg';
@@ -24,6 +27,58 @@ camera.position.set(60, 10, 20) // Adjust camera position
 const renderer = new THREE.WebGLRenderer()
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
+
+//Physics
+
+const world = new CANNON.World({
+  gravity: new CANNON.Vec3(0,-9.81,0)
+});
+
+const timeStep = 1/60;
+
+const boxGeo = new THREE.BoxGeometry(2, 2, 2);
+const boxMat = new THREE.MeshBasicMaterial({
+	color: 0x00ff00,
+	wireframe: true
+});
+const boxMesh = new THREE.Mesh(boxGeo, boxMat);
+scene.add(boxMesh);
+
+
+
+
+
+//Creating the ground
+const groundGeo = new THREE.PlaneGeometry(70, 80);
+const groundMat = new THREE.MeshBasicMaterial({ 
+	color: 0xffffff,
+	side: THREE.DoubleSide,
+	wireframe: true 
+ });
+const groundMesh = new THREE.Mesh(groundGeo, groundMat);
+scene.add(groundMesh);
+
+
+const groundBody = new CANNON.Body({
+  shape: new CANNON.Plane(),
+  //mass: 10
+  // shape: new CANNON.Box(new CANNON.Vec3(15, 15, 0.1)),
+   type: CANNON.Body.STATIC,
+  // material: groundPhysMat
+});
+world.addBody(groundBody);
+groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
+groundBody.position.y -= 30;
+
+const boxBody = new CANNON.Body({
+  mass: 1,
+  shape: new CANNON.Box(new CANNON.Vec3(1, 1, 1)),
+  position: new CANNON.Vec3(1, 20, 0),
+//  material: boxPhysMat
+});
+world.addBody(boxBody);
+
+
 
 // Create a floor tile
 const tileGeometry = new THREE.PlaneGeometry(5, 5) // 1x1 square
@@ -63,12 +118,16 @@ for (let i = 0; i < numRows; i++) {
     }
 }
 
+
 function changeTileColorOnClick(tile) {
     const randomColor = new THREE.Color(0, 0, 255);
     tile.material.color.copy(randomColor);
-    const tileLight = new THREE.PointLight(randomColor, 1, 2) // Create a point light with tile color
-    tileLight.position.copy(tile.position) // Position the light at the tile's position
-    scene.add(tileLight)
+    tile.material.emissive = randomColor; // Use the same color as the tile color for emissive
+    tile.material.emissiveIntensity = 100.0;
+    const tileLight = new THREE.PointLight(randomColor, 1.0, 10.0, 5.0); 
+    tileLight.power = 6.0;
+    tileLight.position.copy(tile.position); // Position the light at the tile's position
+    scene.add(tileLight);
 }
 
 // Start changing tile color and emitting light every 5 seconds
@@ -120,22 +179,19 @@ loader.load( './Chair.glb', function ( gltf ) {
 } );
 // Add lighting (point light)
 const directionalLight = new THREE.PointLight(0xffffff,1);
-directionalLight.position.set(0, 22, 0); // Adjust the position as needed
+directionalLight.position.set(0, 23, 0); // Adjust the position as needed
 
 const target = new THREE.Object3D();
 target.position.copy(floorContainer.position); // Adjust the target's position as needed
 
 
-directionalLight.target = target;
-
 scene.add(directionalLight);
-//scene.add(target);
 
 //Bulb
 const bulbGeometry = new THREE.SphereGeometry(5, 16, 16);
 const bulbMaterial = new THREE.MeshStandardMaterial({
   emissive: 0xffffee, // Emissive color to make it glow
-  emissiveIntensity: 2, // Intensity of the glow
+  emissiveIntensity: 3, // Intensity of the glow
 });
 
 
@@ -144,7 +200,6 @@ bulb.position.copy(directionalLight.position); // Position the bulb at the same 
 
 // Add the bulb to the scene
 scene.add(bulb);
-
 
 
 
@@ -170,6 +225,15 @@ document.addEventListener('keyup', (event) => {
     keyboardState[key] = false;
 });
 
+
+const playerShape = new CANNON.Sphere(1); // Adjust the player's shape
+const playerBody = new CANNON.Body({
+  mass: 5, // Adjust the mass as needed
+  shape: playerShape,
+});
+world.addBody(playerBody);
+playerBody.linearDamping = 0.8;
+
 // Player position and movement speed
 
 
@@ -179,26 +243,36 @@ const player = new THREE.Object3D();
 player.position.copy(camera.position);
 scene.add(player);
 
-const movementSpeed = 0.5;
+const movementSpeed = 0.1;
 
+
+
+// Render loop
 const animate = () => {
     if (keyboardState['w']) {
-        player.translateZ(-movementSpeed);
+        camera.translateZ(-0.1);
     }
     if (keyboardState['s']) {
-        player.translateZ(movementSpeed);
+        camera.translateZ(0.1);
     }
     if (keyboardState['a']) {
-        player.translateX(-movementSpeed);
+        camera.translateX(-0.1);
     }
     if (keyboardState['d']) {
-        player.translateX(movementSpeed);
+        camera.translateX(0.1);
     }
 
-    // Update the camera's position based on the player's position
-    camera.position.copy(player.position);
-
     requestAnimationFrame(animate);
+
+    world.step(timeStep);
+    
+    boxMesh.position.copy(boxBody.position);
+    boxMesh.quaternion.copy(boxBody.quaternion);
+
+    groundMesh.position.copy(groundBody.position);
+    groundMesh.quaternion.copy(groundBody.quaternion);
+
+
     renderer.render(scene, camera);
 };
 
@@ -235,4 +309,4 @@ document.addEventListener('click', (event) => {
 
 
 
-animate()
+animate();
