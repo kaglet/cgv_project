@@ -16,6 +16,7 @@ console.log(walltextureImage);
 // Create a renderer
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio * 1.5);
 document.body.appendChild(renderer.domElement);
 
 // Scene
