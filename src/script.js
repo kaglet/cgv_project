@@ -2,7 +2,7 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'dat.gui'
-
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as CANNON from 'cannon-es';
 
 import woodTextureImage from './woodenfloor.jpg'; // Make sure the path to your wood texture image is correct
@@ -17,6 +17,7 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
+scene.scale.set(3, 3, 3);
 
 // Create a camera
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
@@ -138,6 +139,8 @@ const translationVector = new THREE.Vector3(0, -29.9, -10);
 floorContainer.position.copy(translationVector);
 scene.add(floorContainer);
 
+
+
 // Create room walls
 const roomGeometry = new THREE.BoxGeometry(70, 60, 80)
 const roomMaterial = new THREE.MeshStandardMaterial({ map: walltexture, side: THREE.BackSide }) // Gray color for the room
@@ -189,6 +192,19 @@ bulb.position.copy(directionalLight.position); // Position the bulb at the same 
 // Add the bulb to the scene
 scene.add(bulb);
 
+const loader = new GLTFLoader();
+
+loader.load('/chair.glb', function (gltf) {
+    gltf.scene.rotation.y=Math.PI/2;
+    gltf.scene.scale.set(20,20,20);
+    gltf.scene.position.y=-30;
+    gltf.scene.position.x=-30;
+    gltf.scene.position.z=30;
+    scene.add(gltf.scene);
+
+}, undefined, function (error) {
+    console.error(error);
+});
 
 
 const controls = new OrbitControls(camera, renderer.domElement)
@@ -227,7 +243,7 @@ const player = new THREE.Object3D();
 player.position.copy(camera.position);
 scene.add(player);
 
-const movementSpeed = 0.1;
+const movementSpeed = 1;
 
 
 // Set the initial position of the player (same as the camera)
@@ -328,6 +344,7 @@ document.addEventListener('click', (event) => {
         intersects[0].object.dispatchEvent({ type: 'click' });
     }
 });
+
 
 
 
