@@ -1,9 +1,10 @@
+// This is to add any objects to the world that migh not have pysics?
+
 import * as THREE from 'three'
 
 import woodTextureImage from '../img/woodenfloor.jpg'; // Make sure the path to your wood texture image is correct
 import walltextureImage from '../img/wall.jpg'; // Make sure the path to your wood texture image is correct
 import ceilingtextureImage from '../img/Ceiling.jpg';
-console.log(walltextureImage);
 
 // Scene
 export const scene = new THREE.Scene();
@@ -50,7 +51,7 @@ const walltexture = textureLoader.load(walltextureImage)
 // Duplicate tiles to create the floor with gaps
 const numRows = 10
 const numCols = 10
-const tiles = []
+export const tiles = []
 
 for (let i = 0; i < numRows; i++) {
     for (let j = 0; j < numCols; j++) {
@@ -80,6 +81,28 @@ function changeTileColorOnClick(tile) {
     tileLight.position.copy(tile.position); // Position the light at the tile's position
     scene.add(tileLight);
 }
+
+// clicking the tiles?
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+document.addEventListener('click', (event) => {
+    // Calculate mouse coordinates in normalized device coordinates (NDC)
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    // Update the raycaster
+    raycaster.setFromCamera(mouse, camera);
+
+    // Get a list of objects intersected by the raycaster
+    const intersects = raycaster.intersectObjects(tiles);
+
+    // If there are intersections, trigger the click event on the first object (tile) in the list
+    if (intersects.length > 0) {
+        intersects[0].object.dispatchEvent({ type: 'click' });
+    }
+});
+
 
 // Start changing tile color and emitting light every 5 seconds
 

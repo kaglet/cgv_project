@@ -1,0 +1,23 @@
+import * as THREE from 'three'
+import * as threeObjects from './threeObjects.js'
+
+// Add lighting (point light)
+const directionalLight = new THREE.PointLight(0xffffff,1);
+directionalLight.position.set(0, 23, 0); // Adjust the position as needed
+
+
+threeObjects.scene.add(directionalLight);
+
+//Bulb
+ const bulbGeometry = new THREE.SphereGeometry(5, 16, 16);
+const bulbMaterial = new THREE.MeshStandardMaterial({
+  emissive: 0xffffee, // Emissive color to make it glow
+  emissiveIntensity: 3, // Intensity of the glow
+});
+
+// for some reason this has to be exported to work? Havent figured out why
+export const bulb = new THREE.Mesh(bulbGeometry, bulbMaterial);
+bulb.position.copy(directionalLight.position); // Position the bulb at the same position as the light
+
+// Add the bulb to the scene
+threeObjects.scene.add(bulb);
