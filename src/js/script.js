@@ -1,8 +1,7 @@
 import '../style.css'
-import * as cannonObjects from './cannonObjects.js';
 import * as player from './player.js';
-import * as threeObjects from './threeObjects.js'
-import * as lighting from './lighting'
+import * as objects from './objects.js'
+import * as lighting from './lighting.js'
 import * as camera from './camera.js'
 
 
@@ -31,17 +30,12 @@ function animate() {
 
   requestAnimationFrame(animate);
 
-  cannonObjects.world.step(timeStep);
+  objects.world.step(timeStep);
 
-  threeObjects.boxMesh.position.copy(cannonObjects.boxBody.position);
-  threeObjects.boxMesh.quaternion.copy(cannonObjects.boxBody.quaternion);
+  objects.animated_objects(); //objects that are animated
 
-  threeObjects.groundMesh.position.copy(cannonObjects.groundBody.position);
-  threeObjects.groundMesh.quaternion.copy(cannonObjects.groundBody.quaternion);
-
-  renderer.render(threeObjects.scene, camera.camera);
+  renderer.render(objects.scene, camera.camera);
 }
-
 
 
 renderer.setAnimationLoop(animate);

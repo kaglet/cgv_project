@@ -3,7 +3,7 @@
 
 import * as THREE from 'three'
 import * as CANNON from 'cannon-es';
-import * as cannonObjects from './cannonObjects.js';
+import * as objects from './objects.js';
 import * as camera from './camera.js'
 
 
@@ -12,7 +12,7 @@ export const playerBody = new CANNON.Body({
   mass: 5, // Adjust the mass as needed
   shape: playerShape,
 });
-cannonObjects.world.addBody(playerBody);
+objects.world.addBody(playerBody);
 playerBody.linearDamping = 0.8;
 
 

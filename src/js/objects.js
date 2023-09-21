@@ -1,6 +1,5 @@
-// This is to add any objects to the world that migh not have pysics?
-
 import * as THREE from 'three'
+import * as CANNON from 'cannon-es';
 
 import woodTextureImage from '../img/woodenfloor.jpg'; // Make sure the path to your wood texture image is correct
 import walltextureImage from '../img/wall.jpg'; // Make sure the path to your wood texture image is correct
@@ -9,6 +8,11 @@ import ceilingtextureImage from '../img/Ceiling.jpg';
 // Scene
 export const scene = new THREE.Scene();
 
+// world - this is for cannon objects
+export const world = new CANNON.World({
+    gravity: new CANNON.Vec3(0,-9.81,0)
+  });
+  
 const axesHelper = new THREE.AxesHelper(50); //so we can see the axes for debugging
 scene.add(axesHelper);
 
@@ -20,6 +24,14 @@ const boxMat = new THREE.MeshBasicMaterial({
 export const boxMesh = new THREE.Mesh(boxGeo, boxMat);
 scene.add(boxMesh);
 
+export const boxBody = new CANNON.Body({
+    mass: 1,
+    shape: new CANNON.Box(new CANNON.Vec3(1, 1, 1)),
+    position: new CANNON.Vec3(1, 20, 0),
+  //  material: boxPhysMat
+  });
+  world.addBody(boxBody);
+
 
 //Creating the ground
 const groundGeo = new THREE.PlaneGeometry(70, 80);
@@ -30,6 +42,17 @@ const groundMat = new THREE.MeshBasicMaterial({
  });
 export const groundMesh = new THREE.Mesh(groundGeo, groundMat);
 scene.add(groundMesh);
+
+export const groundBody = new CANNON.Body({
+    shape: new CANNON.Plane(),
+    //mass: 10
+    // shape: new CANNON.Box(new CANNON.Vec3(15, 15, 0.1)),
+     type: CANNON.Body.STATIC,
+    // material: groundPhysMat
+  });
+  world.addBody(groundBody);
+  groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
+  groundBody.position.y -= 30;
 
 
 // Create a floor tile
@@ -145,6 +168,14 @@ const target = new THREE.Object3D();
 target.position.copy(floorContainer.position); // Adjust the target's position as needed
 
 
+export function animated_objects(){
+    boxMesh.position.copy(boxBody.position);
+    boxMesh.quaternion.copy(boxBody.quaternion);
+
+    groundMesh.position.copy(groundBody.position);
+    groundMesh.quaternion.copy(groundBody.quaternion);
+
+}
 
 
 
