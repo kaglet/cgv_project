@@ -60,8 +60,11 @@ export const groundBody = new CANNON.Body({
 
 // Create a floor tile
 const tileGeometry = new THREE.BoxGeometry(5, 5,1.3) 
-const tileMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff }) // Default white color
-
+const tileMaterial = new THREE.MeshStandardMaterial({ 
+    color: 0xffffff,
+    opacity: 0.5, // Adjust the opacity value (0.0 to 1.0)
+    transparent: true, // Enable transparency
+})
 // Define tile size and gap size
 const tileSize = 5 // Adjust the size of each tile
 const gapSize = 0.2 // Adjust the size of the gap
@@ -112,6 +115,9 @@ function changeTileColorOnClick(tile) {
     // scene.add(tileLight);
     const randomColor = new THREE.Color(0, 0, 255);
     tile.material.color.copy(randomColor);
+    tileMaterial.castShadow = true;
+tileMaterial.receiveShadow = true;
+tileMaterial.transparent = true;
     const tileLight = new THREE.PointLight(randomColor, 1, 20, 5);
     tileLight.position.copy(tile.position); 
     scene.add(tileLight);
