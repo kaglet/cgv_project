@@ -1,32 +1,53 @@
-import './style.css'
+import '../style.css'
+import './objects.js'
+
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'dat.gui'
 
 import * as CANNON from 'cannon-es';
 
-import woodTextureImage from './woodenfloor.jpg'; // Make sure the path to your wood texture image is correct
-import walltextureImage from './wall.jpg'; // Make sure the path to your wood texture image is correct
-import ceilingtextureImage from './Ceiling.jpg';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import woodTextureImage from '../img/woodenfloor.jpg'; // Make sure the path to your wood texture image is correct
+import walltextureImage from '../img/wall.jpg'; // Make sure the path to your wood texture image is correct
+import ceilingtextureImage from '../img/Ceiling.jpg';
 console.log(walltextureImage);
+
+
+// Create a renderer
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+document.body.appendChild(renderer.domElement);
+
+// Scene
+const scene = new THREE.Scene();
+
+
+
+// Create a camera
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+
+const orbit = new OrbitControls(camera, renderer.domElement)
+//orbit.enableDamping = true
+//orbit.dampingFactor = 0.05
+
+
+camera.position.set(0, 0, 0); // Adjust camera position
+orbit.update();
+
+
+
+const axesHelper = new THREE.AxesHelper(50); //so we can see the axes for debugging
+scene.add(axesHelper);
+
+
 // Debug
 const gui = new dat.GUI()
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
-// Scene
-const scene = new THREE.Scene()
 
-// Create a camera
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-camera.position.set(60, 10, 20) // Adjust camera position
-
-// Create a renderer
-const renderer = new THREE.WebGLRenderer()
-renderer.setSize(window.innerWidth, window.innerHeight)
-document.body.appendChild(renderer.domElement)
 
 //Physics
 
@@ -34,7 +55,7 @@ const world = new CANNON.World({
   gravity: new CANNON.Vec3(0,-9.81,0)
 });
 
-const timeStep = 1/60;
+
 
 const boxGeo = new THREE.BoxGeometry(2, 2, 2);
 const boxMat = new THREE.MeshBasicMaterial({
@@ -166,17 +187,6 @@ const floor = new THREE.Mesh(floorGeometry, floorMaterial);
 floor.rotation.x = -Math.PI / 2; // Rotate the floor to be horizontal
 floor.position.set(0, -29.99, 0); // Set the floor position to be just below the tiles
 scene.add(floor);
-const loader = new GLTFLoader();
-
-loader.load( './Chair.glb', function ( gltf ) {
-
-	scene.add( gltf.scene );
-
-}, undefined, function ( error ) {
-
-	console.error( error );
-
-} );
 // Add lighting (point light)
 const directionalLight = new THREE.PointLight(0xffffff,1);
 directionalLight.position.set(0, 23, 0); // Adjust the position as needed
@@ -203,10 +213,6 @@ scene.add(bulb);
 
 
 
-const controls = new OrbitControls(camera, renderer.domElement)
-controls.enableDamping = true
-controls.dampingFactor = 0.05
-
 // Player position and movement speed
 const keyboardState = {
     w: false,
@@ -226,7 +232,7 @@ document.addEventListener('keyup', (event) => {
 });
 
 
-const playerShape = new CANNON.Sphere(1); // Adjust the player's shape
+const playerShape = new CANNON.Sphere(4); // Adjust the player's shape
 const playerBody = new CANNON.Body({
   mass: 5, // Adjust the mass as needed
   shape: playerShape,
@@ -235,48 +241,42 @@ world.addBody(playerBody);
 playerBody.linearDamping = 0.8;
 
 // Player position and movement speed
-
-
-
-// Render loop
 const player = new THREE.Object3D();
 player.position.copy(camera.position);
 scene.add(player);
 
-const movementSpeed = 0.1;
+const movementSpeed = 0.01;
 
+// // Add variables to track the previous mouse position
+// let prevMouseX = window.innerWidth / 2;
+// let prevMouseY = window.innerHeight / 2;
 
+// // Set initial camera rotation angles
+// let cameraYaw = 0;
+// let cameraPitch = 0;
 
-// Render loop
-const animate = () => {
-    if (keyboardState['w']) {
-        camera.translateZ(-0.1);
-    }
-    if (keyboardState['s']) {
-        camera.translateZ(0.1);
-    }
-    if (keyboardState['a']) {
-        camera.translateX(-0.1);
-    }
-    if (keyboardState['d']) {
-        camera.translateX(0.1);
-    }
+// // Listen for mousemove events to handle camera movement
+// document.addEventListener('mousemove', (event) => {
+//     const mouseDeltaX = event.clientX - prevMouseX;
+//     const mouseDeltaY = event.clientY - prevMouseY;
 
-    requestAnimationFrame(animate);
+//     // Adjust the camera rotation based on the mouse movement
+//     const sensitivity = 0.002; // Adjust the sensitivity as needed
+//     cameraYaw -= mouseDeltaX * sensitivity;
+//     cameraPitch -= mouseDeltaY * sensitivity;
 
-    world.step(timeStep);
-    
-    boxMesh.position.copy(boxBody.position);
-    boxMesh.quaternion.copy(boxBody.quaternion);
+//     // Limit the vertical rotation to prevent camera flipping
+//     const maxVerticalAngle = Math.PI / 2; // Adjust as needed
+//     cameraPitch = Math.max(-maxVerticalAngle, Math.min(maxVerticalAngle, cameraPitch));
 
-    groundMesh.position.copy(groundBody.position);
-    groundMesh.quaternion.copy(groundBody.quaternion);
+//     // Update the camera rotation
+//     camera.rotation.x = cameraPitch;
+//     camera.rotation.y = cameraYaw;
 
-
-    renderer.render(scene, camera);
-};
-
-animate();
+//     // Update the previous mouse position
+//     prevMouseX = event.clientX;
+//     prevMouseY = event.clientY;
+// });
 
 
 document.addEventListener('keydown', (event) => {
@@ -307,6 +307,50 @@ document.addEventListener('click', (event) => {
     }
 });
 
+const timeStep = 1/100;
+
+function animate() {
+  // Update the player's position based on the Cannon.js body
+  camera.position.set(playerBody.position.x, playerBody.position.y, playerBody.position.z);
+
+  // Handle player movement
+  const cameraDirection = new THREE.Vector3();
+  camera.getWorldDirection(cameraDirection); // Get the camera's forward direction
+
+  if (keyboardState['w']) {
+      // Move forward relative to the camera's orientation
+      const forwardVector = new CANNON.Vec3(cameraDirection.x, 0, cameraDirection.z).scale(movementSpeed);
+      playerBody.velocity.vadd(forwardVector, playerBody.velocity);
+  }
+  if (keyboardState['s']) {
+      // Move backward relative to the camera's orientation
+      const backwardVector = new CANNON.Vec3(-cameraDirection.x, 0, -cameraDirection.z).scale(movementSpeed);
+      playerBody.velocity.vadd(backwardVector, playerBody.velocity);
+  }
+  if (keyboardState['a']) {
+      // Move left relative to the camera's orientation
+      const leftVector = new CANNON.Vec3(cameraDirection.z, 0, -cameraDirection.x).scale(movementSpeed);
+      playerBody.velocity.vadd(leftVector, playerBody.velocity);
+  }
+  if (keyboardState['d']) {
+      // Move right relative to the camera's orientation
+      const rightVector = new CANNON.Vec3(-cameraDirection.z, 0, cameraDirection.x).scale(movementSpeed);
+      playerBody.velocity.vadd(rightVector, playerBody.velocity);
+  }
+
+  requestAnimationFrame(animate);
+
+  world.step(timeStep);
+
+  boxMesh.position.copy(boxBody.position);
+  boxMesh.quaternion.copy(boxBody.quaternion);
+
+  groundMesh.position.copy(groundBody.position);
+  groundMesh.quaternion.copy(groundBody.quaternion);
+
+  renderer.render(scene, camera);
+}
 
 
-animate();
+
+renderer.setAnimationLoop(animate);
