@@ -36,7 +36,7 @@ function animate() {
 
   objects.animated_objects(); //objects that are animated
 
-  renderer.render(objects.scene, camera.camera);
+  renderer.render(objects.scene, camera.currentCamera);
 }
 
 
