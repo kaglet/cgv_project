@@ -1,6 +1,4 @@
 
-
-
 import * as THREE from 'three'
 import * as CANNON from 'cannon-es';
 import * as objects from './objects.js';

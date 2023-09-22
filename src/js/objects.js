@@ -4,6 +4,7 @@ import * as CANNON from 'cannon-es';
 import woodTextureImage from '../img/woodenfloor.jpg'; // Make sure the path to your wood texture image is correct
 import walltextureImage from '../img/wall.jpg'; // Make sure the path to your wood texture image is correct
 import ceilingtextureImage from '../img/Ceiling.jpg';
+import camera from './camera';
 
 // Scene
 export const scene = new THREE.Scene();
@@ -58,7 +59,7 @@ export const groundBody = new CANNON.Body({
 
 
 // Create a floor tile
-const tileGeometry = new THREE.PlaneGeometry(5, 5) // 1x1 square
+const tileGeometry = new THREE.BoxGeometry(5, 5,1.3) 
 const tileMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff }) // Default white color
 
 // Define tile size and gap size
@@ -101,13 +102,18 @@ for (let i = 0; i < numRows; i++) {
 
 
 function changeTileColorOnClick(tile) {
+    // const randomColor = new THREE.Color(0, 0, 255);
+    // tile.material.color.copy(randomColor);
+    // tile.material.emissive = randomColor; // Use the same color as the tile color for emissive
+    // tile.material.emissiveIntensity = 100.0;
+    // const tileLight = new THREE.PointLight(randomColor, 1.0, 10.0, 5.0); 
+    // tileLight.power = 6.0;
+    // tileLight.position.copy(tile.position); // Position the light at the tile's position
+    // scene.add(tileLight);
     const randomColor = new THREE.Color(0, 0, 255);
     tile.material.color.copy(randomColor);
-    tile.material.emissive = randomColor; // Use the same color as the tile color for emissive
-    tile.material.emissiveIntensity = 100.0;
-    const tileLight = new THREE.PointLight(randomColor, 1.0, 10.0, 5.0); 
-    tileLight.power = 6.0;
-    tileLight.position.copy(tile.position); // Position the light at the tile's position
+    const tileLight = new THREE.PointLight(randomColor, 1, 20, 5);
+    tileLight.position.copy(tile.position); 
     scene.add(tileLight);
 }
 
