@@ -42,6 +42,8 @@ const groundMat = new THREE.MeshBasicMaterial({
  });
 export const groundMesh = new THREE.Mesh(groundGeo, groundMat);
 scene.add(groundMesh);
+// renderer.shadowMap.enabled = true;
+// renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 export const groundBody = new CANNON.Body({
     shape: new CANNON.Plane(),
@@ -82,6 +84,10 @@ for (let i = 0; i < numRows; i++) {
         const xOffset = (i - numRows / 2) * (tileSize + gapSize);
         const yOffset = (j - numCols / 2) * (tileSize + gapSize);
         tileClone.position.set(xOffset, yOffset, 0);
+
+        // Enable shadows for the tile
+        tileClone.castShadow = true;
+        tileClone.receiveShadow = true;
 
         // Add click event listener to each tile
         tileClone.addEventListener('click', () => {
@@ -126,7 +132,8 @@ document.addEventListener('click', (event) => {
     }
 });
 
-
+tileMaterial.castShadow = true;
+tileMaterial.receiveShadow = true;
 // Start changing tile color and emitting light every 5 seconds
 
 const rotationAngle = Math.PI / 2;
