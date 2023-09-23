@@ -84,6 +84,8 @@ export const tiles = []
 
 for (let i = 0; i < numRows; i++) {
     for (let j = 0; j < numCols; j++) {
+        
+
         const tileClone = new THREE.Mesh(tileGeometry, tileMaterial.clone());
         const xOffset = (i - numRows / 2) * (tileSize + gapSize);
         const yOffset = (j - numCols / 2) * (tileSize + gapSize);
@@ -102,6 +104,8 @@ for (let i = 0; i < numRows; i++) {
         tiles.push(tileClone);
     }
 }
+
+
 
 
 function changeTileColorOnClick(tile) {
@@ -150,6 +154,7 @@ tileMaterial.receiveShadow = true;
 
 const rotationAngle = Math.PI / 2;
 floorContainer.rotation.set(-rotationAngle, 0, 0);
+
 
 const translationVector = new THREE.Vector3(0, -29.9, -10);
 floorContainer.position.copy(translationVector);
