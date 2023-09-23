@@ -4,7 +4,7 @@ import * as CANNON from 'cannon-es';
 import woodTextureImage from '../img/woodenfloor.jpg'; // Make sure the path to your wood texture image is correct
 import walltextureImage from '../img/wall.jpg'; // Make sure the path to your wood texture image is correct
 import ceilingtextureImage from '../img/Ceiling.jpg';
-import camera from './camera';
+import camera from './camera.js';
 
 // Scene
 export const scene = new THREE.Scene();
@@ -22,10 +22,11 @@ const boxMat = new THREE.MeshBasicMaterial({
 	color: 0x00ff00,
 	wireframe: true
 });
-export const boxMesh = new THREE.Mesh(boxGeo, boxMat);
+
+const boxMesh = new THREE.Mesh(boxGeo, boxMat);
 scene.add(boxMesh);
 
-export const boxBody = new CANNON.Body({
+const boxBody = new CANNON.Body({
     mass: 1,
     shape: new CANNON.Box(new CANNON.Vec3(1, 1, 1)),
     position: new CANNON.Vec3(1, 20, 0),
@@ -46,7 +47,7 @@ scene.add(groundMesh);
 // renderer.shadowMap.enabled = true;
 // renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-export const groundBody = new CANNON.Body({
+const groundBody = new CANNON.Body({
     shape: new CANNON.Plane(),
     //mass: 10
     // shape: new CANNON.Box(new CANNON.Vec3(15, 15, 0.1)),

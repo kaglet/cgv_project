@@ -19,20 +19,18 @@ const fov = 60;
     export default camera;
 
 
-
-
     // const controls = new OrbitControls(
-    //   camera, screen.renderer.domElement);
-    // controls.target.set(0, 10, 0);
-    // controls.update();
-
+    //     camera, render.domElement);
+    //   controls.target.set(0, 10, 0);
+    //   controls.update();
+  
 
 export const topDownCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 topDownCamera.position.set(0, 20, 0); // Adjust the camera position to be above the scene
 topDownCamera.lookAt(0, 0, 0); // Make the camera look at the center of the scene
 
 
-export let currentCamera = camera; // Start with the default camera
+export var currentCamera = camera; // Start with the default camera
 
 document.addEventListener('keydown', (event) => {
     if (event.key === 'c') {
