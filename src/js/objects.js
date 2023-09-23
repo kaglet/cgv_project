@@ -4,7 +4,7 @@ import * as CANNON from 'cannon-es';
 import woodTextureImage from '../img/woodenfloor.jpg'; // Make sure the path to your wood texture image is correct
 import walltextureImage from '../img/wall.jpg'; // Make sure the path to your wood texture image is correct
 import ceilingtextureImage from '../img/Ceiling.jpg';
-import camera from './camera.js';
+import { currentCamera, topDownCamera } from './camera.js';
 
 // Scene
 export const scene = new THREE.Scene();
@@ -13,7 +13,7 @@ export const scene = new THREE.Scene();
 export const world = new CANNON.World({
     gravity: new CANNON.Vec3(0,-9.81,0)
   });
-  
+
 const axesHelper = new THREE.AxesHelper(50); //so we can see the axes for debugging
 scene.add(axesHelper);
 
@@ -60,8 +60,8 @@ const groundBody = new CANNON.Body({
 
 
 // Create a floor tile
-const tileGeometry = new THREE.BoxGeometry(5, 5,1.3) 
-const tileMaterial = new THREE.MeshStandardMaterial({ 
+const tileGeometry = new THREE.BoxGeometry(5, 5,1.3)
+const tileMaterial = new THREE.MeshStandardMaterial({
     color: 0xffffff,
     opacity: 0.5, // Adjust the opacity value (0.0 to 1.0)
     transparent: true, // Enable transparency
@@ -85,7 +85,7 @@ export const tiles = []
 
 for (let i = 0; i < numRows; i++) {
     for (let j = 0; j < numCols; j++) {
-        
+
 
         const tileClone = new THREE.Mesh(tileGeometry, tileMaterial.clone());
         const xOffset = (i - numRows / 2) * (tileSize + gapSize);
@@ -138,7 +138,7 @@ document.addEventListener('click', (event) => {
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
     // Update the raycaster
-    raycaster.setFromCamera(mouse, camera);
+    raycaster.setFromCamera(mouse, currentCamera);
 
     // Get a list of objects intersected by the raycaster
     const intersects = raycaster.intersectObjects(tiles);
