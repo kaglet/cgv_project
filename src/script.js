@@ -124,6 +124,26 @@ box2.position.set(0, 15, 10);
 // update texture by changing the map property of the mesh's material
 box2.material.map = textureLoader.load(nebula);
 
+const vShader = `
+    void main() {
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+`;
+const fShader = `
+    void main() {
+        gl_FragColor = vec4(1.0, 0.1, 0.3, 1.0);
+    }
+`;
+
+const sphere2Geometry = new THREE.SphereGeometry(4, 50, 50);
+const sphere2Material = new THREE.ShaderMaterial({
+    vertexShader: vShader,
+    fragmentShader: fShader,
+});
+const sphere2 = new THREE.Mesh(sphere2Geometry, sphere2Material);
+scene.add(sphere2);
+sphere2.position.set(-20, 10, 7);
+
 const gui = new dat.GUI();
 
 const options = {
@@ -236,3 +256,9 @@ function animate(time) {
 }
 
 renderer.setAnimationLoop(animate);
+
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
