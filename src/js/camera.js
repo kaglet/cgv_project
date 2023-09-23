@@ -1,10 +1,30 @@
 import * as THREE from 'three'
+import * as script from './script.js'
 import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 
-export const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-camera.position.set(0, 0, 0); // Adjust camera position
-export default camera;
+// export const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+// camera.position.set(0, 0, 0); // Adjust camera position
+// export default camera;
+
+const fov = 60;
+    const aspect = 1920 / 1080;
+    const near = 1.0;
+    const far = 1000.0;
+    var mouseX = 0;
+    var mouseY = 0;
+    export var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(25, 10, 25);
+    export default camera;
+
+
+
+
+    // const controls = new OrbitControls(
+    //   camera, screen.renderer.domElement);
+    // controls.target.set(0, 10, 0);
+    // controls.update();
 
 
 export const topDownCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
