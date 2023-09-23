@@ -1,377 +1,238 @@
-import './style.css'
-import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import * as dat from 'dat.gui'
+import * as THREE from 'three';
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
+import * as dat from 'dat.gui';
+import nebula from './nebula.jpg';
+import stars from './stars.jpg';
 
-// Tool for debug
-const gui = new dat.GUI();
-import * as CANNON from 'cannon-es';
-
-import woodTextureImage from './woodenfloor.jpg'; // Make sure the path to your wood texture image is correct
-import walltextureImage from './wall.jpg'; // Make sure the path to your wood texture image is correct
-import ceilingtextureImage from './Ceiling.jpg';
-console.log(ceilingtextureImage);
-console.log(walltextureImage);
-
-// Create canvas in html doc for rendering.
-const canvas = document.querySelector('canvas.webgl');
-
-// Initialize a 3.js scene.
-const scene = new THREE.Scene();
-
-// Create a perspective camera with properties (field of view, aspect ratio, near and far clipping planes).
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-// Set initial camera position.
-camera.position.set(0, 5, 10);
-
-// Create a WebGL renderer and set its size to match the window's dimensions.
-// Append the renderer's DOM element to the HTML body.
 const renderer = new THREE.WebGLRenderer();
+
 renderer.setSize(window.innerWidth, window.innerHeight);
+
+renderer.shadowMap.enabled = true;
+
 document.body.appendChild(renderer.domElement);
 
-//Physics
+const scene = new THREE.Scene();
 
-const world = new CANNON.World({
-  gravity: new CANNON.Vec3(0,-9.81,0)
+const camera = new THREE.PerspectiveCamera(
+    45, // between 40 and 80 is usually fine
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000
+);
+
+const orbit = new OrbitControls(camera, renderer.domElement);
+
+const axesHelper = new THREE.AxesHelper(5);
+scene.add(axesHelper);
+
+camera.position.set(-10, 30, 30);
+orbit.update();
+
+const boxGeometry = new THREE.BoxGeometry();
+const boxMaterial = new THREE.MeshBasicMaterial({color: 0x00ff00});
+const box = new THREE.Mesh(boxGeometry, boxMaterial);
+scene.add(box);
+
+const planeGeometry = new THREE.BoxGeometry(30, 30);
+const planeMaterial = new THREE.MeshStandardMaterial({
+    color: 0xffffff,
+    side: THREE.DoubleSide
+});
+const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+scene.add(plane);
+plane.rotation.x = -0.5 * Math.PI;
+plane.receiveShadow = true;
+
+const gridHelper = new THREE.GridHelper(30);
+scene.add(gridHelper);
+
+const sphereGeometry = new THREE.SphereGeometry(4, 50, 50);
+const sphereMaterial = new THREE.MeshStandardMaterial({
+    color: 0xf1f35f,
+    wireframe: false,
+});
+const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+scene.add(sphere);
+
+sphere.position.set(-10, 10, 0);
+sphere.castShadow = true;
+
+// const ambientLight = new THREE.AmbientLight(0x333333);
+// scene.add(ambientLight);
+
+// const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+// scene.add(directionalLight);
+// directionalLight.castShadow = true;
+// directionalLight.position.set(-30, 20, 0);
+// directionalLight.shadow.camera.bottom = -12;
+// directionalLight.shadow.camera.top = 12;
+
+// const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 5);
+// scene.add(directionalLightHelper);
+
+// // The object that casts a shadow has an implicit shadow camera setup
+// // Different light types have different camera types
+// const directionalLightShadowHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
+// scene.add(directionalLightShadowHelper);
+
+const spotLight = new THREE.SpotLight(0xFFFFFF, 2);
+scene.add(spotLight);
+spotLight.position.set(-100, 100, 0);
+spotLight.castShadow = true;
+spotLight.angle = 0.2;
+
+const spotLightHelper = new THREE.SpotLightHelper(spotLight);
+scene.add(spotLightHelper);
+
+// scene.fog = new THREE.Fog(0xffffff, 0, 200);
+scene.fog = new THREE.FogExp2(0xffffff, 0.01);
+
+// renderer.setClearColor(0x04354f);
+// to be 
+const textureLoader = new THREE.TextureLoader();
+// scene.background = textureLoader.load(nebula);
+
+
+// to use a texture we load it on the cube or scene with a loader
+// the scene has a background property but for the cube we add the map property on the material
+const cubeTextureLoader = new THREE.CubeTextureLoader();
+scene.background = cubeTextureLoader.load([
+    stars, 
+    stars, 
+    nebula, 
+    nebula, 
+    nebula, 
+    nebula
+]);
+
+// create material for each face of mesh, and each should have its own texture
+// pass as argument to constructor of mesh with the materials we want
+const box2Geometry = new THREE.BoxGeometry(4, 4, 4);
+const box2MultiMaterial = [
+    new THREE.MeshStandardMaterial({map: textureLoader.load(nebula)}),
+    new THREE.MeshStandardMaterial({map: textureLoader.load(stars)}),
+    new THREE.MeshStandardMaterial({map: textureLoader.load(nebula)}),
+    new THREE.MeshStandardMaterial({map: textureLoader.load(stars)}),
+    new THREE.MeshStandardMaterial({map: textureLoader.load(nebula)}),
+    new THREE.MeshStandardMaterial({map: textureLoader.load(stars)}),
+];
+
+const box2 = new THREE.Mesh(box2Geometry, box2MultiMaterial);
+scene.add(box2);
+box2.position.set(0, 15, 10);
+// update texture by changing the map property of the mesh's material
+box2.material.map = textureLoader.load(nebula);
+
+const gui = new dat.GUI();
+
+const options = {
+    sphereColor: '#f1f35f',
+    wireframe: false,
+    speed: 0.01,
+    angle: 0.2,
+    penumbra: 0,
+    intensity: 1,
+};
+
+// specify what must happen everytime we change the color on the interface
+// e event variable contains colors code from color palette onChange
+// add color palette element to gui passed the default value of the key name and set its on change method
+gui.addColor(options, 'sphereColor').onChange((e)=>{
+    sphere.material.color.set(e);
 });
 
-const timeStep = 1/60;
-
-const boxGeo = new THREE.BoxGeometry(2, 2, 2);
-const boxMat = new THREE.MeshBasicMaterial({
-	color: 0x00ff00,
-	wireframe: true
-});
-const boxMesh = new THREE.Mesh(boxGeo, boxMat);
-scene.add(boxMesh);
-
-
-
-
-
-//Creating the ground
-const groundGeo = new THREE.PlaneGeometry(70, 80);
-const groundMat = new THREE.MeshBasicMaterial({ 
-	color: 0xffffff,
-	side: THREE.DoubleSide,
-	wireframe: true 
- });
-const groundMesh = new THREE.Mesh(groundGeo, groundMat);
-scene.add(groundMesh);
-
-
-const groundBody = new CANNON.Body({
-  shape: new CANNON.Plane(),
-  //mass: 10
-  // shape: new CANNON.Box(new CANNON.Vec3(15, 15, 0.1)),
-   type: CANNON.Body.STATIC,
-  // material: groundPhysMat
-});
-world.addBody(groundBody);
-groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-groundBody.position.y -= 30;
-
-const boxBody = new CANNON.Body({
-  mass: 1,
-  shape: new CANNON.Box(new CANNON.Vec3(1, 1, 1)),
-  position: new CANNON.Vec3(1, 20, 0),
-//  material: boxPhysMat
-});
-world.addBody(boxBody);
-
-
-
-// Define the geometry and material for a floor tile.
-// Create a group to hold the floor tiles.
-// Create a grid of tiles with gaps between them, and add a click event listener to each tile. The color of each tile changes to blue when clicked.
-const tileGeometry = new THREE.PlaneGeometry(5, 5) // 1x1 square
-const tileMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff }) // Default white color
-
-// Define tile size and gap size
-const tileSize = 5 // Adjust the size of each tile
-const gapSize = 0.2 // Adjust the size of the gap
-
-
-const floorContainer = new THREE.Group()
-const textureLoader = new THREE.TextureLoader()
-const woodTexture = textureLoader.load(woodTextureImage)
-const walltexture = textureLoader.load(walltextureImage)
-
-
-
-//const tileMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff })
-// Duplicate tiles to create the floor with gaps
-const numRows = 10;
-const numCols = 10;
-const tiles = [];
-
-// function changeTileColorOnClick(tile) {
-//   const changedTileColor = new THREE.Color(255,164.7,0);
-//   tile.material.color.copy(changedTileColor);
-//   const tileLight = new THREE.PointLight(changedTileColor, 1, 2) // Create a point light with tile color
-//   tileLight.position.copy(tile.position) // Position the light at the tile's position
-//   scene.add(tileLight)
-// }
-
-const glowMaterial = new THREE.ShaderMaterial({
-  uniforms: {
-    glowColor: { value: new THREE.Color(0x0000ff) }, // Set the glow color to blue
-    viewVector: { value: camera.position }
-  },
-  vertexShader: `
-    varying vec3 vNormal;
-    void main() {
-      vNormal = normalize(normalMatrix * normal);
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    }
-  `,
-  fragmentShader: `
-    uniform vec3 glowColor;
-    varying vec3 vNormal;
-    void main() {
-      vec3 normal = normalize(vNormal);
-      float intensity = dot(normal, normalize(viewVector));
-      if (intensity > 0.5) {
-        gl_FragColor = vec4(glowColor, 1.0);
-      } else {
-        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
-      }
-    }
-  `,
-  side: THREE.FrontSide, // Render the front face of the geometry
-  blending: THREE.AdditiveBlending, // Additive blending for the glow effect
-  transparent: true // Make the material transparent
+// add checkbox element to gui
+// e contains information about event on the option / true false value of checkbox in this case
+gui.add(options, 'wireframe').onChange((e) => {
+    sphere.material.wireframe = e;
 });
 
+gui.add(options, 'speed', 0, 0.1);
+gui.add(options, 'angle', 0, 0.2);
+gui.add(options, 'penumbra', 0, 0.1);
+gui.add(options, 'intensity', 0, 1);
 
-function changeTileColorOnClick(tile) {
-  tile.originalMaterial = tile.material.clone();
-  tile.material = glowMaterial;
+// get the normalized coordinates of the mouse x, y position
+const mousePosition = new THREE.Vector2();
+
+// update mouse position on mouse move
+window.addEventListener('mousemove', (e) => {
+    mousePosition.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mousePosition.y = - (e.clientY / window.innerHeight) * 2 + 1;
+});
+
+const rayCaster = new THREE.Raycaster();
+
+let step = 0;
+
+const sphereId = sphere.id;
+
+box2.name = "theBox";
+
+// the positions of all the points that form the geometry of a mesh are located in an array in this following property
+// array is one dimensional and stores sets of 3 coordinates per vertex
+// coordinates of first vertex of the geometry (plane) for example are in array[0] then array[1] and array[2] for x, y, z coordinates respectively.
+const plane2Geometry = new THREE.PlaneGeometry(10, 10, 10, 10);
+const plane2Material = new THREE.MeshStandardMaterial({
+    color: 0x00f100, 
+    wireframe: true
+});
+const plane2 = new THREE.Mesh(plane2Geometry, plane2Material);
+scene.add(plane2);
+plane2.position.set(10, 10, 30);
+
+// FOR LIGHT ON MOVE
+// on move get coordinate of sphere bottom, on intersection with tile then light it up
+
+
+// in animation you can change the coordinates of vertices over time
+
+function animate(time) {
+    // value of rotation will get updated 60 times per second
+    // we set the update
+    box.rotation.x = time / 1000;
+    box.rotation.y = time / 1000;
+
+    // ranges from 0 to 1 for absolute value of sin so y values will always be positive 
+    // remember y = 0 maps to coordinates there
+    // so here we update the position using a sinosoidal function
+    // position of sphere corresponds to its center
+
+    // options.speed is altered when provided as an argument to that function with those parameters
+    step += options.speed;
+    sphere.position.y = 10 * Math.abs(Math.sin(step));
+
+    spotLight.angle = options.angle;
+    spotLight.penumbra = options.penumbra;
+    spotLight.intensity = options.intensity;
+    // must call this after updating any of the light's properties
+    spotLightHelper.update();
+
+    rayCaster.setFromCamera(mousePosition, camera);
+    const intersects = rayCaster.intersectObjects(scene.children);
+
+    intersects.forEach((intersectItem) => {
+        if (intersectItem.object.id == sphereId) {
+            intersectItem.object.material.color.set(0xff0000);
+        }
+
+        if (intersectItem.object.name == "theBox") {
+            intersectItem.object.rotation.x = time / 1000;
+            intersectItem.object.rotation.y = time / 1000;
+        }
+    });
+
+    plane2.geometry.attributes.position.array[0] = 10 * Math.random();
+    plane2.geometry.attributes.position.array[1] = 10 * Math.random();
+    plane2.geometry.attributes.position.array[2] = 10 * Math.random();
+    const lastPointZ = plane2.geometry.attributes.position.array.length - 1;
+    plane2.geometry.attributes.position.array[lastPointZ] = 10 * Math.random();
+    plane2.geometry.attributes.position.needsUpdate = true;
+
+    // console.log(intersects);
+    
+    renderer.render(scene, camera);
 }
 
-for (let i = 0; i < numRows; i++) {
-    for (let j = 0; j < numCols; j++) {
-      const tileClone = new THREE.Mesh(tileGeometry, tileMaterial.clone());
-      const xOffset = (i - numRows / 2) * (tileSize + gapSize);
-      const yOffset = (j - numCols / 2) * (tileSize + gapSize);
-      tileClone.position.set(xOffset, yOffset, 0);
-  
-      // Add click event listener to each tile
-      tileClone.addEventListener('click', () => {
-        changeTileColorOnClick(tileClone);
-      });
-  
-      floorContainer.add(tileClone);
-      tiles.push(tileClone);
-    }
-  }
-
-// Rotate the floor by -90 degrees around the x-axis.
-// Translate the floor by (-29.9, -10, -10) units.
-const rotationAngle = Math.PI / 2; 
-floorContainer.rotation.set(-rotationAngle, 0, 0);
-
-const translationVector = new THREE.Vector3(0, -29.9, -10); 
-floorContainer.position.copy(translationVector);
-scene.add(floorContainer);
-
-// Create room walls using a BoxGeometry and a gray MeshBasicMaterial. These walls are added to the scene.
-const roomGeometry = new THREE.BoxGeometry(70, 60, 80)
-const roomMaterial = new THREE.MeshStandardMaterial({ map: walltexture, side: THREE.BackSide }) // Gray color for the room
-const room = new THREE.Mesh(roomGeometry, roomMaterial)
-
-scene.add(room)
-
-
-// Add ceiling texture (inside the room cube)
-const ceilingTexture = textureLoader.load(ceilingtextureImage); // Load your ceiling texture image
-const ceilingMaterial = new THREE.MeshStandardMaterial({ map: ceilingTexture });
-const ceilingGeometry = new THREE.PlaneGeometry(70, 79.9);
-const ceiling = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
-ceiling.position.set(0,29.99 , 0); // Adjust the position to be above the room cube
-ceiling.rotation.x = Math.PI / 2; // Rotate 90 degrees along the X-axis
-scene.add(ceiling);
-
-
-const floorWidth = numRows * (tileSize + gapSize);
-const floorHeight = numCols * (tileSize + gapSize);
-const floorGeometry = new THREE.PlaneGeometry(70, 79.9);
-const floorMaterial = new THREE.MeshStandardMaterial({ map: woodTexture });
-const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-floor.rotation.x = -Math.PI / 2; // Rotate the floor to be horizontal
-floor.position.set(0, -29.99, 0); // Set the floor position to be just below the tiles
-scene.add(floor);
-// Add lighting (point light)
-const directionalLight = new THREE.PointLight(0xffffff,1);
-directionalLight.position.set(0, 22, 0); // Adjust the position as needed
-
-const target = new THREE.Object3D();
-target.position.copy(floorContainer.position); // Adjust the target's position as needed
-
-
-directionalLight.target = target;
-
-scene.add(directionalLight);
-//scene.add(target);
-
-//Bulb
-const bulbGeometry = new THREE.SphereGeometry(5, 16, 16);
-const bulbMaterial = new THREE.MeshStandardMaterial({
-  emissive: 0xffffee, // Emissive color to make it glow
-  emissiveIntensity: 2, // Intensity of the glow
-});
-
-
-const bulb = new THREE.Mesh(bulbGeometry, bulbMaterial);
-bulb.position.copy(directionalLight.position); // Position the bulb at the same position as the light
-
-// Add the bulb to the scene
-scene.add(bulb);
-
-
-
-
-
-// Initialize OrbitControls to allow the user to interactively control the camera.
-const controls = new OrbitControls(camera, renderer.domElement)
-controls.enableDamping = true
-controls.dampingFactor = 0.05
-
-// Player position and movement speed
-const keyboardState = {
-    w: false,
-    s: false,
-    a: false,
-    d: false,
-};
-
-document.addEventListener('keydown', (event) => {
-    const key = event.key.toLowerCase();
-    keyboardState[key] = true;
-});
-
-document.addEventListener('keyup', (event) => {
-    const key = event.key.toLowerCase();
-    keyboardState[key] = false;
-});
-
-
-const playerShape = new CANNON.Sphere(1); // Adjust the player's shape
-const playerBody = new CANNON.Body({
-  mass: 5, // Adjust the mass as needed
-  shape: playerShape,
-});
-world.addBody(playerBody);
-playerBody.linearDamping = 0.8;
-
-// Player position and movement speed
-const player = new THREE.Object3D();
-player.position.copy(camera.position);
-scene.add(player);
-
-const movementSpeed = 0.1;
-
-
-// Set the initial position of the player (same as the camera)
-playerBody.position.copy(new CANNON.Vec3(camera.position.x, camera.position.y, camera.position.z));
-
-// // Add variables to track the previous mouse position
-// let prevMouseX = 0;
-// let prevMouseY = 0;
-
-// // Listen for mousemove events to handle camera panning
-// document.addEventListener('mousemove', (event) => {
-//     const mouseDeltaX = event.clientX - prevMouseX;
-//     const mouseDeltaY = event.clientY - prevMouseY;
-
-//     // Adjust the camera position based on the mouse movement
-//     const sensitivity = 0.001; // Adjust the sensitivity as needed
-//     camera.rotation.y -= mouseDeltaX * sensitivity;
-//     camera.rotation.x -= mouseDeltaY * sensitivity;
-
-//     // Limit the vertical rotation to prevent camera flipping
-//     const maxVerticalAngle = Math.PI / 8; // Adjust as needed
-//     camera.rotation.x = Math.max(-maxVerticalAngle, Math.min(maxVerticalAngle, camera.rotation.x));
-
-//     // Update the previous mouse position
-//     prevMouseX = event.clientX;
-//     prevMouseY = event.clientY;
-// });
-
-
-// Render loop
-const animate = () => {
-   // Update the player's position based on the Cannon.js body
-  camera.position.set(playerBody.position.x, playerBody.position.y, playerBody.position.z);
-
-  // Handle player movement
-  if (keyboardState['w']) {
-    // Move forward
-    const forwardVector = new CANNON.Vec3(0, 0, -movementSpeed);
-    playerBody.velocity.vadd(forwardVector, playerBody.velocity);
-  }
-  if (keyboardState['s']) {
-    // Move backward
-    const backwardVector = new CANNON.Vec3(0, 0, movementSpeed);
-    playerBody.velocity.vadd(backwardVector, playerBody.velocity);
-  }
-  if (keyboardState['a']) {
-    // Move left
-    const leftVector = new CANNON.Vec3(-movementSpeed, 0, 0);
-    playerBody.velocity.vadd(leftVector, playerBody.velocity);
-  }
-  if (keyboardState['d']) {
-    // Move right
-    const rightVector = new CANNON.Vec3(movementSpeed, 0, 0);
-    playerBody.velocity.vadd(rightVector, playerBody.velocity);
-  }
-
-    requestAnimationFrame(animate);
-
-    world.step(timeStep);
-    
-    boxMesh.position.copy(boxBody.position);
-    boxMesh.quaternion.copy(boxBody.quaternion);
-
-    groundMesh.position.copy(groundBody.position);
-    groundMesh.quaternion.copy(groundBody.quaternion);
-
-
-    renderer.render(scene, camera);
-};
-
-
-
-
-document.addEventListener('keydown', (event) => {
-    keyboardState[event.key] = true;
-});
-
-document.addEventListener('keyup', (event) => {
-    keyboardState[event.key] = false;
-});
-
-// Set up raycasting to detect mouse clicks on the tiles.
-// When a click event occurs, the code calculates the intersection point between the ray and the tiles and triggers a click event on the first intersected tile.
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
-
-document.addEventListener('click', (event) => {
-  // Calculate mouse coordinates in normalized device coordinates (NDC)
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-  // Update the raycaster
-  raycaster.setFromCamera(mouse, camera);
-
-  // Get a list of objects intersected by the raycaster
-  const intersects = raycaster.intersectObjects(tiles);
-
-  // If there are intersections, trigger the click event on the first object (tile) in the list
-  if (intersects.length > 0) {
-    intersects[0].object.dispatchEvent({ type: 'click' });
-  }
-});
-
-animate();
+renderer.setAnimationLoop(animate);
