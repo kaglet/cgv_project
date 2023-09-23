@@ -2,9 +2,7 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'dat.gui'
-
-// Tool for debug
-const gui = new dat.GUI();
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as CANNON from 'cannon-es';
 
 import woodTextureImage from './woodenfloor.jpg'; // Make sure the path to your wood texture image is correct
@@ -16,8 +14,9 @@ console.log(walltextureImage);
 // Create canvas in html doc for rendering.
 const canvas = document.querySelector('canvas.webgl');
 
-// Initialize a 3.js scene.
-const scene = new THREE.Scene();
+// Scene
+const scene = new THREE.Scene()
+scene.scale.set(3, 3, 3);
 
 // Create a perspective camera with properties (field of view, aspect ratio, near and far clipping planes).
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -167,16 +166,30 @@ for (let i = 0; i < numRows; i++) {
     }
   }
 
-// Rotate the floor by -90 degrees around the x-axis.
-// Translate the floor by (-29.9, -10, -10) units.
-const rotationAngle = Math.PI / 2; 
+
+function changeTileColorOnClick(tile) {
+    const randomColor = new THREE.Color(0, 0, 255);
+    tile.material.color.copy(randomColor);
+    tile.material.emissive = randomColor; // Use the same color as the tile color for emissive
+    tile.material.emissiveIntensity = 100.0;
+    const tileLight = new THREE.PointLight(randomColor, 1.0, 10.0, 5.0); 
+    tileLight.power = 6.0;
+    tileLight.position.copy(tile.position); // Position the light at the tile's position
+    scene.add(tileLight);
+}
+
+// Start changing tile color and emitting light every 5 seconds
+
+const rotationAngle = Math.PI / 2;
 floorContainer.rotation.set(-rotationAngle, 0, 0);
 
 const translationVector = new THREE.Vector3(0, -29.9, -10); 
 floorContainer.position.copy(translationVector);
 scene.add(floorContainer);
 
-// Create room walls using a BoxGeometry and a gray MeshBasicMaterial. These walls are added to the scene.
+
+
+// Create room walls
 const roomGeometry = new THREE.BoxGeometry(70, 60, 80)
 const roomMaterial = new THREE.MeshStandardMaterial({ map: walltexture, side: THREE.BackSide }) // Gray color for the room
 const room = new THREE.Mesh(roomGeometry, roomMaterial)
@@ -204,22 +217,19 @@ floor.position.set(0, -29.99, 0); // Set the floor position to be just below the
 scene.add(floor);
 // Add lighting (point light)
 const directionalLight = new THREE.PointLight(0xffffff,1);
-directionalLight.position.set(0, 22, 0); // Adjust the position as needed
+directionalLight.position.set(0, 23, 0); // Adjust the position as needed
 
 const target = new THREE.Object3D();
 target.position.copy(floorContainer.position); // Adjust the target's position as needed
 
 
-directionalLight.target = target;
-
 scene.add(directionalLight);
-//scene.add(target);
 
 //Bulb
 const bulbGeometry = new THREE.SphereGeometry(5, 16, 16);
 const bulbMaterial = new THREE.MeshStandardMaterial({
   emissive: 0xffffee, // Emissive color to make it glow
-  emissiveIntensity: 2, // Intensity of the glow
+  emissiveIntensity: 3, // Intensity of the glow
 });
 
 
@@ -229,7 +239,19 @@ bulb.position.copy(directionalLight.position); // Position the bulb at the same 
 // Add the bulb to the scene
 scene.add(bulb);
 
+const loader = new GLTFLoader();
 
+loader.load('/chair.glb', function (gltf) {
+    gltf.scene.rotation.y=Math.PI/2;
+    gltf.scene.scale.set(20,20,20);
+    gltf.scene.position.y=-30;
+    gltf.scene.position.x=-30;
+    gltf.scene.position.z=30;
+    scene.add(gltf.scene);
+
+}, undefined, function (error) {
+    console.error(error);
+});
 
 
 
@@ -270,7 +292,7 @@ const player = new THREE.Object3D();
 player.position.copy(camera.position);
 scene.add(player);
 
-const movementSpeed = 0.1;
+const movementSpeed = 1;
 
 
 // Set the initial position of the player (same as the camera)
@@ -373,5 +395,8 @@ document.addEventListener('click', (event) => {
     intersects[0].object.dispatchEvent({ type: 'click' });
   }
 });
+
+
+
 
 animate();
