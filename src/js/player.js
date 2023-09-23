@@ -15,7 +15,7 @@ import {FirstPersonControls} from 'three/examples/jsm/controls/FirstPersonContro
 
 //Physics
 
-export class BasicCharacterControllerProxy {
+ class BasicCharacterControllerProxy {
   constructor(animations) {
     this._animations = animations;
   }
@@ -26,7 +26,7 @@ export class BasicCharacterControllerProxy {
 };
 
 
-export  class BasicCharacterController {
+class BasicCharacterController {
   constructor(params) {
     this._Init(params);
   }
@@ -163,7 +163,7 @@ export  class BasicCharacterController {
   }
 };
 
-export class BasicCharacterControllerInput {
+class BasicCharacterControllerInput {
   constructor() {
     this._Init();
   }
@@ -229,7 +229,7 @@ export class BasicCharacterControllerInput {
 };
 
 
-export class FiniteStateMachine {
+class FiniteStateMachine {
   constructor() {
     this._states = {};
     this._currentState = null;
@@ -263,7 +263,7 @@ export class FiniteStateMachine {
 };
 
 
-export class CharacterFSM extends FiniteStateMachine {
+class CharacterFSM extends FiniteStateMachine {
   constructor(proxy) {
     super();
     this._proxy = proxy;
@@ -278,7 +278,7 @@ export class CharacterFSM extends FiniteStateMachine {
 };
 
 
-export class State {
+class State {
   constructor(parent) {
     this._parent = parent;
   }
@@ -292,7 +292,7 @@ export class State {
 
 
 
-export class WalkState extends State {
+class WalkState extends State {
   constructor(parent) {
     super(parent);
   }
@@ -338,7 +338,7 @@ export class WalkState extends State {
 
 
 
-export class IdleState extends State {
+ class IdleState extends State {
   constructor(parent) {
     super(parent);
   }
@@ -372,3 +372,13 @@ export class IdleState extends State {
   }
 };
 
+
+export var _controls;
+
+export function _LoadAnimatedModel() {
+    const params = {
+      camera: camera.currentCamera,
+      scene: objects.scene,
+    }
+    _controls = new BasicCharacterController(params);
+  }
