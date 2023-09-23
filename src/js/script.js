@@ -42,19 +42,21 @@ class CharacterControllerDemo {
       this._OnWindowResize();
     }, false);
 
-    const fov = 60;
-    const aspect = 1920 / 1080;
-    const near = 1.0;
-    const far = 1000.0;
-    var mouseX = 0;
-    var mouseY = 0;
-    this._camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this._camera.position.set(25, 10, 25);
+    camera.currentCamera;
+
+    // const fov = 60;
+    // const aspect = 1920 / 1080;
+    // const near = 1.0;
+    // const far = 1000.0;
+    // var mouseX = 0;
+    // var mouseY = 0;
+    // this._camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    // this._camera.position.set(25, 10, 25);
 
 
 
     const controls = new OrbitControls(
-      this._camera, this._threejs.domElement);
+      camera.currentCamera, this._threejs.domElement);
     controls.target.set(0, 10, 0);
     controls.update();
 
@@ -109,8 +111,8 @@ class CharacterControllerDemo {
   }
 
   _OnWindowResize() {
-    this._camera.aspect = window.innerWidth / window.innerHeight;
-    this._camera.updateProjectionMatrix();
+    camera.currentCamera.aspect = window.innerWidth / window.innerHeight;
+    camera.currentCamera.updateProjectionMatrix();
     this._threejs.setSize(window.innerWidth, window.innerHeight);
   }
 
@@ -124,7 +126,7 @@ class CharacterControllerDemo {
 
       this._RAF();
 
-      this._threejs.render(objects.scene, this._camera);
+      this._threejs.render(objects.scene, camera.currentCamera);
       this._Step(t - this._previousRAF);
       this._previousRAF = t;
     });
