@@ -26,8 +26,8 @@ objects.scene.add(bulb);
 
 //skybox
 
-const worldGeometry = new THREE.BoxGeometry(70, 60, 80);
+// const worldGeometry = new THREE.BoxGeometry(70, 60, 80);
 
 
- const worldMaterial = new THREE.MeshStandardMaterial({ map: walltexture, side: THREE.BackSide }) // Gray color for the room
- const worldMesh = new THREE.Mesh(worldGeometry , worldMaterial )
+// // const worldMaterial = new THREE.MeshStandardMaterial({ map: walltexture, side: THREE.BackSide }) // Gray color for the room
+//  const worldMesh = new THREE.Mesh(worldGeometry , worldMaterial )
