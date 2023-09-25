@@ -1,15 +1,12 @@
-import '../style.css'
+import '../style.css';
 import * as player from './player.js';
-import * as objects from './objects.js'
-import * as lighting from './lighting.js'
-import * as camera from './camera.js'
-
-
-import * as THREE from 'three'
+import * as objects from './objects.js';
+import * as lighting from './lighting.js';
+import * as camera from './camera.js';
+import * as THREE from 'three';
 import * as CANNON from 'cannon-es';
-import * as dat from 'dat.gui'
-
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import * as dat from 'dat.gui';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -43,26 +40,24 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
     renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
-  const timeStep = 1/100;
-  function animate(t) {
-    if (_previousRAF === null) {
+//  const timeStep = 1/100;
+  function _RAF() {
+    requestAnimationFrame((t) => {
+      if (_previousRAF === null) {
         _previousRAF = t;
     }
 
-    _RAF();
-    _Step(t - _previousRAF);
-    _previousRAF = t;
 
-    objects.world.step(timeStep);
 
-    renderer.render(objects.scene, camera.currentCamera);
-    
-}
+      _RAF();
 
-function _RAF() {
-    requestAnimationFrame(animate);
-}
-
+objects.world.step(1/60);
+  
+      renderer.render(objects.scene, camera.currentCamera);
+      _Step(t - _previousRAF);
+      _previousRAF = t;
+    });
+  }
 
   function  _Step(timeElapsed) {
     const timeElapsedS = timeElapsed * 0.001;
@@ -82,4 +77,7 @@ function _RAF() {
 
   
   player._LoadAnimatedModel();
-  animate(timeStep);
+   _RAF();
+
+
+  //renderer.setAnimationLoop(_RAF);
