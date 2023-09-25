@@ -52,7 +52,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
    
 
-     // _RAF();
+      _RAF();
+      objects.world.step(1/60);
 
   
       renderer.render(objects.scene, camera.currentCamera);
@@ -64,7 +65,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
   function  _Step(timeElapsed) {
     const timeElapsedS = timeElapsed * 0.001;
 
-    objects.world.step(timeElapsedS);
+
     
     if (_mixers) {
       _mixers.map(m => m.update(timeElapsedS));
@@ -79,7 +80,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
   
   player._LoadAnimatedModel();
-  // _RAF();
+   _RAF();
 
 
   renderer.setAnimationLoop(_RAF);
