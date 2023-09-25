@@ -37,26 +37,24 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
     var _previousRAF = null;
    
 
-    player._LoadAnimatedModel();
-    _RAF();
-
-
-
   function  _OnWindowResize() {
     camera.currentCamera.aspect = window.innerWidth / window.innerHeight;
     camera.currentCamera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
-
+  const timeStep = 1/100;
   function _RAF() {
     requestAnimationFrame((t) => {
       if (_previousRAF === null) {
         _previousRAF = t;
       }
 
-      _RAF();
+   
 
+     // _RAF();
+
+  
       renderer.render(objects.scene, camera.currentCamera);
       _Step(t - _previousRAF);
       _previousRAF = t;
@@ -65,6 +63,9 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
   function  _Step(timeElapsed) {
     const timeElapsedS = timeElapsed * 0.001;
+
+    objects.world.step(timeElapsedS);
+    
     if (_mixers) {
       _mixers.map(m => m.update(timeElapsedS));
     }
@@ -73,3 +74,12 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
       player._controls.Update(timeElapsedS);
     }
   }
+
+
+
+  
+  player._LoadAnimatedModel();
+  // _RAF();
+
+
+  renderer.setAnimationLoop(_RAF);
