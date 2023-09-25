@@ -85,19 +85,29 @@ const numRows = 9
 const numCols = 9
 const tiles = []
 
-  for (let i = 0; i < numRows; i++) {
-      for (let j = 0; j < numCols; j++) {
-          const isMissingTile = (i % 2 === 0 && j % 2 === 0) || (i % 2 === 1 && j % 2 === 1);
-          if (!isMissingTile || i % 4 === 0 || (i - 2) % 4 === 0) {
-              const tileClone = new THREE.Mesh(tileGeometry, tileMaterial.clone());
-              const xOffset = (i - numRows / 2) * (tileSize + gapSize);
-              const yOffset = (j - numCols / 2) * (tileSize + gapSize);
-              tileClone.position.set(xOffset, yOffset, 0);
-              floorContainer.add(tileClone);
-              tiles.push(tileClone);
-          }
-      }
-  }
+for (let i = 0; i < numRows; i++) {
+    for (let j = 0; j < numCols; j++) {
+        const isMissingTile = (i % 2 === 0 && j % 2 === 0) || (i % 2 === 1 && j % 2 === 1);
+        if (!isMissingTile || i % 4 === 0 || (i - 2) % 4 === 0) {
+            const tileClone = new THREE.Mesh(tileGeometry, tileMaterial.clone());
+            const xOffset = (i - numRows / 2) * (tileSize + gapSize);
+            const yOffset = (j - numCols / 2) * (tileSize + gapSize);
+            tileClone.position.set(xOffset, yOffset, 0);
+
+            // Enable shadows for the tile
+            tileClone.castShadow = true;
+            tileClone.receiveShadow = true;
+
+            // Add click event listener to each tile
+            tileClone.addEventListener('click', () => {
+            changeTileColorOnClick(tileClone);
+            });
+
+            floorContainer.add(tileClone);
+            tiles.push(tileClone);
+        }
+    }
+}
 
 
 //scales map path
