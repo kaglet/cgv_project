@@ -80,7 +80,7 @@ class BasicCharacterController {
       const loader = new FBXLoader(this._manager);
 
       loader.load('Walking.fbx', (a) => { _OnLoad('walk', a); });
-
+      loader.load('WalkingBackwards.fbx', (a) => { _OnLoad('back', a); });
       loader.load('Idle.fbx', (a) => { _OnLoad('idle', a); });
 
     });
@@ -273,6 +273,7 @@ class CharacterFSM extends FiniteStateMachine {
   _Init() {
     this._AddState('idle', IdleState);
     this._AddState('walk', WalkState);
+    this._AddState('back', BackState);
 
   }
 };
@@ -325,7 +326,49 @@ class WalkState extends State {
   }
 
   Update(timeElapsed, input) {
-    if (input._keys.forward || input._keys.backward) {
+    if (input._keys.forward ) {
+
+      return;
+    }
+
+    this._parent.SetState('idle');
+  }
+};
+
+class BackState extends State {
+  constructor(parent) {
+    super(parent);
+  }
+
+  get Name() {
+    return 'back';
+  }
+
+  Enter(prevState) {
+    const curAction = this._parent._proxy._animations['back'].action;
+    if (prevState) {
+      const prevAction = this._parent._proxy._animations[prevState.Name].action;
+
+      curAction.enabled = true;
+
+
+        curAction.time = 0.0;
+        curAction.setEffectiveTimeScale(1.0);
+        curAction.setEffectiveWeight(1.0);
+
+
+      curAction.crossFadeFrom(prevAction, 0.5, true);
+      curAction.play();
+    } else {
+      curAction.play();
+    }
+  }
+
+  Exit() {
+  }
+
+  Update(timeElapsed, input) {
+    if ( input._keys.backward) {
 
       return;
     }
@@ -366,8 +409,11 @@ class WalkState extends State {
   }
 
   Update(_, input) {
-    if (input._keys.forward || input._keys.backward) {
+    if (input._keys.forward) {
       this._parent.SetState('walk');
+    }
+    if(input._keys.backward){
+       this._parent.SetState('back');
     }
   }
 };

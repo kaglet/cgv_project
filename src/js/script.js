@@ -7,6 +7,7 @@ import * as THREE from 'three';
 import * as CANNON from 'cannon-es';
 import * as dat from 'dat.gui';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+//import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls.js';
 
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
