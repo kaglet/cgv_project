@@ -74,7 +74,7 @@ const floorContainer = new THREE.Group()
 
 const textureLoader = new THREE.TextureLoader()
 const woodTexture = textureLoader.load(woodTextureImage)
-const walltexture = textureLoader.load(walltextureImage)
+//const walltexture = textureLoader.load(walltextureImage)
 
 
 //const tileMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff })
@@ -166,20 +166,20 @@ floorContainer.position.copy(translationVector);
 scene.add(floorContainer);
 
 // Create room walls
-const roomGeometry = new THREE.BoxGeometry(70, 60, 80)
-const roomMaterial = new THREE.MeshStandardMaterial({ map: walltexture, side: THREE.BackSide }) // Gray color for the room
-const room = new THREE.Mesh(roomGeometry, roomMaterial)
+//const roomGeometry = new THREE.BoxGeometry(70, 60, 80)
+//const roomMaterial = new THREE.MeshStandardMaterial({ map: walltexture, side: THREE.BackSide }) // Gray color for the room
+//const room = new THREE.Mesh(roomGeometry, roomMaterial)
 
 //scene.add(room)
 
 
 // Add ceiling texture (inside the room cube)
-const ceilingTexture = textureLoader.load(ceilingtextureImage); // Load your ceiling texture image
-const ceilingMaterial = new THREE.MeshStandardMaterial({ map: ceilingTexture });
-const ceilingGeometry = new THREE.PlaneGeometry(70, 79.9);
-const ceiling = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
-ceiling.position.set(0,29.99 , 0); // Adjust the position to be above the room cube
-ceiling.rotation.x = Math.PI / 2; // Rotate 90 degrees along the X-axis
+//const ceilingTexture = textureLoader.load(ceilingtextureImage); // Load your ceiling texture image
+//const ceilingMaterial = new THREE.MeshStandardMaterial({ map: ceilingTexture });
+//const ceilingGeometry = new THREE.PlaneGeometry(70, 79.9);
+//const ceiling = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
+//ceiling.position.set(0,29.99 , 0); // Adjust the position to be above the room cube
+//ceiling.rotation.x = Math.PI / 2; // Rotate 90 degrees along the X-axis
 //scene.add(ceiling);
 
 
