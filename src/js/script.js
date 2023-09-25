@@ -44,23 +44,25 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
   }
 
   const timeStep = 1/100;
-  function _RAF() {
-    requestAnimationFrame((t) => {
-      if (_previousRAF === null) {
+  function animate(t) {
+    if (_previousRAF === null) {
         _previousRAF = t;
-      }
+    }
 
-   
+    _RAF();
+    _Step(t - _previousRAF);
+    _previousRAF = t;
 
-      _RAF();
-      objects.world.step(1/60);
+    objects.world.step(timeStep);
 
-  
-      renderer.render(objects.scene, camera.currentCamera);
-      _Step(t - _previousRAF);
-      _previousRAF = t;
-    });
-  }
+    renderer.render(objects.scene, camera.currentCamera);
+    
+}
+
+function _RAF() {
+    requestAnimationFrame(animate);
+}
+
 
   function  _Step(timeElapsed) {
     const timeElapsedS = timeElapsed * 0.001;
@@ -80,7 +82,4 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
   
   player._LoadAnimatedModel();
-   _RAF();
-
-
-  renderer.setAnimationLoop(_RAF);
+  animate(timeStep);

@@ -4,13 +4,13 @@ import * as CANNON from 'cannon-es';
 import woodTextureImage from '../img/woodenfloor.jpg'; // Make sure the path to your wood texture image is correct
 import walltextureImage from '../img/wall.jpg'; // Make sure the path to your wood texture image is correct
 import ceilingtextureImage from '../img/Ceiling.jpg';
-import { currentCamera, topDownCamera } from './camera.js';
+import * as camera from './camera.js';
 
 // Scene
 export const scene = new THREE.Scene();
 
 // world - this is for cannon objects
-export const world = new CANNON.World({
+export var world = new CANNON.World({
     gravity: new CANNON.Vec3(0,-9.81,0)
   });
 
@@ -26,15 +26,6 @@ const boxMat = new THREE.MeshBasicMaterial({
 const boxMesh = new THREE.Mesh(boxGeo, boxMat);
 scene.add(boxMesh);
 
-const boxBody = new CANNON.Body({
-    mass: 1,
-    shape: new CANNON.Box(new CANNON.Vec3(1, 1, 1)),
-    position: new CANNON.Vec3(1, 20, 0),
-  //  material: boxPhysMat
-  });
-  world.addBody(boxBody);
-
-
 //Creating the ground
 const groundGeo = new THREE.PlaneGeometry(70, 80);
 const groundMat = new THREE.MeshBasicMaterial({ 
@@ -44,8 +35,7 @@ const groundMat = new THREE.MeshBasicMaterial({
  });
 export const groundMesh = new THREE.Mesh(groundGeo, groundMat);
 scene.add(groundMesh);
-// renderer.shadowMap.enabled = true;
-// renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
 
 const groundBody = new CANNON.Body({
     shape: new CANNON.Plane(),
@@ -54,9 +44,10 @@ const groundBody = new CANNON.Body({
      type: CANNON.Body.STATIC,
     // material: groundPhysMat
   });
-  world.addBody(groundBody);
-  groundBody.quaternion.setFromEuler(Math.PI / 4, 0, 0);
+
+  groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
   groundBody.position.y -= 30;
+  world.addBody(groundBody);
 
 
 // Create a floor tile
@@ -138,7 +129,7 @@ document.addEventListener('click', (event) => {
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
     // Update the raycaster
-    raycaster.setFromCamera(mouse, currentCamera);
+    raycaster.setFromCamera(mouse, camera.currentCamera);
 
     // Get a list of objects intersected by the raycaster
     const intersects = raycaster.intersectObjects(tiles);
