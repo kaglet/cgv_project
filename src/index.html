@@ -16,12 +16,16 @@
         void main() {
             float newX = sin(position.x * u_time) + sin(position.y * u_time);
             vec3 newPosition = vec3(newX, position.y, position.z);
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
         }
     </script>
     <script id="fragmentShader" type="fragment">
+        uniform float u_time;
+        uniform vec2 u_resolution;
+        uniform vec2 u_mouse;
         void main() {
-            gl_FragColor = vec4(1.0, 0.1, 0.3, 1.0);
+            vec2 st = gl_FragCoord.xy / u_resolution; 
+            gl_FragColor = vec4(0.0, u_mouse.x, u_mouse.y, 1.0);
         }
     </script>
     <script type="module" src="./script.js" defer></script>

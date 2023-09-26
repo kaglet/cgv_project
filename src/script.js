@@ -31,16 +31,23 @@ scene.add(gridHelper);
 const axesHelper = new THREE.AxesHelper(4);
 scene.add(axesHelper);
 
+// variables passed from the js side to the shader program
 const uniforms = {
   u_time: {type: 'f', value: 0.0},
+  u_resolution: {type: 'vec2', value: new THREE.Vector2(window.innerWidth, window.innerHeight).multiplyScalar(window.devicePixelRatio)},
+  u_mouse: {type: 'vec2', value: new THREE.Vector2(0.0, 0.0)}
 };
+
+window.addEventListener('mousemove', (e) => {
+  uniforms.u_mouse.value.set(e.screenX / window.innerWidth, 1 - e.screenY / window.innerHeight);
+});
 
 const planeGeometry = new THREE.PlaneGeometry(10, 10, 30, 30);
 const planeMaterial = new THREE.ShaderMaterial({
   vertexShader: document.getElementById('vertexShader').textContent,
   fragmentShader: document.getElementById('fragmentShader').textContent,
-  wireframe: true,
-  uniforms
+  wireframe: false,
+  uniforms,
 });
 const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 scene.add(plane);
