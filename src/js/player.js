@@ -46,8 +46,8 @@ class BasicCharacterController {
 
   _Init(params) {
     this._params = params;
-    this._decceleration = new THREE.Vector3(-0.0005, -0.25, -5.0);
-    this._acceleration = new THREE.Vector3(1, 0.25, 100.0);
+    this._decceleration = new THREE.Vector3(-5.0, -0.25, -5.0);
+    this._acceleration = new THREE.Vector3(100, 1, 100.0);
     this._velocity = new THREE.Vector3(0, 0, 0);
 
     this._animations = {};
@@ -109,33 +109,34 @@ class BasicCharacterController {
 
     velocity = this._velocity;
     const frameDecceleration = new THREE.Vector3(
-        velocity.x * this._decceleration.x,
-        velocity.y * this._decceleration.y,
-        velocity.z * this._decceleration.z
+      velocity.x * this._decceleration.x,
+      velocity.y * this._decceleration.y,
+      velocity.z * this._decceleration.z
     );
     frameDecceleration.multiplyScalar(timeInSeconds);
     frameDecceleration.z = Math.sign(frameDecceleration.z) * Math.min(
-        Math.abs(frameDecceleration.z), Math.abs(velocity.z));
+      Math.abs(frameDecceleration.z), Math.abs(velocity.z)
+    );
 
     velocity.add(frameDecceleration);
 
-    //character model
+    // Character model
     const controlObject = this._target;
-    //fp camera
+    // FP camera
     const cameraObject = this._params.camera;
 
-    // Update camera's position to match the characters position
-    cameraObject.position.copy(controlObject.position);
-    //translate up so above head not in floor
-    cameraObject.position.y += 20;
-
-    const _Q = new THREE.Quaternion();
-    const _A = new THREE.Vector3();
-    const _R = controlObject.quaternion.clone();
+    // Get the camera's direction
+    const cameraDirection = new THREE.Vector3();
+    cameraObject.getWorldDirection(cameraDirection);
+    cameraDirection.y = 0; // Set the camera's vertical (Y-axis) component to 0
 
     const acc = this._acceleration.clone();
 
-    // where movement is done so probably where need to add camera direction
+    // Calculate movement direction based on camera's direction
+    const moveDirection = new THREE.Vector3();
+    moveDirection.copy(cameraDirection);
+
+    // Where movement is done
     if (moveForward) {
       velocity.z += acc.z * timeInSeconds;
     }
@@ -143,42 +144,31 @@ class BasicCharacterController {
       velocity.z -= acc.z * timeInSeconds;
     }
     if (moveLeft) {
-      _A.set(0, 1, 0);
-      _Q.setFromAxisAngle(_A, 4.0 * Math.PI * timeInSeconds * this._acceleration.y);
-      _R.multiply(_Q);
+      velocity.x -= acc.x * timeInSeconds;
     }
     if (moveRight) {
-      _A.set(0, 1, 0);
-      _Q.setFromAxisAngle(_A, 4.0 * -Math.PI * timeInSeconds * this._acceleration.y);
-      _R.multiply(_Q);
+      velocity.x += acc.x * timeInSeconds;
     }
 
-    //saves the new position
-    controlObject.quaternion.copy(_R);
+    // Apply movement direction to character's position
+    controlObject.position.add(moveDirection.normalize().multiplyScalar(velocity.z * timeInSeconds));
+    controlObject.position.add(moveDirection.cross(new THREE.Vector3(0, 1, 0)).normalize().multiplyScalar(velocity.x * timeInSeconds));
 
-    const oldPosition = new THREE.Vector3();
-    oldPosition.copy(controlObject.position);
+    // Rotate the character to face the camera's direction
+    controlObject.rotation.y = Math.atan2(cameraDirection.x, cameraDirection.z);
 
-    const forward = new THREE.Vector3(0, 0, 1);
-    forward.applyQuaternion(controlObject.quaternion);
-    forward.normalize();
-
-    const sideways = new THREE.Vector3(1, 0, 0);
-    sideways.applyQuaternion(controlObject.quaternion);
-    sideways.normalize();
-
-    sideways.multiplyScalar(velocity.x * timeInSeconds);
-    forward.multiplyScalar(velocity.z * timeInSeconds);
-
-    controlObject.position.add(forward);
-    controlObject.position.add(sideways);
-
-    oldPosition.copy(controlObject.position);
+    // Update camera's position to match the character's position
+    cameraObject.position.copy(controlObject.position);
+    // Set the camera's vertical position (Y-axis) to maintain it above the character's head
+    cameraObject.position.y += 20;
 
     if (this._mixer) {
       this._mixer.update(timeInSeconds);
     }
   }
+
+
+
 };
 
 class BasicCharacterControllerInput {
