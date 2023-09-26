@@ -96,78 +96,80 @@ class BasicCharacterController {
       loader.load('Walking.fbx', (a) => { _OnLoad('walk', a); });
       loader.load('WalkingBackwards.fbx', (a) => { _OnLoad('back', a); });
       loader.load('Idle.fbx', (a) => { _OnLoad('idle', a); });
-
+      loader.load('WalkLeft.fbx', (a) => { _OnLoad('left', a); });
+      loader.load('WalkRight.fbx', (a) => { _OnLoad('right', a); });
     });
   }
 
-  Update(timeInSeconds) {
-    if (!this._target) {
-      return;
-    }
+ Update(timeInSeconds) {
+     if (!this._target) {
+       return;
+     }
 
-    this._stateMachine.Update(timeInSeconds, this._input);
+     this._stateMachine.Update(timeInSeconds, this._input);
 
-    velocity = this._velocity;
-    const frameDecceleration = new THREE.Vector3(
-      velocity.x * this._decceleration.x,
-      velocity.y * this._decceleration.y,
-      velocity.z * this._decceleration.z
-    );
-    frameDecceleration.multiplyScalar(timeInSeconds);
-    frameDecceleration.z = Math.sign(frameDecceleration.z) * Math.min(
-      Math.abs(frameDecceleration.z), Math.abs(velocity.z)
-    );
+     velocity = this._velocity;
+     const frameDecceleration = new THREE.Vector3(
+       velocity.x * this._decceleration.x,
+       velocity.y * this._decceleration.y,
+       velocity.z * this._decceleration.z
+     );
+     frameDecceleration.multiplyScalar(timeInSeconds);
+     frameDecceleration.z = Math.sign(frameDecceleration.z) * Math.min(
+       Math.abs(frameDecceleration.z), Math.abs(velocity.z)
+     );
 
-    velocity.add(frameDecceleration);
+     velocity.add(frameDecceleration);
 
-    // Character model
-    const controlObject = this._target;
-    // FP camera
-    const cameraObject = this._params.camera;
+     // Character model
+     const controlObject = this._target;
+     // FP camera
+     const cameraObject = this._params.camera;
 
-    // Get the camera's direction
-    const cameraDirection = new THREE.Vector3();
-    cameraObject.getWorldDirection(cameraDirection);
-    cameraDirection.y = 0; // Set the camera's vertical (Y-axis) component to 0
+     // Get the camera's direction
+     const cameraDirection = new THREE.Vector3();
+     cameraObject.getWorldDirection(cameraDirection);
+     cameraDirection.y = 0; // Set the camera's vertical (Y-axis) component to 0
 
-    const acc = this._acceleration.clone();
+     const acc = this._acceleration.clone();
 
-    // Calculate movement direction based on camera's direction
-    const moveDirection = new THREE.Vector3();
-    moveDirection.copy(cameraDirection);
+     // Calculate movement direction based on camera's direction
+     const moveDirection = new THREE.Vector3();
+     moveDirection.copy(cameraDirection);
 
-    // Where movement is done
-    if (moveForward) {
-      velocity.z += acc.z * timeInSeconds;
-    }
-    if (moveBackward) {
-      velocity.z -= acc.z * timeInSeconds;
-    }
-    if (moveLeft) {
-      velocity.x -= acc.x * timeInSeconds;
-    }
-    if (moveRight) {
-      velocity.x += acc.x * timeInSeconds;
-    }
+     // Separate vector for left and right movement
+     const strafeDirection = new THREE.Vector3(cameraDirection.z, 0, -cameraDirection.x);
 
-    // Apply movement direction to character's position
-    controlObject.position.add(moveDirection.normalize().multiplyScalar(velocity.z * timeInSeconds));
-    controlObject.position.add(moveDirection.cross(new THREE.Vector3(0, 1, 0)).normalize().multiplyScalar(velocity.x * timeInSeconds));
+     // Where movement is done
+     if (moveForward) {
+       velocity.z += acc.z * timeInSeconds;
+     }
+     if (moveBackward) {
+       velocity.z -= acc.z * timeInSeconds;
+     }
+     if (moveRight) {
+       velocity.x -= acc.x * timeInSeconds;
+     }
+     if (moveLeft) {
+       velocity.x += acc.x * timeInSeconds;
+     }
 
-    // Rotate the character to face the camera's direction
-    controlObject.rotation.y = Math.atan2(cameraDirection.x, cameraDirection.z);
+     // Apply movement direction to character's position
+     controlObject.position.add(moveDirection.normalize().multiplyScalar(velocity.z * timeInSeconds));
+     controlObject.position.add(strafeDirection.normalize().multiplyScalar(velocity.x * timeInSeconds));
 
-    // Update camera's position to match the character's position
-    cameraObject.position.copy(controlObject.position);
-    // Set the camera's vertical position (Y-axis) to maintain it above the character's head
-    cameraObject.position.y += 20;
+     // Rotate the character to face the camera's direction
+     controlObject.rotation.y = Math.atan2(cameraDirection.x, cameraDirection.z);
 
-    if (this._mixer) {
-      this._mixer.update(timeInSeconds);
-    }
-  }
+     // Update camera's position to match the character's position
+     cameraObject.position.copy(controlObject.position);
+     // Set the camera's vertical position (Y-axis) to maintain it above the character's head
+     cameraObject.position.y += 20;
 
-
+     if (this._mixer) {
+       this._mixer.update(timeInSeconds);
+     }
+ }
 
 };
 
@@ -289,6 +291,8 @@ class CharacterFSM extends FiniteStateMachine {
     this._AddState('idle', IdleState);
     this._AddState('walk', WalkState);
     this._AddState('back', BackState);
+    this._AddState('left', LeftState);
+    this._AddState('right', RightState);
 
   }
 };
@@ -392,8 +396,89 @@ class BackState extends State {
   }
 };
 
+class LeftState extends State {
+  constructor(parent) {
+    super(parent);
+  }
+
+  get Name() {
+    return 'left';
+  }
+
+  Enter(prevState) {
+    const curAction = this._parent._proxy._animations['left'].action;
+    if (prevState) {
+      const prevAction = this._parent._proxy._animations[prevState.Name].action;
+
+      curAction.enabled = true;
 
 
+        curAction.time = 0.0;
+        curAction.setEffectiveTimeScale(1.0);
+        curAction.setEffectiveWeight(1.0);
+
+
+      curAction.crossFadeFrom(prevAction, 0.5, true);
+      curAction.play();
+    } else {
+      curAction.play();
+    }
+  }
+
+  Exit() {
+  }
+
+  Update(timeElapsed, input) {
+    if (moveLeft ) {
+
+      return;
+    }
+
+    this._parent.SetState('idle');
+  }
+};
+
+class RightState extends State {
+  constructor(parent) {
+    super(parent);
+  }
+
+  get Name() {
+    return 'right';
+  }
+
+  Enter(prevState) {
+    const curAction = this._parent._proxy._animations['right'].action;
+    if (prevState) {
+      const prevAction = this._parent._proxy._animations[prevState.Name].action;
+
+      curAction.enabled = true;
+
+
+        curAction.time = 0.0;
+        curAction.setEffectiveTimeScale(1.0);
+        curAction.setEffectiveWeight(1.0);
+
+
+      curAction.crossFadeFrom(prevAction, 0.5, true);
+      curAction.play();
+    } else {
+      curAction.play();
+    }
+  }
+
+  Exit() {
+  }
+
+  Update(timeElapsed, input) {
+    if (moveRight ) {
+
+      return;
+    }
+
+    this._parent.SetState('idle');
+  }
+};
 
 
  class IdleState extends State {
@@ -429,6 +514,12 @@ class BackState extends State {
     }
     if(moveBackward){
        this._parent.SetState('back');
+    }
+    if(moveRight){
+       this._parent.SetState('right');
+    }
+    if(moveLeft){
+       this._parent.SetState('left');
     }
   }
 };
