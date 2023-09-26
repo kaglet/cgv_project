@@ -12,8 +12,21 @@ import walltextureImage from '../img/wall.jpg'; // Make sure the path to your wo
 import ceilingtextureImage from '../img/Ceiling.jpg';
 import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader.js';
 import {FirstPersonControls} from 'three/examples/jsm/controls/FirstPersonControls.js';
+import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 
-//Physics
+
+const prevTime = performance.now();
+export const controls = new PointerLockControls( camera.currentCamera, document.body );
+let raycaster=objects.raycaster;
+
+let velocity = new THREE.Vector3();
+const direction = new THREE.Vector3();
+const vertex = new THREE.Vector3();
+let moveForward = false;
+let moveBackward = false;
+let moveLeft = false;
+let moveRight = false;
+
 
  class BasicCharacterControllerProxy {
   constructor(animations) {
@@ -33,7 +46,7 @@ class BasicCharacterController {
 
   _Init(params) {
     this._params = params;
-    this._decceleration = new THREE.Vector3(-0.0005, -0.0001, -5.0);
+    this._decceleration = new THREE.Vector3(-0.0005, -0.25, -5.0);
     this._acceleration = new THREE.Vector3(1, 0.25, 100.0);
     this._velocity = new THREE.Vector3(0, 0, 0);
 
@@ -52,6 +65,7 @@ class BasicCharacterController {
 
     loader.load('ALEX.fbx', (fbx) => {
       fbx.position.y=-30;
+      fbx.rotation.y=10;
       fbx.scale.setScalar(0.1);
       fbx.traverse(c => {
         c.castShadow = true;
@@ -80,7 +94,7 @@ class BasicCharacterController {
       const loader = new FBXLoader(this._manager);
 
       loader.load('Walking.fbx', (a) => { _OnLoad('walk', a); });
-
+      loader.load('WalkingBackwards.fbx', (a) => { _OnLoad('back', a); });
       loader.load('Idle.fbx', (a) => { _OnLoad('idle', a); });
 
     });
@@ -93,7 +107,7 @@ class BasicCharacterController {
 
     this._stateMachine.Update(timeInSeconds, this._input);
 
-    const velocity = this._velocity;
+    velocity = this._velocity;
     const frameDecceleration = new THREE.Vector3(
         velocity.x * this._decceleration.x,
         velocity.y * this._decceleration.y,
@@ -105,37 +119,41 @@ class BasicCharacterController {
 
     velocity.add(frameDecceleration);
 
+    //character model
     const controlObject = this._target;
+    //fp camera
+    const cameraObject = this._params.camera;
+
+    // Update camera's position to match the characters position
+    cameraObject.position.copy(controlObject.position);
+    //translate up so above head not in floor
+    cameraObject.position.y += 20;
+
     const _Q = new THREE.Quaternion();
     const _A = new THREE.Vector3();
     const _R = controlObject.quaternion.clone();
 
     const acc = this._acceleration.clone();
-    if (this._input._keys.shift) {
-      acc.multiplyScalar(2.0);
-    }
 
-    // if (this._stateMachine._currentState.Name == 'idle') {
-    //   acc.multiplyScalar(0.0);
-    // }
-
-    if (this._input._keys.forward) {
+    // where movement is done so probably where need to add camera direction
+    if (moveForward) {
       velocity.z += acc.z * timeInSeconds;
     }
-    if (this._input._keys.backward) {
+    if (moveBackward) {
       velocity.z -= acc.z * timeInSeconds;
     }
-    if (this._input._keys.left) {
+    if (moveLeft) {
       _A.set(0, 1, 0);
       _Q.setFromAxisAngle(_A, 4.0 * Math.PI * timeInSeconds * this._acceleration.y);
       _R.multiply(_Q);
     }
-    if (this._input._keys.right) {
+    if (moveRight) {
       _A.set(0, 1, 0);
       _Q.setFromAxisAngle(_A, 4.0 * -Math.PI * timeInSeconds * this._acceleration.y);
       _R.multiply(_Q);
     }
 
+    //saves the new position
     controlObject.quaternion.copy(_R);
 
     const oldPosition = new THREE.Vector3();
@@ -169,62 +187,69 @@ class BasicCharacterControllerInput {
   }
 
   _Init() {
-    this._keys = {
-      forward: false,
-      backward: false,
-      left: false,
-      right: false,
-      space: false,
-      shift: false,
-    };
+
     document.addEventListener('keydown', (e) => this._onKeyDown(e), false);
     document.addEventListener('keyup', (e) => this._onKeyUp(e), false);
-  }
 
+
+        //code that allows the screen to follow mouse
+        const blocker = document.getElementById( 'blocker' );
+        const instructions = document.getElementById( 'instructions' );
+
+        document.addEventListener( 'click', function () {
+            controls.lock();
+        } );
+
+        controls.addEventListener( 'lock', function () {
+            instructions.style.display = 'none';
+            blocker.style.display = 'none';
+        } );
+
+        controls.addEventListener( 'unlock', function () {
+            blocker.style.display = 'block';
+            instructions.style.display = '';
+        } );
+
+        objects.scene.add(controls.getObject());
+
+  }
+//key press listeners
   _onKeyDown(event) {
     switch (event.keyCode) {
       case 87: // w
-        this._keys.forward = true;
+        moveForward = true;
         break;
       case 65: // a
-        this._keys.left = true;
+        moveLeft = true;
         break;
       case 83: // s
-        this._keys.backward = true;
+        moveBackward = true;
         break;
       case 68: // d
-        this._keys.right = true;
+        moveRight = true;
         break;
-      case 32: // SPACE
-        this._keys.space = true;
-        break;
-      case 16: // SHIFT
-        this._keys.shift = true;
-        break;
+
     }
   }
 
   _onKeyUp(event) {
     switch(event.keyCode) {
       case 87: // w
-        this._keys.forward = false;
+        moveForward=false;
         break;
       case 65: // a
-        this._keys.left = false;
+        moveLeft = false;
         break;
       case 83: // s
-        this._keys.backward = false;
+        moveBackward=false;
         break;
       case 68: // d
-        this._keys.right = false;
+        moveRight = false;
         break;
-      case 32: // SPACE
-        this._keys.space = false;
-        break;
-      case 16: // SHIFT
-        this._keys.shift = false;
-        break;
+
+
     }
+
   }
 };
 
@@ -273,6 +298,7 @@ class CharacterFSM extends FiniteStateMachine {
   _Init() {
     this._AddState('idle', IdleState);
     this._AddState('walk', WalkState);
+    this._AddState('back', BackState);
 
   }
 };
@@ -325,7 +351,49 @@ class WalkState extends State {
   }
 
   Update(timeElapsed, input) {
-    if (input._keys.forward || input._keys.backward) {
+    if (moveForward ) {
+
+      return;
+    }
+
+    this._parent.SetState('idle');
+  }
+};
+
+class BackState extends State {
+  constructor(parent) {
+    super(parent);
+  }
+
+  get Name() {
+    return 'back';
+  }
+
+  Enter(prevState) {
+    const curAction = this._parent._proxy._animations['back'].action;
+    if (prevState) {
+      const prevAction = this._parent._proxy._animations[prevState.Name].action;
+
+      curAction.enabled = true;
+
+
+        curAction.time = 0.0;
+        curAction.setEffectiveTimeScale(1.0);
+        curAction.setEffectiveWeight(1.0);
+
+
+      curAction.crossFadeFrom(prevAction, 0.5, true);
+      curAction.play();
+    } else {
+      curAction.play();
+    }
+  }
+
+  Exit() {
+  }
+
+  Update(timeElapsed, input) {
+    if ( moveBackward) {
 
       return;
     }
@@ -366,8 +434,11 @@ class WalkState extends State {
   }
 
   Update(_, input) {
-    if (input._keys.forward || input._keys.backward) {
+    if (moveForward) {
       this._parent.SetState('walk');
+    }
+    if(moveBackward){
+       this._parent.SetState('back');
     }
   }
 };
@@ -381,4 +452,7 @@ export function _LoadAnimatedModel() {
       scene: objects.scene,
     }
     _controls = new BasicCharacterController(params);
+
+
+
   }
