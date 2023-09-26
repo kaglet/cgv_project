@@ -119,11 +119,14 @@ class BasicCharacterController {
 
     velocity.add(frameDecceleration);
 
+    //character model
     const controlObject = this._target;
+    //fp camera
     const cameraObject = this._params.camera;
 
-    // Update camera's position to match the controlObject's position
+    // Update camera's position to match the characters position
     cameraObject.position.copy(controlObject.position);
+    //translate up so above head not in floor
     cameraObject.position.y += 20;
 
     const _Q = new THREE.Quaternion();
@@ -132,6 +135,7 @@ class BasicCharacterController {
 
     const acc = this._acceleration.clone();
 
+    // where movement is done so probably where need to add camera direction
     if (moveForward) {
       velocity.z += acc.z * timeInSeconds;
     }
@@ -149,6 +153,7 @@ class BasicCharacterController {
       _R.multiply(_Q);
     }
 
+    //saves the new position
     controlObject.quaternion.copy(_R);
 
     const oldPosition = new THREE.Vector3();
@@ -186,6 +191,8 @@ class BasicCharacterControllerInput {
     document.addEventListener('keydown', (e) => this._onKeyDown(e), false);
     document.addEventListener('keyup', (e) => this._onKeyUp(e), false);
 
+
+        //code that allows the screen to follow mouse
         const blocker = document.getElementById( 'blocker' );
         const instructions = document.getElementById( 'instructions' );
 
@@ -206,7 +213,7 @@ class BasicCharacterControllerInput {
         objects.scene.add(controls.getObject());
 
   }
-
+//key press listeners
   _onKeyDown(event) {
     switch (event.keyCode) {
       case 87: // w
