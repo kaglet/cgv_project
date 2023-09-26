@@ -1,14 +1,14 @@
 
-import * as THREE from 'three'
+import * as THREE from 'three';
 import * as CANNON from 'cannon-es';
 import * as script from './script.js'
 import * as objects from './objects.js';
-import * as camera from './camera.js'
+import * as camera from './camera.js';
 
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 //import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import woodTextureImage from '../img/woodenfloor.jpg'; // Make sure the path to your wood texture image is correct
-import walltextureImage from '../img/wall.jpg'; // Make sure the path to your wood texture image is correct
+import walltextureImage from '../img/wall.jpg';
 import ceilingtextureImage from '../img/Ceiling.jpg';
 import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader.js';
 import {FirstPersonControls} from 'three/examples/jsm/controls/FirstPersonControls.js';
@@ -102,72 +102,141 @@ class BasicCharacterController {
   }
 
  Update(timeInSeconds) {
-     if (!this._target) {
-       return;
-     }
+     if(camera.currentCamera===camera.camera){
+         if (!this._target) {
+           return;
+         }
 
-     this._stateMachine.Update(timeInSeconds, this._input);
+         this._stateMachine.Update(timeInSeconds, this._input);
 
-     velocity = this._velocity;
-     const frameDecceleration = new THREE.Vector3(
-       velocity.x * this._decceleration.x,
-       velocity.y * this._decceleration.y,
-       velocity.z * this._decceleration.z
-     );
-     frameDecceleration.multiplyScalar(timeInSeconds);
-     frameDecceleration.z = Math.sign(frameDecceleration.z) * Math.min(
-       Math.abs(frameDecceleration.z), Math.abs(velocity.z)
-     );
+         velocity = this._velocity;
+         const frameDecceleration = new THREE.Vector3(
+           velocity.x * this._decceleration.x,
+           velocity.y * this._decceleration.y,
+           velocity.z * this._decceleration.z
+         );
+         frameDecceleration.multiplyScalar(timeInSeconds);
+         frameDecceleration.z = Math.sign(frameDecceleration.z) * Math.min(
+           Math.abs(frameDecceleration.z), Math.abs(velocity.z)
+         );
 
-     velocity.add(frameDecceleration);
+         velocity.add(frameDecceleration);
 
-     // Character model
-     const controlObject = this._target;
-     // FP camera
-     const cameraObject = this._params.camera;
+         // Character model
+         const controlObject = this._target;
+         // FP camera
+         const cameraObject = this._params.camera;
 
-     // Get the camera's direction
-     const cameraDirection = new THREE.Vector3();
-     cameraObject.getWorldDirection(cameraDirection);
-     cameraDirection.y = 0; // Set the camera's vertical (Y-axis) component to 0
+         // Get the camera's direction
+         const cameraDirection = new THREE.Vector3();
+         cameraObject.getWorldDirection(cameraDirection);
+         cameraDirection.y = 0; // Set the camera's vertical (Y-axis) component to 0
 
-     const acc = this._acceleration.clone();
+         const acc = this._acceleration.clone();
 
-     // Calculate movement direction based on camera's direction
-     const moveDirection = new THREE.Vector3();
-     moveDirection.copy(cameraDirection);
+         // Calculate movement direction based on camera's direction
+         const moveDirection = new THREE.Vector3();
+         moveDirection.copy(cameraDirection);
 
-     // Separate vector for left and right movement
-     const strafeDirection = new THREE.Vector3(cameraDirection.z, 0, -cameraDirection.x);
+         // Separate vector for left and right movement
+         const strafeDirection = new THREE.Vector3(cameraDirection.z, 0, -cameraDirection.x);
 
-     // Where movement is done
-     if (moveForward) {
-       velocity.z += acc.z * timeInSeconds;
-     }
-     if (moveBackward) {
-       velocity.z -= acc.z * timeInSeconds;
-     }
-     if (moveRight) {
-       velocity.x -= acc.x * timeInSeconds;
-     }
-     if (moveLeft) {
-       velocity.x += acc.x * timeInSeconds;
-     }
+         // Where movement is done
+         if (moveForward) {
+           velocity.z += acc.z * timeInSeconds;
+         }
+         if (moveBackward) {
+           velocity.z -= acc.z * timeInSeconds;
+         }
+         if (moveRight) {
+           velocity.x -= acc.x * timeInSeconds;
+         }
+         if (moveLeft) {
+           velocity.x += acc.x * timeInSeconds;
+         }
 
-     // Apply movement direction to character's position
-     controlObject.position.add(moveDirection.normalize().multiplyScalar(velocity.z * timeInSeconds));
-     controlObject.position.add(strafeDirection.normalize().multiplyScalar(velocity.x * timeInSeconds));
+         // Apply movement direction to character's position
+         controlObject.position.add(moveDirection.normalize().multiplyScalar(velocity.z * timeInSeconds));
+         controlObject.position.add(strafeDirection.normalize().multiplyScalar(velocity.x * timeInSeconds));
 
-     // Rotate the character to face the camera's direction
-     controlObject.rotation.y = Math.atan2(cameraDirection.x, cameraDirection.z);
+         // Rotate the character to face the camera's direction
+         controlObject.rotation.y = Math.atan2(cameraDirection.x, cameraDirection.z);
 
-     // Update camera's position to match the character's position
-     cameraObject.position.copy(controlObject.position);
-     // Set the camera's vertical position (Y-axis) to maintain it above the character's head
-     cameraObject.position.y += 20;
+         // Update camera's position to match the character's position
+         cameraObject.position.copy(controlObject.position);
+         // Set the camera's vertical position (Y-axis) to maintain it above the character's head
+         cameraObject.position.y += 20;
 
-     if (this._mixer) {
-       this._mixer.update(timeInSeconds);
+         if (this._mixer) {
+           this._mixer.update(timeInSeconds);
+         }
+     }else if (camera.currentCamera === camera.topDownCamera) {
+        if (!this._target) {
+              return;
+            }
+
+            this._stateMachine.Update(timeInSeconds, this._input);
+
+            const velocity = this._velocity;
+            const frameDecceleration = new THREE.Vector3(
+                velocity.x * this._decceleration.x,
+                velocity.y * this._decceleration.y,
+                velocity.z * this._decceleration.z
+            );
+            frameDecceleration.multiplyScalar(timeInSeconds);
+            frameDecceleration.z = Math.sign(frameDecceleration.z) * Math.min(
+                Math.abs(frameDecceleration.z), Math.abs(velocity.z));
+
+            velocity.add(frameDecceleration);
+
+            const controlObject = this._target;
+            const _Q = new THREE.Quaternion();
+            const _A = new THREE.Vector3();
+            const _R = controlObject.quaternion.clone();
+
+            const acc = this._acceleration.clone();
+
+            if (moveForward) {
+              velocity.z += acc.z * timeInSeconds;
+            }
+            if (moveBackward) {
+              velocity.z -= acc.z * timeInSeconds;
+            }
+            if (moveLeft) {
+              _A.set(0, 1, 0);
+              _Q.setFromAxisAngle(_A, 4.0 * Math.PI * timeInSeconds * (this._acceleration.y *0.5));
+              _R.multiply(_Q);
+            }
+            if (moveRight) {
+              _A.set(0, 1, 0);
+              _Q.setFromAxisAngle(_A, 4.0 * -Math.PI * timeInSeconds * (this._acceleration.y *0.5));
+              _R.multiply(_Q);
+            }
+
+            controlObject.quaternion.copy(_R);
+
+            const oldPosition = new THREE.Vector3();
+            oldPosition.copy(controlObject.position);
+
+            const forward = new THREE.Vector3(0, 0, 1);
+            forward.applyQuaternion(controlObject.quaternion);
+            forward.normalize();
+
+            const sideways = new THREE.Vector3(1, 0, 0);
+            sideways.applyQuaternion(controlObject.quaternion);
+            sideways.normalize();
+
+            sideways.multiplyScalar(velocity.x * timeInSeconds);
+            forward.multiplyScalar(velocity.z * timeInSeconds);
+
+            controlObject.position.add(forward);
+            controlObject.position.add(sideways);
+
+            oldPosition.copy(controlObject.position);
+
+            if (this._mixer) {
+              this._mixer.update(timeInSeconds);
+            }
      }
  }
 
