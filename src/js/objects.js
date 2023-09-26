@@ -124,13 +124,14 @@ tileMaterial.transparent = true;
 }
 
 // clicking the tiles?
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
+//export const raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );
+export const raycaster=new THREE.Raycaster();
+const mouse = new THREE.Vector2(0,0);
 
 document.addEventListener('click', (event) => {
     // Calculate mouse coordinates in normalized device coordinates (NDC)
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    mouse.x =0;
+    mouse.y = 0;
 
     // Update the raycaster
     raycaster.setFromCamera(mouse, camera.currentCamera);

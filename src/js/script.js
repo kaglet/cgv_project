@@ -7,7 +7,11 @@ import * as THREE from 'three';
 import * as CANNON from 'cannon-es';
 import * as dat from 'dat.gui';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-//import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls.js';
+
+import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
+
+
+
 
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -25,16 +29,13 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
     }, false);
 
 
-    const controls = new OrbitControls(
-    camera.currentCamera, renderer.domElement);
-    controls.target.set(0, 10, 0);
-    controls.update();
 
 
     var _mixers = [];
     var _previousRAF = null;
-   
-
+   const crosshairs = document.getElementById('crosshairs');
+   document.body.appendChild(crosshairs);
+crosshairs.style.display = 'block';
   function  _OnWindowResize() {
     camera.currentCamera.aspect = window.innerWidth / window.innerHeight;
     camera.currentCamera.updateProjectionMatrix();
@@ -53,7 +54,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
       _RAF();
 
 objects.world.step(1/60);
-  
+
       renderer.render(objects.scene, camera.currentCamera);
       _Step(t - _previousRAF);
       _previousRAF = t;
