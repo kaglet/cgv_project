@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
+import cosmos from './cosmos.jpg';
 
 const renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -35,7 +36,8 @@ scene.add(axesHelper);
 const uniforms = {
   u_time: {type: 'f', value: 0.0},
   u_resolution: {type: 'vec2', value: new THREE.Vector2(window.innerWidth, window.innerHeight).multiplyScalar(window.devicePixelRatio)},
-  u_mouse: {type: 'vec2', value: new THREE.Vector2(0.0, 0.0)}
+  u_mouse: {type: 'vec2', value: new THREE.Vector2(0.0, 0.0)},
+  image: {type: 't', value: new THREE.TextureLoader().load(cosmos)}
 };
 
 window.addEventListener('mousemove', (e) => {
