@@ -288,11 +288,6 @@ class BasicCharacterController {
     playerBody.velocity.y += this._params.world.gravity.y * timeInSeconds;
     playerBody.position.copy(controlObject.position);
     playerBody.quaternion.copy(controlObject.quaternion);
-
-
-    console.log("Player Y Position:", characterModel.position.y);
-    console.log("Player Y Velocity:", playerBody.velocity.y);
-
   }
 
 };
@@ -664,9 +659,7 @@ export function _LoadAnimatedModel() {
 }
 
 export function animated_objects() {
-
-  characterModel.position.copy(playerBody.position);
-  //characterModel.quaternion.copy(playerBody.quaternion);
-
+  if (characterModel && playerBody) {
+    characterModel.position.copy(playerBody.position);
+  }
 }
-

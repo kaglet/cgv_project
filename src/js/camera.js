@@ -4,7 +4,7 @@ import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonCont
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 // Define the first camera (you can customize its parameters)
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 30000);
 camera.position.set(0, -10, 0);
 
 // Define the top-down camera (you can customize its parameters)
