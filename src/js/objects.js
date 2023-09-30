@@ -1,9 +1,11 @@
-import * as THREE from 'three'
-import * as CANNON from 'cannon-es';
+import * as THREE from 'three';
 
+import * as CANNON from 'cannon-es';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import woodTextureImage from '../img/woodenfloor.jpg'; // Make sure the path to your wood texture image is correct
-import walltextureImage from '../img/wall.jpg'; // Make sure the path to your wood texture image is correct
-import ceilingtextureImage from '../img/Ceiling.jpg';
+import walltextureImage from '../img/forest-343483_960_720.jpg'; // Make sure the path to your wood texture image is correct
+import ceilingtextureImage from '../img/sky.jpg';
+
 import * as camera from './camera.js';
 
 // Scene
@@ -65,7 +67,7 @@ const floorContainer = new THREE.Group()
 
 const textureLoader = new THREE.TextureLoader()
 const woodTexture = textureLoader.load(woodTextureImage)
-//const walltexture = textureLoader.load(walltextureImage)
+const walltexture = textureLoader.load(walltextureImage)
 
 
 //const tileMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff })
@@ -158,34 +160,77 @@ floorContainer.position.copy(translationVector);
 scene.add(floorContainer);
 
 // Create room walls
-//const roomGeometry = new THREE.BoxGeometry(70, 60, 80)
-//const roomMaterial = new THREE.MeshStandardMaterial({ map: walltexture, side: THREE.BackSide }) // Gray color for the room
-//const room = new THREE.Mesh(roomGeometry, roomMaterial)
+const roomGeometry = new THREE.BoxGeometry(70, 80, 100);
+const roomMaterial = new THREE.MeshStandardMaterial({ map: walltexture, side: THREE.BackSide }) // Gray color for the room
+const room = new THREE.Mesh(roomGeometry, roomMaterial)
 
-//scene.add(room)
-
-
-// Add ceiling texture (inside the room cube)
-//const ceilingTexture = textureLoader.load(ceilingtextureImage); // Load your ceiling texture image
-//const ceilingMaterial = new THREE.MeshStandardMaterial({ map: ceilingTexture });
-//const ceilingGeometry = new THREE.PlaneGeometry(70, 79.9);
-//const ceiling = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
-//ceiling.position.set(0,29.99 , 0); // Adjust the position to be above the room cube
-//ceiling.rotation.x = Math.PI / 2; // Rotate 90 degrees along the X-axis
-//scene.add(ceiling);
+scene.add(room)
 
 
-//const ceilingTexture = textureLoader.load(ceilingtextureImage); // Load your ceiling texture image
-//const ceilingMaterial = new THREE.MeshBasicMaterial({ map: ceilingTexture });
-//const ceilingGeometry = new THREE.PlaneGeometry(12, 12);
-const floorWidth = numRows * (tileSize + gapSize);
-const floorHeight = numCols * (tileSize + gapSize);
-const floorGeometry = new THREE.PlaneGeometry(70, 79.9);
-const floorMaterial = new THREE.MeshStandardMaterial({ map: woodTexture });
-const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-floor.rotation.x = -Math.PI / 2; // Rotate the floor to be horizontal
-floor.position.set(0, -29.99, 0); // Set the floor position to be just below the tiles
-scene.add(floor);
+const ceilingTexture = textureLoader.load(ceilingtextureImage); // Load your ceiling texture image
+const ceilingMaterial = new THREE.MeshStandardMaterial({ map: ceilingTexture });
+const ceilingGeometry = new THREE.PlaneGeometry(70, 79.9);
+const ceiling = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
+ceiling.position.set(0,29.99 , 0); // Adjust the position to be above the room cube
+ceiling.rotation.x = Math.PI / 2; // Rotate 90 degrees along the X-axis
+scene.add(ceiling);
+const loader = new GLTFLoader();
+
+loader.load('/ground_material.glb', function (gltf) {
+    gltf.scene.rotation.y=Math.PI/2;
+    gltf.scene.scale.set(1,1,1);
+    gltf.scene.position.y=-29.9;
+    gltf.scene.position.x=-0;
+    gltf.scene.position.z=0;
+    scene.add(gltf.scene);
+
+}, undefined, function (error) {S
+    console.error(error);
+});
+loader.load('/lion_statue.glb', function (gltf) {
+    gltf.scene.rotation.y=Math.PI/2;
+    gltf.scene.scale.set(30,30,30);
+    gltf.scene.position.y=-35;
+    gltf.scene.position.x=-20;
+    gltf.scene.position.z=-45;
+    scene.add(gltf.scene);
+
+}, undefined, function (error) {
+    console.error(error);
+});
+loader.load('/dragon_ball_z_-_guko_character.glb', function (gltf) {
+    gltf.scene.rotation.y=Math.PI/2;
+    gltf.scene.scale.set(1,1,1);
+    gltf.scene.position.y=+5;
+    gltf.scene.position.x=-35;
+    gltf.scene.position.z=+30;
+    scene.add(gltf.scene);
+
+}, undefined, function (error) {
+    console.error(error);
+});
+loader.load('/luffy.glb', function (gltf) {
+    gltf.scene.rotation.y=Math.PI/2;
+    gltf.scene.scale.set(0.15,0.15,0.15);
+    gltf.scene.position.y=-31;
+    gltf.scene.position.x=15;
+    gltf.scene.position.z=45;
+    scene.add(gltf.scene);
+
+}, undefined, function (error) {
+    console.error(error);
+});
+// const ceilingTexture = textureLoader.load(ceilingtextureImage); // Load your ceiling texture image
+// const ceilingMaterial = new THREE.MeshBasicMaterial({ map: ceilingTexture });
+// const ceilingGeometry = new THREE.PlaneGeometry(12, 12);
+// const floorWidth = numRows * (tileSize + gapSize);
+// const floorHeight = numCols * (tileSize + gapSize);
+// const floorGeometry = new THREE.PlaneGeometry(70, 79.9);
+// const floorMaterial = new THREE.MeshStandardMaterial({ map: woodTexture });
+// const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+// floor.rotation.x = -Math.PI / 2; // Rotate the floor to be horizontal
+// floor.position.set(0, -29.99, 0); // Set the floor position to be just below the tiles
+// scene.add(floor);
 
 const target = new THREE.Object3D();
 target.position.copy(floorContainer.position); // Adjust the target's position as needed
