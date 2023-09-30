@@ -17,7 +17,7 @@ export var world = new CANNON.World({
 const axesHelper = new THREE.AxesHelper(50); //so we can see the axes for debugging
 scene.add(axesHelper);
 
-const boxGeo = new THREE.BoxGeometry(2, 2, 2);
+const boxGeo = new THREE.BoxGeometry(5, 5, 5);
 const boxMat = new THREE.MeshBasicMaterial({
 	color: 0x00ff00,
 	wireframe: true
@@ -25,6 +25,15 @@ const boxMat = new THREE.MeshBasicMaterial({
 
 const boxMesh = new THREE.Mesh(boxGeo, boxMat);
 scene.add(boxMesh);
+
+const boxBody = new CANNON.Body({
+    mass: 1,
+    shape: new CANNON.Box(new CANNON.Vec3(5, 5, 5)),
+    position: new CANNON.Vec3(30, 30, 0),
+  //  material: boxPhysMat
+  });
+  world.addBody(boxBody);
+
 
 //Creating the ground
 const groundGeo = new THREE.PlaneGeometry(70, 80);

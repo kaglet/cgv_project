@@ -10,14 +10,14 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import woodTextureImage from '../img/woodenfloor.jpg'; // Make sure the path to your wood texture image is correct
 import walltextureImage from '../img/wall.jpg';
 import ceilingtextureImage from '../img/Ceiling.jpg';
-import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader.js';
-import {FirstPersonControls} from 'three/examples/jsm/controls/FirstPersonControls.js';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls.js';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 
 
 const prevTime = performance.now();
-export const controls = new PointerLockControls( camera.currentCamera, document.body );
-let raycaster=objects.raycaster;
+export const controls = new PointerLockControls(camera.currentCamera, document.body);
+let raycaster = objects.raycaster;
 
 let velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
@@ -26,9 +26,10 @@ let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
 let moveRight = false;
+let playerBody;
+let characterModel = null;
 
-
- class BasicCharacterControllerProxy {
+class BasicCharacterControllerProxy {
   constructor(animations) {
     this._animations = animations;
   }
@@ -41,6 +42,18 @@ let moveRight = false;
 
 class BasicCharacterController {
   constructor(params) {
+
+    params.world.gravity.set(0, -9.81, 0);
+
+    // Create a Cannon.js body for the player character
+    playerBody = new CANNON.Body({
+      mass: 100, // Adjust the mass as needed
+      shape: new CANNON.Box(new CANNON.Vec3(0.5, 1, 0.5)), // Adjust the size as needed
+    });
+
+    // Add the body to the Cannon.js world
+    params.world.addBody(playerBody);
+
     this._Init(params);
   }
 
@@ -53,9 +66,30 @@ class BasicCharacterController {
     this._animations = {};
     this._input = new BasicCharacterControllerInput();
     this._stateMachine = new CharacterFSM(
-        new BasicCharacterControllerProxy(this._animations));
+      new BasicCharacterControllerProxy(this._animations));
 
     this._LoadModels();
+
+    playerBody.addEventListener('collide', (event) => {
+      console.log("collide")
+      // Handle collisions here
+
+      // Access the other body involved in the collision
+      const otherBody = event.body;
+
+      // Check if the collision involves a specific type of object
+      // You might want to check the type or some property of the other body
+      if (otherBody.userData && otherBody.userData.type === 'obstacle') {
+        // If it's an obstacle, prevent the player from moving further in that direction
+        // For example, if you want to prevent movement in the X direction:
+        playerBody.velocity.x = 0;
+        playerBody.velocity.z = 0;
+        playerBody.velocity.y = 0;
+
+        // You can do the same for other axes (e.g., playerBody.velocity.y or playerBody.velocity.z)
+      }
+    });
+
   }
 
   _LoadModels() {
@@ -64,8 +98,9 @@ class BasicCharacterController {
     const loader = new FBXLoader();
 
     loader.load('ALEX.fbx', (fbx) => {
-      fbx.position.y=-30;
-      fbx.rotation.y=10;
+      characterModel = fbx;
+      // fbx.position.y=0;
+      // fbx.rotation.y=10;
       fbx.scale.setScalar(0.1);
       fbx.traverse(c => {
         c.castShadow = true;
@@ -101,144 +136,164 @@ class BasicCharacterController {
     });
   }
 
- Update(timeInSeconds) {
-     if(camera.currentCamera===camera.camera){
-         if (!this._target) {
-           return;
-         }
+  Update(timeInSeconds) {
+    const controlObject = this._target;
+    if (!characterModel) {
+      return;
+    }
 
-         this._stateMachine.Update(timeInSeconds, this._input);
 
-         velocity = this._velocity;
-         const frameDecceleration = new THREE.Vector3(
-           velocity.x * this._decceleration.x,
-           velocity.y * this._decceleration.y,
-           velocity.z * this._decceleration.z
-         );
-         frameDecceleration.multiplyScalar(timeInSeconds);
-         frameDecceleration.z = Math.sign(frameDecceleration.z) * Math.min(
-           Math.abs(frameDecceleration.z), Math.abs(velocity.z)
-         );
 
-         velocity.add(frameDecceleration);
 
-         // Character model
-         const controlObject = this._target;
-         // FP camera
-         const cameraObject = this._params.camera;
+    if (camera.currentCamera === camera.camera) {
 
-         // Get the camera's direction
-         const cameraDirection = new THREE.Vector3();
-         cameraObject.getWorldDirection(cameraDirection);
-         cameraDirection.y = 0; // Set the camera's vertical (Y-axis) component to 0
+      if (!this._target) {
+        return;
+      }
 
-         const acc = this._acceleration.clone();
+      this._stateMachine.Update(timeInSeconds, this._input);
 
-         // Calculate movement direction based on camera's direction
-         const moveDirection = new THREE.Vector3();
-         moveDirection.copy(cameraDirection);
+      velocity = this._velocity;
+      const frameDecceleration = new THREE.Vector3(
+        velocity.x * this._decceleration.x,
+        velocity.y * this._decceleration.y,
+        velocity.z * this._decceleration.z
+      );
+      frameDecceleration.multiplyScalar(timeInSeconds);
+      frameDecceleration.z = Math.sign(frameDecceleration.z) * Math.min(
+        Math.abs(frameDecceleration.z), Math.abs(velocity.z)
+      );
 
-         // Separate vector for left and right movement
-         const strafeDirection = new THREE.Vector3(cameraDirection.z, 0, -cameraDirection.x);
+      velocity.add(frameDecceleration);
 
-         // Where movement is done
-         if (moveForward) {
-           velocity.z += acc.z * timeInSeconds;
-         }
-         if (moveBackward) {
-           velocity.z -= acc.z * timeInSeconds;
-         }
-         if (moveRight) {
-           velocity.x -= acc.x * timeInSeconds;
-         }
-         if (moveLeft) {
-           velocity.x += acc.x * timeInSeconds;
-         }
 
-         // Apply movement direction to character's position
-         controlObject.position.add(moveDirection.normalize().multiplyScalar(velocity.z * timeInSeconds));
-         controlObject.position.add(strafeDirection.normalize().multiplyScalar(velocity.x * timeInSeconds));
+      // FP camera
+      const cameraObject = this._params.camera;
 
-         // Rotate the character to face the camera's direction
-         controlObject.rotation.y = Math.atan2(cameraDirection.x, cameraDirection.z);
+      // Get the camera's direction
+      const cameraDirection = new THREE.Vector3();
+      cameraObject.getWorldDirection(cameraDirection);
+      cameraDirection.y = 0; // Set the camera's vertical (Y-axis) component to 0
 
-         // Update camera's position to match the character's position
-         cameraObject.position.copy(controlObject.position);
-         // Set the camera's vertical position (Y-axis) to maintain it above the character's head
-         cameraObject.position.y += 20;
+      const acc = this._acceleration.clone();
 
-         if (this._mixer) {
-           this._mixer.update(timeInSeconds);
-         }
-     }else if (camera.currentCamera === camera.topDownCamera) {
-        if (!this._target) {
-              return;
-            }
+      // Calculate movement direction based on camera's direction
+      const moveDirection = new THREE.Vector3();
+      moveDirection.copy(cameraDirection);
 
-            this._stateMachine.Update(timeInSeconds, this._input);
+      // Separate vector for left and right movement
+      const strafeDirection = new THREE.Vector3(cameraDirection.z, 0, -cameraDirection.x);
 
-            const velocity = this._velocity;
-            const frameDecceleration = new THREE.Vector3(
-                velocity.x * this._decceleration.x,
-                velocity.y * this._decceleration.y,
-                velocity.z * this._decceleration.z
-            );
-            frameDecceleration.multiplyScalar(timeInSeconds);
-            frameDecceleration.z = Math.sign(frameDecceleration.z) * Math.min(
-                Math.abs(frameDecceleration.z), Math.abs(velocity.z));
+      // Where movement is done
+      if (moveForward) {
+        velocity.z += acc.z * timeInSeconds;
+      }
+      if (moveBackward) {
+        velocity.z -= acc.z * timeInSeconds;
+      }
+      if (moveRight) {
+        velocity.x -= acc.x * timeInSeconds;
+      }
+      if (moveLeft) {
+        velocity.x += acc.x * timeInSeconds;
+      }
 
-            velocity.add(frameDecceleration);
 
-            const controlObject = this._target;
-            const _Q = new THREE.Quaternion();
-            const _A = new THREE.Vector3();
-            const _R = controlObject.quaternion.clone();
+      // Apply movement direction to character's position
+      controlObject.position.add(moveDirection.normalize().multiplyScalar(velocity.z * timeInSeconds));
+      controlObject.position.add(strafeDirection.normalize().multiplyScalar(velocity.x * timeInSeconds));
 
-            const acc = this._acceleration.clone();
 
-            if (moveForward) {
-              velocity.z += acc.z * timeInSeconds;
-            }
-            if (moveBackward) {
-              velocity.z -= acc.z * timeInSeconds;
-            }
-            if (moveLeft) {
-              _A.set(0, 1, 0);
-              _Q.setFromAxisAngle(_A, 4.0 * Math.PI * timeInSeconds * (this._acceleration.y *0.5));
-              _R.multiply(_Q);
-            }
-            if (moveRight) {
-              _A.set(0, 1, 0);
-              _Q.setFromAxisAngle(_A, 4.0 * -Math.PI * timeInSeconds * (this._acceleration.y *0.5));
-              _R.multiply(_Q);
-            }
+      // Rotate the character to face the camera's direction
+      controlObject.rotation.y = Math.atan2(cameraDirection.x, cameraDirection.z);
 
-            controlObject.quaternion.copy(_R);
+      // Update camera's position to match the character's position
+      cameraObject.position.copy(controlObject.position);
+      // Set the camera's vertical position (Y-axis) to maintain it above the character's head
+      cameraObject.position.y += 20;
 
-            const oldPosition = new THREE.Vector3();
-            oldPosition.copy(controlObject.position);
+      if (this._mixer) {
+        this._mixer.update(timeInSeconds);
+      }
+    } else if (camera.currentCamera === camera.topDownCamera) {
+      if (!this._target) {
+        return;
+      }
 
-            const forward = new THREE.Vector3(0, 0, 1);
-            forward.applyQuaternion(controlObject.quaternion);
-            forward.normalize();
+      this._stateMachine.Update(timeInSeconds, this._input);
 
-            const sideways = new THREE.Vector3(1, 0, 0);
-            sideways.applyQuaternion(controlObject.quaternion);
-            sideways.normalize();
+      const velocity = this._velocity;
+      const frameDecceleration = new THREE.Vector3(
+        velocity.x * this._decceleration.x,
+        velocity.y * this._decceleration.y,
+        velocity.z * this._decceleration.z
+      );
+      frameDecceleration.multiplyScalar(timeInSeconds);
+      frameDecceleration.z = Math.sign(frameDecceleration.z) * Math.min(
+        Math.abs(frameDecceleration.z), Math.abs(velocity.z));
 
-            sideways.multiplyScalar(velocity.x * timeInSeconds);
-            forward.multiplyScalar(velocity.z * timeInSeconds);
+      velocity.add(frameDecceleration);
 
-            controlObject.position.add(forward);
-            controlObject.position.add(sideways);
 
-            oldPosition.copy(controlObject.position);
+      const _Q = new THREE.Quaternion();
+      const _A = new THREE.Vector3();
+      const _R = controlObject.quaternion.clone();
 
-            if (this._mixer) {
-              this._mixer.update(timeInSeconds);
-            }
-     }
- }
+      const acc = this._acceleration.clone();
+
+      if (moveForward) {
+        velocity.z += acc.z * timeInSeconds;
+      }
+      if (moveBackward) {
+        velocity.z -= acc.z * timeInSeconds;
+      }
+      if (moveLeft) {
+        _A.set(0, 1, 0);
+        _Q.setFromAxisAngle(_A, 4.0 * Math.PI * timeInSeconds * (this._acceleration.y * 0.5));
+        _R.multiply(_Q);
+      }
+      if (moveRight) {
+        _A.set(0, 1, 0);
+        _Q.setFromAxisAngle(_A, 4.0 * -Math.PI * timeInSeconds * (this._acceleration.y * 0.5));
+        _R.multiply(_Q);
+      }
+
+      controlObject.quaternion.copy(_R);
+
+      const oldPosition = new THREE.Vector3();
+      oldPosition.copy(controlObject.position);
+
+      const forward = new THREE.Vector3(0, 0, 1);
+      forward.applyQuaternion(controlObject.quaternion);
+      forward.normalize();
+
+      const sideways = new THREE.Vector3(1, 0, 0);
+      sideways.applyQuaternion(controlObject.quaternion);
+      sideways.normalize();
+
+      sideways.multiplyScalar(velocity.x * timeInSeconds);
+      forward.multiplyScalar(velocity.z * timeInSeconds);
+
+      controlObject.position.add(forward);
+      controlObject.position.add(sideways);
+
+      oldPosition.copy(controlObject.position);
+
+      if (this._mixer) {
+        this._mixer.update(timeInSeconds);
+      }
+    }
+
+
+    playerBody.velocity.y += this._params.world.gravity.y * timeInSeconds;
+    playerBody.position.copy(controlObject.position);
+    playerBody.quaternion.copy(controlObject.quaternion);
+
+
+    console.log("Player Y Position:", characterModel.position.y);
+    console.log("Player Y Velocity:", playerBody.velocity.y);
+
+  }
 
 };
 
@@ -253,28 +308,28 @@ class BasicCharacterControllerInput {
     document.addEventListener('keyup', (e) => this._onKeyUp(e), false);
 
 
-        //code that allows the screen to follow mouse
-        const blocker = document.getElementById( 'blocker' );
-        const instructions = document.getElementById( 'instructions' );
+    //code that allows the screen to follow mouse
+    const blocker = document.getElementById('blocker');
+    const instructions = document.getElementById('instructions');
 
-        document.addEventListener( 'click', function () {
-            controls.lock();
-        } );
+    document.addEventListener('click', function () {
+      controls.lock();
+    });
 
-        controls.addEventListener( 'lock', function () {
-            instructions.style.display = 'none';
-            blocker.style.display = 'none';
-        } );
+    controls.addEventListener('lock', function () {
+      instructions.style.display = 'none';
+      blocker.style.display = 'none';
+    });
 
-        controls.addEventListener( 'unlock', function () {
-            blocker.style.display = 'block';
-            instructions.style.display = '';
-        } );
+    controls.addEventListener('unlock', function () {
+      blocker.style.display = 'block';
+      instructions.style.display = '';
+    });
 
-        objects.scene.add(controls.getObject());
+    objects.scene.add(controls.getObject());
 
   }
-//key press listeners
+  //key press listeners
   _onKeyDown(event) {
     switch (event.keyCode) {
       case 87: // w
@@ -294,15 +349,15 @@ class BasicCharacterControllerInput {
   }
 
   _onKeyUp(event) {
-    switch(event.keyCode) {
+    switch (event.keyCode) {
       case 87: // w
-        moveForward=false;
+        moveForward = false;
         break;
       case 65: // a
         moveLeft = false;
         break;
       case 83: // s
-        moveBackward=false;
+        moveBackward = false;
         break;
       case 68: // d
         moveRight = false;
@@ -372,9 +427,9 @@ class State {
     this._parent = parent;
   }
 
-  Enter() {}
-  Exit() {}
-  Update() {}
+  Enter() { }
+  Exit() { }
+  Update() { }
 };
 
 
@@ -398,9 +453,9 @@ class WalkState extends State {
       curAction.enabled = true;
 
 
-        curAction.time = 0.0;
-        curAction.setEffectiveTimeScale(1.0);
-        curAction.setEffectiveWeight(1.0);
+      curAction.time = 0.0;
+      curAction.setEffectiveTimeScale(1.0);
+      curAction.setEffectiveWeight(1.0);
 
 
       curAction.crossFadeFrom(prevAction, 0.5, true);
@@ -414,7 +469,7 @@ class WalkState extends State {
   }
 
   Update(timeElapsed, input) {
-    if (moveForward ) {
+    if (moveForward) {
 
       return;
     }
@@ -440,9 +495,9 @@ class BackState extends State {
       curAction.enabled = true;
 
 
-        curAction.time = 0.0;
-        curAction.setEffectiveTimeScale(1.0);
-        curAction.setEffectiveWeight(1.0);
+      curAction.time = 0.0;
+      curAction.setEffectiveTimeScale(1.0);
+      curAction.setEffectiveWeight(1.0);
 
 
       curAction.crossFadeFrom(prevAction, 0.5, true);
@@ -456,7 +511,7 @@ class BackState extends State {
   }
 
   Update(timeElapsed, input) {
-    if ( moveBackward) {
+    if (moveBackward) {
 
       return;
     }
@@ -482,9 +537,9 @@ class LeftState extends State {
       curAction.enabled = true;
 
 
-        curAction.time = 0.0;
-        curAction.setEffectiveTimeScale(1.0);
-        curAction.setEffectiveWeight(1.0);
+      curAction.time = 0.0;
+      curAction.setEffectiveTimeScale(1.0);
+      curAction.setEffectiveWeight(1.0);
 
 
       curAction.crossFadeFrom(prevAction, 0.5, true);
@@ -498,7 +553,7 @@ class LeftState extends State {
   }
 
   Update(timeElapsed, input) {
-    if (moveLeft ) {
+    if (moveLeft) {
 
       return;
     }
@@ -524,9 +579,9 @@ class RightState extends State {
       curAction.enabled = true;
 
 
-        curAction.time = 0.0;
-        curAction.setEffectiveTimeScale(1.0);
-        curAction.setEffectiveWeight(1.0);
+      curAction.time = 0.0;
+      curAction.setEffectiveTimeScale(1.0);
+      curAction.setEffectiveWeight(1.0);
 
 
       curAction.crossFadeFrom(prevAction, 0.5, true);
@@ -540,7 +595,7 @@ class RightState extends State {
   }
 
   Update(timeElapsed, input) {
-    if (moveRight ) {
+    if (moveRight) {
 
       return;
     }
@@ -550,7 +605,7 @@ class RightState extends State {
 };
 
 
- class IdleState extends State {
+class IdleState extends State {
   constructor(parent) {
     super(parent);
   }
@@ -581,14 +636,14 @@ class RightState extends State {
     if (moveForward) {
       this._parent.SetState('walk');
     }
-    if(moveBackward){
-       this._parent.SetState('back');
+    if (moveBackward) {
+      this._parent.SetState('back');
     }
-    if(moveRight){
-       this._parent.SetState('right');
+    if (moveRight) {
+      this._parent.SetState('right');
     }
-    if(moveLeft){
-       this._parent.SetState('left');
+    if (moveLeft) {
+      this._parent.SetState('left');
     }
   }
 };
@@ -597,12 +652,21 @@ class RightState extends State {
 export var _controls;
 
 export function _LoadAnimatedModel() {
-    const params = {
-      camera: camera.currentCamera,
-      scene: objects.scene,
-    }
-    _controls = new BasicCharacterController(params);
-
-
-
+  const params = {
+    camera: camera.currentCamera,
+    scene: objects.scene,
+    world: objects.world,
   }
+  _controls = new BasicCharacterController(params);
+
+
+
+}
+
+export function animated_objects() {
+
+  characterModel.position.copy(playerBody.position);
+  //characterModel.quaternion.copy(playerBody.quaternion);
+
+}
+
