@@ -11,6 +11,7 @@ const renderer = new THREE.WebGLRenderer({
 });
 
 // DECLARE FUNCTIONS
+// TODO: Refactor function for clarity and maintainability
 function raf() {
   requestAnimationFrame((t) => {
     if (previousRAF === null) {

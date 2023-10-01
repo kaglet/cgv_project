@@ -84,49 +84,48 @@ const tileMaterial = new THREE.MeshStandardMaterial({
     color: 0xffffff,
     opacity: 0.5, // Adjust the opacity value (0.0 to 1.0)
     transparent: true, // Enable transparency
-})
+});
 
 // Create multiple floor tiles
-const tileSize = 5 // Adjust the size of each tile
-const gapSize = 0.2 // Adjust the size of the gap
+const tileSize = 5; // Adjust the size of each tile
+const gapSize = 0.2; // Adjust the size of the gap
 
-const floorContainer = new THREE.Group()
-
-const textureLoader = new THREE.TextureLoader()
-const woodTexture = textureLoader.load(woodTextureImage)
+const floorContainer = new THREE.Group();
+const textureLoader = new THREE.TextureLoader();
+const woodTexture = textureLoader.load(woodTextureImage);
 
 //creates grid like tile path 
-const numRows = 9
-const numCols = 9
-const tiles = []
+const numRows = 9;
+const numCols = 9;
+const tiles = [];
 
+// TODO: Refactor function for clarity and maintainability, especially boolean expression with hardcoded values
+// TODO: Check if floorContainer for grouping and tiles array are not redundant
 for (let i = 0; i < numRows; i++) {
     for (let j = 0; j < numCols; j++) {
         const isMissingTile = (i % 2 === 0 && j % 2 === 0) || (i % 2 === 1 && j % 2 === 1);
         if (!isMissingTile || i % 4 === 0 || (i - 2) % 4 === 0) {
-            const tileClone = new THREE.Mesh(tileGeometry, tileMaterial.clone());
+            const singleTile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
             const xOffset = (i - numRows / 2) * (tileSize + gapSize);
             const yOffset = (j - numCols / 2) * (tileSize + gapSize);
-            tileClone.position.set(xOffset, yOffset, 0);
+            singleTile.position.set(xOffset, yOffset, 0);
 
-            // Enable shadows for the tile
-            tileClone.castShadow = true;
-            tileClone.receiveShadow = true;
+            singleTile.castShadow = true;
+            singleTile.receiveShadow = true;
 
-            // Add click event listener to each tile
-            tileClone.addEventListener('click', () => {
-                changeTileColorOnClick(tileClone);
+            singleTile.addEventListener('click', () => {
+                changeTileColorOnClick(singleTile);
             });
 
-            floorContainer.add(tileClone);
-            tiles.push(tileClone);
+            floorContainer.add(singleTile);
+            tiles.push(singleTile);
         }
     }
 }
 
 
 //scales map path
-floorContainer.scale.set(1.3, 1.3, 1.3);
+// floorContainer.scale.set(1.3, 1.3, 1.3);
 
 function changeTileColorOnClick(tile) {
     const randomColor = new THREE.Color(0, 0, 255);
