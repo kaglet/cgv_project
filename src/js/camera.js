@@ -1,7 +1,4 @@
 import * as THREE from 'three';
-import * as CANNON from 'cannon-es';
-import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls.js';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 // Define the first camera (you can customize its parameters)
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 30000);

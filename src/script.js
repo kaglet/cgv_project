@@ -5,32 +5,28 @@ import * as dat from 'dat.gui'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as CANNON from 'cannon-es';
 
-import woodTextureImage from './woodenfloor.jpg'; // Make sure the path to your wood texture image is correct
-import walltextureImage from './wall.jpg'; // Make sure the path to your wood texture image is correct
+import woodTextureImage from './woodenfloor.jpg'; 
+import walltextureImage from './wall.jpg'; 
 import ceilingtextureImage from './Ceiling.jpg';
-console.log(ceilingtextureImage);
-console.log(walltextureImage);
 
-// Create canvas in html doc for rendering.
 const canvas = document.querySelector('canvas.webgl');
 
-// Scene
-const scene = new THREE.Scene()
+const scene = new THREE.Scene();
 scene.scale.set(3, 3, 3);
 
-// Create a perspective camera with properties (field of view, aspect ratio, near and far clipping planes).
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-// Set initial camera position.
+const camera = new THREE.PerspectiveCamera(
+    75, 
+    window.innerWidth / window.innerHeight, 
+    0.1, 
+    1000
+);
 camera.position.set(0, 5, 10);
 
-// Create a WebGL renderer and set its size to match the window's dimensions.
-// Append the renderer's DOM element to the HTML body.
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 //Physics
-
 const world = new CANNON.World({
   gravity: new CANNON.Vec3(0,-9.81,0)
 });
@@ -44,10 +40,6 @@ const boxMat = new THREE.MeshBasicMaterial({
 });
 const boxMesh = new THREE.Mesh(boxGeo, boxMat);
 scene.add(boxMesh);
-
-
-
-
 
 //Creating the ground
 const groundGeo = new THREE.PlaneGeometry(70, 80);
@@ -91,15 +83,11 @@ const tileMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff }) // Defa
 const tileSize = 5 // Adjust the size of each tile
 const gapSize = 0.2 // Adjust the size of the gap
 
-
 const floorContainer = new THREE.Group()
 const textureLoader = new THREE.TextureLoader()
 const woodTexture = textureLoader.load(woodTextureImage)
 const walltexture = textureLoader.load(walltextureImage)
 
-
-
-//const tileMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff })
 // Duplicate tiles to create the floor with gaps
 const numRows = 10;
 const numCols = 10;
