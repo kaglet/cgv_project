@@ -147,8 +147,8 @@ export const raycaster = new THREE.Raycaster();
 
 window.addEventListener('click', (e) => {
     // Get normalized values of x and y of cursor (NDC)
-    mousePosition.x = (e.clientX / window.innerWidth) * 2 - 1;
-    mousePosition.y = - (e.clientY / window.innerHeight) * 2 + 1;
+    mousePosition.x = 0;
+    mousePosition.y = 0;
 
     // Set two ends of the ray which are the camera and normalized mouse position
     raycaster.setFromCamera(mousePosition, camera.currentCamera);
