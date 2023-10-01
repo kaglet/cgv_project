@@ -25,7 +25,7 @@ const texture_dn = new THREE.TextureLoader().load(meadowDnImage);
 const texture_rt = new THREE.TextureLoader().load(meadowRtImage);
 const texture_lf = new THREE.TextureLoader().load(meadowLfImage);
 
-// creates new materials we can initialize with properties using the configuration objects
+// Creates new materials we can initialize with properties using the configuration objects
 const materialArray = [
     new THREE.MeshBasicMaterial({ map: texture_ft, side: THREE.BackSide }),
     new THREE.MeshBasicMaterial({ map: texture_bk, side: THREE.BackSide }),
@@ -39,9 +39,11 @@ const materialArray = [
 // const skybox = new THREE.Mesh(skyboxGeo, materialArray);
 // scene.add(skybox);
 
+// Create helpers
 const axesHelper = new THREE.AxesHelper(200); 
 scene.add(axesHelper);
 
+// Create box to test physics on
 const boxGeo = new THREE.BoxGeometry(5, 5, 5);
 const boxMat = new THREE.MeshBasicMaterial({
     color: 0x00ff00,
@@ -58,16 +60,15 @@ const boxBody = new CANNON.Body({
 });
 world.addBody(boxBody);
 
-//Creating the ground
-const groundGeo = new THREE.PlaneGeometry(70, 80);
-const groundMat = new THREE.MeshBasicMaterial({
+// Create ground
+const groundGeo = new THREE.PlaneGeometry(100, 100);
+const groundMat = new THREE.MeshStandardMaterial({
     color: 0xffffff,
     side: THREE.DoubleSide,
-    wireframe: true
+    wireframe: false
 });
 export const groundMesh = new THREE.Mesh(groundGeo, groundMat);
 scene.add(groundMesh);
-
 
 const groundBody = new CANNON.Body({
     shape: new CANNON.Plane(),
@@ -75,18 +76,17 @@ const groundBody = new CANNON.Body({
 });
 
 groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-groundBody.position.y -= 30;
 world.addBody(groundBody);
 
-
-// Create a floor tile
+// Create single floor tile
 const tileGeometry = new THREE.BoxGeometry(5, 5, 1.3)
 const tileMaterial = new THREE.MeshStandardMaterial({
     color: 0xffffff,
     opacity: 0.5, // Adjust the opacity value (0.0 to 1.0)
     transparent: true, // Enable transparency
 })
-// Define tile size and gap size
+
+// Create multiple floor tiles
 const tileSize = 5 // Adjust the size of each tile
 const gapSize = 0.2 // Adjust the size of the gap
 
