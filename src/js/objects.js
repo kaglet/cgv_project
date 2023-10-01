@@ -97,6 +97,11 @@ const floorContainer = new THREE.Group();
 const textureLoader = new THREE.TextureLoader();
 const woodTexture = textureLoader.load(woodTextureImage);
 
+const rotationAngle = -(Math.PI / 2);
+
+floorContainer.rotation.set(rotationAngle, 0, 0);
+floorContainer.scale.set(1.7, 1.7, 1.7);
+scene.add(floorContainer);
 //creates grid like tile path 
 const numRows = 9;
 const numCols = 9;
@@ -105,12 +110,6 @@ const tiles = [];
 let changeTileColorOnClick = function(tile) {
     const tileColor = new THREE.Color(0, 0, 255);
     tile.material.color.copy(tileColor);
-    tileMaterial.castShadow = true;
-    tileMaterial.receiveShadow = true;
-    tileMaterial.transparent = true;
-    const tileLight = new THREE.PointLight(tileColor, 1, 20, 5);
-    tileLight.position.copy(tile.position);
-    scene.add(tileLight);
 }
 
 // TODO: Refactor function for clarity and maintainability, especially boolean expression with hardcoded values
@@ -139,10 +138,8 @@ for (let i = 0; i < numRows; i++) {
     }
 }
 
-//scales map path
-// floorContainer.scale.set(1.3, 1.3, 1.3);
 const mousePosition = new THREE.Vector2(0, 0);
-groundMesh.name = 'ground';
+
 export const raycaster = new THREE.Raycaster();
 
 window.addEventListener('click', (e) => {
@@ -161,12 +158,6 @@ window.addEventListener('click', (e) => {
         }
     });
 });
-// Start changing tile color and emitting light every 5 seconds
-
-const rotationAngle = -(Math.PI / 2);
-
-floorContainer.rotation.set(rotationAngle, 0, 0);
-scene.add(floorContainer);
 
 // TODO: Rename function so its job/action is clear
 export function animated_objects() {
