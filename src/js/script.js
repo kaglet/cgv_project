@@ -83,5 +83,3 @@ player.animated_objects();
   player._LoadAnimatedModel();
    _RAF();
 
-
-  //renderer.setAnimationLoop(_RAF);
