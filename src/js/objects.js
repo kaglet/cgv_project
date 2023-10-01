@@ -99,6 +99,17 @@ const numRows = 9;
 const numCols = 9;
 const tiles = [];
 
+let changeTileColorOnClick = function(tile) {
+    const randomColor = new THREE.Color(0, 0, 255);
+    tile.material.color.copy(randomColor);
+    tileMaterial.castShadow = true;
+    tileMaterial.receiveShadow = true;
+    tileMaterial.transparent = true;
+    const tileLight = new THREE.PointLight(randomColor, 1, 20, 5);
+    tileLight.position.copy(tile.position);
+    scene.add(tileLight);
+}
+
 // TODO: Refactor function for clarity and maintainability, especially boolean expression with hardcoded values
 // TODO: Check if floorContainer for grouping and tiles array are not redundant
 for (let i = 0; i < numRows; i++) {
@@ -126,17 +137,6 @@ for (let i = 0; i < numRows; i++) {
 
 //scales map path
 // floorContainer.scale.set(1.3, 1.3, 1.3);
-
-function changeTileColorOnClick(tile) {
-    const randomColor = new THREE.Color(0, 0, 255);
-    tile.material.color.copy(randomColor);
-    tileMaterial.castShadow = true;
-    tileMaterial.receiveShadow = true;
-    tileMaterial.transparent = true;
-    const tileLight = new THREE.PointLight(randomColor, 1, 20, 5);
-    tileLight.position.copy(tile.position);
-    scene.add(tileLight);
-}
 
 // clicking the tiles?
 //export const raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );
