@@ -43,6 +43,9 @@ const materialArray = [
 const axesHelper = new THREE.AxesHelper(200); 
 scene.add(axesHelper);
 
+// const gridHelper = new THREE.GridHelper(200, 200, 1, 1);
+// scene.add(gridHelper);
+
 // Create box to test physics on
 const boxGeo = new THREE.BoxGeometry(5, 5, 5);
 const boxMat = new THREE.MeshBasicMaterial({
@@ -100,12 +103,12 @@ const numCols = 9;
 const tiles = [];
 
 let changeTileColorOnClick = function(tile) {
-    const randomColor = new THREE.Color(0, 0, 255);
-    tile.material.color.copy(randomColor);
+    const tileColor = new THREE.Color(0, 0, 255);
+    tile.material.color.copy(tileColor);
     tileMaterial.castShadow = true;
     tileMaterial.receiveShadow = true;
     tileMaterial.transparent = true;
-    const tileLight = new THREE.PointLight(randomColor, 1, 20, 5);
+    const tileLight = new THREE.PointLight(tileColor, 1, 20, 5);
     tileLight.position.copy(tile.position);
     scene.add(tileLight);
 }
@@ -134,34 +137,29 @@ for (let i = 0; i < numRows; i++) {
     }
 }
 
-
 //scales map path
 // floorContainer.scale.set(1.3, 1.3, 1.3);
 
-// clicking the tiles?
-//export const raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );
+const mousePosition = new THREE.Vector2(0, 0);
+
 export const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2(0, 0);
 
-document.addEventListener('click', (event) => {
-    // Calculate mouse coordinates in normalized device coordinates (NDC)
-    mouse.x = 0;
-    mouse.y = 0;
+window.addEventListener('click', (e) => {
+    // Get normalized values of x and y of cursor (NDC)
+    mousePosition.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mousePosition.y = - (e.clientY / window.innerHeight) * 2 + 1;
 
-    // Update the raycaster
-    raycaster.setFromCamera(mouse, camera.currentCamera);
+    // Set two ends of the ray which are the camera and normalized mouse position
+    raycaster.setFromCamera(mousePosition, camera.currentCamera);
 
-    // Get a list of objects intersected by the raycaster
-    const intersects = raycaster.intersectObjects(tiles);
+    // Method returns an object that contains all elements from the tiles that intersects with the ray
+    const intersects = raycaster.intersectObjects(scene.children);
 
     // If there are intersections, trigger the click event on the first object (tile) in the list
-    if (intersects.length > 0) {
+    if (intersects.length) {
         intersects[0].object.dispatchEvent({ type: 'click' });
     }
 });
-
-tileMaterial.castShadow = true;
-tileMaterial.receiveShadow = true;
 // Start changing tile color and emitting light every 5 seconds
 
 const rotationAngle = Math.PI / 2;
@@ -172,8 +170,6 @@ const translationVector = new THREE.Vector3(0, -29.9, -10);
 floorContainer.position.copy(translationVector);
 scene.add(floorContainer);
 
-const floorWidth = numRows * (tileSize + gapSize);
-const floorHeight = numCols * (tileSize + gapSize);
 const floorGeometry = new THREE.PlaneGeometry(70, 79.9);
 const floorMaterial = new THREE.MeshStandardMaterial({ map: woodTexture });
 const floor = new THREE.Mesh(floorGeometry, floorMaterial);
@@ -184,14 +180,13 @@ scene.add(floor);
 const target = new THREE.Object3D();
 target.position.copy(floorContainer.position); // Adjust the target's position as needed
 
-
+// TODO: Rename function so its job/action is clear
 export function animated_objects() {
     boxMesh.position.copy(boxBody.position);
     boxMesh.quaternion.copy(boxBody.quaternion);
 
     groundMesh.position.copy(groundBody.position);
     groundMesh.quaternion.copy(groundBody.quaternion);
-
 }
 
 
