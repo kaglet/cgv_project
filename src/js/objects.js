@@ -4,6 +4,16 @@ import * as CANNON from 'cannon-es';
 import woodTextureImage from '../img/woodenfloor.jpg'; // Make sure the path to your wood texture image is correct
 import walltextureImage from '../img/wall.jpg'; // Make sure the path to your wood texture image is correct
 import ceilingtextureImage from '../img/Ceiling.jpg';
+// Import texture images
+import meadowFtImage from '../img/meadow/meadow_ft.jpg';
+import meadowBkImage from '../img/meadow/meadow_bk.jpg';
+import meadowUpImage from '../img/meadow/meadow_up.jpg';
+import meadowDnImage from '../img/meadow/meadow_dn.jpg';
+import meadowRtImage from '../img/meadow/meadow_rt.jpg';
+import meadowLfImage from '../img/meadow/meadow_lf.jpg';
+
+
+
 import * as camera from './camera.js';
 
 // Scene
@@ -14,10 +24,38 @@ export var world = new CANNON.World({
     gravity: new CANNON.Vec3(0,-9.81,0)
   });
 
+
+// Create texture objects
+const texture_ft = new THREE.TextureLoader().load(meadowFtImage);
+const texture_bk = new THREE.TextureLoader().load(meadowBkImage);
+const texture_up = new THREE.TextureLoader().load(meadowUpImage);
+const texture_dn = new THREE.TextureLoader().load(meadowDnImage);
+const texture_rt = new THREE.TextureLoader().load(meadowRtImage);
+const texture_lf = new THREE.TextureLoader().load(meadowLfImage);
+
+// Create material array
+const materialArray = [
+  new THREE.MeshBasicMaterial({ map: texture_ft }),
+  new THREE.MeshBasicMaterial({ map: texture_bk }),
+  new THREE.MeshBasicMaterial({ map: texture_up }),
+  new THREE.MeshBasicMaterial({ map: texture_dn }),
+  new THREE.MeshBasicMaterial({ map: texture_rt }),
+  new THREE.MeshBasicMaterial({ map: texture_lf })
+];
+
+// Set material side to backside
+materialArray.forEach((material) => {
+  material.side = THREE.BackSide;
+});
+
+// Create skybox
+const skyboxGeo = new THREE.BoxGeometry(10000, 10000, 10000);
+const skybox = new THREE.Mesh(skyboxGeo, materialArray);
+scene.add(skybox);
 const axesHelper = new THREE.AxesHelper(50); //so we can see the axes for debugging
 scene.add(axesHelper);
 
-const boxGeo = new THREE.BoxGeometry(2, 2, 2);
+const boxGeo = new THREE.BoxGeometry(5, 5, 5);
 const boxMat = new THREE.MeshBasicMaterial({
 	color: 0x00ff00,
 	wireframe: true
@@ -25,6 +63,15 @@ const boxMat = new THREE.MeshBasicMaterial({
 
 const boxMesh = new THREE.Mesh(boxGeo, boxMat);
 scene.add(boxMesh);
+
+const boxBody = new CANNON.Body({
+    mass: 1,
+    shape: new CANNON.Box(new CANNON.Vec3(5, 5, 5)),
+    position: new CANNON.Vec3(30, 30, 0),
+  //  material: boxPhysMat
+  });
+  world.addBody(boxBody);
+
 
 //Creating the ground
 const groundGeo = new THREE.PlaneGeometry(70, 80);
