@@ -5,12 +5,18 @@ const camera = new THREE.PerspectiveCamera(
     75, 
     window.innerWidth / window.innerHeight, 
     0.1, 
-    1000
+    30000
 );
 camera.position.set(0, -10, 0);
 
 // Define the top-down camera (you can customize its parameters)
-const topDownCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const topDownCamera = new THREE.PerspectiveCamera(
+    75, 
+    window.innerWidth / window.innerHeight, 
+    0.1, 
+    30000
+);
+
 topDownCamera.position.set(0, 20, 0);
 topDownCamera.lookAt(0, 0, 0);
 
@@ -19,6 +25,7 @@ let currentCamera = camera;
 
 document.addEventListener('keydown', (event) => {
     if (event.key === 'c') {
+        // currentCamera = (currentCamera === camera) ? topDownCamera : camera;
         // Switch between cameras
         if (currentCamera === camera) {
             currentCamera = topDownCamera;

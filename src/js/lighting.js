@@ -1,5 +1,4 @@
 import * as THREE from 'three'
-import * as CANNON from 'cannon-es';
 import * as objects from './objects.js'
 
 // Add lighting (point light)
@@ -22,12 +21,3 @@ bulb.position.copy(directionalLight.position); // Position the bulb at the same 
 
 // Add the bulb to the scene
 objects.scene.add(bulb);
-
-
-//skybox
-
-// const worldGeometry = new THREE.BoxGeometry(70, 60, 80);
-
-
-// // const worldMaterial = new THREE.MeshStandardMaterial({ map: walltexture, side: THREE.BackSide }) // Gray color for the room
-//  const worldMesh = new THREE.Mesh(worldGeometry , worldMaterial )
