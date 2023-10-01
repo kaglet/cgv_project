@@ -1,7 +1,6 @@
 import * as THREE from 'three'
 import * as CANNON from 'cannon-es';
-
-import woodTextureImage from '../img/woodenfloor.jpg'; 
+import woodTextureImage from '../img/woodenfloor.jpg';
 // Import texture images
 import meadowFtImage from '../img/meadow/meadow_ft.jpg';
 import meadowBkImage from '../img/meadow/meadow_bk.jpg';
@@ -16,11 +15,9 @@ export const scene = new THREE.Scene();
 
 // world - this is for cannon objects
 export var world = new CANNON.World({
-    gravity: new CANNON.Vec3(0,-9.81,0)
-  });
+    gravity: new CANNON.Vec3(0, -9.81, 0)
+});
 
-
-// Create texture objects
 const texture_ft = new THREE.TextureLoader().load(meadowFtImage);
 const texture_bk = new THREE.TextureLoader().load(meadowBkImage);
 const texture_up = new THREE.TextureLoader().load(meadowUpImage);
@@ -28,19 +25,18 @@ const texture_dn = new THREE.TextureLoader().load(meadowDnImage);
 const texture_rt = new THREE.TextureLoader().load(meadowRtImage);
 const texture_lf = new THREE.TextureLoader().load(meadowLfImage);
 
-// Create material array
 const materialArray = [
-  new THREE.MeshBasicMaterial({ map: texture_ft }),
-  new THREE.MeshBasicMaterial({ map: texture_bk }),
-  new THREE.MeshBasicMaterial({ map: texture_up }),
-  new THREE.MeshBasicMaterial({ map: texture_dn }),
-  new THREE.MeshBasicMaterial({ map: texture_rt }),
-  new THREE.MeshBasicMaterial({ map: texture_lf })
+    new THREE.MeshBasicMaterial({ map: texture_ft }),
+    new THREE.MeshBasicMaterial({ map: texture_bk }),
+    new THREE.MeshBasicMaterial({ map: texture_up }),
+    new THREE.MeshBasicMaterial({ map: texture_dn }),
+    new THREE.MeshBasicMaterial({ map: texture_rt }),
+    new THREE.MeshBasicMaterial({ map: texture_lf })
 ];
 
 // Set material side to backside
 materialArray.forEach((material) => {
-  material.side = THREE.BackSide;
+    material.side = THREE.BackSide;
 });
 
 // Create skybox
@@ -52,8 +48,8 @@ scene.add(axesHelper);
 
 const boxGeo = new THREE.BoxGeometry(5, 5, 5);
 const boxMat = new THREE.MeshBasicMaterial({
-	color: 0x00ff00,
-	wireframe: true
+    color: 0x00ff00,
+    wireframe: true
 });
 
 const boxMesh = new THREE.Mesh(boxGeo, boxMat);
@@ -63,18 +59,18 @@ const boxBody = new CANNON.Body({
     mass: 1,
     shape: new CANNON.Box(new CANNON.Vec3(5, 5, 5)),
     position: new CANNON.Vec3(30, 30, 0),
-  //  material: boxPhysMat
-  });
-  world.addBody(boxBody);
+    //  material: boxPhysMat
+});
+world.addBody(boxBody);
 
 
 //Creating the ground
 const groundGeo = new THREE.PlaneGeometry(70, 80);
-const groundMat = new THREE.MeshBasicMaterial({ 
-	color: 0xffffff,
-	side: THREE.DoubleSide,
-	wireframe: true 
- });
+const groundMat = new THREE.MeshBasicMaterial({
+    color: 0xffffff,
+    side: THREE.DoubleSide,
+    wireframe: true
+});
 export const groundMesh = new THREE.Mesh(groundGeo, groundMat);
 scene.add(groundMesh);
 
@@ -83,17 +79,17 @@ const groundBody = new CANNON.Body({
     shape: new CANNON.Plane(),
     //mass: 10
     // shape: new CANNON.Box(new CANNON.Vec3(15, 15, 0.1)),
-     type: CANNON.Body.STATIC,
+    type: CANNON.Body.STATIC,
     // material: groundPhysMat
-  });
+});
 
-  groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-  groundBody.position.y -= 30;
-  world.addBody(groundBody);
+groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
+groundBody.position.y -= 30;
+world.addBody(groundBody);
 
 
 // Create a floor tile
-const tileGeometry = new THREE.BoxGeometry(5, 5,1.3)
+const tileGeometry = new THREE.BoxGeometry(5, 5, 1.3)
 const tileMaterial = new THREE.MeshStandardMaterial({
     color: 0xffffff,
     opacity: 0.5, // Adjust the opacity value (0.0 to 1.0)
@@ -133,7 +129,7 @@ for (let i = 0; i < numRows; i++) {
 
             // Add click event listener to each tile
             tileClone.addEventListener('click', () => {
-            changeTileColorOnClick(tileClone);
+                changeTileColorOnClick(tileClone);
             });
 
             floorContainer.add(tileClone);
@@ -158,21 +154,21 @@ function changeTileColorOnClick(tile) {
     const randomColor = new THREE.Color(0, 0, 255);
     tile.material.color.copy(randomColor);
     tileMaterial.castShadow = true;
-tileMaterial.receiveShadow = true;
-tileMaterial.transparent = true;
+    tileMaterial.receiveShadow = true;
+    tileMaterial.transparent = true;
     const tileLight = new THREE.PointLight(randomColor, 1, 20, 5);
-    tileLight.position.copy(tile.position); 
+    tileLight.position.copy(tile.position);
     scene.add(tileLight);
 }
 
 // clicking the tiles?
 //export const raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );
-export const raycaster=new THREE.Raycaster();
-const mouse = new THREE.Vector2(0,0);
+export const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2(0, 0);
 
 document.addEventListener('click', (event) => {
     // Calculate mouse coordinates in normalized device coordinates (NDC)
-    mouse.x =0;
+    mouse.x = 0;
     mouse.y = 0;
 
     // Update the raycaster
@@ -233,7 +229,7 @@ const target = new THREE.Object3D();
 target.position.copy(floorContainer.position); // Adjust the target's position as needed
 
 
-export function animated_objects(){
+export function animated_objects() {
     boxMesh.position.copy(boxBody.position);
     boxMesh.quaternion.copy(boxBody.quaternion);
 
