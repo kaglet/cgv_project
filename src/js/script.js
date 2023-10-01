@@ -35,7 +35,7 @@ import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockCont
     var _previousRAF = null;
    const crosshairs = document.getElementById('crosshairs');
    document.body.appendChild(crosshairs);
-crosshairs.style.display = 'block';
+    crosshairs.style.display = 'block';
   function  _OnWindowResize() {
     camera.currentCamera.aspect = window.innerWidth / window.innerHeight;
     camera.currentCamera.updateProjectionMatrix();

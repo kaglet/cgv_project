@@ -145,8 +145,6 @@ class BasicCharacterController {
     }
 
 
-
-
     if (camera.currentCamera === camera.camera) {
        controlObject.quaternion.copy(savedCharacterOrientation);
 
@@ -169,8 +167,6 @@ class BasicCharacterController {
 
       velocity.add(frameDecceleration);
 
-
-      // FP camera
 
 
       // Get the camera's direction
@@ -324,6 +320,10 @@ class BasicCharacterControllerInput {
     controls.addEventListener('unlock', function () {
       blocker.style.display = 'block';
       instructions.style.display = '';
+      moveForward=false;
+      moveBackward=false;
+      moveRight=false;
+      moveLeft=false;
     });
 
     objects.scene.add(controls.getObject());
