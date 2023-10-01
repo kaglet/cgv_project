@@ -43,8 +43,8 @@ const materialArray = [
 const axesHelper = new THREE.AxesHelper(200); 
 scene.add(axesHelper);
 
-// const gridHelper = new THREE.GridHelper(200, 200, 1, 1);
-// scene.add(gridHelper);
+const gridHelper = new THREE.GridHelper(200, 200);
+scene.add(gridHelper);
 
 // Create box to test physics on
 const boxGeo = new THREE.BoxGeometry(5, 5, 5);
@@ -162,20 +162,10 @@ window.addEventListener('click', (e) => {
 });
 // Start changing tile color and emitting light every 5 seconds
 
-const rotationAngle = Math.PI / 2;
-floorContainer.rotation.set(-rotationAngle, 0, 0);
+const rotationAngle = -(Math.PI / 2);
 
-
-const translationVector = new THREE.Vector3(0, -29.9, -10);
-floorContainer.position.copy(translationVector);
+floorContainer.rotation.set(rotationAngle, 0, 0);
 scene.add(floorContainer);
-
-const floorGeometry = new THREE.PlaneGeometry(70, 79.9);
-const floorMaterial = new THREE.MeshStandardMaterial({ map: woodTexture });
-const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-floor.rotation.x = -Math.PI / 2; // Rotate the floor to be horizontal
-floor.position.set(0, -29.99, 0); // Set the floor position to be just below the tiles
-scene.add(floor);
 
 const target = new THREE.Object3D();
 target.position.copy(floorContainer.position); // Adjust the target's position as needed
@@ -189,11 +179,7 @@ export function animated_objects() {
     groundMesh.quaternion.copy(groundBody.quaternion);
 }
 
+/* TODO: Check this will work with actual normalized coordinate
+ positions and that is not what is somehow ruining things */
 
-
-
-
-
-
-
-
+ // Sets the position of the mesh from its origin
