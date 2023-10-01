@@ -25,13 +25,8 @@ let currentCamera = camera;
 
 document.addEventListener('keydown', (event) => {
     if (event.key === 'c') {
-        // currentCamera = (currentCamera === camera) ? topDownCamera : camera;
         // Switch between cameras
-        if (currentCamera === camera) {
-            currentCamera = topDownCamera;
-        } else {
-            currentCamera = camera;
-        }
+        currentCamera = (currentCamera === camera) ? topDownCamera : camera;
     }
 });
 
