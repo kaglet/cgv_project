@@ -35,9 +35,9 @@ const materialArray = [
     new THREE.MeshBasicMaterial({ map: texture_lf, side: THREE.BackSide })
 ];
 
-const skyboxGeo = new THREE.BoxGeometry(10000, 10000, 10000);
-const skybox = new THREE.Mesh(skyboxGeo, materialArray);
-scene.add(skybox);
+// const skyboxGeo = new THREE.BoxGeometry(10000, 10000, 10000);
+// const skybox = new THREE.Mesh(skyboxGeo, materialArray);
+// scene.add(skybox);
 
 const axesHelper = new THREE.AxesHelper(200); 
 scene.add(axesHelper);
