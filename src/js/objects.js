@@ -14,7 +14,7 @@ import * as camera from './camera.js';
 export const scene = new THREE.Scene();
 
 // World - this is for cannon objects
-export var world = new CANNON.World({
+export let world = new CANNON.World({
     gravity: new CANNON.Vec3(0, -9.81, 0)
 });
 
@@ -25,25 +25,21 @@ const texture_dn = new THREE.TextureLoader().load(meadowDnImage);
 const texture_rt = new THREE.TextureLoader().load(meadowRtImage);
 const texture_lf = new THREE.TextureLoader().load(meadowLfImage);
 
+// creates new materials we can initialize with properties using the configuration objects
 const materialArray = [
-    new THREE.MeshBasicMaterial({ map: texture_ft }),
-    new THREE.MeshBasicMaterial({ map: texture_bk }),
-    new THREE.MeshBasicMaterial({ map: texture_up }),
-    new THREE.MeshBasicMaterial({ map: texture_dn }),
-    new THREE.MeshBasicMaterial({ map: texture_rt }),
-    new THREE.MeshBasicMaterial({ map: texture_lf })
+    new THREE.MeshBasicMaterial({ map: texture_ft, side: THREE.BackSide }),
+    new THREE.MeshBasicMaterial({ map: texture_bk, side: THREE.BackSide }),
+    new THREE.MeshBasicMaterial({ map: texture_up, side: THREE.BackSide }),
+    new THREE.MeshBasicMaterial({ map: texture_dn, side: THREE.BackSide }),
+    new THREE.MeshBasicMaterial({ map: texture_rt, side: THREE.BackSide }),
+    new THREE.MeshBasicMaterial({ map: texture_lf, side: THREE.BackSide })
 ];
 
-// Set material side to backside
-materialArray.forEach((material) => {
-    material.side = THREE.BackSide;
-});
-
-// Create skybox
 const skyboxGeo = new THREE.BoxGeometry(10000, 10000, 10000);
 const skybox = new THREE.Mesh(skyboxGeo, materialArray);
 scene.add(skybox);
-const axesHelper = new THREE.AxesHelper(50); //so we can see the axes for debugging
+
+const axesHelper = new THREE.AxesHelper(200); 
 scene.add(axesHelper);
 
 const boxGeo = new THREE.BoxGeometry(5, 5, 5);
@@ -59,7 +55,6 @@ const boxBody = new CANNON.Body({
     mass: 1,
     shape: new CANNON.Box(new CANNON.Vec3(5, 5, 5)),
     position: new CANNON.Vec3(30, 30, 0),
-    //  material: boxPhysMat
 });
 world.addBody(boxBody);
 
