@@ -131,6 +131,8 @@ for (let i = 0; i < numRows; i++) {
                 changeTileColorOnClick(singleTile);
             });
 
+            singleTile.name = 'tile';
+
             floorContainer.add(singleTile);
             tiles.push(singleTile);
         }
@@ -139,9 +141,8 @@ for (let i = 0; i < numRows; i++) {
 
 //scales map path
 // floorContainer.scale.set(1.3, 1.3, 1.3);
-
 const mousePosition = new THREE.Vector2(0, 0);
-
+groundMesh.name = 'ground';
 export const raycaster = new THREE.Raycaster();
 
 window.addEventListener('click', (e) => {
@@ -153,12 +154,12 @@ window.addEventListener('click', (e) => {
     raycaster.setFromCamera(mousePosition, camera.currentCamera);
 
     // Method returns an object that contains all elements from the tiles that intersects with the ray
-    const intersects = raycaster.intersectObjects(scene.children);
-
-    // If there are intersections, trigger the click event on the first object (tile) in the list
-    if (intersects.length) {
-        intersects[0].object.dispatchEvent({ type: 'click' });
-    }
+    const intersects = raycaster.intersectObjects(floorContainer.children, true);
+    intersects.forEach(intersect => {
+        if (intersect.object.name === 'tile') {
+            intersect.object.dispatchEvent({ type: 'click' });
+        }
+    });
 });
 // Start changing tile color and emitting light every 5 seconds
 
@@ -166,9 +167,6 @@ const rotationAngle = -(Math.PI / 2);
 
 floorContainer.rotation.set(rotationAngle, 0, 0);
 scene.add(floorContainer);
-
-const target = new THREE.Object3D();
-target.position.copy(floorContainer.position); // Adjust the target's position as needed
 
 // TODO: Rename function so its job/action is clear
 export function animated_objects() {
