@@ -30,4 +30,4 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
-export { firstPersonCamera as camera, topDownCamera, currentCamera };
+export { firstPersonCamera, topDownCamera, currentCamera };

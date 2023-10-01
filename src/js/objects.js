@@ -13,7 +13,7 @@ import * as camera from './camera.js';
 // Scene
 export const scene = new THREE.Scene();
 
-// world - this is for cannon objects
+// World - this is for cannon objects
 export var world = new CANNON.World({
     gravity: new CANNON.Vec3(0, -9.81, 0)
 });
@@ -63,7 +63,6 @@ const boxBody = new CANNON.Body({
 });
 world.addBody(boxBody);
 
-
 //Creating the ground
 const groundGeo = new THREE.PlaneGeometry(70, 80);
 const groundMat = new THREE.MeshBasicMaterial({
@@ -77,10 +76,7 @@ scene.add(groundMesh);
 
 const groundBody = new CANNON.Body({
     shape: new CANNON.Plane(),
-    //mass: 10
-    // shape: new CANNON.Box(new CANNON.Vec3(15, 15, 0.1)),
     type: CANNON.Body.STATIC,
-    // material: groundPhysMat
 });
 
 groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
@@ -103,11 +99,6 @@ const floorContainer = new THREE.Group()
 
 const textureLoader = new THREE.TextureLoader()
 const woodTexture = textureLoader.load(woodTextureImage)
-//const walltexture = textureLoader.load(walltextureImage)
-
-
-//const tileMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff })
-// Duplicate tiles to create the floor with gaps
 
 //creates grid like tile path 
 const numRows = 9
@@ -143,14 +134,6 @@ for (let i = 0; i < numRows; i++) {
 floorContainer.scale.set(1.3, 1.3, 1.3);
 
 function changeTileColorOnClick(tile) {
-    // const randomColor = new THREE.Color(0, 0, 255);
-    // tile.material.color.copy(randomColor);
-    // tile.material.emissive = randomColor; // Use the same color as the tile color for emissive
-    // tile.material.emissiveIntensity = 100.0;
-    // const tileLight = new THREE.PointLight(randomColor, 1.0, 10.0, 5.0); 
-    // tileLight.power = 6.0;
-    // tileLight.position.copy(tile.position); // Position the light at the tile's position
-    // scene.add(tileLight);
     const randomColor = new THREE.Color(0, 0, 255);
     tile.material.color.copy(randomColor);
     tileMaterial.castShadow = true;
@@ -195,27 +178,6 @@ const translationVector = new THREE.Vector3(0, -29.9, -10);
 floorContainer.position.copy(translationVector);
 scene.add(floorContainer);
 
-// Create room walls
-//const roomGeometry = new THREE.BoxGeometry(70, 60, 80)
-//const roomMaterial = new THREE.MeshStandardMaterial({ map: walltexture, side: THREE.BackSide }) // Gray color for the room
-//const room = new THREE.Mesh(roomGeometry, roomMaterial)
-
-//scene.add(room)
-
-
-// Add ceiling texture (inside the room cube)
-//const ceilingTexture = textureLoader.load(ceilingtextureImage); // Load your ceiling texture image
-//const ceilingMaterial = new THREE.MeshStandardMaterial({ map: ceilingTexture });
-//const ceilingGeometry = new THREE.PlaneGeometry(70, 79.9);
-//const ceiling = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
-//ceiling.position.set(0,29.99 , 0); // Adjust the position to be above the room cube
-//ceiling.rotation.x = Math.PI / 2; // Rotate 90 degrees along the X-axis
-//scene.add(ceiling);
-
-
-//const ceilingTexture = textureLoader.load(ceilingtextureImage); // Load your ceiling texture image
-//const ceilingMaterial = new THREE.MeshBasicMaterial({ map: ceilingTexture });
-//const ceilingGeometry = new THREE.PlaneGeometry(12, 12);
 const floorWidth = numRows * (tileSize + gapSize);
 const floorHeight = numCols * (tileSize + gapSize);
 const floorGeometry = new THREE.PlaneGeometry(70, 79.9);

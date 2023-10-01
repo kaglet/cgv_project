@@ -145,7 +145,7 @@ class BasicCharacterController {
 
 
 
-    if (camera.currentCamera === camera.camera) {
+    if (camera.currentCamera === camera.firstPersonCamera) {
 
       if (!this._target) {
         return;
