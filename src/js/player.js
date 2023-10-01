@@ -97,7 +97,7 @@ class BasicCharacterController {
 
     const loader = new FBXLoader();
 
-    loader.load('ALEX.fbx', (fbx) => {
+    loader.load('./alex/ALEX.fbx', (fbx) => {
       characterModel = fbx;
       // fbx.position.y=0;
       // fbx.rotation.y=10;
@@ -128,11 +128,11 @@ class BasicCharacterController {
 
       const loader = new FBXLoader(this._manager);
 
-      loader.load('Walking.fbx', (a) => { _OnLoad('walk', a); });
-      loader.load('WalkingBackwards.fbx', (a) => { _OnLoad('back', a); });
-      loader.load('Idle.fbx', (a) => { _OnLoad('idle', a); });
-      loader.load('WalkLeft.fbx', (a) => { _OnLoad('left', a); });
-      loader.load('WalkRight.fbx', (a) => { _OnLoad('right', a); });
+      loader.load('./alex/Walking.fbx', (a) => { _OnLoad('walk', a); });
+      loader.load('./alex/WalkingBackwards.fbx', (a) => { _OnLoad('back', a); });
+      loader.load('./alex/Idle.fbx', (a) => { _OnLoad('idle', a); });
+      loader.load('./alex/WalkLeft.fbx', (a) => { _OnLoad('left', a); });
+      loader.load('./alex/WalkRight.fbx', (a) => { _OnLoad('right', a); });
     });
   }
 
