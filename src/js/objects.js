@@ -3,8 +3,17 @@ import * as THREE from 'three';
 import * as CANNON from 'cannon-es';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import woodTextureImage from '../img/woodenfloor.jpg'; // Make sure the path to your wood texture image is correct
-import walltextureImage from '../img/forest-343483_960_720.jpg'; // Make sure the path to your wood texture image is correct
-import ceilingtextureImage from '../img/sky.jpg';
+import walltextureImage from '../img/wall.jpg'; // Make sure the path to your wood texture image is correct
+import ceilingtextureImage from '../img/Ceiling.jpg';
+// Import texture images
+import meadowFtImage from '../img/meadow/meadow_ft.jpg';
+import meadowBkImage from '../img/meadow/meadow_bk.jpg';
+import meadowUpImage from '../img/meadow/meadow_up.jpg';
+import meadowDnImage from '../img/meadow/meadow_dn.jpg';
+import meadowRtImage from '../img/meadow/meadow_rt.jpg';
+import meadowLfImage from '../img/meadow/meadow_lf.jpg';
+
+
 
 import * as camera from './camera.js';
 
@@ -16,10 +25,38 @@ export var world = new CANNON.World({
     gravity: new CANNON.Vec3(0,-9.81,0)
   });
 
+
+// Create texture objects
+const texture_ft = new THREE.TextureLoader().load(meadowFtImage);
+const texture_bk = new THREE.TextureLoader().load(meadowBkImage);
+const texture_up = new THREE.TextureLoader().load(meadowUpImage);
+const texture_dn = new THREE.TextureLoader().load(meadowDnImage);
+const texture_rt = new THREE.TextureLoader().load(meadowRtImage);
+const texture_lf = new THREE.TextureLoader().load(meadowLfImage);
+
+// Create material array
+const materialArray = [
+  new THREE.MeshBasicMaterial({ map: texture_ft }),
+  new THREE.MeshBasicMaterial({ map: texture_bk }),
+  new THREE.MeshBasicMaterial({ map: texture_up }),
+  new THREE.MeshBasicMaterial({ map: texture_dn }),
+  new THREE.MeshBasicMaterial({ map: texture_rt }),
+  new THREE.MeshBasicMaterial({ map: texture_lf })
+];
+
+// Set material side to backside
+materialArray.forEach((material) => {
+  material.side = THREE.BackSide;
+});
+
+// Create skybox
+const skyboxGeo = new THREE.BoxGeometry(10000, 10000, 10000);
+const skybox = new THREE.Mesh(skyboxGeo, materialArray);
+scene.add(skybox);
 const axesHelper = new THREE.AxesHelper(50); //so we can see the axes for debugging
 scene.add(axesHelper);
 
-const boxGeo = new THREE.BoxGeometry(2, 2, 2);
+const boxGeo = new THREE.BoxGeometry(5, 5, 5);
 const boxMat = new THREE.MeshBasicMaterial({
 	color: 0x00ff00,
 	wireframe: true
@@ -27,6 +64,15 @@ const boxMat = new THREE.MeshBasicMaterial({
 
 const boxMesh = new THREE.Mesh(boxGeo, boxMat);
 scene.add(boxMesh);
+
+const boxBody = new CANNON.Body({
+    mass: 1,
+    shape: new CANNON.Box(new CANNON.Vec3(5, 5, 5)),
+    position: new CANNON.Vec3(30, 30, 0),
+  //  material: boxPhysMat
+  });
+  world.addBody(boxBody);
+
 
 //Creating the ground
 const groundGeo = new THREE.PlaneGeometry(70, 80);
@@ -160,20 +206,20 @@ floorContainer.position.copy(translationVector);
 scene.add(floorContainer);
 
 // Create room walls
-const roomGeometry = new THREE.BoxGeometry(70, 80, 100);
-const roomMaterial = new THREE.MeshStandardMaterial({ map: walltexture, side: THREE.BackSide }) // Gray color for the room
-const room = new THREE.Mesh(roomGeometry, roomMaterial)
+// const roomGeometry = new THREE.BoxGeometry(70, 80, 100);
+// const roomMaterial = new THREE.MeshStandardMaterial({ map: walltexture, side: THREE.BackSide }) // Gray color for the room
+// const room = new THREE.Mesh(roomGeometry, roomMaterial)
 
-scene.add(room)
+// scene.add(room)
 
 
-const ceilingTexture = textureLoader.load(ceilingtextureImage); // Load your ceiling texture image
-const ceilingMaterial = new THREE.MeshStandardMaterial({ map: ceilingTexture });
-const ceilingGeometry = new THREE.PlaneGeometry(70, 79.9);
-const ceiling = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
-ceiling.position.set(0,29.99 , 0); // Adjust the position to be above the room cube
-ceiling.rotation.x = Math.PI / 2; // Rotate 90 degrees along the X-axis
-scene.add(ceiling);
+// const ceilingTexture = textureLoader.load(ceilingtextureImage); // Load your ceiling texture image
+// const ceilingMaterial = new THREE.MeshStandardMaterial({ map: ceilingTexture });
+// const ceilingGeometry = new THREE.PlaneGeometry(70, 79.9);
+// const ceiling = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
+// ceiling.position.set(0,29.99 , 0); // Adjust the position to be above the room cube
+// ceiling.rotation.x = Math.PI / 2; // Rotate 90 degrees along the X-axis
+// scene.add(ceiling);
 const loader = new GLTFLoader();
 
 loader.load('/ground_material.glb', function (gltf) {
@@ -220,6 +266,7 @@ loader.load('/luffy.glb', function (gltf) {
 }, undefined, function (error) {
     console.error(error);
 });
+
 // const ceilingTexture = textureLoader.load(ceilingtextureImage); // Load your ceiling texture image
 // const ceilingMaterial = new THREE.MeshBasicMaterial({ map: ceilingTexture });
 // const ceilingGeometry = new THREE.PlaneGeometry(12, 12);

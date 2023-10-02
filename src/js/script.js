@@ -54,6 +54,8 @@ crosshairs.style.display = 'block';
       _RAF();
 
 objects.world.step(1/60);
+objects.animated_objects();
+player.animated_objects();
 
       renderer.render(objects.scene, camera.currentCamera);
       _Step(t - _previousRAF);
