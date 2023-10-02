@@ -78,6 +78,7 @@ const boxBody = new CANNON.Body({
   world.addBody(boxBody);
 
 
+//physics ground
 const groundBody = new CANNON.Body({
     shape: new CANNON.Plane(),
     //mass: 10
@@ -90,7 +91,7 @@ const groundBody = new CANNON.Body({
   world.addBody(groundBody);
 
 
-//Load the FBX model
+//Path object
 
 const fbxLoader = new FBXLoader();
 
@@ -113,6 +114,51 @@ fbxLoader.load('./the_way/the_way.FBX', (fbx) => {
     // Add the loaded model to your scene
     scene.add(fbx);
   });
+
+//Path walls
+
+const loader = new GLTFLoader();
+
+loader.load('./ruined_sandstone__wall_ref/scene.gltf', (gltf) => {
+  const wall1 = gltf.scene;
+  scene.add(wall1);
+
+  wall1.position.set(-90, -5, 130); // Adjust the position as needed
+  wall1.scale.set(4, 1.8, 2); // Adjust the scale as needed
+  wall1.rotation.set(0, Math.PI / 2, 0);
+
+
+  const wall2 = wall1.clone();
+
+  // Apply a scale transformation to reflect it across the X-axis
+  wall2.scale.z = -1; // Reflect across the X-axis
+  wall2.position.set(90, -5, 130); // Adjust the position as needed
+  scene.add(wall2);
+
+
+
+
+  // Optionally, you can perform additional operations on the loaded model here.
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Maze grid
 
 // Create a floor tile
 const tileGeometry = new THREE.BoxGeometry(5, 5,1.3)
@@ -386,8 +432,8 @@ loader.load('/dragon_ball_z_-_guko_character.glb', function (gltf) {
     console.error(error);
 });
 
-const target = new THREE.Object3D();
-target.position.copy(floorContainer.position); // Adjust the target's position as needed
+// const target = new THREE.Object3D();
+// target.position.copy(floorContainer.position); // Adjust the target's position as needed
 
 
 export function animated_objects(){
