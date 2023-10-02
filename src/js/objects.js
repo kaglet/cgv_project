@@ -54,6 +54,7 @@ materialArray.forEach((material) => {
 const skyboxGeo = new THREE.BoxGeometry(10000, 10000, 10000);
 const skybox = new THREE.Mesh(skyboxGeo, materialArray);
 scene.add(skybox);
+
 const axesHelper = new THREE.AxesHelper(50); //so we can see the axes for debugging
 scene.add(axesHelper);
 
@@ -205,11 +206,6 @@ tileMaterial.castShadow = true;
 tileMaterial.receiveShadow = true;
 // Start changing tile color and emitting light every 5 seconds
 
-floorContainer.rotation.set(-Math.PI / 2, 0, 0);
-
-
-const translationVector = new THREE.Vector3(0, 1, 200);
-floorContainer.position.copy(translationVector);
 scene.add(floorContainer);
 
 // Define the dimensions of the floorContainer
@@ -228,10 +224,14 @@ const floorContainerShape = new CANNON.Box(
 
 // Create a Cannon.js body for the floorContainer
 const floorContainerBody = new CANNON.Body({
-    mass: 0, // Make it static
+    type: CANNON.Body.STATIC,
     shape: floorContainerShape,
     position: new CANNON.Vec3(0, 0, -floorContainerDepth / 2) // Adjust the position as needed
 });
+
+const translationVector = new THREE.Vector3(0, 1, 200);
+floorContainerBody.position.copy(translationVector);
+floorContainerBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 
 // Add the floorContainerBody to the world
 world.addBody(floorContainerBody);
@@ -245,8 +245,14 @@ export function animated_objects(){
     boxMesh.position.copy(boxBody.position);
     boxMesh.quaternion.copy(boxBody.quaternion);
 
+    floorContainer.position.copy(floorContainerBody.position);
+    floorContainer.quaternion.copy(floorContainerBody.quaternion);
+
+
     // groundMesh.position.copy(groundBody.position);
     // groundMesh.quaternion.copy(groundBody.quaternion);
+
+
 
     // if (groundModel && groundBody) {
     //     groundModel.position.copy(groundBody.position);
