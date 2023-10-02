@@ -1,4 +1,3 @@
-
 import * as THREE from 'three';
 import * as CANNON from 'cannon-es';
 import * as script from './script.js'
@@ -97,9 +96,9 @@ class BasicCharacterController {
 
     const loader = new FBXLoader();
 
-    loader.load('ALEX.fbx', (fbx) => {
+    loader.load('./alex/ALEX.fbx', (fbx) => {
       characterModel = fbx;
-      // fbx.position.y=0;
+       //fbx.position.y=-30;
       // fbx.rotation.y=10;
       fbx.scale.setScalar(0.1);
       fbx.traverse(c => {
@@ -128,24 +127,26 @@ class BasicCharacterController {
 
       const loader = new FBXLoader(this._manager);
 
-      loader.load('Walking.fbx', (a) => { _OnLoad('walk', a); });
-      loader.load('WalkingBackwards.fbx', (a) => { _OnLoad('back', a); });
-      loader.load('Idle.fbx', (a) => { _OnLoad('idle', a); });
-      loader.load('WalkLeft.fbx', (a) => { _OnLoad('left', a); });
-      loader.load('WalkRight.fbx', (a) => { _OnLoad('right', a); });
+      loader.load('./alex/Walking.fbx', (a) => { _OnLoad('walk', a); });
+      loader.load('./alex/WalkingBackwards.fbx', (a) => { _OnLoad('back', a); });
+      loader.load('./alex/Idle.fbx', (a) => { _OnLoad('idle', a); });
+      loader.load('./alex/WalkLeft.fbx', (a) => { _OnLoad('left', a); });
+      loader.load('./alex/WalkRight.fbx', (a) => { _OnLoad('right', a); });
     });
   }
 
   Update(timeInSeconds) {
+  let savedCharacterOrientation = new THREE.Quaternion();
     const controlObject = this._target;
+    const cameraObject = this._params.camera;
+    const cameraDirection = new THREE.Vector3();
     if (!characterModel) {
       return;
     }
 
 
-
-
     if (camera.currentCamera === camera.camera) {
+       controlObject.quaternion.copy(savedCharacterOrientation);
 
       if (!this._target) {
         return;
@@ -167,20 +168,18 @@ class BasicCharacterController {
       velocity.add(frameDecceleration);
 
 
-      // FP camera
-      const cameraObject = this._params.camera;
 
       // Get the camera's direction
-      const cameraDirection = new THREE.Vector3();
+
       cameraObject.getWorldDirection(cameraDirection);
-      cameraDirection.y = 0; // Set the camera's vertical (Y-axis) component to 0
+      //cameraDirection.y = controlObject.y; // Set the camera's vertical (Y-axis) component to 0
 
       const acc = this._acceleration.clone();
 
       // Calculate movement direction based on camera's direction
       const moveDirection = new THREE.Vector3();
       moveDirection.copy(cameraDirection);
-
+      moveDirection.y=(0);
       // Separate vector for left and right movement
       const strafeDirection = new THREE.Vector3(cameraDirection.z, 0, -cameraDirection.x);
 
@@ -216,6 +215,7 @@ class BasicCharacterController {
         this._mixer.update(timeInSeconds);
       }
     } else if (camera.currentCamera === camera.topDownCamera) {
+          savedCharacterOrientation.copy(controlObject.quaternion);
       if (!this._target) {
         return;
       }
@@ -260,8 +260,8 @@ class BasicCharacterController {
 
       controlObject.quaternion.copy(_R);
 
-      const oldPosition = new THREE.Vector3();
-      oldPosition.copy(controlObject.position);
+      //const oldPosition = new THREE.Vector3();
+      //oldPosition.copy(controlObject.position);
 
       const forward = new THREE.Vector3(0, 0, 1);
       forward.applyQuaternion(controlObject.quaternion);
@@ -276,8 +276,9 @@ class BasicCharacterController {
 
       controlObject.position.add(forward);
       controlObject.position.add(sideways);
-
-      oldPosition.copy(controlObject.position);
+       const targetRotation = controlObject.rotation.clone();
+       cameraObject.rotation.copy(targetRotation);
+      //oldPosition.copy(controlObject.position);
 
       if (this._mixer) {
         this._mixer.update(timeInSeconds);
@@ -319,6 +320,10 @@ class BasicCharacterControllerInput {
     controls.addEventListener('unlock', function () {
       blocker.style.display = 'block';
       instructions.style.display = '';
+      moveForward=false;
+      moveBackward=false;
+      moveRight=false;
+      moveLeft=false;
     });
 
     objects.scene.add(controls.getObject());
