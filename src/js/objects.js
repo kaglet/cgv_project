@@ -24,7 +24,7 @@ export const scene = new THREE.Scene();
 
 // world - this is for cannon objects
 export var world = new CANNON.World({
-    gravity: new CANNON.Vec3(0,-9.81,0)
+    gravity: new CANNON.Vec3(0,-20,0)
   });
 
 
@@ -70,9 +70,9 @@ const boxMesh = new THREE.Mesh(boxGeo, boxMat);
 scene.add(boxMesh);
 
 const boxBody = new CANNON.Body({
-    mass: 10,
+    mass: 100,
     shape: new CANNON.Box(new CANNON.Vec3(5, 5, 5)),
-    position: new CANNON.Vec3(5, 2, 0),
+    position: new CANNON.Vec3(10, 2, 20),
   //  material: boxPhysMat
   });
   world.addBody(boxBody);
@@ -110,14 +110,14 @@ fbxLoader.load('./the_way/the_way.FBX', (fbx) => {
         }
     });
 
-  
+
     // Add the loaded model to your scene
     scene.add(fbx);
   });
 
 //Path walls
 
-//const loader = new GLTFLoader();
+const loader = new GLTFLoader();
 
 loader.load('./ruined_sandstone__wall_ref/scene.gltf', (gltf) => {
   const wall1 = gltf.scene;
@@ -143,21 +143,6 @@ loader.load('./ruined_sandstone__wall_ref/scene.gltf', (gltf) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //Maze grid
 
 // Create a floor tile
@@ -175,7 +160,7 @@ const floorContainer = new THREE.Group()
 
 // Duplicate tiles to create the floor with gaps
 
-//creates grid like tile path 
+//creates grid like tile path
 const numRows = 9
 const numCols = 9
 const tiles = []
@@ -213,7 +198,7 @@ function changeTileColorOnClick(tile) {
     // tile.material.color.copy(randomColor);
     // tile.material.emissive = randomColor; // Use the same color as the tile color for emissive
     // tile.material.emissiveIntensity = 100.0;
-    // const tileLight = new THREE.PointLight(randomColor, 1.0, 10.0, 5.0); 
+    // const tileLight = new THREE.PointLight(randomColor, 1.0, 10.0, 5.0);
     // tileLight.power = 6.0;
     // tileLight.position.copy(tile.position); // Position the light at the tile's position
     // scene.add(tileLight);
@@ -223,7 +208,7 @@ function changeTileColorOnClick(tile) {
 tileMaterial.receiveShadow = true;
 tileMaterial.transparent = true;
     const tileLight = new THREE.PointLight(randomColor, 1, 20, 5);
-    tileLight.position.copy(tile.position); 
+    tileLight.position.copy(tile.position);
     scene.add(tileLight);
 }
 
@@ -282,7 +267,7 @@ floorContainerBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 
 // Add the floorContainerBody to the world
 world.addBody(floorContainerBody);
-const loader = new GLTFLoader();
+
 
 loader.load('/ground_material.glb', function (gltf) {
     gltf.scene.rotation.y=Math.PI/2;
@@ -344,9 +329,9 @@ loader.load('/lion_statue.glb', function (gltf) {
     lionStatueModel.scale.set(20, 20, 20);
     lionStatueModel.position.set(-40, -5, 0);
     console.log("Lion Statue Properties:");
-    for (const property in lionStatueModel) {
-        console.log(`${property}:`, lionStatueModel[property]);
-    }
+//    for (const property in lionStatueModel) {
+//        console.log(`${property}:`, lionStatueModel[property]);
+//    }
 
     // Calculate dimensions of the lion statue model
     const boundingBox = new THREE.Box3().setFromObject(lionStatueModel);
@@ -438,6 +423,7 @@ loader.load('/dragon_ball_z_-_guko_character.glb', function (gltf) {
 
 export function animated_objects(){
     boxMesh.position.copy(boxBody.position);
+    boxMesh.position.y-=2;
     boxMesh.quaternion.copy(boxBody.quaternion);
 
     floorContainer.position.copy(floorContainerBody.position);
@@ -454,12 +440,3 @@ export function animated_objects(){
     //   }
 
 }
-
-
-
-
-
-
-
-
-
