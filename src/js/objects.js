@@ -117,7 +117,7 @@ fbxLoader.load('./the_way/the_way.FBX', (fbx) => {
 
 //Path walls
 
-const loader = new GLTFLoader();
+//const loader = new GLTFLoader();
 
 loader.load('./ruined_sandstone__wall_ref/scene.gltf', (gltf) => {
   const wall1 = gltf.scene;
