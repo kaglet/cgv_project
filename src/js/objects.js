@@ -109,6 +109,7 @@ const tiles = [];
 
 let changeTileColorOnClick = function(tile) {
     const tileColor = new THREE.Color(0, 0, 255);
+    // TODO: Change color of all faces of cube to blue currently only default front face is changed 
     tile.material.color.copy(tileColor);
 }
 

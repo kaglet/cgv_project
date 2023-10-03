@@ -21,7 +21,7 @@ function raf() {
     raf();
 
     objects.world.step(1 / 60);
-    objects.animated_objects();
+    objects.animated_objects(); 
     player.animated_objects();
 
     renderer.render(objects.scene, camera.currentCamera);
