@@ -1,25 +1,12 @@
 import * as THREE from 'three';
+import * as CANNON from 'cannon-es';
+import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 // Define the first camera (you can customize its parameters)
-const firstPersonCamera = new THREE.PerspectiveCamera(
-    75, 
-    window.innerWidth / window.innerHeight, 
-    0.1, 
-    30000
-);
-firstPersonCamera.position.set(0, -10, 0);
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 30000);
+camera.position.set(0, -10, 0);
 
-<<<<<<< HEAD
-// Define the top-down camera (you can customize its parameters)
-const topDownCamera = new THREE.PerspectiveCamera(
-    75, 
-    window.innerWidth / window.innerHeight, 
-    0.1, 
-    30000
-);
-
-topDownCamera.position.set(0, 20, 0);
-=======
 const width = window.innerWidth;
 const height = window.innerHeight;
 
@@ -36,17 +23,20 @@ const far = 1000;
 const topDownCamera = new THREE.OrthographicCamera(left, right, top, bottom, near, far);
 //const topDownCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 topDownCamera.position.set(0, 100, 0);
->>>>>>> 90949b94d9d8e50005b3a80284d161f41d58ba1c
 topDownCamera.lookAt(0, 0, 0);
 
 // Initialize the current camera to be the default camera
-let currentCamera = firstPersonCamera;
+let currentCamera = camera;
 
 document.addEventListener('keydown', (event) => {
     if (event.key === 'c') {
         // Switch between cameras
-        currentCamera = (currentCamera === firstPersonCamera) ? topDownCamera : firstPersonCamera;
+        if (currentCamera === camera) {
+            currentCamera = topDownCamera;
+        } else {
+            currentCamera = camera;
+        }
     }
 });
 
-export { firstPersonCamera, topDownCamera, currentCamera };
+export { camera, topDownCamera, currentCamera };

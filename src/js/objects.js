@@ -1,6 +1,10 @@
-import * as THREE from 'three'
+import * as THREE from 'three';
+
 import * as CANNON from 'cannon-es';
-import woodTextureImage from '../img/woodenfloor.jpg';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+
+
 // Import texture images
 import meadowFtImage from '../img/meadow/meadow_ft.jpg';
 import meadowBkImage from '../img/meadow/meadow_bk.jpg';
@@ -8,6 +12,11 @@ import meadowUpImage from '../img/meadow/meadow_up.jpg';
 import meadowDnImage from '../img/meadow/meadow_dn.jpg';
 import meadowRtImage from '../img/meadow/meadow_rt.jpg';
 import meadowLfImage from '../img/meadow/meadow_lf.jpg';
+
+
+
+
+
 import * as camera from './camera.js';
 
 // Scene
@@ -18,6 +27,8 @@ export var world = new CANNON.World({
     gravity: new CANNON.Vec3(0,-20,0)
   });
 
+
+// Create texture objects
 const texture_ft = new THREE.TextureLoader().load(meadowFtImage);
 const texture_bk = new THREE.TextureLoader().load(meadowBkImage);
 const texture_up = new THREE.TextureLoader().load(meadowUpImage);
@@ -25,19 +36,20 @@ const texture_dn = new THREE.TextureLoader().load(meadowDnImage);
 const texture_rt = new THREE.TextureLoader().load(meadowRtImage);
 const texture_lf = new THREE.TextureLoader().load(meadowLfImage);
 
-// Creates new materials we can initialize with properties using the configuration objects
+// Create material array
 const materialArray = [
-    new THREE.MeshBasicMaterial({ map: texture_ft, side: THREE.BackSide }),
-    new THREE.MeshBasicMaterial({ map: texture_bk, side: THREE.BackSide }),
-    new THREE.MeshBasicMaterial({ map: texture_up, side: THREE.BackSide }),
-    new THREE.MeshBasicMaterial({ map: texture_dn, side: THREE.BackSide }),
-    new THREE.MeshBasicMaterial({ map: texture_rt, side: THREE.BackSide }),
-    new THREE.MeshBasicMaterial({ map: texture_lf, side: THREE.BackSide })
+  new THREE.MeshBasicMaterial({ map: texture_ft }),
+  new THREE.MeshBasicMaterial({ map: texture_bk }),
+  new THREE.MeshBasicMaterial({ map: texture_up }),
+  new THREE.MeshBasicMaterial({ map: texture_dn }),
+  new THREE.MeshBasicMaterial({ map: texture_rt }),
+  new THREE.MeshBasicMaterial({ map: texture_lf })
 ];
 
-// const skyboxGeo = new THREE.BoxGeometry(10000, 10000, 10000);
-// const skybox = new THREE.Mesh(skyboxGeo, materialArray);
-// scene.add(skybox);
+// Set material side to backside
+materialArray.forEach((material) => {
+  material.side = THREE.BackSide;
+});
 
 // Create skybox
 const skyboxGeo = new THREE.BoxGeometry(10000, 10000, 10000);
@@ -50,8 +62,8 @@ scene.add(axesHelper);
 
 const boxGeo = new THREE.BoxGeometry(5, 5, 5);
 const boxMat = new THREE.MeshBasicMaterial({
-    color: 0x00ff00,
-    wireframe: true
+	color: 0x00ff00,
+	wireframe: true
 });
 
 const boxMesh = new THREE.Mesh(boxGeo, boxMat);
@@ -69,8 +81,11 @@ const boxBody = new CANNON.Body({
 //physics ground
 const groundBody = new CANNON.Body({
     shape: new CANNON.Plane(),
-    type: CANNON.Body.STATIC,
-});
+    //mass: 10
+    // shape: new CANNON.Box(new CANNON.Vec3(15, 15, 0.1)),
+     type: CANNON.Body.STATIC,
+    // material: groundPhysMat
+  });
 
   groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
   world.addBody(groundBody);
@@ -136,11 +151,12 @@ const tileMaterial = new THREE.MeshStandardMaterial({
     color: 0xffffff,
     opacity: 0.5, // Adjust the opacity value (0.0 to 1.0)
     transparent: true, // Enable transparency
-});
+})
+// Define tile size and gap size
+const tileSize = 5 // Adjust the size of each tile
+const gapSize = 0.2 // Adjust the size of the gap
 
-// Create multiple floor tiles
-const tileSize = 5; // Adjust the size of each tile
-const gapSize = 0.2; // Adjust the size of the gap
+const floorContainer = new THREE.Group()
 
 // Duplicate tiles to create the floor with gaps
 
@@ -149,40 +165,30 @@ const numRows = 9
 const numCols = 9
 const tiles = []
 
-let changeTileColorOnClick = function(tile) {
-    const tileColor = new THREE.Color(0, 0, 255);
-    tile.material.color.copy(tileColor);
-    tileMaterial.castShadow = true;
-    tileMaterial.receiveShadow = true;
-    tileMaterial.transparent = true;
-    const tileLight = new THREE.PointLight(tileColor, 1, 20, 5);
-    tileLight.position.copy(tile.position);
-    scene.add(tileLight);
-}
-
-// TODO: Refactor function for clarity and maintainability, especially boolean expression with hardcoded values
-// TODO: Check if floorContainer for grouping and tiles array are not redundant
 for (let i = 0; i < numRows; i++) {
     for (let j = 0; j < numCols; j++) {
         const isMissingTile = (i % 2 === 0 && j % 2 === 0) || (i % 2 === 1 && j % 2 === 1);
         if (!isMissingTile || i % 4 === 0 || (i - 2) % 4 === 0) {
-            const singleTile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
+            const tileClone = new THREE.Mesh(tileGeometry, tileMaterial.clone());
             const xOffset = (i - numRows / 2) * (tileSize + gapSize);
             const yOffset = (j - numCols / 2) * (tileSize + gapSize);
-            singleTile.position.set(xOffset, yOffset, 0);
+            tileClone.position.set(xOffset, yOffset, 0);
 
-            singleTile.castShadow = true;
-            singleTile.receiveShadow = true;
+            // Enable shadows for the tile
+            tileClone.castShadow = true;
+            tileClone.receiveShadow = true;
 
-            singleTile.addEventListener('click', () => {
-                changeTileColorOnClick(singleTile);
+            // Add click event listener to each tile
+            tileClone.addEventListener('click', () => {
+            changeTileColorOnClick(tileClone);
             });
 
-            floorContainer.add(singleTile);
-            tiles.push(singleTile);
+            floorContainer.add(tileClone);
+            tiles.push(tileClone);
         }
     }
 }
+
 
 //scales map path
 floorContainer.scale.set(2.6, 2.6, 1.3);
@@ -206,24 +212,30 @@ tileMaterial.transparent = true;
     scene.add(tileLight);
 }
 
-export const raycaster = new THREE.Raycaster();
+// clicking the tiles?
+//export const raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );
+export const raycaster=new THREE.Raycaster();
+const mouse = new THREE.Vector2(0,0);
 
-window.addEventListener('click', (e) => {
-    // Get normalized values of x and y of cursor (NDC)
-    mousePosition.x = (e.clientX / window.innerWidth) * 2 - 1;
-    mousePosition.y = - (e.clientY / window.innerHeight) * 2 + 1;
+document.addEventListener('click', (event) => {
+    // Calculate mouse coordinates in normalized device coordinates (NDC)
+    mouse.x =0;
+    mouse.y = 0;
 
-    // Set two ends of the ray which are the camera and normalized mouse position
-    raycaster.setFromCamera(mousePosition, camera.currentCamera);
+    // Update the raycaster
+    raycaster.setFromCamera(mouse, camera.currentCamera);
 
-    // Method returns an object that contains all elements from the tiles that intersects with the ray
-    const intersects = raycaster.intersectObjects(scene.children);
+    // Get a list of objects intersected by the raycaster
+    const intersects = raycaster.intersectObjects(tiles);
 
     // If there are intersections, trigger the click event on the first object (tile) in the list
-    if (intersects.length) {
+    if (intersects.length > 0) {
         intersects[0].object.dispatchEvent({ type: 'click' });
     }
 });
+
+tileMaterial.castShadow = true;
+tileMaterial.receiveShadow = true;
 // Start changing tile color and emitting light every 5 seconds
 
 scene.add(floorContainer);
@@ -408,8 +420,8 @@ loader.load('/dragon_ball_z_-_guko_character.glb', function (gltf) {
 // const target = new THREE.Object3D();
 // target.position.copy(floorContainer.position); // Adjust the target's position as needed
 
-// TODO: Rename function so its job/action is clear
-export function animated_objects() {
+
+export function animated_objects(){
     boxMesh.position.copy(boxBody.position);
     boxMesh.position.y-=2;
     boxMesh.quaternion.copy(boxBody.quaternion);

@@ -27,8 +27,7 @@ function startGame() {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-function step(timeElapsed) {
-  const timeElapsedS = timeElapsed * 0.001;
+    document.body.appendChild(renderer.domElement);
 
     window.addEventListener('resize', _OnWindowResize, false);
 
