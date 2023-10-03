@@ -9,6 +9,7 @@ body
 {
     height: 100vh;
     font-family: 'Poppins';
+    caret-color: transparent;
 }
 
 .webgl
@@ -18,3 +19,83 @@ body
     left: 0;
     outline: none;
 }
+
+
+#crosshairs {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid red;
+    border-radius: 50%;
+    pointer-events: none;
+    cursor: pointer;
+    caret: none;
+
+}
+
+#title-screen {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#title-screen h1 {
+    font-size: 36px;
+    color: white;
+    margin-bottom: 20px;
+}
+
+#title-screen p {
+    font-size: 18px;
+    color: white;
+    margin-bottom: 30px;
+}
+
+
+#paused-screen {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 1);
+    color: white;
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    display: none; /* Initially hide the pause screen */
+    z-index: 1000; /* Ensure it's on top of other elements */
+}
+
+#paused-screen h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+#paused-screen p {
+    font-size: 18px;
+    margin-top: 0;
+}
+

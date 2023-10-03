@@ -1,40 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ThreeJS Starter</title>
-    <style>
-        body {
-            margin: 0
-        }
-        #crosshairs {
-          position: fixed;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 20px;
-          height: 20px;
-          border: 2px solid red;
-          border-radius: 50%;
-          pointer-events: none;
-          cursor:none;
-        }
-    </style>
+    <!-- Link to your external CSS file (style.css) -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <script src="./js/script.js" type="module"></script>
-    <script src="./js/objects.js" type="module"></script>
-    <script src="./js/lighting.js" type="module"></script>
-    <script src="./js/player.js" type="module"></script>
-    <script src="./js/camera.js" type="module"></script>
-    <canvas class="webgl"></canvas>
-    <div id="blocker">
-        <div id="instructions">
-            <div id="crosshairs">
-                <!-- Add your crosshair content here -->
-            </div>
+<script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.138.3/build/three.module.js"
+            }
+        }
+    </script>
+<script src="./js/script.js" type="module"></script>
+<script src="./js/objects.js" type="module"></script>
+<script src="./js/lighting.js" type="module"></script>
+<script src="./js/player.js" type="module"></script>
+<script src="./js/camera.js" type="module"></script>
+
+<div id="title-screen">
+    <!-- Add your title screen content here -->
+    <h1>Welcome to PUZZLE GAME</h1>
+    <p>Made by US</p>
+    <button id="start-button" style="display: none;">Start Game</button>
+</div>
+<div id="paused-screen" style="display: none;">
+    <h1>Paused</h1>
+    <p>Click to Resume</p>
+</div>
+<canvas class="webgl"></canvas>
+<div id="blocker">
+    <div id="instructions">
+        <div id="crosshairs">
+            <!-- Add your crosshair content here -->
         </div>
     </div>
+</div>
+<!-- Hide the game elements initially using inline style -->
+
 </body>
 </html>

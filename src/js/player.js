@@ -1,4 +1,3 @@
-
 import * as THREE from 'three';
 import * as CANNON from 'cannon-es';
 import * as script from './script.js'
@@ -26,6 +25,7 @@ let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
 let moveRight = false;
+let paused = false;
 let playerBody;
 let characterModel = null;
 
@@ -43,12 +43,13 @@ class BasicCharacterControllerProxy {
 class BasicCharacterController {
   constructor(params) {
 
-    params.world.gravity.set(0, -9.81, 0);
+//    params.world.gravity.set(0, -9.81, 0);
 
     // Create a Cannon.js body for the player character
     playerBody = new CANNON.Body({
       mass: 100, // Adjust the mass as needed
-      shape: new CANNON.Box(new CANNON.Vec3(0.5, 1, 0.5)), // Adjust the size as needed
+      shape: new CANNON.Box(new CANNON.Vec3(1, 5, 1)),
+      position: new CANNON.Vec3(0, 5, 0),
     });
 
     // Add the body to the Cannon.js world
@@ -97,9 +98,9 @@ class BasicCharacterController {
 
     const loader = new FBXLoader();
 
-    loader.load('ALEX.fbx', (fbx) => {
+    loader.load('./alex/ALEX.fbx', (fbx) => {
       characterModel = fbx;
-      // fbx.position.y=0;
+       //fbx.position.y=-30;
       // fbx.rotation.y=10;
       fbx.scale.setScalar(0.1);
       fbx.traverse(c => {
@@ -128,24 +129,26 @@ class BasicCharacterController {
 
       const loader = new FBXLoader(this._manager);
 
-      loader.load('Walking.fbx', (a) => { _OnLoad('walk', a); });
-      loader.load('WalkingBackwards.fbx', (a) => { _OnLoad('back', a); });
-      loader.load('Idle.fbx', (a) => { _OnLoad('idle', a); });
-      loader.load('WalkLeft.fbx', (a) => { _OnLoad('left', a); });
-      loader.load('WalkRight.fbx', (a) => { _OnLoad('right', a); });
+      loader.load('./alex/Walking.fbx', (a) => { _OnLoad('walk', a); });
+      loader.load('./alex/WalkingBackwards.fbx', (a) => { _OnLoad('back', a); });
+      loader.load('./alex/Idle.fbx', (a) => { _OnLoad('idle', a); });
+      loader.load('./alex/WalkLeft.fbx', (a) => { _OnLoad('left', a); });
+      loader.load('./alex/WalkRight.fbx', (a) => { _OnLoad('right', a); });
     });
   }
 
   Update(timeInSeconds) {
+  let savedCharacterOrientation = new THREE.Quaternion();
     const controlObject = this._target;
+    const cameraObject = this._params.camera;
+    const cameraDirection = new THREE.Vector3();
     if (!characterModel) {
       return;
     }
 
 
-
-
-    if (camera.currentCamera === camera.firstPersonCamera) {
+    if (camera.currentCamera === camera.camera) {
+       controlObject.quaternion.copy(savedCharacterOrientation);
 
       if (!this._target) {
         return;
@@ -167,20 +170,18 @@ class BasicCharacterController {
       velocity.add(frameDecceleration);
 
 
-      // FP camera
-      const cameraObject = this._params.camera;
 
       // Get the camera's direction
-      const cameraDirection = new THREE.Vector3();
+
       cameraObject.getWorldDirection(cameraDirection);
-      cameraDirection.y = 0; // Set the camera's vertical (Y-axis) component to 0
+      //cameraDirection.y = controlObject.y; // Set the camera's vertical (Y-axis) component to 0
 
       const acc = this._acceleration.clone();
 
       // Calculate movement direction based on camera's direction
       const moveDirection = new THREE.Vector3();
       moveDirection.copy(cameraDirection);
-
+      moveDirection.y=(0);
       // Separate vector for left and right movement
       const strafeDirection = new THREE.Vector3(cameraDirection.z, 0, -cameraDirection.x);
 
@@ -210,12 +211,13 @@ class BasicCharacterController {
       // Update camera's position to match the character's position
       cameraObject.position.copy(controlObject.position);
       // Set the camera's vertical position (Y-axis) to maintain it above the character's head
-      cameraObject.position.y += 20;
 
+       cameraObject.position.y += 20;
       if (this._mixer) {
         this._mixer.update(timeInSeconds);
       }
     } else if (camera.currentCamera === camera.topDownCamera) {
+          savedCharacterOrientation.copy(controlObject.quaternion);
       if (!this._target) {
         return;
       }
@@ -260,8 +262,8 @@ class BasicCharacterController {
 
       controlObject.quaternion.copy(_R);
 
-      const oldPosition = new THREE.Vector3();
-      oldPosition.copy(controlObject.position);
+      //const oldPosition = new THREE.Vector3();
+      //oldPosition.copy(controlObject.position);
 
       const forward = new THREE.Vector3(0, 0, 1);
       forward.applyQuaternion(controlObject.quaternion);
@@ -276,8 +278,9 @@ class BasicCharacterController {
 
       controlObject.position.add(forward);
       controlObject.position.add(sideways);
-
-      oldPosition.copy(controlObject.position);
+       const targetRotation = controlObject.rotation.clone();
+       cameraObject.rotation.copy(targetRotation);
+      //oldPosition.copy(controlObject.position);
 
       if (this._mixer) {
         this._mixer.update(timeInSeconds);
@@ -306,19 +309,29 @@ class BasicCharacterControllerInput {
     //code that allows the screen to follow mouse
     const blocker = document.getElementById('blocker');
     const instructions = document.getElementById('instructions');
+     const pausedScreen = document.getElementById('paused-screen');
 
-    document.addEventListener('click', function () {
-      controls.lock();
-    });
+     document.addEventListener('click', function () {
+          controls.lock();
+        });
+
 
     controls.addEventListener('lock', function () {
+      paused=false;
       instructions.style.display = 'none';
       blocker.style.display = 'none';
+      pausedScreen.style.display = 'none';
     });
 
     controls.addEventListener('unlock', function () {
+      paused=true;
+      pausedScreen.style.display = 'block';
       blocker.style.display = 'block';
       instructions.style.display = '';
+      moveForward=false;
+      moveBackward=false;
+      moveRight=false;
+      moveLeft=false;
     });
 
     objects.scene.add(controls.getObject());
@@ -326,20 +339,22 @@ class BasicCharacterControllerInput {
   }
   //key press listeners
   _onKeyDown(event) {
+  if(!paused){
     switch (event.keyCode) {
-      case 87: // w
-        moveForward = true;
-        break;
-      case 65: // a
-        moveLeft = true;
-        break;
-      case 83: // s
-        moveBackward = true;
-        break;
-      case 68: // d
-        moveRight = true;
-        break;
+          case 87: // w
+            moveForward = true;
+            break;
+          case 65: // a
+            moveLeft = true;
+            break;
+          case 83: // s
+            moveBackward = true;
+            break;
+          case 68: // d
+            moveRight = true;
+            break;
 
+        }
     }
   }
 
@@ -661,5 +676,6 @@ export function _LoadAnimatedModel() {
 export function animated_objects() {
   if (characterModel && playerBody) {
     characterModel.position.copy(playerBody.position);
+    characterModel.position.y-=2;
   }
 }
