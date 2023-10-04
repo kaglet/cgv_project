@@ -27,7 +27,8 @@ let moveBackward = false;
 let moveLeft = false;
 let moveRight = false;
 let playerBody;
-let characterModel = null;
+export let controlObject = null;
+export let characterModel = null;
 
 class BasicCharacterControllerProxy {
   constructor(animations) {
@@ -137,7 +138,7 @@ class BasicCharacterController {
   }
 
   Update(timeInSeconds) {
-    const controlObject = this._target;
+    controlObject = this._target;
     if (!characterModel) {
       return;
     }

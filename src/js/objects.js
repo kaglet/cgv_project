@@ -93,14 +93,14 @@ const tileMaterial = new THREE.MeshStandardMaterial({
 const tileSize = 5; // Adjust the size of each tile
 const gapSize = 0.2; // Adjust the size of the gap
 
-const floorContainer = new THREE.Group();
+export const floorContainer = new THREE.Group();
 const textureLoader = new THREE.TextureLoader();
 const woodTexture = textureLoader.load(woodTextureImage);
 
 const rotationAngle = -(Math.PI / 2);
 
 floorContainer.rotation.set(rotationAngle, 0, 0);
-floorContainer.scale.set(1.7, 1.7, 1.7);
+floorContainer.scale.set(2, 2, 2);
 scene.add(floorContainer);
 //creates grid like tile path 
 const numRows = 9;
@@ -126,13 +126,16 @@ for (let i = 0; i < numRows; i++) {
 
             singleTile.castShadow = true;
             singleTile.receiveShadow = true;
+            singleTile.updateWorldMatrix(true, false); // Update the world matrix of the tile
 
             singleTile.addEventListener('click', () => {
                 changeTileColorOnClick(singleTile);
             });
 
             singleTile.name = 'tile';
+            singleTile.litUp = false;
 
+            // you can add the tile into the floor container somehow, with its coordinates like that
             floorContainer.add(singleTile);
             tiles.push(singleTile);
         }
@@ -143,6 +146,8 @@ const mousePosition = new THREE.Vector2(0, 0);
 
 export const raycaster = new THREE.Raycaster();
 
+// event listener will not be for on click, but rather for on detect other object hovering over
+
 window.addEventListener('click', (e) => {
     // Get normalized values of x and y of cursor (NDC)
     mousePosition.x = 0;
@@ -152,6 +157,7 @@ window.addEventListener('click', (e) => {
     raycaster.setFromCamera(mousePosition, camera.currentCamera);
 
     // Method returns an object that contains all elements from the tiles that intersects with the ray
+    // Rememeber the floorContainer is conceptual rather than an actual object so it cannot be intersected with
     const intersects = raycaster.intersectObjects(floorContainer.children, true);
     intersects.forEach(intersect => {
         if (intersect.object.name === 'tile') {
