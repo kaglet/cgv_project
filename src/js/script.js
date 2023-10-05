@@ -10,6 +10,7 @@ const renderer = new THREE.WebGLRenderer({
   antialias: true,
 });
 
+
 let i = 0;
 
 // DECLARE FUNCTIONS
@@ -23,8 +24,8 @@ function raf() {
     raf();
 
     objects.world.step(1 / 60);
-    objects.animated_objects();
-    player.animated_objects();
+    objects.animate_objects();
+    player.animate_objects();
     if (i == 0) {
       console.log(objects.floorContainer.children);
     }

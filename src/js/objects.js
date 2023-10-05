@@ -43,8 +43,8 @@ scene.add(skybox);
 const axesHelper = new THREE.AxesHelper(200); 
 scene.add(axesHelper);
 
-const gridHelper = new THREE.GridHelper(200, 200);
-scene.add(gridHelper);
+// const gridHelper = new THREE.GridHelper(200, 200);
+// scene.add(gridHelper);
 
 // Create ground
 const groundGeo = new THREE.PlaneGeometry(100, 100);
@@ -83,6 +83,9 @@ const woodTexture = textureLoader.load(woodTextureImage);
 const rotationAngle = -(Math.PI / 2);
 
 floorContainer.rotation.set(rotationAngle, 0, 0);
+// Scaling applies to group hierarchically nested inside
+// Local transformations before global one
+// Scales floor and anything inside
 floorContainer.scale.set(2, 2, 2);
 scene.add(floorContainer);
 //creates grid like tile path 
@@ -119,7 +122,7 @@ for (let i = 0; i < numRows; i++) {
 export const raycaster = new THREE.Raycaster();
 
 // TODO: Rename function so its job/action is clear
-export function animated_objects() {
+export function animate_objects() {
     groundMesh.position.copy(groundBody.position);
     groundMesh.quaternion.copy(groundBody.quaternion);
 }
