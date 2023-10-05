@@ -17,7 +17,7 @@ const topDownCamera = new THREE.PerspectiveCamera(
     30000
 );
 
-topDownCamera.position.set(0, 20, 0);
+topDownCamera.position.set(0, 70, 0);
 topDownCamera.lookAt(0, 0, 0);
 
 // Initialize the current camera to be the default camera
