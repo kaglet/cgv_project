@@ -122,7 +122,7 @@ for (let i = 0; i < numRows; i++) {
 }
 
 export const raycaster = new THREE.Raycaster();
-
+//
 // TODO: Rename function so its job/action is clear
 export function animated_objects() {
     groundMesh.position.copy(groundBody.position);
