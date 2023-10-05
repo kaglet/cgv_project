@@ -101,6 +101,7 @@ class BasicCharacterController {
 
     loader.load('ALEX.fbx', (fbx) => {
       characterModel = fbx;
+      characterModel.quaternion.copy(playerBody.quaternion);
       // fbx.position.y=0;
       // fbx.rotation.y=10;
       fbx.scale.setScalar(0.1);
