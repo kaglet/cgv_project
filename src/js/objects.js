@@ -27,17 +27,17 @@ const texture_lf = new THREE.TextureLoader().load(meadowLfImage);
 
 // Creates new materials we can initialize with properties using the configuration objects
 const materialArray = [
-    new THREE.MeshBasicMaterial({ map: texture_ft, side: THREE.BackSide }),
-    new THREE.MeshBasicMaterial({ map: texture_bk, side: THREE.BackSide }),
-    new THREE.MeshBasicMaterial({ map: texture_up, side: THREE.BackSide }),
-    new THREE.MeshBasicMaterial({ map: texture_dn, side: THREE.BackSide }),
-    new THREE.MeshBasicMaterial({ map: texture_rt, side: THREE.BackSide }),
-    new THREE.MeshBasicMaterial({ map: texture_lf, side: THREE.BackSide })
+    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide })
 ];
 
-// const skyboxGeo = new THREE.BoxGeometry(10000, 10000, 10000);
-// const skybox = new THREE.Mesh(skyboxGeo, materialArray);
-// scene.add(skybox);
+const skyboxGeo = new THREE.BoxGeometry(10000, 10000, 10000);
+const skybox = new THREE.Mesh(skyboxGeo, materialArray);
+scene.add(skybox);
 
 // Create helpers
 const axesHelper = new THREE.AxesHelper(200); 

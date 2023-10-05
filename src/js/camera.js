@@ -18,7 +18,7 @@ const topDownCamera = new THREE.PerspectiveCamera(
 );
 
 topDownCamera.position.set(0, 70, 0);
-topDownCamera.lookAt(0, 0, 0);
+topDownCamera.lookAt(0, 0, 0); // this camera can be moved using this, but camera does not follow player it only focuses on puzzle I guess
 
 // Initialize the current camera to be the default camera
 let currentCamera = firstPersonCamera;
