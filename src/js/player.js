@@ -47,7 +47,8 @@ class BasicCharacterController {
     // Create a Cannon.js body for the player character
     playerBody = new CANNON.Body({
       mass: 100, // Adjust the mass as needed
-      shape: new CANNON.Box(new CANNON.Vec3(0.5, 1, 0.5)), // Adjust the size as needed
+      shape: new CANNON.Box(new CANNON.Vec3(5, 8, 5)), // Adjust the size as needed
+      position: new CANNON.Vec3(0, 10, 0),
     });
 
     // Add the body to the Cannon.js world
@@ -210,6 +211,7 @@ class BasicCharacterController {
       cameraObject.position.copy(controlObject.position);
       // Set the camera's vertical position (Y-axis) to maintain it above the character's head
       cameraObject.position.y += 20;
+      cameraObject.position.z += 20;
 
       if (this._mixer) {
         this._mixer.update(timeInSeconds);

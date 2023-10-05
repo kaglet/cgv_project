@@ -59,7 +59,7 @@ const axesHelper = new THREE.AxesHelper(50); //so we can see the axes for debugg
 scene.add(axesHelper);
 
 
-const boxGeo = new THREE.BoxGeometry(5, 5, 5);
+const boxGeo = new THREE.BoxGeometry(5, 30, 5);
 const boxMat = new THREE.MeshBasicMaterial({
 	color: 0x00ff00,
 	wireframe: true
@@ -68,26 +68,39 @@ const boxMat = new THREE.MeshBasicMaterial({
 const boxMesh = new THREE.Mesh(boxGeo, boxMat);
 scene.add(boxMesh);
 
+const boxPhysMat = new CANNON.Material();
 const boxBody = new CANNON.Body({
-    mass: 10,
-    shape: new CANNON.Box(new CANNON.Vec3(5, 5, 5)),
-    position: new CANNON.Vec3(5, 2, 0),
-  //  material: boxPhysMat
+    mass: 100,
+    shape: new CANNON.Box(new CANNON.Vec3(5, 30, 5)),
+    position: new CANNON.Vec3(50, 50, 0),
+    // type: CANNON.Body.STATIC,
+    material: boxPhysMat
   });
   world.addBody(boxBody);
 
 
+const groundPhysMat = new CANNON.Material();
 //physics ground
 const groundBody = new CANNON.Body({
     shape: new CANNON.Plane(),
     //mass: 10
     // shape: new CANNON.Box(new CANNON.Vec3(15, 15, 0.1)),
      type: CANNON.Body.STATIC,
-    // material: groundPhysMat
+     material: groundPhysMat
   });
 
   groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
   world.addBody(groundBody);
+
+
+  boxBody.angularVelocity.set(0, 10, 0);
+boxBody.angularDamping = 0.5;
+
+const groundBoxContactMat = new CANNON.ContactMaterial(
+    groundPhysMat,
+    boxPhysMat,
+    {friction: 0.40}
+);
 
 
 //Path object
@@ -98,7 +111,7 @@ fbxLoader.load('./the_way/the_way.FBX', (fbx) => {
     /// You can scale, position, and rotate the model here
     // Example:
     fbx.scale.set(0.1, 0.1, 0.1);
-    fbx.position.set(0, 0, 0);
+    fbx.position.set(0, -10, 0);
 
     fbx.traverse((child) => {
         if (child instanceof THREE.Mesh) {
@@ -111,7 +124,7 @@ fbxLoader.load('./the_way/the_way.FBX', (fbx) => {
 
   
     // Add the loaded model to your scene
-    scene.add(fbx);
+ //   scene.add(fbx);
   });
 
 //Path walls
@@ -133,10 +146,6 @@ loader.load('./ruined_sandstone__wall_ref/scene.gltf', (gltf) => {
   wall2.scale.z = -1; // Reflect across the X-axis
   wall2.position.set(90, -5, 130); // Adjust the position as needed
   scene.add(wall2);
-
-
-
-
   // Optionally, you can perform additional operations on the loaded model here.
 });
 
@@ -289,6 +298,7 @@ world.addBody(floorContainerBody);
 
 export function animated_objects(){
     boxMesh.position.copy(boxBody.position);
+    // boxMesh.position.z -=2.5;
     boxMesh.quaternion.copy(boxBody.quaternion);
 
     floorContainer.position.copy(floorContainerBody.position);
