@@ -128,10 +128,6 @@ for (let i = 0; i < numRows; i++) {
             singleTile.receiveShadow = true;
             singleTile.updateWorldMatrix(true, false); // Update the world matrix of the tile
 
-            singleTile.addEventListener('click', () => {
-                changeTileColorOnClick(singleTile);
-            });
-
             singleTile.name = 'tile';
             singleTile.litUp = false;
 

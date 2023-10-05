@@ -32,21 +32,11 @@ function raf() {
     objects.floorContainer.children.forEach((tile, index) => {
       // TODO: Can make epsilon values for each coordinate x, y, z separately to see which have smaller vs larger errors to allow
       // The above is for finessing because right now the tile will light up when the least error from all coordinates happens, so around the center of the tile
-      // all 3 must match so less chance for a mistake
+      // All 3 must match so less chance for a mistake
       // y error is fine can be large since only one tile is near in y alone but others matter too
       // TODO: Make it so it only lights up once after first detection and after that it doesn't need to be lit up again
       // Because right now I am getting the boolean true triggrered multiple times even after the tile is lit up the first time
       const epsilon = 3; // Small epsilon value to handle floating point errors
-
-      // if (i < 1000) {
-      //   console.log(`The tile position x is: ${tile.position.x} and the player position x is: ${player.characterModel.position.x}`);
-      //   console.log(`The tile position z is: ${tile.position.z} and the player position z is: ${player.characterModel.position.z}`);
-      // }
-      // Transform local coordinates to world coordinates after rotation
-      // if (i == 0) {
-
-      //   console.log(`I am tile ${index}\t with world coordinates: ${worldPosition.x} in x and ${worldPosition.y} in y and ${worldPosition.z} in z\t and local coordinates: ${tile.position.x} in x and ${tile.position.y} in y and ${tile.position.z}`);
-      // }
       const worldPosition = new THREE.Vector3();
       tile.getWorldPosition(worldPosition); // Get the world position of the tile
       // console.log(`I am tile ${index}\t with world coordinates: ${worldPosition.x} in x and ${worldPosition.y} in y and ${worldPosition.z} in z\t and local coordinates: ${tile.position.x} in x and ${tile.position.y} in y and ${tile.position.z}`);
