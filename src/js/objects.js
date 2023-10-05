@@ -90,12 +90,6 @@ const numRows = 9;
 const numCols = 9;
 const tiles = [];
 
-let changeTileColorOnClick = function(tile) {
-    const tileColor = new THREE.Color(0, 0, 255);
-    // TODO: Change color of all faces of cube to blue currently only default front face is changed 
-    tile.material.color.copy(tileColor);
-}
-
 // TODO: Refactor function for clarity and maintainability, especially boolean expression with hardcoded values
 // TODO: Check if floorContainer for grouping and tiles array are not redundant
 for (let i = 0; i < numRows; i++) {
@@ -105,6 +99,7 @@ for (let i = 0; i < numRows; i++) {
             const singleTile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
             const xOffset = (i - numRows / 2) * (tileSize + gapSize);
             const yOffset = (j - numCols / 2) * (tileSize + gapSize);
+
             singleTile.position.set(xOffset, yOffset, 0);
 
             singleTile.castShadow = true;
