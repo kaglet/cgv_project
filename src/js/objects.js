@@ -46,23 +46,6 @@ scene.add(axesHelper);
 const gridHelper = new THREE.GridHelper(200, 200);
 scene.add(gridHelper);
 
-// Create box to test physics on
-const boxGeo = new THREE.BoxGeometry(5, 5, 5);
-const boxMat = new THREE.MeshBasicMaterial({
-    color: 0x00ff00,
-    wireframe: true
-});
-
-const boxMesh = new THREE.Mesh(boxGeo, boxMat);
-scene.add(boxMesh);
-
-const boxBody = new CANNON.Body({
-    mass: 1,
-    shape: new CANNON.Box(new CANNON.Vec3(5, 5, 5)),
-    position: new CANNON.Vec3(30, 30, 0),
-});
-world.addBody(boxBody);
-
 // Create ground
 const groundGeo = new THREE.PlaneGeometry(100, 100);
 const groundMat = new THREE.MeshStandardMaterial({
@@ -138,35 +121,10 @@ for (let i = 0; i < numRows; i++) {
     }
 }
 
-const mousePosition = new THREE.Vector2(0, 0);
-
 export const raycaster = new THREE.Raycaster();
-
-// event listener will not be for on click, but rather for on detect other object hovering over
-
-window.addEventListener('click', (e) => {
-    // Get normalized values of x and y of cursor (NDC)
-    mousePosition.x = 0;
-    mousePosition.y = 0;
-
-    // Set two ends of the ray which are the camera and normalized mouse position
-    raycaster.setFromCamera(mousePosition, camera.currentCamera);
-
-    // Method returns an object that contains all elements from the tiles that intersects with the ray
-    // Rememeber the floorContainer is conceptual rather than an actual object so it cannot be intersected with
-    const intersects = raycaster.intersectObjects(floorContainer.children, true);
-    intersects.forEach(intersect => {
-        if (intersect.object.name === 'tile') {
-            intersect.object.dispatchEvent({ type: 'click' });
-        }
-    });
-});
 
 // TODO: Rename function so its job/action is clear
 export function animated_objects() {
-    boxMesh.position.copy(boxBody.position);
-    boxMesh.quaternion.copy(boxBody.quaternion);
-
     groundMesh.position.copy(groundBody.position);
     groundMesh.quaternion.copy(groundBody.quaternion);
 }
