@@ -25,6 +25,7 @@ let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
 let moveRight = false;
+let paused = false;
 let playerBody;
 let characterModel = null;
 
@@ -42,13 +43,13 @@ class BasicCharacterControllerProxy {
 class BasicCharacterController {
   constructor(params) {
 
-    params.world.gravity.set(0, -9.81, 0);
+//    params.world.gravity.set(0, -9.81, 0);
 
     // Create a Cannon.js body for the player character
     playerBody = new CANNON.Body({
       mass: 100, // Adjust the mass as needed
-      shape: new CANNON.Box(new CANNON.Vec3(5, 8, 5)), // Adjust the size as needed
-      position: new CANNON.Vec3(0, 10, 0),
+      shape: new CANNON.Box(new CANNON.Vec3(1, 5, 1)),
+      position: new CANNON.Vec3(0, 5, 0),
     });
 
     // Add the body to the Cannon.js world
@@ -210,9 +211,8 @@ class BasicCharacterController {
       // Update camera's position to match the character's position
       cameraObject.position.copy(controlObject.position);
       // Set the camera's vertical position (Y-axis) to maintain it above the character's head
-      cameraObject.position.y += 20;
-      cameraObject.position.z += 20;
 
+       cameraObject.position.y += 20;
       if (this._mixer) {
         this._mixer.update(timeInSeconds);
       }
@@ -309,17 +309,23 @@ class BasicCharacterControllerInput {
     //code that allows the screen to follow mouse
     const blocker = document.getElementById('blocker');
     const instructions = document.getElementById('instructions');
+     const pausedScreen = document.getElementById('paused-screen');
 
-    document.addEventListener('click', function () {
-      controls.lock();
-    });
+     document.addEventListener('click', function () {
+          controls.lock();
+        });
+
 
     controls.addEventListener('lock', function () {
+      paused=false;
       instructions.style.display = 'none';
       blocker.style.display = 'none';
+      pausedScreen.style.display = 'none';
     });
 
     controls.addEventListener('unlock', function () {
+      paused=true;
+      pausedScreen.style.display = 'block';
       blocker.style.display = 'block';
       instructions.style.display = '';
       moveForward=false;
@@ -333,20 +339,22 @@ class BasicCharacterControllerInput {
   }
   //key press listeners
   _onKeyDown(event) {
+  if(!paused){
     switch (event.keyCode) {
-      case 87: // w
-        moveForward = true;
-        break;
-      case 65: // a
-        moveLeft = true;
-        break;
-      case 83: // s
-        moveBackward = true;
-        break;
-      case 68: // d
-        moveRight = true;
-        break;
+          case 87: // w
+            moveForward = true;
+            break;
+          case 65: // a
+            moveLeft = true;
+            break;
+          case 83: // s
+            moveBackward = true;
+            break;
+          case 68: // d
+            moveRight = true;
+            break;
 
+        }
     }
   }
 
@@ -668,5 +676,6 @@ export function _LoadAnimatedModel() {
 export function animated_objects() {
   if (characterModel && playerBody) {
     characterModel.position.copy(playerBody.position);
+    characterModel.position.y-=2;
   }
 }

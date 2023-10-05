@@ -21,6 +21,17 @@
 <script src="./js/lighting.js" type="module"></script>
 <script src="./js/player.js" type="module"></script>
 <script src="./js/camera.js" type="module"></script>
+
+<div id="title-screen">
+    <!-- Add your title screen content here -->
+    <h1>Welcome to PUZZLE GAME</h1>
+    <p>Made by US</p>
+    <button id="start-button" style="display: none;">Start Game</button>
+</div>
+<div id="paused-screen" style="display: none;">
+    <h1>Paused</h1>
+    <p>Click to Resume</p>
+</div>
 <canvas class="webgl"></canvas>
 <div id="blocker">
     <div id="instructions">
@@ -29,5 +40,7 @@
         </div>
     </div>
 </div>
+<!-- Hide the game elements initially using inline style -->
+
 </body>
 </html>

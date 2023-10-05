@@ -1,0 +1,473 @@
+[33mcommit 9e32000d09bce56ae5d440107fb5b7fe7f4dcb47[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Merge: 27a64e9 445d719
+Author: Darth-Vallabh <amitvkesh@gmail.com>
+Date:   Mon Oct 2 15:28:42 2023 +0200
+
+    Merge branch 'main' of https://github.com/kaglet/cgv_project
+
+[33mcommit 27a64e9ed29773029ee71b166ab4059109833642[m
+Merge: 93866ee 3ad6503
+Author: Darth-Vallabh <amitvkesh@gmail.com>
+Date:   Mon Oct 2 15:28:34 2023 +0200
+
+    idk
+
+[33mcommit 445d719c172431324e9bfa891d642af26feb0bd1[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Mon Oct 2 10:31:00 2023 +0200
+
+    Added  some walls
+
+[33mcommit 93866ee06781b0c5253d51b3f99a4124b7af50ca[m
+Merge: 54c805f 91d19b1
+Author: Darth-Vallabh <amitvkesh@gmail.com>
+Date:   Mon Oct 2 09:21:49 2023 +0200
+
+    idk
+
+[33mcommit 3ad6503d66a695fb1dc5aef18d2a810286f84119[m
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Mon Oct 2 08:34:20 2023 +0200
+
+    fixed floorcCont bug
+
+[33mcommit 9d8602024ff6797d2fd8e70245730c898993429d[m
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Sun Oct 1 23:47:24 2023 +0200
+
+    fixed movement bug with esc and removed flashing cursor from crosshair
+
+[33mcommit e0ef2cbb658f47f7602b656312ea62d4f2f37bb3[m
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Sun Oct 1 16:26:46 2023 +0200
+
+    fixed some first person camera movement errors
+
+[33mcommit 4cf5f7b1e4e2a1c0a3b6fa466d28092ad397376a[m
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Sun Oct 1 15:48:48 2023 +0200
+
+    path asset added
+
+[33mcommit 54c805fbc1b4c53ced0fb7a097c78a425f3d41eb[m
+Author: Darth-Vallabh <amitvkesh@gmail.com>
+Date:   Sat Sep 30 23:06:12 2023 +0200
+
+    idk
+
+[33mcommit 91d19b197ac7e08666cd3e4644056392634027c3[m
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Sat Sep 30 12:59:15 2023 +0200
+
+    Static skybox
+
+[33mcommit 5ea546981b7382026856fb2372b571410bc9bdd8[m
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Sat Sep 30 11:47:04 2023 +0200
+
+    Added physics to the player and fixed other physics
+
+[33mcommit 84ec642b7e29dc2c19646c0542a26213d0152c6f[m
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Tue Sep 26 16:44:11 2023 +0200
+
+    topdown movement fixed
+
+[33mcommit f7c4b4cb7dcdf2e59a5927e122becbf37dad37c5[m
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Tue Sep 26 15:52:13 2023 +0200
+
+    strafe animations. fixed strafe bug
+
+[33mcommit 599ad42943b0db48de7f57c4e5c598667595f488[m
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Tue Sep 26 15:14:05 2023 +0200
+
+    first person camera
+
+[33mcommit d0f23f7d5cd2ba145a0c7cb35d523b0f7cbc1be4[m
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Tue Sep 26 12:25:11 2023 +0200
+
+    added some comments
+
+[33mcommit 740864a9943faf243064dabf3abdc2385d96fbe8[m
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Tue Sep 26 12:20:18 2023 +0200
+
+    first person camera not fully working
+
+[33mcommit 78902e303ab3549cde94da53fa52e397f70efc04[m
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Mon Sep 25 19:54:30 2023 +0200
+
+    Walking backwards animation added
+
+[33mcommit 8d8ab6b90f370abf61e460062682fcfc904d1115[m
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Mon Sep 25 17:30:18 2023 +0200
+
+    small error
+
+[33mcommit 57bd9d2517749943d2a85ea47ecdc8734811b973[m
+Merge: aedb2bb f8960d5
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Mon Sep 25 17:25:52 2023 +0200
+
+    Merge branch 'main' of https://github.com/kaglet/cgv_project
+
+[33mcommit aedb2bbb7c6567028caf00ff33be1f876e973612[m
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Mon Sep 25 17:24:45 2023 +0200
+
+    file structure fix
+
+[33mcommit f8960d584d21881706ae53fb76fef0a623764694[m
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Mon Sep 25 12:58:39 2023 +0200
+
+    made the animations smoother again
+
+[33mcommit 907de417fa58fecb66cadb226f3367a96c47eaaa[m
+Author: ShreyaRupan <2445052@students.wits.ac.za>
+Date:   Mon Sep 25 11:56:37 2023 +0200
+
+    tile color change added to grid path
+
+[33mcommit b4cd114323ba9db5f853d6fa74f81399ba3dfcf5[m
+Author: ShreyaRupan <2445052@students.wits.ac.za>
+Date:   Mon Sep 25 11:53:09 2023 +0200
+
+    grid like tile path added
+
+[33mcommit 7df5a68deb765d2fc51561aef4bc5b0fb0c47cd4[m
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Mon Sep 25 11:42:36 2023 +0200
+
+    fix
+
+[33mcommit e7499a9d0cd73097d99c26e16812914d13d5572c[m
+Merge: 62f5334 7b58610
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Mon Sep 25 07:44:31 2023 +0200
+
+    Merge branch 'main' of https://github.com/kaglet/cgv_project
+
+[33mcommit 62f533487c9a396d2fb00051407527c656159b7c[m
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Mon Sep 25 07:44:28 2023 +0200
+
+    small changes
+
+[33mcommit 7b586105fee8491f753d9c436fe741ec320b1743[m
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Sat Sep 23 15:09:11 2023 +0200
+
+    topdown onclick works
+
+[33mcommit f470607c6f99973f5f86a7ad5ea69dfa892d98c2[m
+Merge: 4ce59e0 af43619
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Sat Sep 23 15:06:09 2023 +0200
+
+    Merge remote-tracking branch 'origin/main'
+
+[33mcommit af4361962d83f950d72a8c2884e1f1f0248abaf6[m
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Sat Sep 23 14:47:54 2023 +0200
+
+    minor updates
+
+[33mcommit 4ce59e094855ed070645b63d9bc6a67c0325d2c2[m
+Merge: 1a1c98a 6ae635a
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Sat Sep 23 14:15:10 2023 +0200
+
+    Merge remote-tracking branch 'origin/main'
+
+[33mcommit 1a1c98a452e035196870161d27f61935f798b4a8[m
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Sat Sep 23 14:14:59 2023 +0200
+
+    tracking files
+
+[33mcommit 6ae635a972181d70dd275f6bd90f3939aa9d711a[m
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Sat Sep 23 14:11:23 2023 +0200
+
+    minor camera change
+
+[33mcommit ae8a7613983728dcbb1ee00866a28926eb7db897[m
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Sat Sep 23 13:57:46 2023 +0200
+
+    Player model update
+
+[33mcommit c0b443668da01447f3ce9367b3da911699d14789[m
+Merge: 071790c d9ddaf6
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Sat Sep 23 12:27:04 2023 +0200
+
+    Merge remote-tracking branch 'origin/main'
+    
+    # Conflicts:
+    #       src/index.html
+    #       src/js/script.js
+
+[33mcommit d9ddaf6e90c3c2636943d5893503aedfb26c419b[m
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Fri Sep 22 19:40:35 2023 +0200
+
+    add top down cam
+    
+    Press "C" to switch to the top down camera
+
+[33mcommit dddd6eae18cf24af929f8f3786aeb8f1a935e955[m
+Author: Darth-Vallabh <amitvkesh@gmail.com>
+Date:   Fri Sep 22 12:39:50 2023 +0200
+
+    madetiletransparent
+
+[33mcommit 0dd939bbd04cccf7bd5759ebeb68a27a75f79df8[m
+Merge: ee544f3 26f83b4
+Author: Darth-Vallabh <amitvkesh@gmail.com>
+Date:   Fri Sep 22 12:21:01 2023 +0200
+
+    Merge branch 'main' of https://github.com/kaglet/cgv_project
+
+[33mcommit ee544f38cdd98f13f7ada4b91667e81a3c8fd9f2[m
+Author: Darth-Vallabh <amitvkesh@gmail.com>
+Date:   Fri Sep 22 12:20:55 2023 +0200
+
+    aw
+
+[33mcommit 26f83b4331ff83c0556efae2c54dee9f167e9b6e[m
+Author: Michael Kavai <mchlkavai@gmail.com>
+Date:   Fri Sep 22 12:13:20 2023 +0200
+
+    Adjust tiles
+
+[33mcommit 127a3705277bf986c34551a8d672236affd1c282[m
+Merge: d239b34 032cf07
+Author: Darth-Vallabh <amitvkesh@gmail.com>
+Date:   Fri Sep 22 10:11:50 2023 +0200
+
+    Merge branch 'main' of https://github.com/kaglet/cgv_project
+
+[33mcommit d239b346c137fb600e546a34d23e07e18ec20a5b[m
+Merge: ea07305 71f2b21
+Author: Darth-Vallabh <amitvkesh@gmail.com>
+Date:   Fri Sep 22 10:11:23 2023 +0200
+
+    a
+    Merge branch 'main' of https://github.com/kaglet/cgv_project
+
+[33mcommit 032cf0723d86e343c21527f5a45fca4adc39b76a[m
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Thu Sep 21 11:29:12 2023 +0200
+
+    more file spilting
+
+[33mcommit 2ed53d551eb57f88ce4db3cab6b9c0b920957446[m
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Thu Sep 21 11:11:51 2023 +0200
+
+    big split
+
+[33mcommit 9d045dccf0cb25910c938cfe6cc63132e41cc6f9[m
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Thu Sep 21 09:27:52 2023 +0200
+
+    threeObjects created
+
+[33mcommit ea07305c66b9c6ea5ffa9391e3971d804773f2d4[m
+Merge: 9cd6719 d835bdf
+Author: Darth-Vallabh <amitvkesh@gmail.com>
+Date:   Wed Sep 20 23:09:49 2023 +0200
+
+    Merge branch 'main' of https://github.com/kaglet/cgv_project
+
+[33mcommit 71f2b21f2edcc7b644902c90061948f16273a021[m
+Author: ShreyaRupan <2445052@students.wits.ac.za>
+Date:   Wed Sep 20 22:08:30 2023 +0200
+
+    Improvement to jagged lines solution
+
+[33mcommit dac2c1cda314f0fddc4c2c4b2d3b092e2d3a2724[m
+Author: ShreyaRupan <2445052@students.wits.ac.za>
+Date:   Wed Sep 20 22:00:01 2023 +0200
+
+    Fixed jagged tiles
+
+[33mcommit 071790cbaae5e6a56a3419565196bf865ab7e989[m
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Wed Sep 20 14:31:28 2023 +0200
+
+    chair
+
+[33mcommit 97283ee52c8cf337c7fb8fbf19e60e3e856a3a09[m
+Merge: 2d3e43d bb39e68
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Wed Sep 20 14:02:49 2023 +0200
+
+    revert to commit d835bdf
+
+[33mcommit 2d3e43d9eb954c75ebfa760a652484678e0ca704[m
+Merge: 62c5fd8 d835bdf
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Wed Sep 20 13:47:57 2023 +0200
+
+    trying to add assets
+
+[33mcommit bb39e683abb0ae20dd8203ce6c9f276a7e6db731[m
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Wed Sep 20 11:12:01 2023 +0200
+
+    Movement changes and file structure
+
+[33mcommit 8f43ca96e27c10e2e10871f86287bbd2e8859d96[m
+Merge: f430e50 d835bdf
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Wed Sep 20 09:16:43 2023 +0200
+
+    Merge branch 'main' of https://github.com/kaglet/cgv_project
+
+[33mcommit f430e50ba1414746afabb18dc63da85355e2fb80[m
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Wed Sep 20 09:16:40 2023 +0200
+
+    Small size changes
+
+[33mcommit 9cd6719092ffb164cf28149cdc59221858be3cca[m
+Author: Darth-Vallabh <amitvkesh@gmail.com>
+Date:   Tue Sep 19 15:48:53 2023 +0200
+
+    abc
+
+[33mcommit 62c5fd8822560bc3c048881aee92b92f578be6b7[m
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Tue Sep 19 14:14:43 2023 +0200
+
+    trying to add assets
+
+[33mcommit d835bdfdf4f69d7637aec30d6fd3751d1b5cf700[m
+Author: Michael Kavai <mchlkavai@gmail.com>
+Date:   Tue Sep 19 14:00:09 2023 +0200
+
+    Try Make Tiles Glow
+
+[33mcommit d9c06a10dc308513d0b1bfbc2341bc9ccb487b64[m
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Tue Sep 19 13:52:34 2023 +0200
+
+    Merge lighting and physics
+
+[33mcommit 0ae9f3aeadf3746527e3849d0de26a16e3662cfb[m
+Merge: 3095e86 e470eb2
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Tue Sep 19 13:49:13 2023 +0200
+
+    Merge branch 'main' of https://github.com/kaglet/cgv_project
+
+[33mcommit 3095e86d820a670c66930729881ff35648fd169d[m
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Tue Sep 19 13:41:21 2023 +0200
+
+    Physics and camera changes
+
+[33mcommit e470eb27e07b1035a338023a3e083df59e9273fb[m
+Author: Darth-Vallabh <amitvkesh@gmail.com>
+Date:   Tue Sep 19 12:40:49 2023 +0200
+
+    abc
+
+[33mcommit ff61270e1a43b703e437b6c40b6345f474fac8ae[m
+Merge: 5904bdc 095cc6d
+Author: Darth-Vallabh <amitvkesh@gmail.com>
+Date:   Tue Sep 19 12:19:49 2023 +0200
+
+    abc
+
+[33mcommit 5904bdc8f8bb72b72363d531e7d8c4a8335e22f4[m
+Author: Darth-Vallabh <amitvkesh@gmail.com>
+Date:   Tue Sep 19 12:14:18 2023 +0200
+
+    add textures
+
+[33mcommit 095cc6dba5d12cf70417abbc92bd0f6495150d7b[m
+Author: Michael Kavai <mchlkavai@gmail.com>
+Date:   Tue Sep 19 12:05:38 2023 +0200
+
+    Basic lighting added to room
+
+[33mcommit 3e255fa4caf72faa11904ea5e89ddf5df2ae3ca8[m
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Tue Sep 19 10:56:59 2023 +0200
+
+    wasd movement
+
+[33mcommit 5a1ab3ce23c917a364341c4e6a5640bc253a41b9[m
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Tue Sep 19 10:09:38 2023 +0200
+
+    bigger
+
+[33mcommit 639c7631a5f29fe1efa0febc4a34510c1eda60c3[m
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Tue Sep 19 09:30:09 2023 +0200
+
+    clickable tiles
+
+[33mcommit 7b19fd2d99687981ee8c76dddb946dd9dc9277e1[m
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Mon Sep 18 23:20:37 2023 +0200
+
+    actualy fixed now
+
+[33mcommit c4b2e830dc0c5a110c401ab7f8fcb42dbdc82ddd[m
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Mon Sep 18 23:15:44 2023 +0200
+
+    fixed issue where i pasted in wrong file 0w0
+
+[33mcommit 1e916bcd6b93a377c7cf2f64bc3a98192a2d0a50[m
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Mon Sep 18 23:07:14 2023 +0200
+
+    test
+
+[33mcommit c11b40809457331a98c4717a3b59492f2b0a83e6[m
+Author: Shakeel <2424161@students.wits.ac.za>
+Date:   Mon Sep 18 23:05:53 2023 +0200
+
+    Cube
+
+[33mcommit 2d8dc4da7b0a6a00991e64f126882206f555eebb[m
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Sun Sep 17 21:35:27 2023 +0200
+
+    local build
+
+[33mcommit 53e97471fd3761bf2410d593b0ea310c3e855600[m
+Author: luca-vm <127728915+luca-vm@users.noreply.github.com>
+Date:   Sun Sep 17 21:27:36 2023 +0200
+
+    three js setup
+
+[33mcommit 3433150205e783c08df8cd545d40c60fde45e04c[m
+Author: Kago <kmotlhabane769@gmail.com>
+Date:   Fri Sep 15 17:43:11 2023 +0200
+
+    Update README with title
+
+[33mcommit 6c271486db0be089c8c68fc5a9b1fd0a3227e7d3[m
+Author: Kago <kmotlhabane769@gmail.com>
+Date:   Fri Sep 15 17:41:54 2023 +0200
+
+    Create README
+
+[33mcommit 624b7e445ed990b9f997cae527af2e72a0080cf2[m
+Author: Kago <kmotlhabane769@gmail.com>
+Date:   Fri Sep 15 17:41:04 2023 +0200
+
+    Create initial folder structure
