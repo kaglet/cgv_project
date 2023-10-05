@@ -122,14 +122,9 @@ for (let i = 0; i < numRows; i++) {
 }
 
 export const raycaster = new THREE.Raycaster();
-//
+
 // TODO: Rename function so its job/action is clear
 export function animated_objects() {
     groundMesh.position.copy(groundBody.position);
     groundMesh.quaternion.copy(groundBody.quaternion);
 }
-
-/* TODO: Check this will work with actual normalized coordinate
- positions and that is not what is somehow ruining things */
-
- // Sets the position of the mesh from its origin
