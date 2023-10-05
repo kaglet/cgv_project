@@ -7,8 +7,10 @@ objects.scene.add(directionalLight);
 directionalLight.castShadow = true;
 directionalLight.position.set(-30, 50, 0);
 // You can adjust the edges of the shadow camera to capture a wider area where shadows are rendered
-directionalLight.shadow.camera.bottom = -12;
-directionalLight.shadow.camera.top = 12;
+directionalLight.shadow.camera.bottom = -100;
+directionalLight.shadow.camera.top = 100;
+directionalLight.shadow.camera.left = -100;
+directionalLight.shadow.camera.right = 100;
 
 const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 5);
 objects.scene.add(directionalLightHelper);
