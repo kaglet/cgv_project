@@ -50,7 +50,6 @@ class BasicCharacterController {
     playerBody = new CANNON.Body({
       mass: 100, // Adjust the mass as needed
       shape: new CANNON.Box(new CANNON.Vec3(0.5, 1, 0.5)), // Adjust the size as needed
-      position: new CANNON.Vec3(0, 0, 0)
     });
 
     // Add the body to the Cannon.js world
@@ -101,7 +100,6 @@ class BasicCharacterController {
 
     loader.load('ALEX.fbx', (fbx) => {
       characterModel = fbx;
-      characterModel.quaternion.copy(playerBody.quaternion);
       // fbx.position.y=0;
       // fbx.rotation.y=10;
       fbx.scale.setScalar(0.1);

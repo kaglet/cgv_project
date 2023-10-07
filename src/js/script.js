@@ -35,8 +35,6 @@ function raf() {
       // The above is for finessing because right now the tile will light up when the least error from all coordinates happens, so around the center of the tile
       // All 3 must match so less chance for a mistake
       // y error is fine can be large since only one tile is near in y alone but others matter too
-      // TODO: Make it so it only lights up once after first detection and after that it doesn't need to be lit up again
-      // Because right now I am getting the boolean true triggrered multiple times even after the tile is lit up the first time
       const epsilon = 3; // Small epsilon value to handle floating point errors
       const worldPosition = new THREE.Vector3();
       tile.getWorldPosition(worldPosition); // Get the world position of the tile
@@ -45,7 +43,7 @@ function raf() {
       if (tile.litUp === false && Math.abs(player.characterModel.position.x - worldPosition.x) < epsilon && Math.abs(player.characterModel.position.z - worldPosition.z) < epsilon) {
         console.log(`I am a lit tile ${index}\n with world coordinates: ${worldPosition.x} in x and ${worldPosition.y} in y and ${worldPosition.z} in z\n and local coordinates: ${tile.position.x} in x and ${tile.position.y} in y and ${tile.position.z} in z`);
         console.log(`When lit the player coordinates are: ${player.characterModel.position.x} in x and ${player.characterModel.position.y} in y and ${player.characterModel.position.z} in z`);
-        const tileColor = new THREE.Color(0, 0, 255);
+        const tileColor = new THREE.Color(255, 255, 0);
         // TODO: Change color of all faces of cube to blue currently only default front face is changed 
         tile.material.color.copy(tileColor);
         tile.litUp = true;

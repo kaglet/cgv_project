@@ -18,13 +18,6 @@ export let world = new CANNON.World({
     gravity: new CANNON.Vec3(0, -9.81, 0)
 });
 
-const texture_ft = new THREE.TextureLoader().load(meadowFtImage);
-const texture_bk = new THREE.TextureLoader().load(meadowBkImage);
-const texture_up = new THREE.TextureLoader().load(meadowUpImage);
-const texture_dn = new THREE.TextureLoader().load(meadowDnImage);
-const texture_rt = new THREE.TextureLoader().load(meadowRtImage);
-const texture_lf = new THREE.TextureLoader().load(meadowLfImage);
-
 // Creates new materials we can initialize with properties using the configuration objects
 const materialArray = [
     new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
@@ -47,7 +40,7 @@ scene.add(axesHelper);
 // scene.add(gridHelper);
 
 // Create ground
-const groundGeo = new THREE.PlaneGeometry(100, 100);
+const groundGeo = new THREE.PlaneGeometry(200, 300);
 const groundMat = new THREE.MeshStandardMaterial({
     color: 0xffffff,
     side: THREE.DoubleSide,
@@ -86,7 +79,8 @@ floorContainer.rotation.set(rotationAngle, 0, 0);
 // Scaling applies to group hierarchically nested inside
 // Local transformations before global one
 // Scales floor and anything inside
-floorContainer.scale.set(2, 2, 2);
+floorContainer.scale.set(2.5, 2.5, 0.3);
+floorContainer.position.set(30, 5, -80);
 scene.add(floorContainer);
 //creates grid like tile path 
 const numRows = 9;
@@ -103,7 +97,7 @@ for (let i = 0; i < numRows; i++) {
             const xOffset = (i - numRows / 2) * (tileSize + gapSize);
             const yOffset = (j - numCols / 2) * (tileSize + gapSize);
 
-            singleTile.position.set(xOffset, yOffset, 0);
+            singleTile.position.set(xOffset, yOffset, 10);
 
             singleTile.castShadow = true;
             singleTile.receiveShadow = true;
