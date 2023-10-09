@@ -146,67 +146,89 @@ loader.load('./ruined_sandstone__wall_ref/scene.gltf', (gltf) => {
 //Maze grid
 
 // Create a floor tile
-const tileGeometry = new THREE.BoxGeometry(5, 5,1.3)
+const tileGeometry = new THREE.BoxGeometry(5, 5, 1.3);
 const tileMaterial = new THREE.MeshStandardMaterial({
     color: 0xffffff,
     opacity: 0.5, // Adjust the opacity value (0.0 to 1.0)
     transparent: true, // Enable transparency
-})
+});
+
 // Define tile size and gap size
-const tileSize = 5 // Adjust the size of each tile
-const gapSize = 0.2 // Adjust the size of the gap
+const tileSize = 5; // Adjust the size of each tile
+const gapSize = 0.2; // Adjust the size of the gap
+const numRows=9;
+const numCols=9;
+const tiles = [];
 
-const floorContainer = new THREE.Group()
+const floorContainer1 = new THREE.Group();
+scene.add(floorContainer1);
 
-// Duplicate tiles to create the floor with gaps
 
-//creates grid like tile path
-const numRows = 9
-const numCols = 9
-const tiles = []
+const floorContainer2 = new THREE.Group();
+scene.add(floorContainer2);
 
-for (let i = 0; i < numRows; i++) {
-    for (let j = 0; j < numCols; j++) {
-        const isMissingTile = (i % 2 === 0 && j % 2 === 0) || (i % 2 === 1 && j % 2 === 1);
-        if (!isMissingTile || i % 4 === 0 || (i - 2) % 4 === 0) {
-            const tileClone = new THREE.Mesh(tileGeometry, tileMaterial.clone());
-            const xOffset = (i - numRows / 2) * (tileSize + gapSize);
-            const yOffset = (j - numCols / 2) * (tileSize + gapSize);
-            tileClone.position.set(xOffset, yOffset, 0);
+const floorContainer3 = new THREE.Group();
+scene.add(floorContainer3);
 
-            // Enable shadows for the tile
-            tileClone.castShadow = true;
-            tileClone.receiveShadow = true;
+// Function to create a unique tile object
+function createTile(index) {
+    const tile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
+    tile.userData.tileNumber = index; // Store the tile number in user data
+    tile.castShadow = true;
+    tile.receiveShadow = true;
+    return tile;
+}
 
-            // Add click event listener to each tile
-            tileClone.addEventListener('click', () => {
-            changeTileColorOnClick(tileClone);
-            });
-
-            floorContainer.add(tileClone);
-            tiles.push(tileClone);
+// Function to add or omit tiles based on tile numbers
+function drawGridWithOmissions(container, omittedTiles = []) {
+    for (let i = 0; i < numRows; i++) {
+        for (let j = 0; j < numCols; j++) {
+            const tileNumber = i * numCols + j + 1;
+            if (!omittedTiles.includes(tileNumber)) {
+                const isMissingTile = (i % 2 === 0 && j % 2 === 0) || (i % 2 === 1 && j % 2 === 1);
+                if (!isMissingTile || i % 4 === 0 || (i - 2) % 4 === 0) {
+                    const tile = createTile(tileNumber);
+                    const xOffset = (i - numRows / 2) * (tileSize + gapSize);
+                    const yOffset = (j - numCols / 2) * (tileSize + gapSize);
+                    tile.position.set(xOffset, yOffset, 0);
+                    container.add(tile); // Add the tile to the specified container
+                }
+            }
         }
     }
 }
 
+// Call the function to draw the first grid with omissions
+drawGridWithOmissions(floorContainer1, []);
+drawGridWithOmissions(floorContainer2, [30,38,78]);
+drawGridWithOmissions(floorContainer3, [28,30,42,52,76]);
 
+function changeTileColor(container, tileNumber, newColor) {
+    const tile = container.children.find(tile => tile.userData.tileNumber === tileNumber);
+    if (tile) {
+        tile.material.color.set(newColor);
+    }
+}
+// Example: Change the color of tile number 1 to red
+changeTileColor(floorContainer2,1, 0xff0000);
 //scales map path
-floorContainer.scale.set(2.6, 2.6, 1.3);
+floorContainer1.scale.set(2.6, 2.6, 1.3);
+floorContainer2.scale.set(2.6, 2.6, 1.3);
+floorContainer3.scale.set(2.6, 2.6, 1.3);
+
+floorContainer1.position.set(0,0,180);
+floorContainer2.position.set(0,0,50);
+floorContainer3.position.set(0,0,-100);
+
+floorContainer2.rotation.set(Math.PI/2,0,0);
+floorContainer3.rotation.set(Math.PI/2,0,0);
 
 function changeTileColorOnClick(tile) {
-    // const randomColor = new THREE.Color(0, 0, 255);
-    // tile.material.color.copy(randomColor);
-    // tile.material.emissive = randomColor; // Use the same color as the tile color for emissive
-    // tile.material.emissiveIntensity = 100.0;
-    // const tileLight = new THREE.PointLight(randomColor, 1.0, 10.0, 5.0);
-    // tileLight.power = 6.0;
-    // tileLight.position.copy(tile.position); // Position the light at the tile's position
-    // scene.add(tileLight);
     const randomColor = new THREE.Color(0, 0, 255);
     tile.material.color.copy(randomColor);
     tileMaterial.castShadow = true;
-tileMaterial.receiveShadow = true;
-tileMaterial.transparent = true;
+    tileMaterial.receiveShadow = true;
+    tileMaterial.transparent = true;
     const tileLight = new THREE.PointLight(randomColor, 1, 20, 5);
     tileLight.position.copy(tile.position);
     scene.add(tileLight);
@@ -234,11 +256,7 @@ document.addEventListener('click', (event) => {
     }
 });
 
-tileMaterial.castShadow = true;
-tileMaterial.receiveShadow = true;
-// Start changing tile color and emitting light every 5 seconds
-
-scene.add(floorContainer);
+//scene.add(floorContainer1);
 
 // Define the dimensions of the floorContainer
 const floorContainerWidth = numRows * (tileSize + gapSize) * 1.3; // Adjusted for scaling
@@ -426,8 +444,8 @@ export function animated_objects(){
     boxMesh.position.y-=2;
     boxMesh.quaternion.copy(boxBody.quaternion);
 
-    floorContainer.position.copy(floorContainerBody.position);
-    floorContainer.quaternion.copy(floorContainerBody.quaternion);
+    floorContainer1.position.copy(floorContainerBody.position);
+    floorContainer1.quaternion.copy(floorContainerBody.quaternion);
 
 
     // groundMesh.position.copy(groundBody.position);
