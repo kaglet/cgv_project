@@ -13,10 +13,6 @@ import meadowDnImage from '../img/meadow/meadow_dn.jpg';
 import meadowRtImage from '../img/meadow/meadow_rt.jpg';
 import meadowLfImage from '../img/meadow/meadow_lf.jpg';
 
-
-
-
-
 import * as camera from './camera.js';
 
 // Scene
@@ -110,7 +106,6 @@ fbxLoader.load('./the_way/the_way.FBX', (fbx) => {
         }
     });
 
-
     // Add the loaded model to your scene
     scene.add(fbx);
   });
@@ -134,9 +129,6 @@ loader.load('./ruined_sandstone__wall_ref/scene.gltf', (gltf) => {
   wall2.scale.z = -1; // Reflect across the X-axis
   wall2.position.set(90, -5, 130); // Adjust the position as needed
   scene.add(wall2);
-
-
-
 
   // Optionally, you can perform additional operations on the loaded model here.
 });
