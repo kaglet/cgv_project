@@ -193,47 +193,12 @@ floorContainer3.rotation.set(rotationAngle, 0, 0);
 // Example: Change the color of tile number 1 to red
 changeTileColor(floorContainer2, 1, 0xff0000);
 
-// Define the dimensions of the floorContainer
-const floorContainerWidth = numRows * (tileSize + gapSize) * 1.3; // Adjusted for scaling
-const floorContainerHeight = numCols * (tileSize + gapSize) * 1.3; // Adjusted for scaling
-const floorContainerDepth = 1.3; // Depth of the floor container (same as the tile)
-
-const floorContainerShape = new CANNON.Box(
-    new CANNON.Vec3(
-        floorContainerWidth / 2,
-        floorContainerHeight / 2,
-        floorContainerDepth / 2
-    )
-);
-
-const floorContainerBody = new CANNON.Body({
-    type: CANNON.Body.STATIC,
-    shape: floorContainerShape,
-    position: new CANNON.Vec3(0, 0, -floorContainerDepth / 2) // Adjust the position as needed
-});
-
-const translationVector = new THREE.Vector3(0, 1, 200);
-floorContainerBody.position.copy(translationVector);
-floorContainerBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-
-// Add the floorContainerBody to the world
-world.addBody(floorContainerBody);
-
 loadModels(loader, scene, world);
 
 // TODO: Figure out what this does where its exported and why it is required
 export const raycaster = new THREE.Raycaster();
 
 export function animated_objects() {
-    floorContainer1.position.copy(floorContainerBody.position);
-    floorContainer1.quaternion.copy(floorContainerBody.quaternion);
-
-    floorContainer2.position.copy(floorContainerBody.position);
-    floorContainer2.quaternion.copy(floorContainerBody.quaternion);
-
-    floorContainer3.position.copy(floorContainerBody.position);
-    floorContainer3.quaternion.copy(floorContainerBody.quaternion);
-
     groundMesh.position.copy(groundBody.position);
     groundMesh.quaternion.copy(groundBody.quaternion);
 }
