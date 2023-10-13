@@ -6,27 +6,80 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 import * as camera from './camera.js';
 
+// DEFINE GLOBAL VARIABLES
 // Scene
 export const scene = new THREE.Scene();
 
 // world - this is for cannon objects
 export var world = new CANNON.World({
-    gravity: new CANNON.Vec3(0,-20,0)
+    gravity: new CANNON.Vec3(0, -20, 0)
 });
+
+// DEFINE FUNCTIONS
+// Function to create a unique tile object
+function createTile(index) {
+    const tile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
+    tile.userData.tileNumber = index; // Store the tile number in user data
+    tile.castShadow = true;
+    tile.receiveShadow = true;
+    return tile;
+}
+
+function changeTileColor(container, tileNumber, newColor) {
+    const tile = container.children.find(tile => tile.userData.tileNumber === tileNumber);
+    if (tile) {
+        tile.material.color.set(newColor);
+    }
+}
+
+// Function to add or omit tiles based on tile numbers
+function drawGridWithOmissions(container, omittedTiles = []) {
+    for (let i = 0; i < numRows; i++) {
+        for (let j = 0; j < numCols; j++) {
+            const tileNumber = i * numCols + j + 1;
+            if (!omittedTiles.includes(tileNumber)) {
+                const isMissingTile = (i % 2 === 0 && j % 2 === 0) || (i % 2 === 1 && j % 2 === 1);
+                if (!isMissingTile || i % 4 === 0 || (i - 2) % 4 === 0) {
+                    const tile = createTile(tileNumber);
+                    const xOffset = (i - numRows / 2) * (tileSize + gapSize);
+                    const yOffset = (j - numCols / 2) * (tileSize + gapSize);
+                    tile.position.set(xOffset, yOffset, 0);
+                    container.add(tile); // Add the tile to the specified container
+                }
+            }
+        }
+    }
+}
+
+function changeTileColorOnClick(tile) {
+    const randomColor = new THREE.Color(0, 0, 255);
+    tile.material.color.copy(randomColor);
+    tileMaterial.castShadow = true;
+    tileMaterial.receiveShadow = true;
+    tileMaterial.transparent = true;
+    const tileLight = new THREE.PointLight(randomColor, 1, 20, 5);
+    tileLight.position.copy(tile.position);
+    scene.add(tileLight);
+}
+
+export function animated_objects() {
+    floorContainer1.position.copy(floorContainerBody.position);
+    floorContainer1.quaternion.copy(floorContainerBody.quaternion);
+}
 
 // Create material array
 const materialArray = [
-  new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
-  new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
-  new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
-  new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
-  new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
-  new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide })
+    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide })
 ];
 
 // Set material side to backside
-materialArray.forEach((material) => {
-  material.side = THREE.BackSide;
+materialArray.forEach(material => {
+    material.side = THREE.BackSide;
 });
 
 // Create skybox
@@ -40,8 +93,8 @@ scene.add(axesHelper);
 //physics ground
 const groundBody = new CANNON.Body({
     shape: new CANNON.Plane(),
-     type: CANNON.Body.STATIC,
-  });
+    type: CANNON.Body.STATIC,
+});
 groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(groundBody);
 
@@ -65,31 +118,30 @@ fbxLoader.load('./the_way/the_way.FBX', (fbx) => {
 
     // Add the loaded model to your scene
     scene.add(fbx);
-  });
+});
 
 //Path walls
 const loader = new GLTFLoader();
 
 loader.load('./ruined_sandstone__wall_ref/scene.gltf', (gltf) => {
-  const leftWall = gltf.scene;
-  scene.add(leftWall);
+    const leftWall = gltf.scene;
+    scene.add(leftWall);
 
-  leftWall.position.set(-90, -5, 130); // Adjust the position as needed
-  leftWall.scale.set(4, 1.8, 2); // Adjust the scale as needed
-  leftWall.rotation.set(0, Math.PI / 2, 0);
+    leftWall.position.set(-90, -5, 130); // Adjust the position as needed
+    leftWall.scale.set(4, 1.8, 2); // Adjust the scale as needed
+    leftWall.rotation.set(0, Math.PI / 2, 0);
 
-  const rightWall = leftWall.clone();
+    const rightWall = leftWall.clone();
 
-  // Apply a scale transformation to reflect it across the X-axis
-  rightWall.scale.z = -1; // Reflect across the X-axis
-  rightWall.position.set(90, -5, 130); // Adjust the position as needed
-  scene.add(rightWall);
+    // Apply a scale transformation to reflect it across the X-axis
+    rightWall.scale.z = -1; // Reflect across the X-axis
+    rightWall.position.set(90, -5, 130); // Adjust the position as needed
+    scene.add(rightWall);
 
-  // Optionally, you can perform additional operations on the loaded model here.
+    // Optionally, you can perform additional operations on the loaded model here.
 });
 
-//Maze grid
-
+// DEFINE MAZE GRID
 // Create a floor tile
 const tileGeometry = new THREE.BoxGeometry(5, 5, 1.3);
 const tileMaterial = new THREE.MeshStandardMaterial({
@@ -102,91 +154,40 @@ const tileMaterial = new THREE.MeshStandardMaterial({
 const tileSize = 5; // Adjust the size of each tile
 const gapSize = 0.2; // Adjust the size of the gap
 
-const numRows=9;
-const numCols=9;
+const numRows = 9;
+const numCols = 9;
 const tiles = [];
 
 const floorContainer1 = new THREE.Group();
 scene.add(floorContainer1);
 
-const floorContainer2 = new THREE.Group();
-scene.add(floorContainer2);
-
-const floorContainer3 = new THREE.Group();
-scene.add(floorContainer3);
-
-// Function to create a unique tile object
-function createTile(index) {
-    const tile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
-    tile.userData.tileNumber = index; // Store the tile number in user data
-    tile.castShadow = true;
-    tile.receiveShadow = true;
-    return tile;
-}
-
-// Function to add or omit tiles based on tile numbers
-function drawGridWithOmissions(container, omittedTiles = []) {
-    for (let i = 0; i < numRows; i++) {
-        for (let j = 0; j < numCols; j++) {
-            const tileNumber = i * numCols + j + 1;
-            if (!omittedTiles.includes(tileNumber)) {
-                const isMissingTile = (i % 2 === 0 && j % 2 === 0) || (i % 2 === 1 && j % 2 === 1);
-                if (!isMissingTile || i % 4 === 0 || (i - 2) % 4 === 0) {
-                    const tile = createTile(tileNumber);
-                    const xOffset = (i - numRows / 2) * (tileSize + gapSize);
-                    const yOffset = (j - numCols / 2) * (tileSize + gapSize);
-                    tile.position.set(xOffset, yOffset, 0);
-                    container.add(tile); // Add the tile to the specified container
-                }
-            }
-        }
-    }
-}
-
 // Call the function to draw the first grid with omissions
 drawGridWithOmissions(floorContainer1, []);
-drawGridWithOmissions(floorContainer2, [30,38,78]);
-drawGridWithOmissions(floorContainer3, [28,30,42,52,76]);
+drawGridWithOmissions(floorContainer2, [30, 38, 78]);
+drawGridWithOmissions(floorContainer3, [28, 30, 42, 52, 76]);
 
-function changeTileColor(container, tileNumber, newColor) {
-    const tile = container.children.find(tile => tile.userData.tileNumber === tileNumber);
-    if (tile) {
-        tile.material.color.set(newColor);
-    }
-}
 // Example: Change the color of tile number 1 to red
-changeTileColor(floorContainer2,1, 0xff0000);
+changeTileColor(floorContainer2, 1, 0xff0000);
 //scales map path
 floorContainer1.scale.set(2.6, 2.6, 1.3);
 floorContainer2.scale.set(2.6, 2.6, 1.3);
 floorContainer3.scale.set(2.6, 2.6, 1.3);
 
-floorContainer1.position.set(0,0,180);
-floorContainer2.position.set(0,0,50);
-floorContainer3.position.set(0,0,-100);
+floorContainer1.position.set(0, 0, 180);
+floorContainer2.position.set(0, 0, 50);
+floorContainer3.position.set(0, 0, -100);
 
-floorContainer2.rotation.set(Math.PI/2,0,0);
-floorContainer3.rotation.set(Math.PI/2,0,0);
-
-function changeTileColorOnClick(tile) {
-    const randomColor = new THREE.Color(0, 0, 255);
-    tile.material.color.copy(randomColor);
-    tileMaterial.castShadow = true;
-    tileMaterial.receiveShadow = true;
-    tileMaterial.transparent = true;
-    const tileLight = new THREE.PointLight(randomColor, 1, 20, 5);
-    tileLight.position.copy(tile.position);
-    scene.add(tileLight);
-}
+floorContainer2.rotation.set(Math.PI / 2, 0, 0);
+floorContainer3.rotation.set(Math.PI / 2, 0, 0);
 
 // clicking the tiles?
 //export const raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );
-export const raycaster=new THREE.Raycaster();
-const mouse = new THREE.Vector2(0,0);
+export const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2(0, 0);
 
 document.addEventListener('click', (event) => {
     // Calculate mouse coordinates in normalized device coordinates (NDC)
-    mouse.x =0;
+    mouse.x = 0;
     mouse.y = 0;
 
     // Update the raycaster
@@ -200,8 +201,6 @@ document.addEventListener('click', (event) => {
         intersects[0].object.dispatchEvent({ type: 'click' });
     }
 });
-
-//scene.add(floorContainer1);
 
 // Define the dimensions of the floorContainer
 const floorContainerWidth = numRows * (tileSize + gapSize) * 1.3; // Adjusted for scaling
@@ -233,11 +232,11 @@ world.addBody(floorContainerBody);
 
 
 loader.load('/ground_material.glb', function (gltf) {
-    gltf.scene.rotation.y=Math.PI/2;
-    gltf.scene.scale.set(1,1,1);
-    gltf.scene.position.y=-1;
-    gltf.scene.position.x=0;
-    gltf.scene.position.z=0;
+    gltf.scene.rotation.y = Math.PI / 2;
+    gltf.scene.scale.set(1, 1, 1);
+    gltf.scene.position.y = -1;
+    gltf.scene.position.x = 0;
+    gltf.scene.position.z = 0;
     scene.add(gltf.scene);
 
 }, undefined, function (error) {
@@ -292,9 +291,9 @@ loader.load('/lion_statue.glb', function (gltf) {
     lionStatueModel.scale.set(20, 20, 20);
     lionStatueModel.position.set(-40, -5, 0);
     console.log("Lion Statue Properties:");
-//    for (const property in lionStatueModel) {
-//        console.log(`${property}:`, lionStatueModel[property]);
-//    }
+    //    for (const property in lionStatueModel) {
+    //        console.log(`${property}:`, lionStatueModel[property]);
+    //    }
 
     // Calculate dimensions of the lion statue model
     const boundingBox = new THREE.Box3().setFromObject(lionStatueModel);
@@ -315,7 +314,7 @@ loader.load('/lion_statue.glb', function (gltf) {
     scene.add(lionStatueModel);
 
     // Create wireframe mesh for visualization
-    const wireframeGeometry = new THREE.BoxGeometry(width, height-3, depth);
+    const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
     const wireframeMaterial = new THREE.MeshBasicMaterial({
         color: 0x00ff00,
         wireframe: true
@@ -364,7 +363,7 @@ loader.load('/dragon_ball_z_-_guko_character.glb', function (gltf) {
     scene.add(gukoModel);
 
     // Create wireframe mesh for visualization
-    const wireframeGeometry = new THREE.BoxGeometry(width, height-2, depth);
+    const wireframeGeometry = new THREE.BoxGeometry(width, height - 2, depth);
     const wireframeMaterial = new THREE.MeshBasicMaterial({
         color: 0x00ff00,
         wireframe: true
@@ -381,7 +380,3 @@ loader.load('/dragon_ball_z_-_guko_character.glb', function (gltf) {
 });
 
 
-export function animated_objects(){
-    floorContainer1.position.copy(floorContainerBody.position);
-    floorContainer1.quaternion.copy(floorContainerBody.quaternion);
-}
