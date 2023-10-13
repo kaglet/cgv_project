@@ -47,6 +47,9 @@ function raf() {
         // TODO: Change color of all faces of cube to blue currently only default front face is changed 
         tile.material.color.copy(tileColor);
         tile.litUp = true;
+        // TODO: Make tiles sink also upon intersection, just shift slightly in the z
+        // How do I position the tiles, is it within the floor container, using current position -= 1 for z for example or do I do a local transformation in floor?
+        // TODO: Elevate tiles a bit from the ground they are on or simply shift the whole floor container
       }
     });
     i++;

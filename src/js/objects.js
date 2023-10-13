@@ -70,16 +70,13 @@ const tileSize = 5; // Adjust the size of each tile
 const gapSize = 0.2; // Adjust the size of the gap
 
 export const floorContainer = new THREE.Group();
-const textureLoader = new THREE.TextureLoader();
-const woodTexture = textureLoader.load(woodTextureImage);
-
 const rotationAngle = -(Math.PI / 2);
 
 floorContainer.rotation.set(rotationAngle, 0, 0);
 // Scaling applies to group hierarchically nested inside
 // Local transformations before global one
 // Scales floor and anything inside
-floorContainer.scale.set(2.5, 2.5, 0.3);
+// floorContainer.scale.set(2.5, 2.5, 0.3);
 floorContainer.position.set(30, 5, -80);
 scene.add(floorContainer);
 //creates grid like tile path 
@@ -93,11 +90,18 @@ for (let i = 0; i < numRows; i++) {
     for (let j = 0; j < numCols; j++) {
         const isMissingTile = (i % 2 === 0 && j % 2 === 0) || (i % 2 === 1 && j % 2 === 1);
         if (!isMissingTile || i % 4 === 0 || (i - 2) % 4 === 0) {
+            const tileBody = new CANNON.Body({
+                shape: new CANNON.Box(new CANNON.Vec3(2.5, 2.5, 0.65)),
+                type: CANNON.Body.STATIC,
+                // mass: 1,
+            });
+            world.addBody(tileBody);
+
             const singleTile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
             const xOffset = (i - numRows / 2) * (tileSize + gapSize);
             const yOffset = (j - numCols / 2) * (tileSize + gapSize);
 
-            singleTile.position.set(xOffset, yOffset, 10);
+            tileBody.position.set(xOffset, yOffset, 10);
 
             singleTile.castShadow = true;
             singleTile.receiveShadow = true;
@@ -105,6 +109,7 @@ for (let i = 0; i < numRows; i++) {
 
             singleTile.name = 'tile';
             singleTile.litUp = false;
+            singleTile.body = tileBody;
 
             // you can add the tile into the floor container somehow, with its coordinates like that
             floorContainer.add(singleTile);
@@ -119,4 +124,9 @@ export const raycaster = new THREE.Raycaster();
 export function animate_objects() {
     groundMesh.position.copy(groundBody.position);
     groundMesh.quaternion.copy(groundBody.quaternion);
+
+    floorContainer.children.forEach((tile) => {
+        tile.position.copy(tile.body.position);
+        tile.quaternion.copy(tile.body.quaternion);
+    });
 }
