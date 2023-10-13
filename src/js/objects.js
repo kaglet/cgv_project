@@ -88,130 +88,43 @@ const axesHelper = new THREE.AxesHelper(200); //so we can see the axes for debug
 scene.add(axesHelper);
 
 // Create ground
-const groundGeo = new THREE.PlaneGeometry(200, 300);
+const groundGeo = new THREE.PlaneGeometry(10000, 10000);
 const groundMat = new THREE.MeshStandardMaterial({
-    color: 0xffffff,
+    color: 0x78BE21,
     side: THREE.DoubleSide,
     wireframe: false
 });
+export const groundMesh = new THREE.Mesh(groundGeo, groundMat);
+scene.add(groundMesh);
 
-const boxMesh = new THREE.Mesh(boxGeo, boxMat);
-scene.add(boxMesh);
-
-const boxPhysMat = new CANNON.Material();
-const boxBody = new CANNON.Body({
-    mass: 100,
-    shape: new CANNON.Box(new CANNON.Vec3(5, 5, 5)),
-    position: new CANNON.Vec3(10, 2, 20),
-  //  material: boxPhysMat
-  });
-  world.addBody(boxBody);
-
-
-const groundPhysMat = new CANNON.Material();
 //physics ground
 const groundBody = new CANNON.Body({
     shape: new CANNON.Plane(),
-    //mass: 10
-    // shape: new CANNON.Box(new CANNON.Vec3(15, 15, 0.1)),
-     type: CANNON.Body.STATIC,
-     material: groundPhysMat
-  });
+    type: CANNON.Body.STATIC,
+});
+groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
+world.addBody(groundBody);
 
-  groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-  world.addBody(groundBody);
-
-
-  boxBody.angularVelocity.set(0, 10, 0);
-boxBody.angularDamping = 0.5;
-
-const groundBoxContactMat = new CANNON.ContactMaterial(
-    groundPhysMat,
-    boxPhysMat,
-    {friction: 0.40}
-);
-
-
-//Path object
-
-// const fbxLoader = new FBXLoader();
-
-// fbxLoader.load('./the_way/the_way.FBX', (fbx) => {
-//     /// You can scale, position, and rotate the model here
-//     // Example:
-//     fbx.scale.set(0.1, 0.1, 0.1);
-//     fbx.position.set(0, -10, 0);
-
-//     fbx.traverse((child) => {
-//         if (child instanceof THREE.Mesh) {
-//             const material = child.material;
-//             if (material && material.shininessMap) {
-//                 material.shininessMap = null;
-//             }
-//         }
-//     });
-
-//     // Add the loaded model to your scene
-//  //   scene.add(fbx);
-//   });
-
-// //Path walls
-
-// const loader = new GLTFLoader();
+//Path walls
+const loader = new GLTFLoader();
 
 // loader.load('./ruined_sandstone__wall_ref/scene.gltf', (gltf) => {
-//   const wall1 = gltf.scene;
-//   scene.add(wall1);
+//     const leftWall = gltf.scene;
+//     scene.add(leftWall);
 
-//   wall1.position.set(-90, -5, 130); // Adjust the position as needed
-//   wall1.scale.set(4, 1.8, 2); // Adjust the scale as needed
-//   wall1.rotation.set(0, Math.PI / 2, 0);
+//     leftWall.position.set(-90, -5, 130); // Adjust the position as needed
+//     leftWall.scale.set(4, 1.8, 2); // Adjust the scale as needed
+//     leftWall.rotation.set(0, Math.PI / 2, 0);
 
+//     const rightWall = leftWall.clone();
 
-//   const wall2 = wall1.clone();
+//     // Apply a scale transformation to reflect it across the X-axis
+//     rightWall.scale.z = -1; // Reflect across the X-axis
+//     rightWall.position.set(90, -5, 130); // Adjust the position as needed
+//     scene.add(rightWall);
 
-//   // Apply a scale transformation to reflect it across the X-axis
-//   wall2.scale.z = -1; // Reflect across the X-axis
-//   wall2.position.set(90, -5, 130); // Adjust the position as needed
-//   scene.add(wall2);
-  
-//       // Calculate dimensions of the Luffy model
-//       const boundingBox = new THREE.Box3().setFromObject(wall1);
-//       const width = boundingBox.max.x - boundingBox.min.x;
-//       const height = boundingBox.max.y - boundingBox.min.y;
-//       const depth = boundingBox.max.z - boundingBox.min.z;
-  
-//       // Create Cannon.js body shape for Luffy model
-//       const pathwallShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-  
-//       // Create Cannon.js body for Luffy model
-//       const pathwallBody  = new CANNON.Body({
-//           mass: 0, // Adjust mass as needed
-//           position: wall1.position,
-//       });
-//       pathwallBody.addShape(pathwallShape );
-//       world.addBody(pathwallBody);
-  
+//     // Optionally, you can perform additional operations on the loaded model here.
 // });
-
-
-
-// const pathwallBody = new CANNON.Body({
-//     //mass: 10
-//      shape: new CANNON.Box(new CANNON.Vec3(15, 15, 0.1)),
-//      type: CANNON.Body.STATIC,
-//   });
-
-
-//   pathwallBody.position.copy( new THREE.Vector3(0, 1, 200));
-//  // pathwallBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-
-//   world.addBody(pathwallBody);
-
-
-
-
-
 
 // DEFINE MAZE GRID
 // Create a floor tile
@@ -257,49 +170,16 @@ floorContainer1.position.set(-125,0,-250);
 floorContainer2.position.set(125,0,-250);
 floorContainer3.position.set(125,0,0);
 
-floorContainer1.rotation.set(Math.PI/2,0,0);
-floorContainer2.rotation.set(Math.PI/2,0,0);
-floorContainer3.rotation.set(Math.PI/2,0,0);
 
-function changeTileColorOnClick(tile) {
-    const randomColor = new THREE.Color(0, 0, 255);
-    tile.material.color.copy(randomColor);
-    tileMaterial.castShadow = true;
-    tileMaterial.receiveShadow = true;
-    tileMaterial.transparent = true;
-    const tileLight = new THREE.PointLight(randomColor, 1, 20, 5);
-    tileLight.position.copy(tile.position);
-    scene.add(tileLight);
-}
+floorContainer1.rotation.set(rotationAngle, 0, 0);
+floorContainer2.rotation.set(rotationAngle, 0, 0);
+floorContainer3.rotation.set(rotationAngle, 0, 0);
 
-// clicking the tiles?
-//export const raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );
-export const raycaster=new THREE.Raycaster();
-const mouse = new THREE.Vector2(0,0);
+// Example: Change the color of tile number 1 to red
+changeTileColor(floorContainer2, 1, 0xff0000);
 
-document.addEventListener('click', (event) => {
-    // Calculate mouse coordinates in normalized device coordinates (NDC)
-    mouse.x =0;
-    mouse.y = 0;
+loadModels(loader, scene, world);
 
-    // Update the raycaster
-    raycaster.setFromCamera(mouse, camera.currentCamera);
-
-    // Get a list of objects intersected by the raycaster
-    const intersects = raycaster.intersectObjects(tiles);
-
-    // If there are intersections, trigger the click event on the first object (tile) in the list
-    if (intersects.length > 0) {
-        intersects[0].object.dispatchEvent({ type: 'click' });
-    }
-});
-
-
-
-// Define the dimensions of the floorContainer
-const floorContainerWidth = numRows * (tileSize + gapSize) * 1.3; // Adjusted for scaling
-const floorContainerHeight = numCols * (tileSize + gapSize) * 1.3; // Adjusted for scaling
-const floorContainerDepth = 1.3; // Depth of the floor container (same as the tile)
 
 const gridSizeX = 2;
 const gridSizeZ = 3;
@@ -327,201 +207,10 @@ for (let i = 0; i < gridSizeX; i++) {
     }
 }
 
+// TODO: Figure out what this does where its exported and why it is required
+export const raycaster = new THREE.Raycaster();
 
-
-
-// Create a box shape for the floorContainer
-//const floorContainerShape = new CANNON.Box(
-//    new CANNON.Vec3(
-//        floorContainerWidth / 2,
-//        floorContainerHeight / 2,
-//        floorContainerDepth / 2
-//    )
-//);
-//
-//// Create a Cannon.js body for the floorContainer
-//const floorContainerBody = new CANNON.Body({
-//    type: CANNON.Body.STATIC,
-//    shape: floorContainerShape,
-//    position: new CANNON.Vec3(0, 0, -floorContainerDepth / 2) // Adjust the position as needed
-//});
-//
-//const translationVector = new THREE.Vector3(0, 1, 200);
-//floorContainerBody.position.copy(translationVector);
-//floorContainerBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-//
-//// Add the floorContainerBody to the world
-//world.addBody(floorContainerBody);
-
-// const loader = new GLTFLoader();
-// loader.load('/ground_material.glb', function (gltf) {
-//     gltf.scene.rotation.y=Math.PI/2;
-//     gltf.scene.scale.set(5,1,5);
-//     gltf.scene.position.y=-1;
-//     gltf.scene.position.x=0;
-//     gltf.scene.position.z=0;
-//     scene.add(gltf.scene);
-
-// }, undefined, function (error) {
-//     console.error(error);
-// });
-
-// loader.load('/luffy.glb', function (gltf) {
-//     const luffyModel = gltf.scene;
-//     luffyModel.rotation.y = -Math.PI / 2;
-//     luffyModel.scale.set(0.15, 0.15, 0.15);
-//     luffyModel.position.set(0, -2, -40);
-
-//     // Calculate dimensions of the Luffy model
-//     const boundingBox = new THREE.Box3().setFromObject(luffyModel);
-//     const width = boundingBox.max.x - boundingBox.min.x;
-//     const height = boundingBox.max.y - boundingBox.min.y;
-//     const depth = boundingBox.max.z - boundingBox.min.z;
-
-//     // Create Cannon.js body shape for Luffy model
-//     const luffyShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-
-//     // Create Cannon.js body for Luffy model
-//     const luffyBody = new CANNON.Body({
-//         mass: 0, // Adjust mass as needed
-//         position: new CANNON.Vec3(0, -2, -40) // Initial position of the model
-//     });
-//     luffyBody.addShape(luffyShape);
-//     world.addBody(luffyBody);
-
-//     scene.add(luffyModel);
-
-//     // Print the size of the Luffy model
-//     console.log('Luffy Model Size - Width:', width, 'Height:', height, 'Depth:', depth);
-
-//     // Create wireframe mesh for visualization
-//     const wireframeGeometry = new THREE.BoxGeometry(width, height, depth);
-//     const wireframeMaterial = new THREE.MeshBasicMaterial({
-//         color: 0x00ff00,
-//         wireframe: true
-//     });
-//     const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-//     // Position the wireframe mesh at the same position as the model
-//     wireframeMesh.position.set(0, 10, -40);
-
-//     // Add the wireframe mesh to the scene
-//     scene.add(wireframeMesh);
-// }, undefined, function (error) {
-//     console.error(error);
-// });
-// loader.load('/lion_statue.glb', function (gltf) {
-//     const lionStatueModel = gltf.scene;
-//     lionStatueModel.scale.set(20, 20, 20);
-//     lionStatueModel.position.set(-40, -5, 0);
-//     console.log("Lion Statue Properties:");
-// //    for (const property in lionStatueModel) {
-// //        console.log(`${property}:`, lionStatueModel[property]);
-// //    }
-
-//     // Calculate dimensions of the lion statue model
-//     const boundingBox = new THREE.Box3().setFromObject(lionStatueModel);
-//     const width = boundingBox.max.x - boundingBox.min.x;
-//     const height = boundingBox.max.y - boundingBox.min.y;
-//     const depth = boundingBox.max.z - boundingBox.min.z;
-//     console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-//     // Add Cannon.js body for Lion Statue model
-//     const lionStatueShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-//     const lionStatueBody = new CANNON.Body({
-//         mass: 0, // Static object, so mass is 0
-//         position: new CANNON.Vec3(-40, -5, 0) // Initial position of the model
-//     });
-//     lionStatueBody.addShape(lionStatueShape);
-//     world.addBody(lionStatueBody);
-
-//     scene.add(lionStatueModel);
-
-//     // Create wireframe mesh for visualization
-//     const wireframeGeometry = new THREE.BoxGeometry(width, height-3, depth);
-//     const wireframeMaterial = new THREE.MeshBasicMaterial({
-//         color: 0x00ff00,
-//         wireframe: true
-//     });
-//     const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-//     // Position the wireframe mesh at the same position as the model
-//     wireframeMesh.position.set(-40, 8, 0);
-
-//     // Add the wireframe mesh to the scene
-//     scene.add(wireframeMesh);
-// }, undefined, function (error) {
-//     console.error(error);
-// });
-
-// // Load Dragon Ball Z - Guko Character model
-// loader.load('/dragon_ball_z_-_guko_character.glb', function (gltf) {
-//     const gukoModel = gltf.scene;
-//     gukoModel.rotation.y = -Math.PI / 2;
-//     gukoModel.scale.set(1, 1, 1);
-//     gukoModel.position.set(40, 35, 0);
-
-//     // Calculate dimensions of the Goku model
-//     const boundingBox = new THREE.Box3().setFromObject(gukoModel);
-//     const width = boundingBox.max.x - boundingBox.min.x;
-//     const height = boundingBox.max.y - boundingBox.min.y;
-//     const depth = boundingBox.max.z - boundingBox.min.z;
-//     console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-//     // Create Cannon.js body shape for Goku model
-//     const gukoShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-
-//     // Create Cannon.js body for Goku model
-//     const gukoBody = new CANNON.Body({
-//         mass: 0, // Adjust mass as needed based on your scene's requirements
-//         position: new CANNON.Vec3(40, 35, 0) // Initial position of the model
-//     });
-
-//     // Add the shape to the body
-//     gukoBody.addShape(gukoShape);
-
-//     // Add the body to the world
-//     world.addBody(gukoBody);
-
-//     // Add the model to the scene
-//     scene.add(gukoModel);
-
-//     // Create wireframe mesh for visualization
-//     const wireframeGeometry = new THREE.BoxGeometry(width, height-2, depth);
-//     const wireframeMaterial = new THREE.MeshBasicMaterial({
-//         color: 0x00ff00,
-//         wireframe: true
-//     });
-//     const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-//     // Position the wireframe mesh at the same position as the model
-//     wireframeMesh.position.set(27, 12, 0);
-
-//     // Add the wireframe mesh to the scene
-//     scene.add(wireframeMesh);
-// }, undefined, function (error) {
-//     console.error(error);
-// });
-
-// // const target = new THREE.Object3D();
-// // target.position.copy(floorContainer.position); // Adjust the target's position as needed
-
-
-export function animated_objects(){
-    boxMesh.position.copy(boxBody.position);
-    boxMesh.position.y-=2;
-    boxMesh.quaternion.copy(boxBody.quaternion);
-
-//    floorContainer1.position.copy(floorContainerBody.position);
-//    floorContainer1.quaternion.copy(floorContainerBody.quaternion);
-
-
-    // groundMesh.position.copy(groundBody.position);
-    // groundMesh.quaternion.copy(groundBody.quaternion);
-
-
-
-    // if (groundModel && groundBody) {
-    //     groundModel.position.copy(groundBody.position);
-    //   }
-
+export function animate_objects() {
+    groundMesh.position.copy(groundBody.position);
+    groundMesh.quaternion.copy(groundBody.quaternion);
+}
