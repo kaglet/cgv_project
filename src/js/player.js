@@ -27,7 +27,7 @@ let moveLeft = false;
 let moveRight = false;
 let paused = false;
 let playerBody;
-let characterModel = null;
+export let characterModel = null;
 
 class BasicCharacterControllerProxy {
   constructor(animations) {
@@ -673,7 +673,7 @@ export function _LoadAnimatedModel() {
 
 }
 
-export function animated_objects() {
+export function animate_objects() {
   if (characterModel && playerBody) {
     characterModel.position.copy(playerBody.position);
     characterModel.position.y-=2;

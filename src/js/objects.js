@@ -43,7 +43,10 @@ function drawGridWithOmissions(container, omittedTiles = []) {
                     const tile = createTile(tileNumber);
                     const xOffset = (i - numRows / 2) * (tileSize + gapSize);
                     const yOffset = (j - numCols / 2) * (tileSize + gapSize);
+                    tile.name = 'tile';
+                    tile.litUp = false;
                     tile.position.set(xOffset, yOffset, 0);
+                    tile.updateWorldMatrix(true, false);
                     container.add(tile); // Add the tile to the specified container
                 }
             }
@@ -104,6 +107,7 @@ groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(groundBody);
 
 //Path object
+// TODO: Understand or comment what this does
 const fbxLoader = new FBXLoader();
 
 fbxLoader.load('./the_way/the_way.FBX', (fbx) => {
@@ -165,9 +169,9 @@ const numCols = 9;
 const tiles = [];
 
 const rotationAngle = (Math.PI / 2);
-const floorContainer1 = new THREE.Group();
-const floorContainer2 = new THREE.Group();
-const floorContainer3 = new THREE.Group();
+export const floorContainer1 = new THREE.Group();
+export const floorContainer2 = new THREE.Group();
+export const floorContainer3 = new THREE.Group();
 scene.add(floorContainer1);
 scene.add(floorContainer2);
 scene.add(floorContainer3);
@@ -177,7 +181,6 @@ drawGridWithOmissions(floorContainer1, []);
 drawGridWithOmissions(floorContainer2, [30, 38, 78]);
 drawGridWithOmissions(floorContainer3, [28, 30, 42, 52, 76]);
 
-//scales map path
 floorContainer1.scale.set(2.6, 2.6, 1.3);
 floorContainer2.scale.set(2.6, 2.6, 1.3);
 floorContainer3.scale.set(2.6, 2.6, 1.3);
@@ -198,7 +201,7 @@ loadModels(loader, scene, world);
 // TODO: Figure out what this does where its exported and why it is required
 export const raycaster = new THREE.Raycaster();
 
-export function animated_objects() {
+export function animate_objects() {
     groundMesh.position.copy(groundBody.position);
     groundMesh.quaternion.copy(groundBody.quaternion);
 }
