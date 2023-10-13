@@ -37,25 +37,6 @@ scene.add(skybox);
 const axesHelper = new THREE.AxesHelper(200); //so we can see the axes for debugging
 scene.add(axesHelper);
 
-
-const boxGeo = new THREE.BoxGeometry(5, 5, 5);
-const boxMat = new THREE.MeshBasicMaterial({
-	color: 0x00ff00,
-	wireframe: true
-});
-
-const boxMesh = new THREE.Mesh(boxGeo, boxMat);
-scene.add(boxMesh);
-
-const boxBody = new CANNON.Body({
-    mass: 100,
-    shape: new CANNON.Box(new CANNON.Vec3(5, 5, 5)),
-    position: new CANNON.Vec3(10, 2, 20),
-  //  material: boxPhysMat
-  });
-  world.addBody(boxBody);
-
-
 //physics ground
 const groundBody = new CANNON.Body({
     shape: new CANNON.Plane(),
