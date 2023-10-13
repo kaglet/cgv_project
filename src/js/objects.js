@@ -40,18 +40,12 @@ scene.add(axesHelper);
 //physics ground
 const groundBody = new CANNON.Body({
     shape: new CANNON.Plane(),
-    //mass: 10
-    // shape: new CANNON.Box(new CANNON.Vec3(15, 15, 0.1)),
      type: CANNON.Body.STATIC,
-    // material: groundPhysMat
   });
-
-  groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-  world.addBody(groundBody);
-
+groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
+world.addBody(groundBody);
 
 //Path object
-
 const fbxLoader = new FBXLoader();
 
 fbxLoader.load('./the_way/the_way.FBX', (fbx) => {
@@ -74,29 +68,25 @@ fbxLoader.load('./the_way/the_way.FBX', (fbx) => {
   });
 
 //Path walls
-
 const loader = new GLTFLoader();
 
 loader.load('./ruined_sandstone__wall_ref/scene.gltf', (gltf) => {
-  const wall1 = gltf.scene;
-  scene.add(wall1);
+  const leftWall = gltf.scene;
+  scene.add(leftWall);
 
-  wall1.position.set(-90, -5, 130); // Adjust the position as needed
-  wall1.scale.set(4, 1.8, 2); // Adjust the scale as needed
-  wall1.rotation.set(0, Math.PI / 2, 0);
+  leftWall.position.set(-90, -5, 130); // Adjust the position as needed
+  leftWall.scale.set(4, 1.8, 2); // Adjust the scale as needed
+  leftWall.rotation.set(0, Math.PI / 2, 0);
 
-
-  const wall2 = wall1.clone();
+  const rightWall = leftWall.clone();
 
   // Apply a scale transformation to reflect it across the X-axis
-  wall2.scale.z = -1; // Reflect across the X-axis
-  wall2.position.set(90, -5, 130); // Adjust the position as needed
-  scene.add(wall2);
+  rightWall.scale.z = -1; // Reflect across the X-axis
+  rightWall.position.set(90, -5, 130); // Adjust the position as needed
+  scene.add(rightWall);
 
   // Optionally, you can perform additional operations on the loaded model here.
 });
-
-
 
 //Maze grid
 
@@ -111,13 +101,13 @@ const tileMaterial = new THREE.MeshStandardMaterial({
 // Define tile size and gap size
 const tileSize = 5; // Adjust the size of each tile
 const gapSize = 0.2; // Adjust the size of the gap
+
 const numRows=9;
 const numCols=9;
 const tiles = [];
 
 const floorContainer1 = new THREE.Group();
 scene.add(floorContainer1);
-
 
 const floorContainer2 = new THREE.Group();
 scene.add(floorContainer2);
@@ -390,26 +380,8 @@ loader.load('/dragon_ball_z_-_guko_character.glb', function (gltf) {
     console.error(error);
 });
 
-// const target = new THREE.Object3D();
-// target.position.copy(floorContainer.position); // Adjust the target's position as needed
-
 
 export function animated_objects(){
-    boxMesh.position.copy(boxBody.position);
-    boxMesh.position.y-=2;
-    boxMesh.quaternion.copy(boxBody.quaternion);
-
     floorContainer1.position.copy(floorContainerBody.position);
     floorContainer1.quaternion.copy(floorContainerBody.quaternion);
-
-
-    // groundMesh.position.copy(groundBody.position);
-    // groundMesh.quaternion.copy(groundBody.quaternion);
-
-
-
-    // if (groundModel && groundBody) {
-    //     groundModel.position.copy(groundBody.position);
-    //   }
-
 }
