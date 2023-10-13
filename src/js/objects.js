@@ -146,8 +146,44 @@ loader.load('./ruined_sandstone__wall_ref/scene.gltf', (gltf) => {
   wall2.scale.z = -1; // Reflect across the X-axis
   wall2.position.set(90, -5, 130); // Adjust the position as needed
   scene.add(wall2);
-  // Optionally, you can perform additional operations on the loaded model here.
+  
+      // Calculate dimensions of the Luffy model
+      const boundingBox = new THREE.Box3().setFromObject(wall1);
+      const width = boundingBox.max.x - boundingBox.min.x;
+      const height = boundingBox.max.y - boundingBox.min.y;
+      const depth = boundingBox.max.z - boundingBox.min.z;
+  
+      // Create Cannon.js body shape for Luffy model
+      const pathwallShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
+  
+      // Create Cannon.js body for Luffy model
+      const pathwallBody  = new CANNON.Body({
+          mass: 0, // Adjust mass as needed
+          position: wall1.position,
+      });
+      pathwallBody.addShape(pathwallShape );
+      world.addBody(pathwallBody);
+  
 });
+
+
+
+// const pathwallBody = new CANNON.Body({
+//     //mass: 10
+//      shape: new CANNON.Box(new CANNON.Vec3(15, 15, 0.1)),
+//      type: CANNON.Body.STATIC,
+//   });
+
+
+//   pathwallBody.position.copy( new THREE.Vector3(0, 1, 200));
+//  // pathwallBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
+
+//   world.addBody(pathwallBody);
+
+
+
+
+
 
 
 

@@ -43,17 +43,24 @@ class BasicCharacterControllerProxy {
 class BasicCharacterController {
   constructor(params) {
 
-//    params.world.gravity.set(0, -9.81, 0);
+    //    params.world.gravity.set(0, -9.81, 0);
 
-    // Create a Cannon.js body for the player character
+    //   // Create a Cannon.js body for the player character
+    //   const playerBody = new CANNON.Body({
+    //     mass: 100, // Adjust mass as needed
+    //     position: new CANNON.Vec3(0, 5, 0) // Initial position of the model
+    // });
+
     playerBody = new CANNON.Body({
       mass: 100, // Adjust the mass as needed
-      shape: new CANNON.Box(new CANNON.Vec3(1, 5, 1)),
+      //  shape: new CANNON.Box(new CANNON.Vec3(1, 5, 1)),
       position: new CANNON.Vec3(0, 5, 0),
     });
 
-    // Add the body to the Cannon.js world
+    //   // Add the body to the Cannon.js world
     params.world.addBody(playerBody);
+
+
 
     this._Init(params);
   }
@@ -71,25 +78,25 @@ class BasicCharacterController {
 
     this._LoadModels();
 
-    playerBody.addEventListener('collide', (event) => {
-      console.log("collide")
-      // Handle collisions here
+    // playerBody.addEventListener('collide', (event) => {
+    //   console.log("collide")
+    //   // Handle collisions here
 
-      // Access the other body involved in the collision
-      const otherBody = event.body;
+    //   // Access the other body involved in the collision
+    //   const otherBody = event.body;
 
-      // Check if the collision involves a specific type of object
-      // You might want to check the type or some property of the other body
-      if (otherBody.userData && otherBody.userData.type === 'obstacle') {
-        // If it's an obstacle, prevent the player from moving further in that direction
-        // For example, if you want to prevent movement in the X direction:
-        playerBody.velocity.x = 0;
-        playerBody.velocity.z = 0;
-        playerBody.velocity.y = 0;
+    //   // Check if the collision involves a specific type of object
+    //   // You might want to check the type or some property of the other body
+    //   if (otherBody.userData && otherBody.userData.type === 'obstacle') {
+    //     // If it's an obstacle, prevent the player from moving further in that direction
+    //     // For example, if you want to prevent movement in the X direction:
+    //     playerBody.velocity.x = 0;
+    //     playerBody.velocity.z = 0;
+    //     playerBody.velocity.y = 0;
 
-        // You can do the same for other axes (e.g., playerBody.velocity.y or playerBody.velocity.z)
-      }
-    });
+    //     // You can do the same for other axes (e.g., playerBody.velocity.y or playerBody.velocity.z)
+    //   }
+    // });
 
   }
 
@@ -100,12 +107,25 @@ class BasicCharacterController {
 
     loader.load('./alex/ALEX.fbx', (fbx) => {
       characterModel = fbx;
-       //fbx.position.y=-30;
+      //fbx.position.y=-30;
       // fbx.rotation.y=10;
       fbx.scale.setScalar(0.1);
       fbx.traverse(c => {
         c.castShadow = true;
       });
+
+      
+      // accurate hitbox for the player
+      const boundingBox = new THREE.Box3().setFromObject(characterModel);
+      const width = boundingBox.max.x - boundingBox.min.x;
+      const height = boundingBox.max.y - boundingBox.min.y;
+      const depth = boundingBox.max.z - boundingBox.min.z;
+
+      const playerShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
+
+      playerBody.addShape(playerShape);
+
+
 
       this._target = fbx;
       this._params.scene.add(this._target);
@@ -138,7 +158,7 @@ class BasicCharacterController {
   }
 
   Update(timeInSeconds) {
-  let savedCharacterOrientation = new THREE.Quaternion();
+    let savedCharacterOrientation = new THREE.Quaternion();
     const controlObject = this._target;
     const cameraObject = this._params.camera;
     const cameraDirection = new THREE.Vector3();
@@ -148,7 +168,7 @@ class BasicCharacterController {
 
 
     if (camera.currentCamera === camera.camera) {
-       controlObject.quaternion.copy(savedCharacterOrientation);
+      controlObject.quaternion.copy(savedCharacterOrientation);
 
       if (!this._target) {
         return;
@@ -181,7 +201,7 @@ class BasicCharacterController {
       // Calculate movement direction based on camera's direction
       const moveDirection = new THREE.Vector3();
       moveDirection.copy(cameraDirection);
-      moveDirection.y=(0);
+      moveDirection.y = (0);
       // Separate vector for left and right movement
       const strafeDirection = new THREE.Vector3(cameraDirection.z, 0, -cameraDirection.x);
 
@@ -212,12 +232,12 @@ class BasicCharacterController {
       cameraObject.position.copy(controlObject.position);
       // Set the camera's vertical position (Y-axis) to maintain it above the character's head
 
-       cameraObject.position.y += 20;
+      cameraObject.position.y += 20;
       if (this._mixer) {
         this._mixer.update(timeInSeconds);
       }
     } else if (camera.currentCamera === camera.topDownCamera) {
-          savedCharacterOrientation.copy(controlObject.quaternion);
+      savedCharacterOrientation.copy(controlObject.quaternion);
       if (!this._target) {
         return;
       }
@@ -278,8 +298,8 @@ class BasicCharacterController {
 
       controlObject.position.add(forward);
       controlObject.position.add(sideways);
-       const targetRotation = controlObject.rotation.clone();
-       cameraObject.rotation.copy(targetRotation);
+      const targetRotation = controlObject.rotation.clone();
+      cameraObject.rotation.copy(targetRotation);
       //oldPosition.copy(controlObject.position);
 
       if (this._mixer) {
@@ -309,29 +329,29 @@ class BasicCharacterControllerInput {
     //code that allows the screen to follow mouse
     const blocker = document.getElementById('blocker');
     const instructions = document.getElementById('instructions');
-     const pausedScreen = document.getElementById('paused-screen');
+    const pausedScreen = document.getElementById('paused-screen');
 
-     document.addEventListener('click', function () {
-          controls.lock();
-        });
+    document.addEventListener('click', function () {
+      controls.lock();
+    });
 
 
     controls.addEventListener('lock', function () {
-      paused=false;
+      paused = false;
       instructions.style.display = 'none';
       blocker.style.display = 'none';
       pausedScreen.style.display = 'none';
     });
 
     controls.addEventListener('unlock', function () {
-      paused=true;
+      paused = true;
       pausedScreen.style.display = 'block';
       blocker.style.display = 'block';
       instructions.style.display = '';
-      moveForward=false;
-      moveBackward=false;
-      moveRight=false;
-      moveLeft=false;
+      moveForward = false;
+      moveBackward = false;
+      moveRight = false;
+      moveLeft = false;
     });
 
     objects.scene.add(controls.getObject());
@@ -339,22 +359,22 @@ class BasicCharacterControllerInput {
   }
   //key press listeners
   _onKeyDown(event) {
-  if(!paused){
-    switch (event.keyCode) {
-          case 87: // w
-            moveForward = true;
-            break;
-          case 65: // a
-            moveLeft = true;
-            break;
-          case 83: // s
-            moveBackward = true;
-            break;
-          case 68: // d
-            moveRight = true;
-            break;
+    if (!paused) {
+      switch (event.keyCode) {
+        case 87: // w
+          moveForward = true;
+          break;
+        case 65: // a
+          moveLeft = true;
+          break;
+        case 83: // s
+          moveBackward = true;
+          break;
+        case 68: // d
+          moveRight = true;
+          break;
 
-        }
+      }
     }
   }
 
@@ -676,6 +696,6 @@ export function _LoadAnimatedModel() {
 export function animated_objects() {
   if (characterModel && playerBody) {
     characterModel.position.copy(playerBody.position);
-    characterModel.position.y-=2;
+    characterModel.position.y -= 2;
   }
 }
