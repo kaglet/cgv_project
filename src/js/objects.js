@@ -88,9 +88,9 @@ const axesHelper = new THREE.AxesHelper(200); //so we can see the axes for debug
 scene.add(axesHelper);
 
 // Create ground
-const groundGeo = new THREE.PlaneGeometry(200, 300);
+const groundGeo = new THREE.PlaneGeometry(10000, 10000);
 const groundMat = new THREE.MeshStandardMaterial({
-    color: 0xffffff,
+    color: 0x78BE21,
     side: THREE.DoubleSide,
     wireframe: false
 });
@@ -104,29 +104,6 @@ const groundBody = new CANNON.Body({
 });
 groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(groundBody);
-
-//Path object
-// TODO: Understand or comment what this does
-const fbxLoader = new FBXLoader();
-
-fbxLoader.load('./the_way/the_way.FBX', (fbx) => {
-    /// You can scale, position, and rotate the model here
-    // Example:
-    fbx.scale.set(0.1, 0.1, 0.1);
-    fbx.position.set(0, 0, 0);
-
-    fbx.traverse((child) => {
-        if (child instanceof THREE.Mesh) {
-            const material = child.material;
-            if (material && material.shininessMap) {
-                material.shininessMap = null;
-            }
-        }
-    });
-
-    // Add the loaded model to your scene
-    scene.add(fbx);
-});
 
 //Path walls
 const loader = new GLTFLoader();
