@@ -25,13 +25,6 @@ function createTile(index) {
     return tile;
 }
 
-function changeTileColor(container, tileNumber, newColor) {
-    const tile = container.children.find(tile => tile.userData.tileNumber === tileNumber);
-    if (tile) {
-        tile.material.color.set(newColor);
-    }
-}
-
 // Function to add or omit tiles based on tile numbers
 function drawGridWithOmissions(container, omittedTiles = []) {
     for (let i = 0; i < numRows; i++) {
@@ -54,18 +47,24 @@ function drawGridWithOmissions(container, omittedTiles = []) {
     }
 }
 
-function changeTileColorOnClick(tile) {
-    const randomColor = new THREE.Color(0, 0, 255);
-    tile.material.color.copy(randomColor);
-    tileMaterial.castShadow = true;
-    tileMaterial.receiveShadow = true;
-    tileMaterial.transparent = true;
-    const tileLight = new THREE.PointLight(randomColor, 1, 20, 5);
-    tileLight.position.copy(tile.position);
-    scene.add(tileLight);
+function changeTileColor(container, tileNumber, newColor) {
+    const tile = container.children.find(tile => tile.userData.tileNumber === tileNumber);
+    if (tile) {
+        tile.material.color.set(newColor);
+    }
+}
+function changePathColor(container, path, color) {
+    path.forEach(tileNumber => {
+        changeTileColor(container, tileNumber, color);
+    });
 }
 
 // Create material array
+
+const path1=[1,2,3,12,21,30,39,48,57,66,75,76,77,78,79,70,61,52,43,42,41,32,23,24,25,26,27,36,45,54,63,72,81];
+const path2=[5,14,23,24,25,26,27,36,45,44,43,42,41,40,39,48,57,56,55,64,73,74,75,76,77,68,59,60,61,62,63,72,81];
+const path3=[19,10,1,2,3,4,5,6,7,8,9,18,27,36,45,44,43,34,25,24,23,32,41,40,39,38,37,46,55,64,73,74,75,66,57,58,59,68,77,78,79,80,81];
+
 const materialArray = [
     new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
     new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
@@ -181,6 +180,11 @@ drawGridWithOmissions(floorContainer1, []);
 drawGridWithOmissions(floorContainer2, [30, 38, 78]);
 drawGridWithOmissions(floorContainer3, [28, 30, 42, 52, 76]);
 
+changePathColor(floorContainer1, path1, 0x00ff00); // Green
+changePathColor(floorContainer2, path2, 0xff0000); // Red
+changePathColor(floorContainer3, path3, 0x0000FF);//blue
+
+//scales map path
 floorContainer1.scale.set(2.6, 2.6, 1.3);
 floorContainer2.scale.set(2.6, 2.6, 1.3);
 floorContainer3.scale.set(2.6, 2.6, 1.3);
