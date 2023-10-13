@@ -62,11 +62,6 @@ function changeTileColorOnClick(tile) {
     scene.add(tileLight);
 }
 
-export function animated_objects() {
-    floorContainer1.position.copy(floorContainerBody.position);
-    floorContainer1.quaternion.copy(floorContainerBody.quaternion);
-}
-
 // Create material array
 const materialArray = [
     new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
@@ -156,18 +151,22 @@ const gapSize = 0.2; // Adjust the size of the gap
 
 const numRows = 9;
 const numCols = 9;
+
 const tiles = [];
 
+const rotationAngle = (Math.PI / 2);
 const floorContainer1 = new THREE.Group();
+const floorContainer2 = new THREE.Group();
+const floorContainer3 = new THREE.Group();
 scene.add(floorContainer1);
+scene.add(floorContainer2);
+scene.add(floorContainer3);
 
 // Call the function to draw the first grid with omissions
 drawGridWithOmissions(floorContainer1, []);
 drawGridWithOmissions(floorContainer2, [30, 38, 78]);
 drawGridWithOmissions(floorContainer3, [28, 30, 42, 52, 76]);
 
-// Example: Change the color of tile number 1 to red
-changeTileColor(floorContainer2, 1, 0xff0000);
 //scales map path
 floorContainer1.scale.set(2.6, 2.6, 1.3);
 floorContainer2.scale.set(2.6, 2.6, 1.3);
@@ -177,30 +176,15 @@ floorContainer1.position.set(0, 0, 180);
 floorContainer2.position.set(0, 0, 50);
 floorContainer3.position.set(0, 0, -100);
 
-floorContainer2.rotation.set(Math.PI / 2, 0, 0);
-floorContainer3.rotation.set(Math.PI / 2, 0, 0);
+floorContainer1.rotation.set(rotationAngle, 0, 0);
+floorContainer2.rotation.set(rotationAngle, 0, 0);
+floorContainer3.rotation.set(rotationAngle, 0, 0);
 
-// clicking the tiles?
-//export const raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );
+// Example: Change the color of tile number 1 to red
+changeTileColor(floorContainer2, 1, 0xff0000);
+
+// TODO: Figure out what this does where its exported and why it is required
 export const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2(0, 0);
-
-document.addEventListener('click', (event) => {
-    // Calculate mouse coordinates in normalized device coordinates (NDC)
-    mouse.x = 0;
-    mouse.y = 0;
-
-    // Update the raycaster
-    raycaster.setFromCamera(mouse, camera.currentCamera);
-
-    // Get a list of objects intersected by the raycaster
-    const intersects = raycaster.intersectObjects(tiles);
-
-    // If there are intersections, trigger the click event on the first object (tile) in the list
-    if (intersects.length > 0) {
-        intersects[0].object.dispatchEvent({ type: 'click' });
-    }
-});
 
 // Define the dimensions of the floorContainer
 const floorContainerWidth = numRows * (tileSize + gapSize) * 1.3; // Adjusted for scaling
@@ -379,4 +363,8 @@ loader.load('/dragon_ball_z_-_guko_character.glb', function (gltf) {
     console.error(error);
 });
 
+export function animated_objects() {
+    floorContainer1.position.copy(floorContainerBody.position);
+    floorContainer1.quaternion.copy(floorContainerBody.quaternion);
+}
 
