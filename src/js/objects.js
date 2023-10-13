@@ -4,15 +4,6 @@ import * as CANNON from 'cannon-es';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-
-// Import texture images
-import meadowFtImage from '../img/meadow/meadow_ft.jpg';
-import meadowBkImage from '../img/meadow/meadow_bk.jpg';
-import meadowUpImage from '../img/meadow/meadow_up.jpg';
-import meadowDnImage from '../img/meadow/meadow_dn.jpg';
-import meadowRtImage from '../img/meadow/meadow_rt.jpg';
-import meadowLfImage from '../img/meadow/meadow_lf.jpg';
-
 import * as camera from './camera.js';
 
 // Scene
@@ -21,25 +12,16 @@ export const scene = new THREE.Scene();
 // world - this is for cannon objects
 export var world = new CANNON.World({
     gravity: new CANNON.Vec3(0,-20,0)
-  });
-
-
-// Create texture objects
-const texture_ft = new THREE.TextureLoader().load(meadowFtImage);
-const texture_bk = new THREE.TextureLoader().load(meadowBkImage);
-const texture_up = new THREE.TextureLoader().load(meadowUpImage);
-const texture_dn = new THREE.TextureLoader().load(meadowDnImage);
-const texture_rt = new THREE.TextureLoader().load(meadowRtImage);
-const texture_lf = new THREE.TextureLoader().load(meadowLfImage);
+});
 
 // Create material array
 const materialArray = [
-  new THREE.MeshBasicMaterial({ map: texture_ft }),
-  new THREE.MeshBasicMaterial({ map: texture_bk }),
-  new THREE.MeshBasicMaterial({ map: texture_up }),
-  new THREE.MeshBasicMaterial({ map: texture_dn }),
-  new THREE.MeshBasicMaterial({ map: texture_rt }),
-  new THREE.MeshBasicMaterial({ map: texture_lf })
+  new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+  new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+  new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+  new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+  new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+  new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide })
 ];
 
 // Set material side to backside
