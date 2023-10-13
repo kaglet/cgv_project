@@ -34,7 +34,7 @@ const skyboxGeo = new THREE.BoxGeometry(10000, 10000, 10000);
 const skybox = new THREE.Mesh(skyboxGeo, materialArray);
 scene.add(skybox);
 
-const axesHelper = new THREE.AxesHelper(50); //so we can see the axes for debugging
+const axesHelper = new THREE.AxesHelper(200); //so we can see the axes for debugging
 scene.add(axesHelper);
 
 
