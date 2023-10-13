@@ -162,9 +162,9 @@ changePathColor(floorContainer2, path2, 0xff0000); // Red
 changePathColor(floorContainer3, path3, 0x0000FF);//blue
 
 //scales map path
-floorContainer1.scale.set(2.6, 2.6, 1.3);
-floorContainer2.scale.set(2.6, 2.6, 1.3);
-floorContainer3.scale.set(2.6, 2.6, 1.3);
+floorContainer1.scale.set(3, 3, 1.3);
+floorContainer2.scale.set(3, 3, 1.3);
+floorContainer3.scale.set(3, 3, 1.3);
 
 floorContainer1.position.set(-125,0,-250);
 floorContainer2.position.set(125,0,-250);
