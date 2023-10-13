@@ -106,65 +106,65 @@ const groundBoxContactMat = new CANNON.ContactMaterial(
 
 //Path object
 
-const fbxLoader = new FBXLoader();
+// const fbxLoader = new FBXLoader();
 
-fbxLoader.load('./the_way/the_way.FBX', (fbx) => {
-    /// You can scale, position, and rotate the model here
-    // Example:
-    fbx.scale.set(0.1, 0.1, 0.1);
-    fbx.position.set(0, -10, 0);
+// fbxLoader.load('./the_way/the_way.FBX', (fbx) => {
+//     /// You can scale, position, and rotate the model here
+//     // Example:
+//     fbx.scale.set(0.1, 0.1, 0.1);
+//     fbx.position.set(0, -10, 0);
 
-    fbx.traverse((child) => {
-        if (child instanceof THREE.Mesh) {
-            const material = child.material;
-            if (material && material.shininessMap) {
-                material.shininessMap = null;
-            }
-        }
-    });
+//     fbx.traverse((child) => {
+//         if (child instanceof THREE.Mesh) {
+//             const material = child.material;
+//             if (material && material.shininessMap) {
+//                 material.shininessMap = null;
+//             }
+//         }
+//     });
 
-    // Add the loaded model to your scene
- //   scene.add(fbx);
-  });
+//     // Add the loaded model to your scene
+//  //   scene.add(fbx);
+//   });
 
-//Path walls
+// //Path walls
 
-const loader = new GLTFLoader();
+// const loader = new GLTFLoader();
 
-loader.load('./ruined_sandstone__wall_ref/scene.gltf', (gltf) => {
-  const wall1 = gltf.scene;
-  scene.add(wall1);
+// loader.load('./ruined_sandstone__wall_ref/scene.gltf', (gltf) => {
+//   const wall1 = gltf.scene;
+//   scene.add(wall1);
 
-  wall1.position.set(-90, -5, 130); // Adjust the position as needed
-  wall1.scale.set(4, 1.8, 2); // Adjust the scale as needed
-  wall1.rotation.set(0, Math.PI / 2, 0);
+//   wall1.position.set(-90, -5, 130); // Adjust the position as needed
+//   wall1.scale.set(4, 1.8, 2); // Adjust the scale as needed
+//   wall1.rotation.set(0, Math.PI / 2, 0);
 
 
-  const wall2 = wall1.clone();
+//   const wall2 = wall1.clone();
 
-  // Apply a scale transformation to reflect it across the X-axis
-  wall2.scale.z = -1; // Reflect across the X-axis
-  wall2.position.set(90, -5, 130); // Adjust the position as needed
-  scene.add(wall2);
+//   // Apply a scale transformation to reflect it across the X-axis
+//   wall2.scale.z = -1; // Reflect across the X-axis
+//   wall2.position.set(90, -5, 130); // Adjust the position as needed
+//   scene.add(wall2);
   
-      // Calculate dimensions of the Luffy model
-      const boundingBox = new THREE.Box3().setFromObject(wall1);
-      const width = boundingBox.max.x - boundingBox.min.x;
-      const height = boundingBox.max.y - boundingBox.min.y;
-      const depth = boundingBox.max.z - boundingBox.min.z;
+//       // Calculate dimensions of the Luffy model
+//       const boundingBox = new THREE.Box3().setFromObject(wall1);
+//       const width = boundingBox.max.x - boundingBox.min.x;
+//       const height = boundingBox.max.y - boundingBox.min.y;
+//       const depth = boundingBox.max.z - boundingBox.min.z;
   
-      // Create Cannon.js body shape for Luffy model
-      const pathwallShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
+//       // Create Cannon.js body shape for Luffy model
+//       const pathwallShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
   
-      // Create Cannon.js body for Luffy model
-      const pathwallBody  = new CANNON.Body({
-          mass: 0, // Adjust mass as needed
-          position: wall1.position,
-      });
-      pathwallBody.addShape(pathwallShape );
-      world.addBody(pathwallBody);
+//       // Create Cannon.js body for Luffy model
+//       const pathwallBody  = new CANNON.Body({
+//           mass: 0, // Adjust mass as needed
+//           position: wall1.position,
+//       });
+//       pathwallBody.addShape(pathwallShape );
+//       world.addBody(pathwallBody);
   
-});
+// });
 
 
 
@@ -268,9 +268,9 @@ floorContainer1.scale.set(2.6, 2.6, 1.3);
 floorContainer2.scale.set(2.6, 2.6, 1.3);
 floorContainer3.scale.set(2.6, 2.6, 1.3);
 
-floorContainer1.position.set(0,0,150);
-floorContainer2.position.set(0,0,0);
-floorContainer3.position.set(0,0,-150);
+floorContainer1.position.set(-125,0,-250);
+floorContainer2.position.set(125,0,-250);
+floorContainer3.position.set(125,0,0);
 
 floorContainer1.rotation.set(Math.PI/2,0,0);
 floorContainer2.rotation.set(Math.PI/2,0,0);
@@ -316,6 +316,35 @@ const floorContainerWidth = numRows * (tileSize + gapSize) * 1.3; // Adjusted fo
 const floorContainerHeight = numCols * (tileSize + gapSize) * 1.3; // Adjusted for scaling
 const floorContainerDepth = 1.3; // Depth of the floor container (same as the tile)
 
+const gridSizeX = 2;
+const gridSizeZ = 3;
+const blockWidth = 250;
+const blockDepth = 250;
+
+const planeGeometry = new THREE.PlaneGeometry(gridSizeX * blockWidth, gridSizeZ * blockDepth);
+const planeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff }); // White color
+
+const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+plane.rotation.x = -Math.PI / 2; // Rotate it to be horizontal
+plane.position.set(0, 0, 0); // Position it on the X-Z plane
+
+scene.add(plane);
+
+// Create alternating grey and white blocks
+for (let i = 0; i < gridSizeX; i++) {
+    for (let j = 0; j < gridSizeZ; j++) {
+        const color = (i + j) % 2 === 0 ? 0x808080 : 0xffffff; // Alternating grey and white
+        const blockMaterial = new THREE.MeshBasicMaterial({ color });
+        const blockGeometry = new THREE.BoxGeometry(blockWidth, 1, blockDepth);
+        const blockMesh = new THREE.Mesh(blockGeometry, blockMaterial);
+        blockMesh.position.set((i - gridSizeX / 2 + 0.5) * blockWidth, 0, (j - gridSizeZ / 2 + 0.5) * blockDepth);
+        scene.add(blockMesh);
+    }
+}
+
+
+
+
 // Create a box shape for the floorContainer
 //const floorContainerShape = new CANNON.Box(
 //    new CANNON.Vec3(
@@ -339,157 +368,158 @@ const floorContainerDepth = 1.3; // Depth of the floor container (same as the ti
 //// Add the floorContainerBody to the world
 //world.addBody(floorContainerBody);
 
+// const loader = new GLTFLoader();
+// loader.load('/ground_material.glb', function (gltf) {
+//     gltf.scene.rotation.y=Math.PI/2;
+//     gltf.scene.scale.set(5,1,5);
+//     gltf.scene.position.y=-1;
+//     gltf.scene.position.x=0;
+//     gltf.scene.position.z=0;
+//     scene.add(gltf.scene);
 
-loader.load('/ground_material.glb', function (gltf) {
-    gltf.scene.rotation.y=Math.PI/2;
-    gltf.scene.scale.set(1,1,1);
-    gltf.scene.position.y=-1;
-    gltf.scene.position.x=0;
-    gltf.scene.position.z=0;
-    scene.add(gltf.scene);
+// }, undefined, function (error) {
+//     console.error(error);
+// });
 
-}, undefined, function (error) {
-    console.error(error);
-});
-loader.load('/luffy.glb', function (gltf) {
-    const luffyModel = gltf.scene;
-    luffyModel.rotation.y = -Math.PI / 2;
-    luffyModel.scale.set(0.15, 0.15, 0.15);
-    luffyModel.position.set(0, -2, -40);
+// loader.load('/luffy.glb', function (gltf) {
+//     const luffyModel = gltf.scene;
+//     luffyModel.rotation.y = -Math.PI / 2;
+//     luffyModel.scale.set(0.15, 0.15, 0.15);
+//     luffyModel.position.set(0, -2, -40);
 
-    // Calculate dimensions of the Luffy model
-    const boundingBox = new THREE.Box3().setFromObject(luffyModel);
-    const width = boundingBox.max.x - boundingBox.min.x;
-    const height = boundingBox.max.y - boundingBox.min.y;
-    const depth = boundingBox.max.z - boundingBox.min.z;
+//     // Calculate dimensions of the Luffy model
+//     const boundingBox = new THREE.Box3().setFromObject(luffyModel);
+//     const width = boundingBox.max.x - boundingBox.min.x;
+//     const height = boundingBox.max.y - boundingBox.min.y;
+//     const depth = boundingBox.max.z - boundingBox.min.z;
 
-    // Create Cannon.js body shape for Luffy model
-    const luffyShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
+//     // Create Cannon.js body shape for Luffy model
+//     const luffyShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
 
-    // Create Cannon.js body for Luffy model
-    const luffyBody = new CANNON.Body({
-        mass: 0, // Adjust mass as needed
-        position: new CANNON.Vec3(0, -2, -40) // Initial position of the model
-    });
-    luffyBody.addShape(luffyShape);
-    world.addBody(luffyBody);
+//     // Create Cannon.js body for Luffy model
+//     const luffyBody = new CANNON.Body({
+//         mass: 0, // Adjust mass as needed
+//         position: new CANNON.Vec3(0, -2, -40) // Initial position of the model
+//     });
+//     luffyBody.addShape(luffyShape);
+//     world.addBody(luffyBody);
 
-    scene.add(luffyModel);
+//     scene.add(luffyModel);
 
-    // Print the size of the Luffy model
-    console.log('Luffy Model Size - Width:', width, 'Height:', height, 'Depth:', depth);
+//     // Print the size of the Luffy model
+//     console.log('Luffy Model Size - Width:', width, 'Height:', height, 'Depth:', depth);
 
-    // Create wireframe mesh for visualization
-    const wireframeGeometry = new THREE.BoxGeometry(width, height, depth);
-    const wireframeMaterial = new THREE.MeshBasicMaterial({
-        color: 0x00ff00,
-        wireframe: true
-    });
-    const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
+//     // Create wireframe mesh for visualization
+//     const wireframeGeometry = new THREE.BoxGeometry(width, height, depth);
+//     const wireframeMaterial = new THREE.MeshBasicMaterial({
+//         color: 0x00ff00,
+//         wireframe: true
+//     });
+//     const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
 
-    // Position the wireframe mesh at the same position as the model
-    wireframeMesh.position.set(0, 10, -40);
+//     // Position the wireframe mesh at the same position as the model
+//     wireframeMesh.position.set(0, 10, -40);
 
-    // Add the wireframe mesh to the scene
-    scene.add(wireframeMesh);
-}, undefined, function (error) {
-    console.error(error);
-});
-loader.load('/lion_statue.glb', function (gltf) {
-    const lionStatueModel = gltf.scene;
-    lionStatueModel.scale.set(20, 20, 20);
-    lionStatueModel.position.set(-40, -5, 0);
-    console.log("Lion Statue Properties:");
-//    for (const property in lionStatueModel) {
-//        console.log(`${property}:`, lionStatueModel[property]);
-//    }
+//     // Add the wireframe mesh to the scene
+//     scene.add(wireframeMesh);
+// }, undefined, function (error) {
+//     console.error(error);
+// });
+// loader.load('/lion_statue.glb', function (gltf) {
+//     const lionStatueModel = gltf.scene;
+//     lionStatueModel.scale.set(20, 20, 20);
+//     lionStatueModel.position.set(-40, -5, 0);
+//     console.log("Lion Statue Properties:");
+// //    for (const property in lionStatueModel) {
+// //        console.log(`${property}:`, lionStatueModel[property]);
+// //    }
 
-    // Calculate dimensions of the lion statue model
-    const boundingBox = new THREE.Box3().setFromObject(lionStatueModel);
-    const width = boundingBox.max.x - boundingBox.min.x;
-    const height = boundingBox.max.y - boundingBox.min.y;
-    const depth = boundingBox.max.z - boundingBox.min.z;
-    console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+//     // Calculate dimensions of the lion statue model
+//     const boundingBox = new THREE.Box3().setFromObject(lionStatueModel);
+//     const width = boundingBox.max.x - boundingBox.min.x;
+//     const height = boundingBox.max.y - boundingBox.min.y;
+//     const depth = boundingBox.max.z - boundingBox.min.z;
+//     console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
 
-    // Add Cannon.js body for Lion Statue model
-    const lionStatueShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-    const lionStatueBody = new CANNON.Body({
-        mass: 0, // Static object, so mass is 0
-        position: new CANNON.Vec3(-40, -5, 0) // Initial position of the model
-    });
-    lionStatueBody.addShape(lionStatueShape);
-    world.addBody(lionStatueBody);
+//     // Add Cannon.js body for Lion Statue model
+//     const lionStatueShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
+//     const lionStatueBody = new CANNON.Body({
+//         mass: 0, // Static object, so mass is 0
+//         position: new CANNON.Vec3(-40, -5, 0) // Initial position of the model
+//     });
+//     lionStatueBody.addShape(lionStatueShape);
+//     world.addBody(lionStatueBody);
 
-    scene.add(lionStatueModel);
+//     scene.add(lionStatueModel);
 
-    // Create wireframe mesh for visualization
-    const wireframeGeometry = new THREE.BoxGeometry(width, height-3, depth);
-    const wireframeMaterial = new THREE.MeshBasicMaterial({
-        color: 0x00ff00,
-        wireframe: true
-    });
-    const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
+//     // Create wireframe mesh for visualization
+//     const wireframeGeometry = new THREE.BoxGeometry(width, height-3, depth);
+//     const wireframeMaterial = new THREE.MeshBasicMaterial({
+//         color: 0x00ff00,
+//         wireframe: true
+//     });
+//     const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
 
-    // Position the wireframe mesh at the same position as the model
-    wireframeMesh.position.set(-40, 8, 0);
+//     // Position the wireframe mesh at the same position as the model
+//     wireframeMesh.position.set(-40, 8, 0);
 
-    // Add the wireframe mesh to the scene
-    scene.add(wireframeMesh);
-}, undefined, function (error) {
-    console.error(error);
-});
+//     // Add the wireframe mesh to the scene
+//     scene.add(wireframeMesh);
+// }, undefined, function (error) {
+//     console.error(error);
+// });
 
-// Load Dragon Ball Z - Guko Character model
-loader.load('/dragon_ball_z_-_guko_character.glb', function (gltf) {
-    const gukoModel = gltf.scene;
-    gukoModel.rotation.y = -Math.PI / 2;
-    gukoModel.scale.set(1, 1, 1);
-    gukoModel.position.set(40, 35, 0);
+// // Load Dragon Ball Z - Guko Character model
+// loader.load('/dragon_ball_z_-_guko_character.glb', function (gltf) {
+//     const gukoModel = gltf.scene;
+//     gukoModel.rotation.y = -Math.PI / 2;
+//     gukoModel.scale.set(1, 1, 1);
+//     gukoModel.position.set(40, 35, 0);
 
-    // Calculate dimensions of the Goku model
-    const boundingBox = new THREE.Box3().setFromObject(gukoModel);
-    const width = boundingBox.max.x - boundingBox.min.x;
-    const height = boundingBox.max.y - boundingBox.min.y;
-    const depth = boundingBox.max.z - boundingBox.min.z;
-    console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+//     // Calculate dimensions of the Goku model
+//     const boundingBox = new THREE.Box3().setFromObject(gukoModel);
+//     const width = boundingBox.max.x - boundingBox.min.x;
+//     const height = boundingBox.max.y - boundingBox.min.y;
+//     const depth = boundingBox.max.z - boundingBox.min.z;
+//     console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
 
-    // Create Cannon.js body shape for Goku model
-    const gukoShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
+//     // Create Cannon.js body shape for Goku model
+//     const gukoShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
 
-    // Create Cannon.js body for Goku model
-    const gukoBody = new CANNON.Body({
-        mass: 0, // Adjust mass as needed based on your scene's requirements
-        position: new CANNON.Vec3(40, 35, 0) // Initial position of the model
-    });
+//     // Create Cannon.js body for Goku model
+//     const gukoBody = new CANNON.Body({
+//         mass: 0, // Adjust mass as needed based on your scene's requirements
+//         position: new CANNON.Vec3(40, 35, 0) // Initial position of the model
+//     });
 
-    // Add the shape to the body
-    gukoBody.addShape(gukoShape);
+//     // Add the shape to the body
+//     gukoBody.addShape(gukoShape);
 
-    // Add the body to the world
-    world.addBody(gukoBody);
+//     // Add the body to the world
+//     world.addBody(gukoBody);
 
-    // Add the model to the scene
-    scene.add(gukoModel);
+//     // Add the model to the scene
+//     scene.add(gukoModel);
 
-    // Create wireframe mesh for visualization
-    const wireframeGeometry = new THREE.BoxGeometry(width, height-2, depth);
-    const wireframeMaterial = new THREE.MeshBasicMaterial({
-        color: 0x00ff00,
-        wireframe: true
-    });
-    const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
+//     // Create wireframe mesh for visualization
+//     const wireframeGeometry = new THREE.BoxGeometry(width, height-2, depth);
+//     const wireframeMaterial = new THREE.MeshBasicMaterial({
+//         color: 0x00ff00,
+//         wireframe: true
+//     });
+//     const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
 
-    // Position the wireframe mesh at the same position as the model
-    wireframeMesh.position.set(27, 12, 0);
+//     // Position the wireframe mesh at the same position as the model
+//     wireframeMesh.position.set(27, 12, 0);
 
-    // Add the wireframe mesh to the scene
-    scene.add(wireframeMesh);
-}, undefined, function (error) {
-    console.error(error);
-});
+//     // Add the wireframe mesh to the scene
+//     scene.add(wireframeMesh);
+// }, undefined, function (error) {
+//     console.error(error);
+// });
 
-// const target = new THREE.Object3D();
-// target.position.copy(floorContainer.position); // Adjust the target's position as needed
+// // const target = new THREE.Object3D();
+// // target.position.copy(floorContainer.position); // Adjust the target's position as needed
 
 
 export function animated_objects(){

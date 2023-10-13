@@ -22,7 +22,7 @@ const far = 1000;
 // Create an orthographic camera
 const topDownCamera = new THREE.OrthographicCamera(left, right, top, bottom, near, far);
 //const topDownCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-topDownCamera.position.set(0, 100, 0);
+topDownCamera.position.set(0, 1000, 0);
 topDownCamera.lookAt(0, 0, 0);
 
 // Initialize the current camera to be the default camera
