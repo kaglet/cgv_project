@@ -7,6 +7,14 @@ import { loadModels } from './models.js';
 import * as camera from './camera.js';
 import * as player from './player.js';
 
+// Import texture images
+import meadowFtImage from '../img/meadow/meadow_ft.jpg';
+import meadowBkImage from '../img/meadow/meadow_bk.jpg';
+import meadowUpImage from '../img/meadow/meadow_up.jpg';
+import meadowDnImage from '../img/meadow/meadow_dn.jpg';
+import meadowRtImage from '../img/meadow/meadow_rt.jpg';
+import meadowLfImage from '../img/meadow/meadow_lf.jpg';
+
 // DEFINE GLOBAL VARIABLES
 // Scene
 export const scene = new THREE.Scene();
@@ -66,19 +74,43 @@ const path1=[1,2,3,12,21,30,39,48,57,66,75,76,77,78,79,70,61,52,43,42,41,32,23,2
 const path2=[5,14,23,24,25,26,27,36,45,44,43,42,41,40,39,48,57,56,55,64,73,74,75,76,77,68,59,60,61,62,63,72,81];
 const path3=[19,10,1,2,3,4,5,6,7,8,9,18,27,36,45,44,43,34,25,24,23,32,41,40,39,38,37,46,55,64,73,74,75,66,57,58,59,68,77,78,79,80,81];
 
+// const materialArray = [
+//     new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+//     new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+//     new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+//     new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+//     new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+//     new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide })
+// ];
+
+// // Set material side to backside
+// materialArray.forEach(material => {
+//     material.side = THREE.BackSide;
+// });
+
+// Create texture objects
+const texture_ft = new THREE.TextureLoader().load(meadowFtImage);
+const texture_bk = new THREE.TextureLoader().load(meadowBkImage);
+const texture_up = new THREE.TextureLoader().load(meadowUpImage);
+const texture_dn = new THREE.TextureLoader().load(meadowDnImage);
+const texture_rt = new THREE.TextureLoader().load(meadowRtImage);
+const texture_lf = new THREE.TextureLoader().load(meadowLfImage);
+
+// Create material array
 const materialArray = [
-    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
-    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
-    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
-    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
-    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
-    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide })
+  new THREE.MeshBasicMaterial({ map: texture_ft }),
+  new THREE.MeshBasicMaterial({ map: texture_bk }),
+  new THREE.MeshBasicMaterial({ map: texture_up }),
+  new THREE.MeshBasicMaterial({ map: texture_dn }),
+  new THREE.MeshBasicMaterial({ map: texture_rt }),
+  new THREE.MeshBasicMaterial({ map: texture_lf })
 ];
 
 // Set material side to backside
-materialArray.forEach(material => {
-    material.side = THREE.BackSide;
+materialArray.forEach((material) => {
+  material.side = THREE.BackSide;
 });
+
 
 // Create skybox
 const skyboxGeo = new THREE.BoxGeometry(10000, 10000, 10000);
@@ -174,7 +206,7 @@ changeTileColor(floorContainer2, 1, 0xff0000);
 
 
 
-
+//white and gray squares (will be removed later)
 const gridSizeX = 2;
 const gridSizeZ = 3;
 const blockWidth = 250;
@@ -200,6 +232,69 @@ for (let i = 0; i < gridSizeX; i++) {
         scene.add(blockMesh);
     }
 }
+
+class Wall {
+    constructor(scene, world, position, rotation) {
+        // Create Three.js wall
+        const wallGeometry = new THREE.BoxGeometry(250, 100, 5);
+        const wallMaterial = new THREE.MeshStandardMaterial({
+            color: "black",
+            side: THREE.DoubleSide,
+            wireframe: false,
+        });
+
+        this.mesh = new THREE.Mesh(wallGeometry, wallMaterial);
+        scene.add(this.mesh);
+
+        // Create Cannon.js wall
+        const wallPhysMat = new CANNON.Material()
+        const wallShape = new CANNON.Box(new CANNON.Vec3(125, 50, 2.5));
+        this.body = new CANNON.Body({
+            mass: 0,
+            shape: wallShape,
+            material: wallPhysMat,
+        });
+
+        // Set the initial position and rotation for the Cannon.js body
+        this.body.position.copy(position);
+        this.body.quaternion.setFromEuler(rotation.x, rotation.y, rotation.z);
+
+        // Add the Cannon.js body to the world
+        world.addBody(this.body);
+
+        // Update the Three.js mesh position and rotation based on the Cannon.js body
+        this.mesh.position.copy(this.body.position);
+        this.mesh.quaternion.copy(this.body.quaternion);
+    }
+}
+
+
+const wallSpawnRight = new Wall(scene, world, new CANNON.Vec3(250, 0, 250), new CANNON.Vec3(0, rotationAngle, 0));
+const wallSpawnLeft = new Wall(scene, world, new CANNON.Vec3(0, 0, 250), new CANNON.Vec3(0, rotationAngle, 0));
+const wallSpawnBack = new Wall(scene, world, new CANNON.Vec3(125, 0, 375), new CANNON.Vec3(0, (Math.PI / 1), 0));
+
+const wallPuzz1Right = new Wall(scene, world, new CANNON.Vec3(250, 0, 0), new CANNON.Vec3(0, rotationAngle, 0));
+const wallPuzz1Left  = new Wall(scene, world, new CANNON.Vec3(0, 0, 0), new CANNON.Vec3(0, rotationAngle, 0));
+
+const wallPuzz2Back = new Wall(scene, world, new CANNON.Vec3(125, 0, -375), new CANNON.Vec3(0, (Math.PI / 1), 0));
+const wallPuzz2Right  = new Wall(scene, world, new CANNON.Vec3(250, 0, -250), new CANNON.Vec3(0, rotationAngle, 0));
+
+const wallPuzz3Right = new Wall(scene, world, new CANNON.Vec3(-125, 0, -375), new CANNON.Vec3(0, (Math.PI / 1), 0));
+const wallPuzz3Left = new Wall(scene, world, new CANNON.Vec3(-125, 0, -125), new CANNON.Vec3(0, (Math.PI / 1), 0));
+const wallPuzz3back  = new Wall(scene, world, new CANNON.Vec3(-250, 0, -250), new CANNON.Vec3(0, rotationAngle, 0));
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // TODO: Figure out what this does where its exported and why it is required
 export const raycaster = new THREE.Raycaster();
