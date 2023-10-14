@@ -24,6 +24,41 @@ export var world = new CANNON.World({
     gravity: new CANNON.Vec3(0, -20, 0)
 });
 
+class Wall {
+    constructor(scene, world, position, rotation) {
+        // Create Three.js wall
+        const wallGeometry = new THREE.BoxGeometry(blockWidth, 70, 5);
+        const wallMaterial = new THREE.MeshStandardMaterial({
+            color: "#DEC4B0",
+            side: THREE.DoubleSide,
+            wireframe: false,
+        });
+
+        this.mesh = new THREE.Mesh(wallGeometry, wallMaterial);
+        scene.add(this.mesh);
+
+        // Create Cannon.js wall
+        const wallPhysMat = new CANNON.Material()
+        const wallShape = new CANNON.Box(new CANNON.Vec3(blockWidth/2, 35, 2.5));
+        this.body = new CANNON.Body({
+            mass: 0,
+            shape: wallShape,
+            material: wallPhysMat,
+        });
+
+        // Set the initial position and rotation for the Cannon.js body
+        this.body.position.copy(position);
+        this.body.quaternion.setFromEuler(rotation.x, rotation.y, rotation.z);
+
+        // Add the Cannon.js body to the world
+        world.addBody(this.body);
+
+        // Update the Three.js mesh position and rotation based on the Cannon.js body
+        this.mesh.position.copy(this.body.position);
+        this.mesh.quaternion.copy(this.body.quaternion);
+    }
+}
+
 // DEFINE FUNCTIONS
 // Function to create a unique tile object
 function createTile(index) {
@@ -233,47 +268,6 @@ floorContainer3.rotation.set(rotationAngle, 0, 0);
 
 // Example: Change the color of tile number 1 to red
 changeTileColor(floorContainer2, 1, 0xff0000);
-
-
-
-
-class Wall {
-    constructor(scene, world, position, rotation) {
-        // Create Three.js wall
-        const wallGeometry = new THREE.BoxGeometry(blockWidth, 70, 5);
-        const wallMaterial = new THREE.MeshStandardMaterial({
-            color: "black",
-            side: THREE.DoubleSide,
-            wireframe: false,
-        });
-
-        this.mesh = new THREE.Mesh(wallGeometry, wallMaterial);
-        scene.add(this.mesh);
-
-        // Create Cannon.js wall
-        const wallPhysMat = new CANNON.Material()
-        const wallShape = new CANNON.Box(new CANNON.Vec3(blockWidth/2, 35, 2.5));
-        this.body = new CANNON.Body({
-            mass: 0,
-            shape: wallShape,
-            material: wallPhysMat,
-        });
-
-        // Set the initial position and rotation for the Cannon.js body
-        this.body.position.copy(position);
-        this.body.quaternion.setFromEuler(rotation.x, rotation.y, rotation.z);
-
-        // Add the Cannon.js body to the world
-        world.addBody(this.body);
-
-        // Update the Three.js mesh position and rotation based on the Cannon.js body
-        this.mesh.position.copy(this.body.position);
-        this.mesh.quaternion.copy(this.body.quaternion);
-    }
-}
-
-
-
 
 const wallSpawnRight = new Wall(scene, world, new CANNON.Vec3(blockWidth, 0, blockWidth), new CANNON.Vec3(0, rotationAngle, 0));
 const wallSpawnLeft = new Wall(scene, world, new CANNON.Vec3(0, 0, blockWidth), new CANNON.Vec3(0, rotationAngle, 0));
