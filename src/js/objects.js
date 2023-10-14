@@ -7,17 +7,10 @@ import { loadModels } from './models.js';
 import * as camera from './camera.js';
 import * as player from './player.js';
 
-// Import texture images
-import meadowFtImage from '../img/meadow/meadow_ft.jpg';
-import meadowBkImage from '../img/meadow/meadow_bk.jpg';
-import meadowUpImage from '../img/meadow/meadow_up.jpg';
-import meadowDnImage from '../img/meadow/meadow_dn.jpg';
-import meadowRtImage from '../img/meadow/meadow_rt.jpg';
-import meadowLfImage from '../img/meadow/meadow_lf.jpg';
-
 // DEFINE GLOBAL VARIABLES
 // Scene
 export const scene = new THREE.Scene();
+export let levelAreas = [];
 
 // world - this is for cannon objects
 export var world = new CANNON.World({
@@ -118,36 +111,13 @@ let litUpTiles2=[];
 let litUpTiles3=[];
 
 
-// const materialArray = [
-//     new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
-//     new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
-//     new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
-//     new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
-//     new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
-//     new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide })
-// ];
-
-// // Set material side to backside
-// materialArray.forEach(material => {
-//     material.side = THREE.BackSide;
-// });
-
-// Create texture objects
-const texture_ft = new THREE.TextureLoader().load(meadowFtImage);
-const texture_bk = new THREE.TextureLoader().load(meadowBkImage);
-const texture_up = new THREE.TextureLoader().load(meadowUpImage);
-const texture_dn = new THREE.TextureLoader().load(meadowDnImage);
-const texture_rt = new THREE.TextureLoader().load(meadowRtImage);
-const texture_lf = new THREE.TextureLoader().load(meadowLfImage);
-
-// Create material array
 const materialArray = [
-  new THREE.MeshBasicMaterial({ map: texture_ft }),
-  new THREE.MeshBasicMaterial({ map: texture_bk }),
-  new THREE.MeshBasicMaterial({ map: texture_up }),
-  new THREE.MeshBasicMaterial({ map: texture_dn }),
-  new THREE.MeshBasicMaterial({ map: texture_rt }),
-  new THREE.MeshBasicMaterial({ map: texture_lf })
+    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
+    new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide })
 ];
 
 // Set material side to backside
@@ -167,14 +137,9 @@ scene.add(axesHelper);
 const groundGeo = new THREE.PlaneGeometry(10000, 10000);
 const groundMat = new THREE.MeshStandardMaterial({
     color: 0x78BE21,
-   // side: THREE.DoubleSide,
-    //wireframe: false,
     receiveShadow: true,
     castShadow: true,
 });
-
-
-
 
 const groundPhysMat = new CANNON.Material()
 export const groundMesh = new THREE.Mesh(groundGeo, groundMat);
@@ -190,13 +155,6 @@ groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(groundBody);
 groundMesh.position.copy(groundBody.position);
 groundMesh.quaternion.copy(groundBody.quaternion);
-
-
-// const groundPlayerContactMat = new CANNON.ContactMaterial(
-//     groundPhysMat,
-//     player.playerPhysMat,
-//     {friction: 0.40}
-// );
 
 //white and gray squares (will be removed later)
 const gridSizeX = 2;
@@ -221,10 +179,16 @@ for (let i = 0; i < gridSizeX; i++) {
         const blockGeometry = new THREE.BoxGeometry(blockWidth, 1, blockDepth);
         const blockMesh = new THREE.Mesh(blockGeometry, blockMaterial);
         blockMesh.position.set((i - gridSizeX / 2 + 0.5) * blockWidth, 0, (j - gridSizeZ / 2 + 0.5) * blockDepth);
+        blockMesh.updateWorldMatrix(true, false);
+        
         scene.add(blockMesh);
+        let boundingBox = new THREE.Box3().setFromObject(blockMesh);
+        let size = new THREE.Vector3();
+        boundingBox.getSize(size);
+        blockMesh.sizeFromBoundingBox = size;
+        levelAreas.push(blockMesh);
     }
 }
-
 
 const loader = new GLTFLoader();
 loadModels(loader, scene, world);
