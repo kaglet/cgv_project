@@ -54,6 +54,7 @@ function startGame() {
       objects.world.step(1 / 60);
       objects.animate_objects();
       player.animate_objects();
+      lighting.animate_lights();
 
 
       renderer.render(objects.scene, camera.currentCamera);
