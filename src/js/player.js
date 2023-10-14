@@ -26,7 +26,7 @@ let moveBackward = false;
 let moveLeft = false;
 let moveRight = false;
 let paused = false;
-let playerBody;
+export let playerBody;
 export let characterModel = null;
 // export let playerPhysMat = new CANNON.Material();
 
