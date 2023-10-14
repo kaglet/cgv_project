@@ -109,6 +109,15 @@ const path1=[1,2,3,12,21,30,39,48,57,66,75,76,77,78,79,70,61,52,43,42,41,32,23,2
 const path2=[5,14,23,24,25,26,27,36,45,44,43,42,41,40,39,48,57,56,55,64,73,74,75,76,77,68,59,60,61,62,63,72,81];
 const path3=[19,10,1,2,3,4,5,6,7,8,9,18,27,36,45,44,43,34,25,24,23,32,41,40,39,38,37,46,55,64,73,74,75,66,57,58,59,68,77,78,79,80,81];
 
+const correctPath1=[0, 1, 2, 10, 16, 24, 30, 38, 44, 52, 58, 59, 60, 61, 62, 54, 48, 40, 34, 33, 32, 25, 18, 19, 20, 21, 22, 27, 36, 41, 50, 55, 64];
+const correctPath2=[61, 53, 48, 47, 46, 45, 44, 51, 58, 57, 56, 55, 54, 49, 40, 41, 42, 36, 28, 29, 30, 31, 32, 33, 34, 26, 22, 21, 20, 19, 18, 11, 4];
+const correctPath3=[14, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 13, 22, 25, 33, 32, 31, 24, 20, 19, 18, 23, 30, 29, 28, 27, 26, 34, 38, 47, 52, 53, 54, 48, 40, 41, 42, 49, 55, 56, 57, 58, 59];
+
+let litUpTiles1=[];
+let litUpTiles2=[];
+let litUpTiles3=[];
+
+
 // const materialArray = [
 //     new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
 //     new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
@@ -146,7 +155,6 @@ materialArray.forEach((material) => {
   material.side = THREE.BackSide;
 });
 
-
 // Create skybox
 const skyboxGeo = new THREE.BoxGeometry(10000, 10000, 10000);
 const skybox = new THREE.Mesh(skyboxGeo, materialArray);
@@ -159,9 +167,13 @@ scene.add(axesHelper);
 const groundGeo = new THREE.PlaneGeometry(10000, 10000);
 const groundMat = new THREE.MeshStandardMaterial({
     color: 0x78BE21,
-    side: THREE.DoubleSide,
-    wireframe: false
+   // side: THREE.DoubleSide,
+    //wireframe: false,
+    receiveShadow: true,
+    castShadow: true,
 });
+
+
 
 
 const groundPhysMat = new CANNON.Material()
@@ -222,8 +234,8 @@ loadModels(loader, scene, world);
 const tileGeometry = new THREE.BoxGeometry(5, 5, 1.3);
 const tileMaterial = new THREE.MeshStandardMaterial({
     color: 0xffffff,
-    opacity: 0.5, // Adjust the opacity value (0.0 to 1.0)
-    transparent: true, // Enable transparency
+    opacity: 0.5,
+    transparent: true,
 });
 
 // Define tile size and gap size
@@ -266,8 +278,8 @@ floorContainer1.rotation.set(rotationAngle, 0, 0);
 floorContainer2.rotation.set(rotationAngle, 0, 0);
 floorContainer3.rotation.set(rotationAngle, 0, 0);
 
-// Example: Change the color of tile number 1 to red
-changeTileColor(floorContainer2, 1, 0xff0000);
+
+
 
 const wallSpawnRight = new Wall(scene, world, new CANNON.Vec3(blockWidth, 0, blockWidth), new CANNON.Vec3(0, rotationAngle, 0));
 const wallSpawnLeft = new Wall(scene, world, new CANNON.Vec3(0, 0, blockWidth), new CANNON.Vec3(0, rotationAngle, 0));
@@ -292,4 +304,104 @@ export function animate_objects() {
     // groundMesh.position.copy(groundBody.position);
     // groundMesh.quaternion.copy(groundBody.quaternion);
 
+}
+
+export function animate_lights() {
+
+    if (player.characterModel) {
+
+        floorContainer1.children.forEach((tile, index) => {
+        const epsilon = 3; // Small epsilon value to handle floating point errors
+        const tileWorldPosition = new THREE.Vector3();
+        tile.getWorldPosition(tileWorldPosition); // Get the world position of the tile instead of the position in the local coordinate system of the floor container
+        let boundingBox = new THREE.Box3().setFromObject(tile);
+        let size = new THREE.Vector3();
+        boundingBox.getSize(size);
+
+        let rangeInX = size.x / 2;
+        let rangeInZ = size.z / 2;
+
+        let inXBounds = tileWorldPosition.x - rangeInX <= player.characterModel.position.x && player.characterModel.position.x <= tileWorldPosition.x + rangeInX;
+        let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
+
+        if (tile.litUp === false && inXBounds && inZBounds && Math.abs(player.characterModel.position.y - tileWorldPosition.y) < epsilon) {
+         const tileColor = new THREE.Color(255, 255, 0);
+          // TODO: Change color of all faces of cube to blue currently only default front face is changed
+          tile.material.color.copy(tileColor);
+          tile.litUp = true;
+          litUpTiles1.push(index);
+          const haveSameValues = correctPath1.every(value => litUpTiles1.includes(value) && litUpTiles1.length === correctPath1.length);
+                if (haveSameValues) {
+                    console.log("Path 1 correct.");
+                }
+          // TODO: Make tiles sink also upon intersection, just shift slightly in the z
+          // How do I position the tiles, is it within the floor container, using current position -= 1 for z for example or do I do a local transformation in floor?
+          // TODO: Elevate tiles a bit from the ground they are on or simply shift the whole floor container
+        }
+      });
+
+
+
+        floorContainer2.children.forEach((tile, index) => {
+        const epsilon = 3; // Small epsilon value to handle floating point errors
+        const tileWorldPosition = new THREE.Vector3();
+        tile.getWorldPosition(tileWorldPosition);
+
+        let boundingBox = new THREE.Box3().setFromObject(tile);
+        let size = new THREE.Vector3();
+        boundingBox.getSize(size);
+
+        let rangeInX = size.x / 2;
+        let rangeInZ = size.z / 2;
+
+        let inXBounds = tileWorldPosition.x - rangeInX <= player.characterModel.position.x && player.characterModel.position.x <= tileWorldPosition.x + rangeInX;
+        let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
+
+        if (tile.litUp === false && inXBounds && inZBounds && Math.abs(player.characterModel.position.y - tileWorldPosition.y) < epsilon) {
+          const tileColor = new THREE.Color(255, 255, 0);
+          // TODO: Change color of all faces of cube to blue currently only default front face is changed
+          tile.material.color.copy(tileColor);
+          tile.litUp = true;
+          litUpTiles2.push(index);
+          const haveSameValues = correctPath2.every(value => litUpTiles2.includes(value) && litUpTiles2.length === correctPath2.length);
+                if (haveSameValues) {
+                    console.log("Path 2 correct.");
+                }
+          // TODO: Make tiles sink also upon intersection, just shift slightly in the z
+          // How do I position the tiles, is it within the floor container, using current position -= 1 for z for example or do I do a local transformation in floor?
+          // TODO: Elevate tiles a bit from the ground they are on or simply shift the whole floor container
+        }
+      });
+
+        floorContainer3.children.forEach((tile, index) => {
+        const epsilon = 3; // Small epsilon value to handle floating point errors
+        const tileWorldPosition = new THREE.Vector3();
+        tile.getWorldPosition(tileWorldPosition);
+
+        let boundingBox = new THREE.Box3().setFromObject(tile);
+        let size = new THREE.Vector3();
+        boundingBox.getSize(size);
+
+        let rangeInX = size.x / 2;
+        let rangeInZ = size.z / 2;
+
+        let inXBounds = tileWorldPosition.x - rangeInX <= player.characterModel.position.x && player.characterModel.position.x <= tileWorldPosition.x + rangeInX;
+        let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
+
+        if (tile.litUp === false && inXBounds && inZBounds && Math.abs(player.characterModel.position.y - tileWorldPosition.y) < epsilon) {
+          const tileColor = new THREE.Color(255, 255, 0);
+          // TODO: Change color of all faces of cube to blue currently only default front face is changed
+          tile.material.color.copy(tileColor);
+          tile.litUp = true;
+          litUpTiles3.push(index);
+          const haveSameValues = correctPath3.every(value => litUpTiles3.includes(value) && litUpTiles3.length === correctPath3.length);
+          if (haveSameValues) {
+              console.log("Path 3 correct.");
+          }
+          // TODO: Make tiles sink also upon intersection, just shift slightly in the z
+          // How do I position the tiles, is it within the floor container, using current position -= 1 for z for example or do I do a local transformation in floor?
+          // TODO: Elevate tiles a bit from the ground they are on or simply shift the whole floor container
+        }
+      });
+    }
 }
