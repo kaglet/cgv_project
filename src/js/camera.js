@@ -13,7 +13,7 @@ const width = window.innerWidth;
 const height = window.innerHeight;
 
 // Define orthographic camera parameters
-const zoomFactor = 5; // Adjust this value to zoom in or out
+const zoomFactor = 4; // Adjust this value to zoom in or out
 const left = -width / 2 / zoomFactor;
 const right = width / 2 / zoomFactor;
 const top = height / 2 / zoomFactor;
@@ -25,8 +25,7 @@ const far = 1000;
 const topDownCamera = new THREE.OrthographicCamera(left, right, top, bottom, near, far);
 //const topDownCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-topDownCamera.position.set(-180, 1000, -360);
-topDownCamera.lookAt(-180, 0, -360);
+
 
 // Initialize the current camera to be the default camera
 let currentCamera = camera;
@@ -52,6 +51,19 @@ document.addEventListener('keydown', (event) => {
                 // can set camera based off this square's coordinates or simply from known coordinates from knowing if square 1 needs certain coordinates
                 // calculate position of topDownCamera from here
                 console.log(`I am in box ${index}`);
+                if (index==0){
+                    topDownCamera.position.set(-180, 1000, -360);
+                    topDownCamera.lookAt(-180, 0, -360);
+                }else if(index==3){
+                    topDownCamera.position.set(170, 1000, -360);
+                    topDownCamera.lookAt(170, 0, -360);
+                }else if(index==4){
+                     topDownCamera.position.set(170, 1000, -10);
+                     topDownCamera.lookAt(170, 0, -10);
+                 }else if(index==5){
+                      topDownCamera.position.set(170, 1000, 340);
+                      topDownCamera.lookAt(170, 0, 340);
+                  }
             }
         });
         // Switch between cameras

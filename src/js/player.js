@@ -48,7 +48,7 @@ class BasicCharacterController {
 
     // Create a Cannon.js body for the player character
     let playerPhysMat = new CANNON.Material();
-    playerPhysMat.friction = 0.5; 
+    playerPhysMat.friction = 1000;
     playerBody = new CANNON.Body({
       mass: 100, // Adjust the mass as needed
  //     shape: new CANNON.Box(new CANNON.Vec3(1, 5, 1)),
@@ -65,7 +65,7 @@ class BasicCharacterController {
   _Init(params) {
     this._params = params;
     this._decceleration = new THREE.Vector3(-5.0, -0.25, -5.0);
-    this._acceleration = new THREE.Vector3(100, 1, 100.0);
+    this._acceleration = new THREE.Vector3(100, 1, 100);
     this._velocity = new THREE.Vector3(0, 0, 0);
 
     this._animations = {};
@@ -201,6 +201,10 @@ class BasicCharacterController {
       const strafeDirection = new THREE.Vector3(cameraDirection.z, 0, -cameraDirection.x);
 
       // Where movement is done
+
+        if (!moveForward){
+        velocity.z -= 0.0046*acc.z * timeInSeconds;
+        }
       if (moveForward) {
         velocity.z += acc.z * timeInSeconds;
       }
@@ -214,7 +218,10 @@ class BasicCharacterController {
         velocity.x += acc.x * timeInSeconds;
       }
 
-
+//    if (!moveForward){
+//        velocity.z = 0;
+//        velocity.x = 0;
+//    }
       // Apply movement direction to character's position
       controlObject.position.add(moveDirection.normalize().multiplyScalar(velocity.z * timeInSeconds));
       controlObject.position.add(strafeDirection.normalize().multiplyScalar(velocity.x * timeInSeconds));
