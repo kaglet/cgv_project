@@ -141,6 +141,9 @@ const groundBody = new CANNON.Body({
 });
 groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(groundBody);
+groundMesh.position.copy(groundBody.position);
+groundMesh.quaternion.copy(groundBody.quaternion);
+
 
 // const groundPlayerContactMat = new CANNON.ContactMaterial(
 //     groundPhysMat,
@@ -148,7 +151,34 @@ world.addBody(groundBody);
 //     {friction: 0.40}
 // );
 
-//Path walls
+//white and gray squares (will be removed later)
+const gridSizeX = 2;
+const gridSizeZ = 3;
+const blockWidth = 350;
+const blockDepth = 350;
+
+const planeGeometry = new THREE.PlaneGeometry(gridSizeX * blockWidth, gridSizeZ * blockDepth);
+const planeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff }); // White color
+
+const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+plane.rotation.x = -Math.PI / 2; // Rotate it to be horizontal
+plane.position.set(0, 0, 0); // Position it on the X-Z plane
+
+scene.add(plane);
+
+// Create alternating grey and white blocks
+for (let i = 0; i < gridSizeX; i++) {
+    for (let j = 0; j < gridSizeZ; j++) {
+        const color = (i + j) % 2 === 0 ? 0x808080 : 0xffffff; // Alternating grey and white
+        const blockMaterial = new THREE.MeshBasicMaterial({ color });
+        const blockGeometry = new THREE.BoxGeometry(blockWidth, 1, blockDepth);
+        const blockMesh = new THREE.Mesh(blockGeometry, blockMaterial);
+        blockMesh.position.set((i - gridSizeX / 2 + 0.5) * blockWidth, 0, (j - gridSizeZ / 2 + 0.5) * blockDepth);
+        scene.add(blockMesh);
+    }
+}
+
+
 const loader = new GLTFLoader();
 loadModels(loader, scene, world);
 
@@ -188,13 +218,13 @@ changePathColor(floorContainer2, path2, 0xff0000); // Red
 changePathColor(floorContainer3, path3, 0x0000FF);//blue
 
 //scales map path
-floorContainer1.scale.set(3, 3, 1.3);
-floorContainer2.scale.set(3, 3, 1.3);
-floorContainer3.scale.set(3, 3, 1.3);
+floorContainer1.scale.set(4, 4, 1);
+floorContainer2.scale.set(4, 4, 1);
+floorContainer3.scale.set(4, 4, 1);
 
-floorContainer1.position.set(-125,0,-250);
-floorContainer2.position.set(125,0,-250);
-floorContainer3.position.set(125,0,0);
+floorContainer1.position.set(-blockWidth/2,5,- blockWidth);
+floorContainer2.position.set( blockWidth/2,5,- blockWidth);
+floorContainer3.position.set( blockWidth/2,5,0);
 
 
 floorContainer1.rotation.set(rotationAngle, 0, 0);
@@ -206,37 +236,11 @@ changeTileColor(floorContainer2, 1, 0xff0000);
 
 
 
-//white and gray squares (will be removed later)
-const gridSizeX = 2;
-const gridSizeZ = 3;
-const blockWidth = 250;
-const blockDepth = 250;
-
-const planeGeometry = new THREE.PlaneGeometry(gridSizeX * blockWidth, gridSizeZ * blockDepth);
-const planeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff }); // White color
-
-const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-plane.rotation.x = -Math.PI / 2; // Rotate it to be horizontal
-plane.position.set(0, 0, 0); // Position it on the X-Z plane
-
-scene.add(plane);
-
-// Create alternating grey and white blocks
-for (let i = 0; i < gridSizeX; i++) {
-    for (let j = 0; j < gridSizeZ; j++) {
-        const color = (i + j) % 2 === 0 ? 0x808080 : 0xffffff; // Alternating grey and white
-        const blockMaterial = new THREE.MeshBasicMaterial({ color });
-        const blockGeometry = new THREE.BoxGeometry(blockWidth, 1, blockDepth);
-        const blockMesh = new THREE.Mesh(blockGeometry, blockMaterial);
-        blockMesh.position.set((i - gridSizeX / 2 + 0.5) * blockWidth, 0, (j - gridSizeZ / 2 + 0.5) * blockDepth);
-        scene.add(blockMesh);
-    }
-}
 
 class Wall {
     constructor(scene, world, position, rotation) {
         // Create Three.js wall
-        const wallGeometry = new THREE.BoxGeometry(250, 100, 5);
+        const wallGeometry = new THREE.BoxGeometry(blockWidth, 70, 5);
         const wallMaterial = new THREE.MeshStandardMaterial({
             color: "black",
             side: THREE.DoubleSide,
@@ -248,7 +252,7 @@ class Wall {
 
         // Create Cannon.js wall
         const wallPhysMat = new CANNON.Material()
-        const wallShape = new CANNON.Box(new CANNON.Vec3(125, 50, 2.5));
+        const wallShape = new CANNON.Box(new CANNON.Vec3(blockWidth/2, 35, 2.5));
         this.body = new CANNON.Body({
             mass: 0,
             shape: wallShape,
@@ -269,30 +273,21 @@ class Wall {
 }
 
 
-const wallSpawnRight = new Wall(scene, world, new CANNON.Vec3(250, 0, 250), new CANNON.Vec3(0, rotationAngle, 0));
-const wallSpawnLeft = new Wall(scene, world, new CANNON.Vec3(0, 0, 250), new CANNON.Vec3(0, rotationAngle, 0));
-const wallSpawnBack = new Wall(scene, world, new CANNON.Vec3(125, 0, 375), new CANNON.Vec3(0, (Math.PI / 1), 0));
 
-const wallPuzz1Right = new Wall(scene, world, new CANNON.Vec3(250, 0, 0), new CANNON.Vec3(0, rotationAngle, 0));
+
+const wallSpawnRight = new Wall(scene, world, new CANNON.Vec3(blockWidth, 0, blockWidth), new CANNON.Vec3(0, rotationAngle, 0));
+const wallSpawnLeft = new Wall(scene, world, new CANNON.Vec3(0, 0, blockWidth), new CANNON.Vec3(0, rotationAngle, 0));
+const wallSpawnBack = new Wall(scene, world, new CANNON.Vec3(blockWidth/2, 0, blockWidth*1.5), new CANNON.Vec3(0, (Math.PI / 1), 0));
+
+const wallPuzz1Right = new Wall(scene, world, new CANNON.Vec3(blockWidth, 0, 0), new CANNON.Vec3(0, rotationAngle, 0));
 const wallPuzz1Left  = new Wall(scene, world, new CANNON.Vec3(0, 0, 0), new CANNON.Vec3(0, rotationAngle, 0));
 
-const wallPuzz2Back = new Wall(scene, world, new CANNON.Vec3(125, 0, -375), new CANNON.Vec3(0, (Math.PI / 1), 0));
-const wallPuzz2Right  = new Wall(scene, world, new CANNON.Vec3(250, 0, -250), new CANNON.Vec3(0, rotationAngle, 0));
+const wallPuzz2Back = new Wall(scene, world, new CANNON.Vec3(blockWidth/2, 0, -blockWidth*1.5), new CANNON.Vec3(0, (Math.PI / 1), 0));
+const wallPuzz2Right  = new Wall(scene, world, new CANNON.Vec3(blockWidth, 0, -blockWidth), new CANNON.Vec3(0, rotationAngle, 0));
 
-const wallPuzz3Right = new Wall(scene, world, new CANNON.Vec3(-125, 0, -375), new CANNON.Vec3(0, (Math.PI / 1), 0));
-const wallPuzz3Left = new Wall(scene, world, new CANNON.Vec3(-125, 0, -125), new CANNON.Vec3(0, (Math.PI / 1), 0));
-const wallPuzz3back  = new Wall(scene, world, new CANNON.Vec3(-250, 0, -250), new CANNON.Vec3(0, rotationAngle, 0));
-
-
-
-
-
-
-
-
-
-
-
+const wallPuzz3Right = new Wall(scene, world, new CANNON.Vec3(-blockWidth/2, 0, -blockWidth*1.5), new CANNON.Vec3(0, (Math.PI / 1), 0));
+const wallPuzz3Left = new Wall(scene, world, new CANNON.Vec3(-blockWidth/2, 0, -blockWidth/2), new CANNON.Vec3(0, (Math.PI / 1), 0));
+const wallPuzz3back  = new Wall(scene, world, new CANNON.Vec3(-blockWidth, 0, -blockWidth), new CANNON.Vec3(0, rotationAngle, 0));
 
 
 
@@ -300,7 +295,7 @@ const wallPuzz3back  = new Wall(scene, world, new CANNON.Vec3(-250, 0, -250), ne
 export const raycaster = new THREE.Raycaster();
 
 export function animate_objects() {
-    groundMesh.position.copy(groundBody.position);
-    groundMesh.quaternion.copy(groundBody.quaternion);
+    // groundMesh.position.copy(groundBody.position);
+    // groundMesh.quaternion.copy(groundBody.quaternion);
 
 }
