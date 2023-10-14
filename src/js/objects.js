@@ -5,6 +5,7 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { loadModels } from './models.js';
 import * as camera from './camera.js';
+import * as player from './player.js';
 
 // DEFINE GLOBAL VARIABLES
 // Scene
@@ -94,6 +95,9 @@ const groundMat = new THREE.MeshStandardMaterial({
     side: THREE.DoubleSide,
     wireframe: false
 });
+
+
+const groundPhysMat = new CANNON.Material()
 export const groundMesh = new THREE.Mesh(groundGeo, groundMat);
 scene.add(groundMesh);
 
@@ -101,9 +105,16 @@ scene.add(groundMesh);
 const groundBody = new CANNON.Body({
     shape: new CANNON.Plane(),
     type: CANNON.Body.STATIC,
+    material: groundPhysMat
 });
 groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 world.addBody(groundBody);
+
+// const groundPlayerContactMat = new CANNON.ContactMaterial(
+//     groundPhysMat,
+//     player.playerPhysMat,
+//     {friction: 0.40}
+// );
 
 //Path walls
 const loader = new GLTFLoader();

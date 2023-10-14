@@ -28,6 +28,7 @@ let moveRight = false;
 let paused = false;
 let playerBody;
 export let characterModel = null;
+// export let playerPhysMat = new CANNON.Material();
 
 class BasicCharacterControllerProxy {
   constructor(animations) {
@@ -46,10 +47,13 @@ class BasicCharacterController {
 //    params.world.gravity.set(0, -9.81, 0);
 
     // Create a Cannon.js body for the player character
+    let playerPhysMat = new CANNON.Material();
+    playerPhysMat.friction = 0.5; 
     playerBody = new CANNON.Body({
       mass: 100, // Adjust the mass as needed
-      shape: new CANNON.Box(new CANNON.Vec3(1, 5, 1)),
+ //     shape: new CANNON.Box(new CANNON.Vec3(1, 5, 1)),
       position: new CANNON.Vec3(0, 5, 0),
+      material: playerPhysMat
     });
 
     // Add the body to the Cannon.js world
@@ -71,25 +75,25 @@ class BasicCharacterController {
 
     this._LoadModels();
 
-    playerBody.addEventListener('collide', (event) => {
-      console.log("collide")
-      // Handle collisions here
+    // playerBody.addEventListener('collide', (event) => {
+    //   console.log("collide")
+    //   // Handle collisions here
 
-      // Access the other body involved in the collision
-      const otherBody = event.body;
+    //   // Access the other body involved in the collision
+    //   const otherBody = event.body;
 
-      // Check if the collision involves a specific type of object
-      // You might want to check the type or some property of the other body
-      if (otherBody.userData && otherBody.userData.type === 'obstacle') {
-        // If it's an obstacle, prevent the player from moving further in that direction
-        // For example, if you want to prevent movement in the X direction:
-        playerBody.velocity.x = 0;
-        playerBody.velocity.z = 0;
-        playerBody.velocity.y = 0;
+    //   // Check if the collision involves a specific type of object
+    //   // You might want to check the type or some property of the other body
+    //   if (otherBody.userData && otherBody.userData.type === 'obstacle') {
+    //     // If it's an obstacle, prevent the player from moving further in that direction
+    //     // For example, if you want to prevent movement in the X direction:
+    //     playerBody.velocity.x = 0;
+    //     playerBody.velocity.z = 0;
+    //     playerBody.velocity.y = 0;
 
-        // You can do the same for other axes (e.g., playerBody.velocity.y or playerBody.velocity.z)
-      }
-    });
+    //     // You can do the same for other axes (e.g., playerBody.velocity.y or playerBody.velocity.z)
+    //   }
+    // });
 
   }
 
@@ -106,6 +110,17 @@ class BasicCharacterController {
       fbx.traverse(c => {
         c.castShadow = true;
       });
+
+      // accurate hitbox for the player
+      const boundingBox = new THREE.Box3().setFromObject(characterModel);
+      const width = boundingBox.max.x - boundingBox.min.x;
+      const height = boundingBox.max.y - boundingBox.min.y;
+      const depth = boundingBox.max.z - boundingBox.min.z;
+
+      const playerShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
+
+      playerBody.addShape(playerShape);
+
 
       this._target = fbx;
       this._params.scene.add(this._target);
