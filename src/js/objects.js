@@ -118,24 +118,7 @@ world.addBody(groundBody);
 
 //Path walls
 const loader = new GLTFLoader();
-
-// loader.load('./ruined_sandstone__wall_ref/scene.gltf', (gltf) => {
-//     const leftWall = gltf.scene;
-//     scene.add(leftWall);
-
-//     leftWall.position.set(-90, -5, 130); // Adjust the position as needed
-//     leftWall.scale.set(4, 1.8, 2); // Adjust the scale as needed
-//     leftWall.rotation.set(0, Math.PI / 2, 0);
-
-//     const rightWall = leftWall.clone();
-
-//     // Apply a scale transformation to reflect it across the X-axis
-//     rightWall.scale.z = -1; // Reflect across the X-axis
-//     rightWall.position.set(90, -5, 130); // Adjust the position as needed
-//     scene.add(rightWall);
-
-//     // Optionally, you can perform additional operations on the loaded model here.
-// });
+loadModels(loader, scene, world);
 
 // DEFINE MAZE GRID
 // Create a floor tile
@@ -189,7 +172,7 @@ floorContainer3.rotation.set(rotationAngle, 0, 0);
 // Example: Change the color of tile number 1 to red
 changeTileColor(floorContainer2, 1, 0xff0000);
 
-loadModels(loader, scene, world);
+
 
 
 const gridSizeX = 2;
@@ -225,92 +208,4 @@ export function animate_objects() {
     groundMesh.position.copy(groundBody.position);
     groundMesh.quaternion.copy(groundBody.quaternion);
 
-
-    if (player.characterModel) {
-
-    floorContainer1.children.forEach((tile, index) => {
-        const epsilon = 3; // Small epsilon value to handle floating point errors
-        const tileWorldPosition = new THREE.Vector3();
-        tile.getWorldPosition(tileWorldPosition); // Get the world position of the tile instead of the position in the local coordinate system of the floor container
-        let boundingBox = new THREE.Box3().setFromObject(tile);
-        let size = new THREE.Vector3();
-        boundingBox.getSize(size);
-
-        let rangeInX = size.x / 2;
-        let rangeInZ = size.z / 2;
-
-        let inXBounds = tileWorldPosition.x - rangeInX <= player.characterModel.position.x && player.characterModel.position.x <= tileWorldPosition.x + rangeInX;
-        let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
-
-        if (tile.litUp === false && inXBounds && inZBounds && Math.abs(player.characterModel.position.y - tileWorldPosition.y) < epsilon) {
-          console.log(`I am a lit tile ${index}\n with world coordinates: ${tileWorldPosition.x} in x and ${tileWorldPosition.y} in y and ${tileWorldPosition.z} in z\n and local coordinates: ${tile.position.x} in x and ${tile.position.y} in y and ${tile.position.z} in z`);
-          console.log(`When lit the player coordinates are: ${player.characterModel.position.x} in x and ${player.characterModel.position.y} in y and ${player.characterModel.position.z} in z`);
-          const tileColor = new THREE.Color(255, 255, 0);
-          // TODO: Change color of all faces of cube to blue currently only default front face is changed 
-          tile.material.color.copy(tileColor);
-          tile.litUp = true;
-          // TODO: Make tiles sink also upon intersection, just shift slightly in the z
-          // How do I position the tiles, is it within the floor container, using current position -= 1 for z for example or do I do a local transformation in floor?
-          // TODO: Elevate tiles a bit from the ground they are on or simply shift the whole floor container
-        }
-      });
-
-    
-
-      floorContainer2.children.forEach((tile, index) => {
-        const epsilon = 3; // Small epsilon value to handle floating point errors
-        const tileWorldPosition = new THREE.Vector3();
-        tile.getWorldPosition(tileWorldPosition);
-
-        let boundingBox = new THREE.Box3().setFromObject(tile);
-        let size = new THREE.Vector3();
-        boundingBox.getSize(size);
-
-        let rangeInX = size.x / 2;
-        let rangeInZ = size.z / 2;
-
-        let inXBounds = tileWorldPosition.x - rangeInX <= player.characterModel.position.x && player.characterModel.position.x <= tileWorldPosition.x + rangeInX;
-        let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
-
-        if (tile.litUp === false && inXBounds && inZBounds && Math.abs(player.characterModel.position.y - tileWorldPosition.y) < epsilon) {
-          console.log(`I am a lit tile ${index}\n with world coordinates: ${tileWorldPosition.x} in x and ${tileWorldPosition.y} in y and ${tileWorldPosition.z} in z\n and local coordinates: ${tile.position.x} in x and ${tile.position.y} in y and ${tile.position.z} in z`);
-          console.log(`When lit the player coordinates are: ${player.characterModel.position.x} in x and ${player.characterModel.position.y} in y and ${player.characterModel.position.z} in z`);
-          const tileColor = new THREE.Color(255, 255, 0);
-          // TODO: Change color of all faces of cube to blue currently only default front face is changed 
-          tile.material.color.copy(tileColor);
-          tile.litUp = true;
-          // TODO: Make tiles sink also upon intersection, just shift slightly in the z
-          // How do I position the tiles, is it within the floor container, using current position -= 1 for z for example or do I do a local transformation in floor?
-          // TODO: Elevate tiles a bit from the ground they are on or simply shift the whole floor container
-        }
-      });
-
-      floorContainer3.children.forEach((tile, index) => {
-        const epsilon = 3; // Small epsilon value to handle floating point errors
-        const tileWorldPosition = new THREE.Vector3();
-        tile.getWorldPosition(tileWorldPosition);
-
-        let boundingBox = new THREE.Box3().setFromObject(tile);
-        let size = new THREE.Vector3();
-        boundingBox.getSize(size);
-
-        let rangeInX = size.x / 2;
-        let rangeInZ = size.z / 2;
-
-        let inXBounds = tileWorldPosition.x - rangeInX <= player.characterModel.position.x && player.characterModel.position.x <= tileWorldPosition.x + rangeInX;
-        let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
-
-        if (tile.litUp === false && inXBounds && inZBounds && Math.abs(player.characterModel.position.y - tileWorldPosition.y) < epsilon) {
-          console.log(`I am a lit tile ${index}\n with world coordinates: ${tileWorldPosition.x} in x and ${tileWorldPosition.y} in y and ${tileWorldPosition.z} in z\n and local coordinates: ${tile.position.x} in x and ${tile.position.y} in y and ${tile.position.z} in z`);
-          console.log(`When lit the player coordinates are: ${player.characterModel.position.x} in x and ${player.characterModel.position.y} in y and ${player.characterModel.position.z} in z`);
-          const tileColor = new THREE.Color(255, 255, 0);
-          // TODO: Change color of all faces of cube to blue currently only default front face is changed 
-          tile.material.color.copy(tileColor);
-          tile.litUp = true;
-          // TODO: Make tiles sink also upon intersection, just shift slightly in the z
-          // How do I position the tiles, is it within the floor container, using current position -= 1 for z for example or do I do a local transformation in floor?
-          // TODO: Elevate tiles a bit from the ground they are on or simply shift the whole floor container
-        }
-      });
-    }
 }
