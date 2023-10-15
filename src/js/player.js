@@ -17,6 +17,16 @@ import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockCont
 const prevTime = performance.now();
 export const controls = new PointerLockControls(camera.currentCamera, document.body);
 let raycaster = objects.raycaster;
+const listener = new THREE.AudioListener();
+//camera.add( listener );
+const moveSound = new THREE.Audio(listener);
+const moveSoundLoader = new THREE.AudioLoader();
+moveSoundLoader.load('/amen-break-no-copyright-remake-120bpm-25924.mp3', function (buffer) {
+  moveSound.setBuffer(buffer);
+  moveSound.setVolume(0.5); // Set the volume as needed
+});
+//const moveForwardSoundPlaying = false; // Add a flag to track if the sound is already playing
+
 
 let velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
@@ -318,6 +328,7 @@ class BasicCharacterController {
 };
 
 class BasicCharacterControllerInput {
+  //const  moveForwardSoundPlaying = false;
   constructor() {
     this._Init();
   }
@@ -359,45 +370,53 @@ class BasicCharacterControllerInput {
     objects.scene.add(controls.getObject());
 
   }
-  //key press listeners
-  _onKeyDown(event) {
-  if(!paused){
-    switch (event.keyCode) {
-          case 87: // w
-            moveForward = true;
-            break;
-          case 65: // a
-            moveLeft = true;
-            break;
-          case 83: // s
-            moveBackward = true;
-            break;
-          case 68: // d
-            moveRight = true;
-            break;
+ // const moveForwardSoundPlaying = false; // Add a flag to track if the sound is already playing
 
-        }
+
+  //key press listeners
+  moveForwardSoundPlaying = false ;
+
+  _onKeyDown(event) {
+    if (!paused) {
+      moveSound.play(); // Play the sound for all directions
+      switch (event.keyCode) {
+        case 87: // w
+          moveForward = true;
+          break;
+        case 65: // a
+          moveLeft = true;
+          break;
+        case 83: // s
+          moveBackward = true;
+          break;
+        case 68: // d
+          moveRight = true;
+          break;
+      }
     }
-  }
+  };
 
   _onKeyUp(event) {
     switch (event.keyCode) {
       case 87: // w
         moveForward = false;
+        moveSound.stop(); // Stop the move sound
+
+       // this.moveForwardSoundPlaying = false;
         break;
       case 65: // a
         moveLeft = false;
+        moveSound.stop();
         break;
       case 83: // s
         moveBackward = false;
+        moveSound.stop();
         break;
       case 68: // d
         moveRight = false;
+        moveSound.stop();
         break;
-
-
     }
-
   }
 };
 

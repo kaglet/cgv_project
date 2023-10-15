@@ -85,7 +85,7 @@ const audioLoader = new THREE.AudioLoader();
 audioLoader.load( '/acoustic-guitar-loop-f-91bpm-132687.mp3', function( buffer ) {
     sound.setBuffer( buffer );
     sound.setLoop( true );
-    sound.setVolume( 0.01 );
+    sound.setVolume( 0.01);
     sound.play();
 });
 
