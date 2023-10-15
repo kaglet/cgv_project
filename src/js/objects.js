@@ -74,7 +74,7 @@ class floorContBody {
             type: CANNON.Body.STATIC,
             material: floorContPhysMat,
         });
-        this.body.position.copy(new CANNON.Vec3(container.position.x - 10, container.position.y, container.position.z - 10));
+        this.body.position.copy(new CANNON.Vec3(container.position.x - 10, container.position.y - 1, container.position.z - 10));
         this.body.quaternion.setFromEuler(rotationAngle, 0, 0);
         world.addBody(this.body);
 
@@ -336,9 +336,9 @@ function makeMazes() {
     floorContainerRed.scale.set(4, 4, 1);
     floorContainerBlue.scale.set(4, 4, 1);
 
-    floorContainerGreen.position.set(-blockWidth / 2, 5, - blockWidth);
-    floorContainerRed.position.set(blockWidth / 2, 5, - blockWidth);
-    floorContainerBlue.position.set(blockWidth / 2, 5, 0);
+    floorContainerGreen.position.set(-blockWidth / 2, 0, - blockWidth);
+    floorContainerRed.position.set(blockWidth / 2, 0, - blockWidth);
+    floorContainerBlue.position.set(blockWidth / 2, 0, 0);
 
 
 
@@ -348,92 +348,8 @@ function makeMazes() {
 
 }
 
-// Create material array
 
-const path1 = [1, 2, 3, 12, 21, 30, 39, 48, 57, 66, 75, 76, 77, 78, 79, 70, 61, 52, 43, 42, 41, 32, 23, 24, 25, 26, 27, 36, 45, 54, 63, 72, 81];
-const path2 = [5, 14, 23, 24, 25, 26, 27, 36, 45, 44, 43, 42, 41, 40, 39, 48, 57, 56, 55, 64, 73, 74, 75, 76, 77, 68, 59, 60, 61, 62, 63, 72, 81];
-const path3 = [19, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 18, 27, 36, 45, 44, 43, 34, 25, 24, 23, 32, 41, 40, 39, 38, 37, 46, 55, 64, 73, 74, 75, 66, 57, 58, 59, 68, 77, 78, 79, 80, 81];
-
-const correctPath1 = [0, 1, 2, 10, 16, 24, 30, 38, 44, 52, 58, 59, 60, 61, 62, 54, 48, 40, 34, 33, 32, 25, 18, 19, 20, 21, 22, 27, 36, 41, 50, 55, 64];
-const correctPath2 = [61, 53, 48, 47, 46, 45, 44, 51, 58, 57, 56, 55, 54, 49, 40, 41, 42, 36, 28, 29, 30, 31, 32, 33, 34, 26, 22, 21, 20, 19, 18, 11, 4];
-const correctPath3 = [14, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 13, 22, 25, 33, 32, 31, 24, 20, 19, 18, 23, 30, 29, 28, 27, 26, 34, 38, 47, 52, 53, 54, 48, 40, 41, 42, 49, 55, 56, 57, 58, 59];
-
-let litUpTiles1 = [];
-let litUpTiles2 = [];
-let litUpTiles3 = [];
-
-
-sky();
-
-
-const axesHelper = new THREE.AxesHelper(200); //so we can see the axes for debugging
-scene.add(axesHelper);
-
-ground();
-
-//helper squares
-const gridSizeX = 2;
-const gridSizeZ = 3;
-const blockWidth = 350;
-const blockDepth = 350;
-helperSquares();
-
-const loader = new GLTFLoader();
-loadModels(loader, scene, world);
-
-// DEFINE MAZE GRID
-// Define tile size and gap size
-const tileSize = 5; // Adjust the size of each tile
-const gapSize = 0.2; // Adjust the size of the gap
-
-const numRows = 9;
-const numCols = 9;
-
-
-// Create a floor tile
-const tileGeometry = new THREE.BoxGeometry(5, 5, 1.3);
-const tileMaterial = new THREE.MeshStandardMaterial({
-    color: 0xffffff,
-    opacity: 0.5,
-    transparent: true,
-});
-
-
-
-const tiles = [];
-
-const rotationAngle = (Math.PI / 2);
-export const floorContainerGreen = new THREE.Group();
-export const floorContainerRed = new THREE.Group();
-export const floorContainerBlue = new THREE.Group();
-makeMazes();
-
-
-addFloorBodies();
-
-
-//pip
-export const PiP1 = floorContainerGreen.clone();
-export const PiP2 = floorContainerRed.clone();
-export const PiP3 = floorContainerBlue.clone();
-PiP();
-
-
-
-addWalls();
-
-
-
-// TODO: Figure out what this does where its exported and why it is required
-export const raycaster = new THREE.Raycaster();
-
-export function animate_objects() {
-    // groundMesh.position.copy(groundBody.position);
-    // groundMesh.quaternion.copy(groundBody.quaternion);
-
-}
-
-export function animate_lights() {
+function tileLights(){
 
     if (player.characterModel) {
 
@@ -531,4 +447,97 @@ export function animate_lights() {
             }
         });
     }
+
+}
+
+// Create material array
+
+const path1 = [1, 2, 3, 12, 21, 30, 39, 48, 57, 66, 75, 76, 77, 78, 79, 70, 61, 52, 43, 42, 41, 32, 23, 24, 25, 26, 27, 36, 45, 54, 63, 72, 81];
+const path2 = [5, 14, 23, 24, 25, 26, 27, 36, 45, 44, 43, 42, 41, 40, 39, 48, 57, 56, 55, 64, 73, 74, 75, 76, 77, 68, 59, 60, 61, 62, 63, 72, 81];
+const path3 = [19, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 18, 27, 36, 45, 44, 43, 34, 25, 24, 23, 32, 41, 40, 39, 38, 37, 46, 55, 64, 73, 74, 75, 66, 57, 58, 59, 68, 77, 78, 79, 80, 81];
+
+const correctPath1 = [0, 1, 2, 10, 16, 24, 30, 38, 44, 52, 58, 59, 60, 61, 62, 54, 48, 40, 34, 33, 32, 25, 18, 19, 20, 21, 22, 27, 36, 41, 50, 55, 64];
+const correctPath2 = [61, 53, 48, 47, 46, 45, 44, 51, 58, 57, 56, 55, 54, 49, 40, 41, 42, 36, 28, 29, 30, 31, 32, 33, 34, 26, 22, 21, 20, 19, 18, 11, 4];
+const correctPath3 = [14, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 13, 22, 25, 33, 32, 31, 24, 20, 19, 18, 23, 30, 29, 28, 27, 26, 34, 38, 47, 52, 53, 54, 48, 40, 41, 42, 49, 55, 56, 57, 58, 59];
+
+let litUpTiles1 = [];
+let litUpTiles2 = [];
+let litUpTiles3 = [];
+
+
+sky();
+
+
+const axesHelper = new THREE.AxesHelper(200); //so we can see the axes for debugging
+scene.add(axesHelper);
+
+ground();
+
+//helper squares
+const gridSizeX = 2;
+const gridSizeZ = 3;
+const blockWidth = 350;
+const blockDepth = 350;
+helperSquares();
+
+const loader = new GLTFLoader();
+loadModels(loader, scene, world);
+
+// DEFINE MAZE GRID
+// Define tile size and gap size
+const tileSize = 5; // Adjust the size of each tile
+const gapSize = 0.2; // Adjust the size of the gap
+
+const numRows = 9;
+const numCols = 9;
+
+
+// Create a floor tile
+const tileGeometry = new THREE.BoxGeometry(5, 5, 1.3);
+const tileMaterial = new THREE.MeshStandardMaterial({
+    color: 0xffffff,
+    opacity: 0.5,
+    transparent: true,
+});
+
+
+
+const tiles = [];
+
+const rotationAngle = (Math.PI / 2);
+export const floorContainerGreen = new THREE.Group();
+export const floorContainerRed = new THREE.Group();
+export const floorContainerBlue = new THREE.Group();
+makeMazes();
+
+
+addFloorBodies();
+
+
+//pip
+export const PiP1 = floorContainerGreen.clone();
+export const PiP2 = floorContainerRed.clone();
+export const PiP3 = floorContainerBlue.clone();
+PiP();
+
+
+
+addWalls();
+
+
+
+// TODO: Figure out what this does where its exported and why it is required
+export const raycaster = new THREE.Raycaster();
+
+export function animate_objects() {
+    // groundMesh.position.copy(groundBody.position);
+    // groundMesh.quaternion.copy(groundBody.quaternion);
+
+}
+
+export function animate_lights() {
+
+    tileLights();
+
+  
 }
