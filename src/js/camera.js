@@ -82,10 +82,10 @@ const sound = new THREE.Audio( listener );
 
 // load a sound and set it as the Audio object's buffer
 const audioLoader = new THREE.AudioLoader();
-audioLoader.load( '/acoustic-guitar-loop-f-91bpm-132687.mp3', function( buffer ) {
+audioLoader.load( '/BetterBackground.mp3', function( buffer ) {
     sound.setBuffer( buffer );
     sound.setLoop( true );
-    sound.setVolume( 0.01 );
+    sound.setVolume( 0.4 );
     sound.play();
 });
 
