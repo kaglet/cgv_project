@@ -3,7 +3,25 @@ import * as player from './player.js';
 import * as objects from './objects.js';
 import * as lighting from './lighting.js';
 import * as camera from './camera.js';
+
 import * as THREE from 'three';
+import { getLastTimestamp, setLastTimestamp } from './player.js';
+
+
+
+const listener = new THREE.AudioListener();
+const sound = new THREE.Audio(listener);
+
+const audioLoader = new THREE.AudioLoader();
+audioLoader.load('/Audio/BetterBackground.mp3', function (buffer) {
+    sound.setBuffer(buffer);
+    sound.setLoop(true);
+    sound.setVolume(0.5);
+    sound.play();
+});
+
+
+//camera.camera.add(listener);
 
 const renderer = new THREE.WebGLRenderer({
   antialias: true,
@@ -49,17 +67,20 @@ function startGame() {
         _previousRAF = t;
       }
 
-      _RAF();
+      if (!player.paused) {
+        const deltaTime = (t - getLastTimestamp()) / 1000; // Convert milliseconds to seconds
+        setLastTimestamp(t);
 
-      objects.world.step(1 / 60);
-      objects.animate_objects();
-      player.animate_objects();
-      objects.animate_lights();
+        objects.world.step(1/60);
+        objects.animate_objects();
+        player.animate_objects();
+        objects.animate_lights();
+        renderer.render(objects.scene, camera.currentCamera);
+        step(t - _previousRAF);
+      }
 
-
-      renderer.render(objects.scene, camera.currentCamera);
-      step(t - _previousRAF);
       _previousRAF = t;
+      _RAF();
     });
   }
 
