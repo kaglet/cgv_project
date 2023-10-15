@@ -94,42 +94,49 @@ class floorContBody {
 
 // DEFINE FUNCTIONS
 
-function createTile(index) {
-    const tile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
+function createTile(index,round) {
+let tile;
+    if(index!=81){
+         tile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
+          // Add cylinders at each corner of the tile
+             const cornerCylinderGeometry = new THREE.CylinderGeometry(0.1, 0.1, 5, 32); // Adjusted size
+             const cornerCylinderMaterial = new THREE.MeshStandardMaterial({ color: 0x888888 });
+
+             // Add cubes on top of each cylinder
+             const cubeGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5); // Cube dimensions
+             const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0x888888 });
+
+             const tilePosition = tile.position.clone();
+             const tileCorners = [
+                 tilePosition.clone().add(new THREE.Vector3(-tileSize / 2, -tileSize / 2, 0)),
+                 tilePosition.clone().add(new THREE.Vector3(tileSize / 2, -tileSize / 2, 0)),
+                 tilePosition.clone().add(new THREE.Vector3(-tileSize / 2, tileSize / 2, 0)),
+                 tilePosition.clone().add(new THREE.Vector3(tileSize / 2, tileSize / 2, 0)),
+             ];
+
+             const halfCylinderHeight = 5 / 2; // Half of the cylinder's height
+
+             tileCorners.forEach((corner) => {
+                 // Create the corner cylinder
+                 const cornerCylinder = new THREE.Mesh(cornerCylinderGeometry, cornerCylinderMaterial);
+                 cornerCylinder.position.copy(corner).add(new THREE.Vector3(0, 0, halfCylinderHeight));
+                 cornerCylinder.rotation.x = Math.PI / 2; // Rotate 90 degrees around the x-axis
+                 tile.add(cornerCylinder); // Add the cylinder as a child of the tile
+
+                 // Create the cube on top of the cylinder
+                 const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+                 cube.position.copy(corner).add(new THREE.Vector3(0, 0, -halfCylinderHeight + 2)); // Adjusted position
+                 tile.add(cube); // Add the cube as a child of the tile
+             });
+    }else{
+         tile = new THREE.Mesh(tileGeoRound, tileMaterial.clone());
+         tile.rotation.x = Math.PI / 2;
+    }
     tile.userData.tileNumber = index; // Store the tile number in user data
     tile.castShadow = true;
     tile.receiveShadow = true;
 
-    // Add cylinders at each corner of the tile
-    const cornerCylinderGeometry = new THREE.CylinderGeometry(0.1, 0.1, 5, 32); // Adjusted size
-    const cornerCylinderMaterial = new THREE.MeshStandardMaterial({ color: 0x888888 });
 
-    // Add cubes on top of each cylinder
-    const cubeGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5); // Cube dimensions
-    const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0x888888 });
-
-    const tilePosition = tile.position.clone();
-    const tileCorners = [
-        tilePosition.clone().add(new THREE.Vector3(-tileSize / 2, -tileSize / 2, 0)),
-        tilePosition.clone().add(new THREE.Vector3(tileSize / 2, -tileSize / 2, 0)),
-        tilePosition.clone().add(new THREE.Vector3(-tileSize / 2, tileSize / 2, 0)),
-        tilePosition.clone().add(new THREE.Vector3(tileSize / 2, tileSize / 2, 0)),
-    ];
-
-    const halfCylinderHeight = 5 / 2; // Half of the cylinder's height
-
-    tileCorners.forEach((corner) => {
-        // Create the corner cylinder
-        const cornerCylinder = new THREE.Mesh(cornerCylinderGeometry, cornerCylinderMaterial);
-        cornerCylinder.position.copy(corner).add(new THREE.Vector3(0, 0, halfCylinderHeight));
-        cornerCylinder.rotation.x = Math.PI / 2; // Rotate 90 degrees around the x-axis
-        tile.add(cornerCylinder); // Add the cylinder as a child of the tile
-
-        // Create the cube on top of the cylinder
-        const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-        cube.position.copy(corner).add(new THREE.Vector3(0, 0, -halfCylinderHeight + 2)); // Adjusted position
-        tile.add(cube); // Add the cube as a child of the tile
-    });
 
     return tile;
 }
@@ -139,14 +146,14 @@ function createTile(index) {
 
 
 // Function to add or omit tiles based on tile numbers
-function drawGridWithOmissions(container, omittedTiles = []) {
+function drawGridWithOmissions(container, omittedTiles = [],round) {
     for (let i = 0; i < numRows; i++) {
         for (let j = 0; j < numCols; j++) {
             const tileNumber = i * numCols + j + 1;
             if (!omittedTiles.includes(tileNumber)) {
                 const isMissingTile = (i % 2 === 0 && j % 2 === 0) || (i % 2 === 1 && j % 2 === 1);
                 if (!isMissingTile || i % 4 === 0 || (i - 2) % 4 === 0) {
-                    const tile = createTile(tileNumber);
+                    const tile = createTile(tileNumber,round);
                     const xOffset = (i - numRows / 2) * (tileSize + gapSize);
                     const yOffset = (j - numCols / 2) * (tileSize + gapSize);
                     tile.name = 'tile';
@@ -413,9 +420,9 @@ function makeMazes() {
     scene.add(floorContainerBlue);
 
     // Call the function to draw the first grid with omissions
-    drawGridWithOmissions(floorContainerGreen, []);
-    drawGridWithOmissions(floorContainerRed, [30, 38, 78]);
-    drawGridWithOmissions(floorContainerBlue, [28, 30, 42, 52, 76]);
+    drawGridWithOmissions(floorContainerGreen, [],1);
+    drawGridWithOmissions(floorContainerRed, [30, 38, 78],5);
+    drawGridWithOmissions(floorContainerBlue, [28, 30, 42, 52, 76],19);
 
     changePathColor(floorContainerGreen, path1, 0x00ff00); // Green
     changePathColor(floorContainerRed, path2, 0xff0000); // Red
@@ -584,6 +591,7 @@ const numCols = 9;
 
 // Create a floor tile
 const tileGeometry = new THREE.BoxGeometry(5, 5, 1.3);
+const tileGeoRound = new THREE.CylinderGeometry(4,4,0.5,64);
 const tileMaterial = new THREE.MeshStandardMaterial({
     color: 0xffffff,
     opacity: 0.5,
