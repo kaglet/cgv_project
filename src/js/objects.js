@@ -569,6 +569,16 @@ function makeMazes() {
     changePathColor(floorContainerRed, path2, 0xff0000); // Red
     changePathColor(floorContainerBlue, path3, 0x0000FF);//blue
 
+    //Draw PiPs
+    drawPiP(PiP1,[],1);
+    changePathColor(PiP1, pathPiP2AND3, 0x006400);
+
+    drawPiP(PiP2,[],2);
+    changePathColor(PiP2, pathPiP2AND3, 0xff00ff);
+
+    
+
+
     //scales map path
     floorContainerGreen.scale.set(4, 4, 1);
     floorContainerRed.scale.set(4, 4, 1);
