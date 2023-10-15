@@ -17,16 +17,18 @@ import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockCont
 const prevTime = performance.now();
 export const controls = new PointerLockControls(camera.currentCamera, document.body);
 let raycaster = objects.raycaster;
+
+//const moveForwardSoundPlaying = false; // Add a flag to track if the sound is already playing
+
+
 const listener = new THREE.AudioListener();
 //camera.add( listener );
 const moveSound = new THREE.Audio(listener);
 const moveSoundLoader = new THREE.AudioLoader();
-moveSoundLoader.load('/amen-break-no-copyright-remake-120bpm-25924.mp3', function (buffer) {
+moveSoundLoader.load('/grassFootsteps.mp3', function (buffer) {
   moveSound.setBuffer(buffer);
-  moveSound.setVolume(0.5); // Set the volume as needed
+  moveSound.setVolume(1); // Set the volume as needed
 });
-//const moveForwardSoundPlaying = false; // Add a flag to track if the sound is already playing
-
 
 let velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
