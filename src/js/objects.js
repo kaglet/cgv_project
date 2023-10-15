@@ -137,12 +137,9 @@ scene.add(axesHelper);
 const groundGeo = new THREE.PlaneGeometry(10000, 10000);
 const groundMat = new THREE.MeshStandardMaterial({
     color: 0x78BE21,
-    side: THREE.DoubleSide,
-    wireframe: false,
     receiveShadow: true,
     castShadow: true,
 });
-
 
 const groundPhysMat = new CANNON.Material()
 export const groundMesh = new THREE.Mesh(groundGeo, groundMat);
@@ -241,6 +238,7 @@ floorContainer2.position.set( blockWidth/2,5,- blockWidth);
 floorContainer3.position.set( blockWidth/2,5,0);
 
 
+
 floorContainer1.rotation.set(rotationAngle, 0, 0);
 floorContainer2.rotation.set(rotationAngle, 0, 0);
 floorContainer3.rotation.set(rotationAngle, 0, 0);
@@ -272,40 +270,74 @@ floorCont3Mesh.position.copy(floorCont3Body.position);
 floorCont3Mesh.quaternion.copy(floorCont3Body.quaternion);
 
 
-class Wall {
-    constructor(scene, world, position, rotation) {
-        // Create Three.js wall
-        const wallGeometry = new THREE.BoxGeometry(blockWidth, 70, 5);
-        const wallMaterial = new THREE.MeshStandardMaterial({
-            color: "black",
-            side: THREE.DoubleSide,
-            wireframe: false,
-        });
+//PiP
+export const PiP1 = floorContainer1.clone();
+export const PiP2 = floorContainer2.clone();
+export const PiP3 = floorContainer3.clone();
 
-        this.mesh = new THREE.Mesh(wallGeometry, wallMaterial);
-        scene.add(this.mesh);
+// Iterate through all objects in PiP3
+// PiP3.children.forEach((tile) => {
+//     //tile.material = tile.material.clone();
+//     tile.material.transparent = false;
+//     tile.material.opacity = 1;
+// });
 
-        // Create Cannon.js wall
-        const wallPhysMat = new CANNON.Material()
-        const wallShape = new CANNON.Box(new CANNON.Vec3(blockWidth/2, 35, 2.5));
-        this.body = new CANNON.Body({
-            mass: 0,
-            shape: wallShape,
-            material: wallPhysMat,
-        });
+// const shearMatrix = new THREE.Matrix4();
+// shearMatrix.set(
+//   1, 0.5, 0, 0, // Shearing along the x-axis
+//   0.5, 1, 0, 0, // Shearing along the y-axis
+//   0, 0, 1, 0,
+//   0, 0, 0, 1
+// );
 
-        // Set the initial position and rotation for the Cannon.js body
-        this.body.position.copy(position);
-        this.body.quaternion.setFromEuler(rotation.x, rotation.y, rotation.z);
+//PiP3 Creation
+PiP3.scale.set(0.12,0.12,0.12);
+PiP3.position.set(blockWidth/2 + 0.5,20,141);
+PiP3.rotation.set(Math.PI,0,0);
+//PiP3 Pole
+const poleGeometry = new THREE.CylinderGeometry(0.75, 0.75, 35, 50);
+const poleMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+const pole3 = new THREE.Mesh(poleGeometry, poleMaterial);
+scene.add(pole3);
+pole3.position.set(175,0,140);
+//PiP3 Sign
+const signwallgeometry = new THREE.BoxGeometry(10, 10, 1.5);
+const signmaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+const signwall3 = new THREE.Mesh(signwallgeometry,signmaterial);
+scene.add(signwall3)
+signwall3.position.set(175,20,140);
 
-        // Add the Cannon.js body to the world
-        world.addBody(this.body);
+//PiP1 Creation
+PiP1.scale.set(0.12,0.12,0.12);
+PiP1.position.set(-blockWidth/2 + 142.5 ,20,- blockWidth + 0.6);
+PiP1.rotation.set(-Math.PI/2,-Math.PI/2,-Math.PI);
+//PiP1 Pole
+const pole1 = new THREE.Mesh(poleGeometry, poleMaterial);
+scene.add(pole1);
+pole1.position.set(-blockWidth/2 + 141 ,0,- blockWidth + 0.5);
+//PiP1 Sign
+const signwall1 = new THREE.Mesh(signwallgeometry,signmaterial);
+scene.add(signwall1);
+signwall1.position.set(-blockWidth/2 + 141 ,20,- blockWidth + 0.8);
+signwall1.rotation.set(0,Math.PI/2,0);
 
-        // Update the Three.js mesh position and rotation based on the Cannon.js body
-        this.mesh.position.copy(this.body.position);
-        this.mesh.quaternion.copy(this.body.quaternion);
-    }
-}
+
+//PiP2 Creation
+PiP2.scale.set(0.12,0.12,0.12);
+PiP2.position.set(blockWidth/2 + 0.65,20, -218);
+PiP2.rotation.set(Math.PI,0,0);
+//PiP2 Pole
+const pole2 = new THREE.Mesh(poleGeometry, poleMaterial);
+scene.add(pole2);
+pole2.position.set(blockWidth/2 + 0.5,0,-220);
+//PiP2 Sign
+const signwall2 = new THREE.Mesh(signwallgeometry, signmaterial);
+scene.add(signwall2);
+signwall2.position.set(blockWidth/2 + 0.5,20,-220);
+
+scene.add(PiP1);
+scene.add(PiP2);
+scene.add(PiP3);
 
 
 

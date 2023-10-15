@@ -6,7 +6,8 @@ import * as player from './player.js';
 const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
 objects.scene.add(directionalLight);
 directionalLight.castShadow = true;
-directionalLight.position.set(-30, 50, 0);
+//directionalLight.position.set(-30, 50, 0);
+directionalLight.position.set(350/2,22,140);
 // You can adjust the edges of the shadow camera to capture a wider area where shadows are rendered
 directionalLight.shadow.camera.bottom = -100;
 directionalLight.shadow.camera.top = 100;
