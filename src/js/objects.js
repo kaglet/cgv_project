@@ -94,7 +94,7 @@ class floorContBody {
 
 function createTile(index,round) {
 let tile;
-    if(index!=round){
+    if(index!=81){
          tile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
           // Add cylinders at each corner of the tile
              const cornerCylinderGeometry = new THREE.CylinderGeometry(0.1, 0.1, 5, 32); // Adjusted size
