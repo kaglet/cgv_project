@@ -17,6 +17,9 @@ export var world = new CANNON.World({
     gravity: new CANNON.Vec3(0, -20, 0)
 });
 
+// TODO: Figure out what this does where its exported and why it is required
+export const raycaster = new THREE.Raycaster();
+
 class Wall {
     constructor(scene, world, position, rotation) {
         // Create Three.js wall
@@ -73,7 +76,10 @@ class floorContBody {
             shape: floorContShape,
             type: CANNON.Body.STATIC,
             material: floorContPhysMat,
+
         });
+        this.body.collisionFilterGroup = 2;  // or any other number
+        this.body.collisionFilterMask = -1; 
         this.body.position.copy(new CANNON.Vec3(container.position.x - 10, container.position.y - 1, container.position.z - 10));
         this.body.quaternion.setFromEuler(rotationAngle, 0, 0);
         world.addBody(this.body);
@@ -336,9 +342,9 @@ function makeMazes() {
     floorContainerRed.scale.set(4, 4, 1);
     floorContainerBlue.scale.set(4, 4, 1);
 
-    floorContainerGreen.position.set(-blockWidth / 2, 0, - blockWidth);
-    floorContainerRed.position.set(blockWidth / 2, 0, - blockWidth);
-    floorContainerBlue.position.set(blockWidth / 2, 0, 0);
+    floorContainerGreen.position.set(-blockWidth / 2, 5, - blockWidth);
+    floorContainerRed.position.set(blockWidth / 2, 5, - blockWidth);
+    floorContainerBlue.position.set(blockWidth / 2, 5, 0);
 
 
 
@@ -526,8 +532,7 @@ addWalls();
 
 
 
-// TODO: Figure out what this does where its exported and why it is required
-export const raycaster = new THREE.Raycaster();
+
 
 export function animate_objects() {
     // groundMesh.position.copy(groundBody.position);
