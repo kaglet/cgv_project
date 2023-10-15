@@ -89,16 +89,52 @@ class floorContBody {
     }
 }
 
+
 // DEFINE FUNCTIONS
 
-// Function to create a unique tile object
 function createTile(index) {
     const tile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
     tile.userData.tileNumber = index; // Store the tile number in user data
     tile.castShadow = true;
     tile.receiveShadow = true;
+
+    // Add cylinders at each corner of the tile
+    const cornerCylinderGeometry = new THREE.CylinderGeometry(0.1, 0.1, 5, 32); // Adjusted size
+    const cornerCylinderMaterial = new THREE.MeshStandardMaterial({ color: 0x888888 });
+
+    // Add cubes on top of each cylinder
+    const cubeGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5); // Cube dimensions
+    const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0x888888 });
+
+    const tilePosition = tile.position.clone();
+    const tileCorners = [
+        tilePosition.clone().add(new THREE.Vector3(-tileSize / 2, -tileSize / 2, 0)),
+        tilePosition.clone().add(new THREE.Vector3(tileSize / 2, -tileSize / 2, 0)),
+        tilePosition.clone().add(new THREE.Vector3(-tileSize / 2, tileSize / 2, 0)),
+        tilePosition.clone().add(new THREE.Vector3(tileSize / 2, tileSize / 2, 0)),
+    ];
+
+    const halfCylinderHeight = 5 / 2; // Half of the cylinder's height
+
+    tileCorners.forEach((corner) => {
+        // Create the corner cylinder
+        const cornerCylinder = new THREE.Mesh(cornerCylinderGeometry, cornerCylinderMaterial);
+        cornerCylinder.position.copy(corner).add(new THREE.Vector3(0, 0, halfCylinderHeight));
+        cornerCylinder.rotation.x = Math.PI / 2; // Rotate 90 degrees around the x-axis
+        tile.add(cornerCylinder); // Add the cylinder as a child of the tile
+
+        // Create the cube on top of the cylinder
+        const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+        cube.position.copy(corner).add(new THREE.Vector3(0, 0, -halfCylinderHeight + 2)); // Adjusted position
+        tile.add(cube); // Add the cube as a child of the tile
+    });
+
     return tile;
 }
+
+
+
+
 
 // Function to add or omit tiles based on tile numbers
 function drawGridWithOmissions(container, omittedTiles = []) {
