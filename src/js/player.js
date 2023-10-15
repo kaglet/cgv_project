@@ -27,6 +27,7 @@ const moveSound = new THREE.Audio(listener);
 const moveSoundLoader = new THREE.AudioLoader();
 moveSoundLoader.load('/grassFootsteps.mp3', function (buffer) {
   moveSound.setBuffer(buffer);
+  moveSound.setLoop( true );
   moveSound.setVolume(1); // Set the volume as needed
 });
 
