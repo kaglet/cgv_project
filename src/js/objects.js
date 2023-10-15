@@ -4,6 +4,7 @@ import * as CANNON from 'cannon-es';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { loadModels } from './models.js';
+//import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as camera from './camera.js';
 import * as player from './player.js';
 
@@ -29,6 +30,7 @@ export var world = new CANNON.World({
 export const raycaster = new THREE.Raycaster();
 
 class Wall {
+
     constructor(scene, world, position, rotation) {
         // Create Three.js wall
         const wallGeometry = new THREE.BoxGeometry(blockWidth, 70, 5);
@@ -100,42 +102,49 @@ class floorContBody {
 
 // DEFINE FUNCTIONS
 
-function createTile(index) {
-    const tile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
+function createTile(index,round) {
+let tile;
+    if(index!=81){
+         tile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
+          // Add cylinders at each corner of the tile
+             const cornerCylinderGeometry = new THREE.CylinderGeometry(0.1, 0.1, 5, 32); // Adjusted size
+             const cornerCylinderMaterial = new THREE.MeshStandardMaterial({ color: 0x888888 });
+
+             // Add cubes on top of each cylinder
+             const cubeGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5); // Cube dimensions
+             const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0x888888 });
+
+             const tilePosition = tile.position.clone();
+             const tileCorners = [
+                 tilePosition.clone().add(new THREE.Vector3(-tileSize / 2, -tileSize / 2, 0)),
+                 tilePosition.clone().add(new THREE.Vector3(tileSize / 2, -tileSize / 2, 0)),
+                 tilePosition.clone().add(new THREE.Vector3(-tileSize / 2, tileSize / 2, 0)),
+                 tilePosition.clone().add(new THREE.Vector3(tileSize / 2, tileSize / 2, 0)),
+             ];
+
+             const halfCylinderHeight = 5 / 2; // Half of the cylinder's height
+
+             tileCorners.forEach((corner) => {
+                 // Create the corner cylinder
+                 const cornerCylinder = new THREE.Mesh(cornerCylinderGeometry, cornerCylinderMaterial);
+                 cornerCylinder.position.copy(corner).add(new THREE.Vector3(0, 0, halfCylinderHeight));
+                 cornerCylinder.rotation.x = Math.PI / 2; // Rotate 90 degrees around the x-axis
+                 tile.add(cornerCylinder); // Add the cylinder as a child of the tile
+
+                 // Create the cube on top of the cylinder
+                 const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+                 cube.position.copy(corner).add(new THREE.Vector3(0, 0, -halfCylinderHeight + 2)); // Adjusted position
+                 tile.add(cube); // Add the cube as a child of the tile
+             });
+    }else{
+         tile = new THREE.Mesh(tileGeoRound, tileMaterial.clone());
+         tile.rotation.x = Math.PI / 2;
+    }
     tile.userData.tileNumber = index; // Store the tile number in user data
     tile.castShadow = true;
     tile.receiveShadow = true;
 
-    // Add cylinders at each corner of the tile
-    const cornerCylinderGeometry = new THREE.CylinderGeometry(0.1, 0.1, 5, 32); // Adjusted size
-    const cornerCylinderMaterial = new THREE.MeshStandardMaterial({ color: 0x888888 });
 
-    // Add cubes on top of each cylinder
-    const cubeGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5); // Cube dimensions
-    const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0x888888 });
-
-    const tilePosition = tile.position.clone();
-    const tileCorners = [
-        tilePosition.clone().add(new THREE.Vector3(-tileSize / 2, -tileSize / 2, 0)),
-        tilePosition.clone().add(new THREE.Vector3(tileSize / 2, -tileSize / 2, 0)),
-        tilePosition.clone().add(new THREE.Vector3(-tileSize / 2, tileSize / 2, 0)),
-        tilePosition.clone().add(new THREE.Vector3(tileSize / 2, tileSize / 2, 0)),
-    ];
-
-    const halfCylinderHeight = 5 / 2; // Half of the cylinder's height
-
-    tileCorners.forEach((corner) => {
-        // Create the corner cylinder
-        const cornerCylinder = new THREE.Mesh(cornerCylinderGeometry, cornerCylinderMaterial);
-        cornerCylinder.position.copy(corner).add(new THREE.Vector3(0, 0, halfCylinderHeight));
-        cornerCylinder.rotation.x = Math.PI / 2; // Rotate 90 degrees around the x-axis
-        tile.add(cornerCylinder); // Add the cylinder as a child of the tile
-
-        // Create the cube on top of the cylinder
-        const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-        cube.position.copy(corner).add(new THREE.Vector3(0, 0, -halfCylinderHeight + 2)); // Adjusted position
-        tile.add(cube); // Add the cube as a child of the tile
-    });
 
     return tile;
 }
@@ -145,14 +154,14 @@ function createTile(index) {
 
 
 // Function to add or omit tiles based on tile numbers
-function drawGridWithOmissions(container, omittedTiles = []) {
+function drawGridWithOmissions(container, omittedTiles = [],round) {
     for (let i = 0; i < numRows; i++) {
         for (let j = 0; j < numCols; j++) {
             const tileNumber = i * numCols + j + 1;
             if (!omittedTiles.includes(tileNumber)) {
                 const isMissingTile = (i % 2 === 0 && j % 2 === 0) || (i % 2 === 1 && j % 2 === 1);
                 if (!isMissingTile || i % 4 === 0 || (i - 2) % 4 === 0) {
-                    const tile = createTile(tileNumber);
+                    const tile = createTile(tileNumber,round);
                     const xOffset = (i - numRows / 2) * (tileSize + gapSize);
                     const yOffset = (j - numCols / 2) * (tileSize + gapSize);
                     tile.name = 'tile';
@@ -350,7 +359,53 @@ function sky() {
 
 
 function ground() {
-
+//     this.gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+//     const vertexShaderCode = `
+//     varying vec2 vUv;
+//
+//     void main() {
+//         vUv = uv;
+//         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+//     }
+// `;
+//     const fragmentShaderCode = `
+//     varying vec2 vUv;
+//
+//     void main() {
+//         // Use vUv to get the texture color at the current fragment position
+//         vec3 textureColor = texture2D(yourTextureSampler, vUv).rgb;
+//
+//         // Manipulate the texture color if needed (e.g., apply lighting, color adjustments, etc.)
+//         // For now, let's just output the texture color directly
+//         gl_FragColor = vec4(textureColor, 1.0);
+//     }
+// `;
+//
+//
+//     loader.load('grass_shader.glb', (gltf) => {
+//         // The loaded object is stored in 'gltf' variable.
+//         const model = gltf.scene;
+//         scene.add(model);
+//
+//         // Access a mesh from the loaded model (assuming there is a mesh with the material you want to apply the shader to)
+//         const meshWithShaderMaterial = model.children[0]; // Adjust this based on your model's structure
+//
+//         // Load shaders from the mesh material
+//         if (meshWithShaderMaterial.material instanceof THREE.ShaderMaterial) {
+//             vertexShader = meshWithShaderMaterial.material.vertexShader;
+//             fragmentShader = meshWithShaderMaterial.material.fragmentShader;
+//         }
+//     });
+//     const shaderMaterial = new THREE.ShaderMaterial({
+//         uniforms: uniforms,
+//         vertexShader: vertexShader,
+//         fragmentShader: fragmentShader
+//     });
+//
+//     // Apply the shader material to a mesh (you can create a new mesh or use an existing one)
+//     const geometry = new THREE.BoxGeometry(100, 100, 1);
+//     const shaderMesh = new THREE.Mesh(geometry, shaderMaterial);
+    //scene.add(shaderMesh);
     // Create ground
     const groundGeo = new THREE.PlaneGeometry(10000, 10000);
     const groundMat = new THREE.MeshStandardMaterial({
@@ -384,9 +439,9 @@ function makeMazes() {
     scene.add(floorContainerBlue);
 
     // Call the function to draw the first grid with omissions
-    drawGridWithOmissions(floorContainerGreen, []);
-    drawGridWithOmissions(floorContainerRed, [30, 38, 78]);
-    drawGridWithOmissions(floorContainerBlue, [28, 30, 42, 52, 76]);
+    drawGridWithOmissions(floorContainerGreen, [],1);
+    drawGridWithOmissions(floorContainerRed, [30, 38, 78],5);
+    drawGridWithOmissions(floorContainerBlue, [28, 30, 42, 52, 76],19);
 
     changePathColor(floorContainerGreen, path1, 0x00ff00); // Green
     changePathColor(floorContainerRed, path2, 0xff0000); // Red
@@ -433,8 +488,8 @@ function tileLights() {
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
                 tile.litUp = true;
-                litUpTiles1.push(index);
-                const haveSameValues = correctPath1.every(value => litUpTiles1.includes(value) && litUpTiles1.length === correctPath1.length);
+                litUpTiles1.push(tile.userData.tileNumber);
+                const haveSameValues = path1.every(value => litUpTiles1.includes(value) && litUpTiles1.length === path1.length);
                 if (haveSameValues) {
                     console.log("Path 1 correct.");
                 }
@@ -466,8 +521,9 @@ function tileLights() {
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
                 tile.litUp = true;
-                litUpTiles2.push(index);
-                const haveSameValues = correctPath2.every(value => litUpTiles2.includes(value) && litUpTiles2.length === correctPath2.length);
+                litUpTiles2.push(tile.userData.tileNumber);
+                console.log(litUpTiles2);
+                const haveSameValues = path2.every(value => litUpTiles2.includes(value) && litUpTiles2.length === path2.length);
                 if (haveSameValues) {
                     console.log("Path 2 correct.");
                 }
@@ -497,8 +553,8 @@ function tileLights() {
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
                 tile.litUp = true;
-                litUpTiles3.push(index);
-                const haveSameValues = correctPath3.every(value => litUpTiles3.includes(value) && litUpTiles3.length === correctPath3.length);
+                litUpTiles3.push(tile.userData.tileNumber);
+                const haveSameValues = path3.every(value => litUpTiles3.includes(value) && litUpTiles3.length === path3.length);
                 if (haveSameValues) {
                     console.log("Path 3 correct.");
                 }
@@ -517,9 +573,6 @@ const path1 = [1, 2, 3, 12, 21, 30, 39, 48, 57, 66, 75, 76, 77, 78, 79, 70, 61, 
 const path2 = [5, 14, 23, 24, 25, 26, 27, 36, 45, 44, 43, 42, 41, 40, 39, 48, 57, 56, 55, 64, 73, 74, 75, 76, 77, 68, 59, 60, 61, 62, 63, 72, 81];
 const path3 = [19, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 18, 27, 36, 45, 44, 43, 34, 25, 24, 23, 32, 41, 40, 39, 38, 37, 46, 55, 64, 73, 74, 75, 66, 57, 58, 59, 68, 77, 78, 79, 80, 81];
 
-const correctPath1 = [0, 1, 2, 10, 16, 24, 30, 38, 44, 52, 58, 59, 60, 61, 62, 54, 48, 40, 34, 33, 32, 25, 18, 19, 20, 21, 22, 27, 36, 41, 50, 55, 64];
-const correctPath2 = [61, 53, 48, 47, 46, 45, 44, 51, 58, 57, 56, 55, 54, 49, 40, 41, 42, 36, 28, 29, 30, 31, 32, 33, 34, 26, 22, 21, 20, 19, 18, 11, 4];
-const correctPath3 = [14, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 13, 22, 25, 33, 32, 31, 24, 20, 19, 18, 23, 30, 29, 28, 27, 26, 34, 38, 47, 52, 53, 54, 48, 40, 41, 42, 49, 55, 56, 57, 58, 59];
 
 let litUpTiles1 = [];
 let litUpTiles2 = [];
@@ -532,6 +585,10 @@ sky();
 // const axesHelper = new THREE.AxesHelper(200); //so we can see the axes for debugging
 // scene.add(axesHelper);
 
+const axesHelper = new THREE.AxesHelper(200); //so we can see the axes for debugging
+scene.add(axesHelper);
+const loader = new GLTFLoader();
+loadModels(loader, scene, world);
 ground();
 
 //helper squares
@@ -541,8 +598,7 @@ const blockWidth = 350;
 const blockDepth = 350;
 helperSquares();
 
-const loader = new GLTFLoader();
-loadModels(loader, scene, world);
+
 
 // DEFINE MAZE GRID
 // Define tile size and gap size
@@ -555,6 +611,7 @@ const numCols = 9;
 
 // Create a floor tile
 const tileGeometry = new THREE.BoxGeometry(5, 5, 1.3);
+const tileGeoRound = new THREE.CylinderGeometry(4,4,0.5,64);
 const tileMaterial = new THREE.MeshStandardMaterial({
     color: 0xffffff,
     opacity: 0.5,
@@ -584,6 +641,8 @@ PiP();
 
 
 addWalls();
+
+//Sound
 
 
 

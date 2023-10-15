@@ -85,7 +85,7 @@ const audioLoader = new THREE.AudioLoader();
 audioLoader.load( '/BetterBackground.mp3', function( buffer ) {
     sound.setBuffer( buffer );
     sound.setLoop( true );
-    sound.setVolume( 0.4 );
+    sound.setVolume( 0.0 );
     sound.play();
 });
 
