@@ -17,19 +17,17 @@ import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockCont
 const prevTime = performance.now();
 export const controls = new PointerLockControls(camera.currentCamera, document.body);
 let raycaster = objects.raycaster;
-
-//const moveForwardSoundPlaying = false; // Add a flag to track if the sound is already playing
-
-
 const listener = new THREE.AudioListener();
 //camera.add( listener );
 const moveSound = new THREE.Audio(listener);
 const moveSoundLoader = new THREE.AudioLoader();
-moveSoundLoader.load('/grassFootsteps.mp3', function (buffer) {
+moveSoundLoader.load('/amen-break-no-copyright-remake-120bpm-25924.mp3', function (buffer) {
   moveSound.setBuffer(buffer);
-  moveSound.setLoop( true );
-  moveSound.setVolume(1); // Set the volume as needed
+  moveSound.setVolume(0.5); // Set the volume as needed
+  moveSound.setLoop(true);
 });
+//const moveForwardSoundPlaying = false; // Add a flag to track if the sound is already playing
+
 
 let velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
@@ -41,7 +39,6 @@ let moveRight = false;
 let paused = false;
 export let playerBody;
 export let characterModel = null;
-let height;
 // export let playerPhysMat = new CANNON.Material();
 
 class BasicCharacterControllerProxy {
@@ -108,37 +105,6 @@ class BasicCharacterController {
     //     // You can do the same for other axes (e.g., playerBody.velocity.y or playerBody.velocity.z)
     //   }
     // });
-    let onMaze = false;
-playerBody.addEventListener('collide', (event) => {
-  const otherBody = event.body;
-
-  if (otherBody.collisionFilterGroup === 2 && !onMaze) {
-    onMaze = true;
-    
-    // Calculate the vector from player to otherBody's center
-    const offset = new CANNON.Vec3();
-    otherBody.position.vsub(playerBody.position, offset);
-
-    // Normalize the offset vector to get the direction
-    offset.normalize();
-
-    // Scale the direction vector by 5 units (or any desired distance)
-    offset.scale(1);
-
-    // Update player's position (x and z) accordingly
-    playerBody.position.x -= offset.x;
-    playerBody.position.z -= offset.z;
-
-    // Calculate the desired Y position for the player
-    const desiredY = otherBody.position.y + height + 1; // Adjust as needed
-
-    // Adjust the player's Y position (Cannon.js)
-    playerBody.position.y = desiredY;
-  } else if (otherBody.collisionFilterGroup === 1) {
-    onMaze = false;
-  }
-});
-
 
   }
 
@@ -159,7 +125,7 @@ playerBody.addEventListener('collide', (event) => {
       // accurate hitbox for the player
       const boundingBox = new THREE.Box3().setFromObject(characterModel);
       const width = boundingBox.max.x - boundingBox.min.x;
-      height = boundingBox.max.y - boundingBox.min.y;
+      const height = boundingBox.max.y - boundingBox.min.y;
       const depth = boundingBox.max.z - boundingBox.min.z;
 
       const playerShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
