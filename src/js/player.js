@@ -17,17 +17,19 @@ import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockCont
 const prevTime = performance.now();
 export const controls = new PointerLockControls(camera.currentCamera, document.body);
 let raycaster = objects.raycaster;
+
+//const moveForwardSoundPlaying = false; // Add a flag to track if the sound is already playing
+
+
 const listener = new THREE.AudioListener();
 //camera.add( listener );
 const moveSound = new THREE.Audio(listener);
 const moveSoundLoader = new THREE.AudioLoader();
-moveSoundLoader.load('/amen-break-no-copyright-remake-120bpm-25924.mp3', function (buffer) {
+moveSoundLoader.load('/footsteps-dirt-gravel-6823.mp3', function (buffer) {
   moveSound.setBuffer(buffer);
-  moveSound.setVolume(0.5); // Set the volume as needed
-  moveSound.setLoop(true);
+  moveSound.setLoop( true );
+  moveSound.setVolume(10); // Set the volume as needed
 });
-//const moveForwardSoundPlaying = false; // Add a flag to track if the sound is already playing
-
 
 let velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
@@ -39,6 +41,7 @@ let moveRight = false;
 let paused = false;
 export let playerBody;
 export let characterModel = null;
+let height;
 // export let playerPhysMat = new CANNON.Material();
 
 class BasicCharacterControllerProxy {
@@ -62,7 +65,7 @@ class BasicCharacterController {
     playerPhysMat.friction = 1000;
     playerBody = new CANNON.Body({
       mass: 100, // Adjust the mass as needed
- //     shape: new CANNON.Box(new CANNON.Vec3(1, 5, 1)),
+      //     shape: new CANNON.Box(new CANNON.Vec3(1, 5, 1)),
       position: new CANNON.Vec3(125, 5, 125),
       material: playerPhysMat
     });
@@ -82,7 +85,7 @@ class BasicCharacterController {
     this._animations = {};
     this._input = new BasicCharacterControllerInput();
     this._stateMachine = new CharacterFSM(
-      new BasicCharacterControllerProxy(this._animations));
+        new BasicCharacterControllerProxy(this._animations));
 
     this._LoadModels();
 
@@ -105,6 +108,37 @@ class BasicCharacterController {
     //     // You can do the same for other axes (e.g., playerBody.velocity.y or playerBody.velocity.z)
     //   }
     // });
+    let onMaze = false;
+    playerBody.addEventListener('collide', (event) => {
+      const otherBody = event.body;
+
+      if (otherBody.collisionFilterGroup === 2 && !onMaze) {
+        onMaze = true;
+
+        // Calculate the vector from player to otherBody's center
+        const offset = new CANNON.Vec3();
+        otherBody.position.vsub(playerBody.position, offset);
+
+        // Normalize the offset vector to get the direction
+        offset.normalize();
+
+        // Scale the direction vector by 5 units (or any desired distance)
+        offset.scale(1);
+
+        // Update player's position (x and z) accordingly
+        playerBody.position.x -= offset.x;
+        playerBody.position.z -= offset.z;
+
+        // Calculate the desired Y position for the player
+        const desiredY = otherBody.position.y + height + 1; // Adjust as needed
+
+        // Adjust the player's Y position (Cannon.js)
+        playerBody.position.y = desiredY;
+      } else if (otherBody.collisionFilterGroup === 1) {
+        onMaze = false;
+      }
+    });
+
 
   }
 
@@ -115,7 +149,7 @@ class BasicCharacterController {
 
     loader.load('./alex/ALEX.fbx', (fbx) => {
       characterModel = fbx;
-       //fbx.position.y=-30;
+      //fbx.position.y=-30;
       // fbx.rotation.y=10;
       fbx.scale.setScalar(0.1);
       fbx.traverse(c => {
@@ -125,7 +159,7 @@ class BasicCharacterController {
       // accurate hitbox for the player
       const boundingBox = new THREE.Box3().setFromObject(characterModel);
       const width = boundingBox.max.x - boundingBox.min.x;
-      const height = boundingBox.max.y - boundingBox.min.y;
+      height = boundingBox.max.y - boundingBox.min.y;
       const depth = boundingBox.max.z - boundingBox.min.z;
 
       const playerShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -164,7 +198,7 @@ class BasicCharacterController {
   }
 
   Update(timeInSeconds) {
-  let savedCharacterOrientation = new THREE.Quaternion();
+    let savedCharacterOrientation = new THREE.Quaternion();
     const controlObject = this._target;
     const cameraObject = this._params.camera;
     const cameraDirection = new THREE.Vector3();
@@ -174,7 +208,7 @@ class BasicCharacterController {
 
 
     if (camera.currentCamera === camera.camera) {
-       controlObject.quaternion.copy(savedCharacterOrientation);
+      controlObject.quaternion.copy(savedCharacterOrientation);
 
       if (!this._target) {
         return;
@@ -184,13 +218,13 @@ class BasicCharacterController {
 
       velocity = this._velocity;
       const frameDecceleration = new THREE.Vector3(
-        velocity.x * this._decceleration.x,
-        velocity.y * this._decceleration.y,
-        velocity.z * this._decceleration.z
+          velocity.x * this._decceleration.x,
+          velocity.y * this._decceleration.y,
+          velocity.z * this._decceleration.z
       );
       frameDecceleration.multiplyScalar(timeInSeconds);
       frameDecceleration.z = Math.sign(frameDecceleration.z) * Math.min(
-        Math.abs(frameDecceleration.z), Math.abs(velocity.z)
+          Math.abs(frameDecceleration.z), Math.abs(velocity.z)
       );
 
       velocity.add(frameDecceleration);
@@ -213,9 +247,9 @@ class BasicCharacterController {
 
       // Where movement is done
 
-        if (!moveForward){
+      if (!moveForward){
         velocity.z -= 0.0046*acc.z * timeInSeconds;
-        }
+      }
       if (moveForward) {
         velocity.z += acc.z * timeInSeconds;
       }
@@ -245,12 +279,12 @@ class BasicCharacterController {
       cameraObject.position.copy(controlObject.position);
       // Set the camera's vertical position (Y-axis) to maintain it above the character's head
 
-       cameraObject.position.y += 20;
+      cameraObject.position.y += 20;
       if (this._mixer) {
         this._mixer.update(timeInSeconds);
       }
     } else if (camera.currentCamera === camera.topDownCamera) {
-          savedCharacterOrientation.copy(controlObject.quaternion);
+      savedCharacterOrientation.copy(controlObject.quaternion);
       if (!this._target) {
         return;
       }
@@ -259,13 +293,13 @@ class BasicCharacterController {
 
       const velocity = this._velocity;
       const frameDecceleration = new THREE.Vector3(
-        velocity.x * this._decceleration.x,
-        velocity.y * this._decceleration.y,
-        velocity.z * this._decceleration.z
+          velocity.x * this._decceleration.x,
+          velocity.y * this._decceleration.y,
+          velocity.z * this._decceleration.z
       );
       frameDecceleration.multiplyScalar(timeInSeconds);
       frameDecceleration.z = Math.sign(frameDecceleration.z) * Math.min(
-        Math.abs(frameDecceleration.z), Math.abs(velocity.z));
+          Math.abs(frameDecceleration.z), Math.abs(velocity.z));
 
       velocity.add(frameDecceleration);
 
@@ -311,8 +345,8 @@ class BasicCharacterController {
 
       controlObject.position.add(forward);
       controlObject.position.add(sideways);
-       const targetRotation = controlObject.rotation.clone();
-       cameraObject.rotation.copy(targetRotation);
+      const targetRotation = controlObject.rotation.clone();
+      cameraObject.rotation.copy(targetRotation);
       //oldPosition.copy(controlObject.position);
 
       if (this._mixer) {
@@ -343,11 +377,11 @@ class BasicCharacterControllerInput {
     //code that allows the screen to follow mouse
     const blocker = document.getElementById('blocker');
     const instructions = document.getElementById('instructions');
-     const pausedScreen = document.getElementById('paused-screen');
+    const pausedScreen = document.getElementById('paused-screen');
 
-     document.addEventListener('click', function () {
-          controls.lock();
-        });
+    document.addEventListener('click', function () {
+      controls.lock();
+    });
 
 
     controls.addEventListener('lock', function () {
@@ -371,7 +405,7 @@ class BasicCharacterControllerInput {
     objects.scene.add(controls.getObject());
 
   }
- // const moveForwardSoundPlaying = false; // Add a flag to track if the sound is already playing
+  // const moveForwardSoundPlaying = false; // Add a flag to track if the sound is already playing
 
 
   //key press listeners
@@ -379,7 +413,7 @@ class BasicCharacterControllerInput {
 
   _onKeyDown(event) {
     if (!paused) {
-      moveSound.play(); // Play the sound for all directions
+    // Play the sound for all directions
       switch (event.keyCode) {
         case 87: // w
           moveForward = true;
@@ -394,32 +428,45 @@ class BasicCharacterControllerInput {
           moveRight = true;
           break;
       }
+      if (moveForward || moveBackward || moveRight || moveLeft) {
+        moveSound.play();
+      } else {
+        moveSound.stop();
+      }
     }
   };
 
   _onKeyUp(event) {
+    //moveSound.stop();
+    //this._checkAndPlayMoveSound();
     switch (event.keyCode) {
       case 87: // w
         moveForward = false;
-        moveSound.stop(); // Stop the move sound
+       // Stop the move sound
 
-       // this.moveForwardSoundPlaying = false;
+        // this.moveForwardSoundPlaying = false;
         break;
       case 65: // a
         moveLeft = false;
-        moveSound.stop();
+       // moveSound.stop();
         break;
       case 83: // s
         moveBackward = false;
-        moveSound.stop();
+       // moveSound.stop();
         break;
       case 68: // d
         moveRight = false;
-        moveSound.stop();
+       // moveSound.stop();
         break;
+    }
+    if (moveForward || moveBackward || moveRight || moveLeft) {
+      moveSound.play();
+    } else {
+      moveSound.stop();
     }
   }
 };
+
 
 
 class FiniteStateMachine {
