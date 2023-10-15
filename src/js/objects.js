@@ -7,6 +7,14 @@ import { loadModels } from './models.js';
 import * as camera from './camera.js';
 import * as player from './player.js';
 
+// Import texture images
+import exosystemFtImage from '../img/exosystem/exosystem_ft.jpg';
+import exosystemBkImage from '../img/exosystem/exosystem_bk.jpg';
+import exosystemUpImage from '../img/exosystem/exosystem_up.jpg';
+import exosystemDnImage from '../img/exosystem/exosystem_dn.jpg';
+import exosystemRtImage from '../img/exosystem/exosystem_rt.jpg';
+import exosystemLfImage from '../img/exosystem/exosystem_lf.jpg';
+
 // DEFINE GLOBAL VARIABLES
 // Scene
 export const scene = new THREE.Scene();
@@ -79,7 +87,7 @@ class floorContBody {
 
         });
         this.body.collisionFilterGroup = 2;  // or any other number
-        this.body.collisionFilterMask = -1; 
+        this.body.collisionFilterMask = -1;
         this.body.position.copy(new CANNON.Vec3(container.position.x - 10, container.position.y - 1, container.position.z - 10));
         this.body.quaternion.setFromEuler(rotationAngle, 0, 0);
         world.addBody(this.body);
@@ -308,13 +316,23 @@ function PiP() {
 
 function sky() {
 
+
+    // Create texture objects
+    const texture_ft = new THREE.TextureLoader().load(exosystemFtImage);
+    const texture_bk = new THREE.TextureLoader().load(exosystemBkImage);
+    const texture_up = new THREE.TextureLoader().load(exosystemUpImage);
+    const texture_dn = new THREE.TextureLoader().load(exosystemDnImage);
+    const texture_rt = new THREE.TextureLoader().load(exosystemRtImage);
+    const texture_lf = new THREE.TextureLoader().load(exosystemLfImage);
+
+    // Create material array
     const materialArray = [
-        new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
-        new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
-        new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
-        new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
-        new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide }),
-        new THREE.MeshBasicMaterial({ color: 0x87ceeb, side: THREE.BackSide })
+        new THREE.MeshBasicMaterial({ map: texture_ft }),
+        new THREE.MeshBasicMaterial({ map: texture_bk }),
+        new THREE.MeshBasicMaterial({ map: texture_up }),
+        new THREE.MeshBasicMaterial({ map: texture_dn }),
+        new THREE.MeshBasicMaterial({ map: texture_rt }),
+        new THREE.MeshBasicMaterial({ map: texture_lf })
     ];
 
     // Set material side to backside
@@ -325,6 +343,7 @@ function sky() {
     // Create skybox
     const skyboxGeo = new THREE.BoxGeometry(10000, 10000, 10000);
     const skybox = new THREE.Mesh(skyboxGeo, materialArray);
+    skybox.position.set(0, 200, 0);
     scene.add(skybox);
 
 }
@@ -391,7 +410,7 @@ function makeMazes() {
 }
 
 
-function tileLights(){
+function tileLights() {
 
     if (player.characterModel) {
 
@@ -510,8 +529,8 @@ let litUpTiles3 = [];
 sky();
 
 
-const axesHelper = new THREE.AxesHelper(200); //so we can see the axes for debugging
-scene.add(axesHelper);
+// const axesHelper = new THREE.AxesHelper(200); //so we can see the axes for debugging
+// scene.add(axesHelper);
 
 ground();
 
@@ -580,5 +599,5 @@ export function animate_lights() {
 
     tileLights();
 
-  
+
 }

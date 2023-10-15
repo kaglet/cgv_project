@@ -1,0 +1,11 @@
+Model Information:
+* title:	Coconut tree
+* source:	https://sketchfab.com/3d-models/coconut-tree-425d38e294f747a39a1ca55b7cf6d8a6
+* author:	1-3D.com (https://sketchfab.com/1-3D.com)
+
+Model License:
+* license type:	CC-BY-SA-4.0 (http://creativecommons.org/licenses/by-sa/4.0/)
+* requirements:	Author must be credited. Modified versions must have the same license. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Coconut tree" (https://sketchfab.com/3d-models/coconut-tree-425d38e294f747a39a1ca55b7cf6d8a6) by 1-3D.com (https://sketchfab.com/1-3D.com) licensed under CC-BY-SA-4.0 (http://creativecommons.org/licenses/by-sa/4.0/)

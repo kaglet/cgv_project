@@ -389,6 +389,7 @@ class BasicCharacterControllerInput {
       instructions.style.display = 'none';
       blocker.style.display = 'none';
       pausedScreen.style.display = 'none';
+       playerBody.mass = 0;
     });
 
     controls.addEventListener('unlock', function () {
@@ -400,6 +401,7 @@ class BasicCharacterControllerInput {
       moveBackward=false;
       moveRight=false;
       moveLeft=false;
+      playerBody.mass = 0;
     });
 
     objects.scene.add(controls.getObject());
