@@ -469,8 +469,8 @@ function tileLights(){
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
                 tile.litUp = true;
-                litUpTiles1.push(index);
-                const haveSameValues = correctPath1.every(value => litUpTiles1.includes(value) && litUpTiles1.length === correctPath1.length);
+                litUpTiles1.push(tile.userData.tileNumber);
+                const haveSameValues = path1.every(value => litUpTiles1.includes(value) && litUpTiles1.length === path1.length);
                 if (haveSameValues) {
                     console.log("Path 1 correct.");
                 }
@@ -502,8 +502,9 @@ function tileLights(){
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
                 tile.litUp = true;
-                litUpTiles2.push(index);
-                const haveSameValues = correctPath2.every(value => litUpTiles2.includes(value) && litUpTiles2.length === correctPath2.length);
+                litUpTiles2.push(tile.userData.tileNumber);
+                console.log(litUpTiles2);
+                const haveSameValues = path2.every(value => litUpTiles2.includes(value) && litUpTiles2.length === path2.length);
                 if (haveSameValues) {
                     console.log("Path 2 correct.");
                 }
@@ -533,8 +534,8 @@ function tileLights(){
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
                 tile.litUp = true;
-                litUpTiles3.push(index);
-                const haveSameValues = correctPath3.every(value => litUpTiles3.includes(value) && litUpTiles3.length === correctPath3.length);
+                litUpTiles3.push(tile.userData.tileNumber);
+                const haveSameValues = path3.every(value => litUpTiles3.includes(value) && litUpTiles3.length === path3.length);
                 if (haveSameValues) {
                     console.log("Path 3 correct.");
                 }
@@ -553,9 +554,6 @@ const path1 = [1, 2, 3, 12, 21, 30, 39, 48, 57, 66, 75, 76, 77, 78, 79, 70, 61, 
 const path2 = [5, 14, 23, 24, 25, 26, 27, 36, 45, 44, 43, 42, 41, 40, 39, 48, 57, 56, 55, 64, 73, 74, 75, 76, 77, 68, 59, 60, 61, 62, 63, 72, 81];
 const path3 = [19, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 18, 27, 36, 45, 44, 43, 34, 25, 24, 23, 32, 41, 40, 39, 38, 37, 46, 55, 64, 73, 74, 75, 66, 57, 58, 59, 68, 77, 78, 79, 80, 81];
 
-const correctPath1 = [0, 1, 2, 10, 16, 24, 30, 38, 44, 52, 58, 59, 60, 61, 62, 54, 48, 40, 34, 33, 32, 25, 18, 19, 20, 21, 22, 27, 36, 41, 50, 55, 64];
-const correctPath2 = [61, 53, 48, 47, 46, 45, 44, 51, 58, 57, 56, 55, 54, 49, 40, 41, 42, 36, 28, 29, 30, 31, 32, 33, 34, 26, 22, 21, 20, 19, 18, 11, 4];
-const correctPath3 = [14, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 13, 22, 25, 33, 32, 31, 24, 20, 19, 18, 23, 30, 29, 28, 27, 26, 34, 38, 47, 52, 53, 54, 48, 40, 41, 42, 49, 55, 56, 57, 58, 59];
 
 let litUpTiles1 = [];
 let litUpTiles2 = [];
