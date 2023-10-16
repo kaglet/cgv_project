@@ -66,8 +66,9 @@ class BasicCharacterController {
     playerPhysMat.friction = 1000;
     playerBody = new CANNON.Body({
       mass: 100, // Adjust the mass as needed
+      // TODO: Check why this shape was commented out and only added in later
       //     shape: new CANNON.Box(new CANNON.Vec3(1, 5, 1)),
-      position: new CANNON.Vec3(125, 5, 125),
+      position: new CANNON.Vec3(125, 3, 325),
       material: playerPhysMat
     });
 

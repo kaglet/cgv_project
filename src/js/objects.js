@@ -23,7 +23,7 @@ export let levelAreas = [];
 
 // world - this is for cannon objects
 export var world = new CANNON.World({
-    gravity: new CANNON.Vec3(0, -9.8, 0)
+    gravity: new CANNON.Vec3(0, -9.81, 0)
 });
 
 // TODO: Figure out what this does where its exported and why it is required
@@ -639,53 +639,6 @@ function sky() {
 
 
 function ground() {
-//     this.gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-//     const vertexShaderCode = `
-//     varying vec2 vUv;
-//
-//     void main() {
-//         vUv = uv;
-//         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-//     }
-// `;
-//     const fragmentShaderCode = `
-//     varying vec2 vUv;
-//
-//     void main() {
-//         // Use vUv to get the texture color at the current fragment position
-//         vec3 textureColor = texture2D(yourTextureSampler, vUv).rgb;
-//
-//         // Manipulate the texture color if needed (e.g., apply lighting, color adjustments, etc.)
-//         // For now, let's just output the texture color directly
-//         gl_FragColor = vec4(textureColor, 1.0);
-//     }
-// `;
-//
-//
-//     loader.load('grass_shader.glb', (gltf) => {
-//         // The loaded object is stored in 'gltf' variable.
-//         const model = gltf.scene;
-//         scene.add(model);
-//
-//         // Access a mesh from the loaded model (assuming there is a mesh with the material you want to apply the shader to)
-//         const meshWithShaderMaterial = model.children[0]; // Adjust this based on your model's structure
-//
-//         // Load shaders from the mesh material
-//         if (meshWithShaderMaterial.material instanceof THREE.ShaderMaterial) {
-//             vertexShader = meshWithShaderMaterial.material.vertexShader;
-//             fragmentShader = meshWithShaderMaterial.material.fragmentShader;
-//         }
-//     });
-//     const shaderMaterial = new THREE.ShaderMaterial({
-//         uniforms: uniforms,
-//         vertexShader: vertexShader,
-//         fragmentShader: fragmentShader
-//     });
-//
-//     // Apply the shader material to a mesh (you can create a new mesh or use an existing one)
-//     const geometry = new THREE.BoxGeometry(100, 100, 1);
-//     const shaderMesh = new THREE.Mesh(geometry, shaderMaterial);
-    //scene.add(shaderMesh);
     // Create ground
     const groundGeo = new THREE.PlaneGeometry(10000, 10000);
     const groundMat = new THREE.MeshStandardMaterial({
