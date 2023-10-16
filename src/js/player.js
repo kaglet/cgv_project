@@ -65,11 +65,11 @@ class BasicCharacterController {
       mass: 100, // Adjust the mass as needed
       // TODO: Check why this shape was commented out and only added in later
       //     shape: new CANNON.Box(new CANNON.Vec3(1, 5, 1)),
-<<<<<<< HEAD
+//<<<<<<< HEAD
       position: new CANNON.Vec3(125, 3, 325),
-=======
-      position: new CANNON.Vec3(200, 10, -400),
->>>>>>> new_b
+//=======
+     // position: new CANNON.Vec3(200, 10, -400),
+//>>>>>>> new_b
       material: playerPhysMat
     });
 

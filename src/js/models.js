@@ -406,7 +406,7 @@ export function loadModels(loader, scene, world, blockWidth){
         // Adjust rotation, scale, and position as needed
         fairyForestSkybox.rotation.y = Math.PI / 4; // Example rotation: 45 degrees around the y-axis
         fairyForestSkybox.scale.set(0.02, 0.02, 0.02); // Example scale: adjust as needed
-        fairyForestSkybox.position.set(103, 55, -33); // Place it on top of the pillar
+        fairyForestSkybox.position.set(103, 65, -33); // Place it on top of the pillar
 
         // Add the Fairy Forest Skybox model to the scene
         scene.add(fairyForestSkybox);
@@ -419,7 +419,7 @@ export function loadModels(loader, scene, world, blockWidth){
     loader.load('/dungeon.glb', function (gltf) {
         const dungeonModel = gltf.scene;
         dungeonModel.scale.set(15, 15, 15);
-        dungeonModel.position.set(105, 17, 487);
+        dungeonModel.position.set(106, 17, 487);
         //console.log("Dungeon Model Properties:");
         //    for (const property in lionStatueModel) {
         //        console.log(`${property}:`, lionStatueModel[property]);
