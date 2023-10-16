@@ -80,7 +80,7 @@ class BasicCharacterController {
   _Init(params) {
     this._params = params;
     this._decceleration = new THREE.Vector3(-5.0, -0.25, -5.0);
-    this._acceleration = new THREE.Vector3(100, 1, 100);
+    this._acceleration = new THREE.Vector3(200, 1, 200);
     this._velocity = new THREE.Vector3(0, 0, 0);
 
     this._animations = {};

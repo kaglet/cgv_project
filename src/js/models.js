@@ -1629,6 +1629,13 @@ export function loadModels(loader, scene, world, blockWidth){
     let offsetCurvedEdgesShift = 27;
     // for wall spawn right
     let adjustment1 = 0;
+    // Calculate the total width of the inner wall (including the gap)
+    const totalWidth = blockWidth;
+    const gapWidth = 50;
+    
+    // Calculate the width of each part of the inner wall
+    const partWidth = (totalWidth - gapWidth) / 2;
+
     for (let i = 0; i < 13; i++) {
         loader.load(pathToWall , (gltf) => {
             const model = gltf.scene;
@@ -1723,6 +1730,92 @@ export function loadModels(loader, scene, world, blockWidth){
             model.position.set(-blockWidth - baselineShift, 0, -blockWidth + offsetCurvedEdgesShift + adjustment7);
             adjustment7 -= 120;
             model.rotateY(-Math.PI / 2);
+        }, undefined, (error) => {
+            console.log(error);
+        });
+    }
+
+    // lobby exit
+    let adjustment8 = 0;
+    for (let i = 0; i < 2; i++) {
+        loader.load(pathToWall, (gltf) => {
+            const modelLeft = gltf.scene;
+            const modelRight = modelLeft.clone();
+            
+            scene.add(modelLeft);
+            scene.add(modelRight);
+            // I must position two models at the same place in one coordinate so maybe add model twice or just different variables
+            // try work on one side for now before other side
+            let height = generateRandomNumberForVariation();
+            let depth = generateRandomNumberForVariation();
+            let positionX = blockWidth / 2;
+            let positionY = 0;
+            let positionZ = blockWidth / 2;
+            modelLeft.scale.set(0.2, height, depth);
+            modelLeft.position.set((positionX - partWidth / 2 - gapWidth / 2) - offsetCurvedEdgesShift - 35 - adjustment8, positionY, positionZ);
+
+            modelRight.scale.set(0.2, height, depth);
+            modelRight.position.set((positionX - partWidth / 2 + gapWidth / 2) + offsetCurvedEdgesShift + 139 + adjustment8, positionY, positionZ);
+            
+            adjustment8 -= 18.7;
+            // model.rotateY(-Math.PI / 2);
+        }, undefined, (error) => {
+            console.log(error);
+        });
+    }
+    // puzzle 1 exit
+    let adjustment9 = 0;
+    for (let i = 0; i < 2; i++) {
+        loader.load(pathToWall, (gltf) => {
+            const modelLeft = gltf.scene;
+            const modelRight = modelLeft.clone();
+            
+            scene.add(modelLeft);
+            scene.add(modelRight);
+            // I must position two models at the same place in one coordinate so maybe add model twice or just different variables
+            // try work on one side for now before other side
+            let height = generateRandomNumberForVariation();
+            let depth = generateRandomNumberForVariation();
+            let positionX = blockWidth / 2;
+            let positionY = 0;
+            let positionZ = - blockWidth / 2;
+            modelLeft.scale.set(0.2, height, depth);
+            modelLeft.position.set((positionX - partWidth / 2 - gapWidth / 2) - offsetCurvedEdgesShift - 35 - adjustment9, positionY, positionZ + 20);
+
+            modelRight.scale.set(0.2, height, depth);
+            modelRight.position.set((positionX - partWidth / 2 + gapWidth / 2) + offsetCurvedEdgesShift + 139 + adjustment9, positionY, positionZ + 20);
+            
+            adjustment9 -= 18.7;
+        }, undefined, (error) => {
+            console.log(error);
+        });
+    }
+    // puzzle 2 exit
+    let adjustment10 = 0;
+    for (let i = 0; i < 2; i++) {
+        loader.load(pathToWall, (gltf) => {
+            const modelLeft = gltf.scene;
+            const modelRight = modelLeft.clone();
+            
+            scene.add(modelLeft);
+            scene.add(modelRight);
+            // I must position two models at the same place in one coordinate so maybe add model twice or just different variables
+            // try work on one side for now before other side
+            let height = generateRandomNumberForVariation();
+            let depth = generateRandomNumberForVariation();
+            let positionX = 0;
+            let positionY = 0;
+            let positionZ = - blockWidth;
+            modelLeft.scale.set(0.2, height, depth);
+            modelLeft.position.set(positionX - 33.5, positionY, positionZ - offsetCurvedEdgesShift - partWidth / 2 - gapWidth / 2);
+
+            modelRight.scale.set(0.2, height, depth);
+            modelRight.position.set(positionX - 33.5, positionY, positionZ + partWidth / 2 + gapWidth / 2);
+            
+            adjustment10 -= 18.7;
+
+            modelLeft.rotateY(-Math.PI / 2);
+            modelRight.rotateY(-Math.PI / 2);
         }, undefined, (error) => {
             console.log(error);
         });

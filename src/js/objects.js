@@ -23,7 +23,7 @@ export let levelAreas = [];
 
 // world - this is for cannon objects
 export var world = new CANNON.World({
-    gravity: new CANNON.Vec3(0, -20, 0)
+    gravity: new CANNON.Vec3(0, -9.8, 0)
 });
 
 // TODO: Figure out what this does where its exported and why it is required
@@ -79,7 +79,7 @@ class InnerWall {
         const wallMaterial1 = new THREE.MeshStandardMaterial({
             color: "#DEC4B0",
             side: THREE.DoubleSide,
-            wireframe: false,
+            wireframe: true,
         });
         this.mesh1 = new THREE.Mesh(wallGeometry1, wallMaterial1);
         
@@ -87,7 +87,7 @@ class InnerWall {
         const wallMaterial2 = new THREE.MeshStandardMaterial({
             color: "#DEC4B0",
             side: THREE.DoubleSide,
-            wireframe: false,
+            wireframe: true,
         });
         this.mesh2 = new THREE.Mesh(wallGeometry2, wallMaterial2);
         
@@ -474,8 +474,8 @@ function addWalls() {
     const wallPuzz3back = new Wall(scene, world, new CANNON.Vec3(-blockWidth, 0, -blockWidth), new CANNON.Vec3(0, rotationAngle, 0));
 
     const lobbyExit = new InnerWall(scene, world, new CANNON.Vec3(blockWidth / 2, 0, blockWidth / 2), new CANNON.Vec3(0, (Math.PI / 1), 0));
-    const puzz1Exit = new InnerWall(scene, world, new CANNON.Vec3(blockWidth / 2, 0, -blockWidth / 2), new CANNON.Vec3(0, (Math.PI / 1), 0));
-    const puzz2Exit = new InnerWall(scene, world, new CANNON.Vec3(0, 0, -blockWidth), new CANNON.Vec3(0, (Math.PI / 2), 0));
+    const puzz1Exit = new InnerWall(scene, world, new CANNON.Vec3(blockWidth / 2, 0, -blockWidth / 2 + 20), new CANNON.Vec3(0, (Math.PI / 1), 0));
+    const puzz2Exit = new InnerWall(scene, world, new CANNON.Vec3(-33.5, 0, -blockWidth), new CANNON.Vec3(0, (Math.PI / 2), 0));
 
 }
 
