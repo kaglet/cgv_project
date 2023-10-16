@@ -178,7 +178,7 @@ let tile;
     return tile;
 }
 
-function createPiP2Tile(index, PiP) {
+function createPiPTile(index, PiP) {
     const tile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
     tile.userData.tileNumber = index; // Store the tile number in user data
     tile.castShadow = true;
@@ -233,7 +233,7 @@ function createPiP2Tile(index, PiP) {
         if( [17, 15, 69, 71].includes(index)){
         // Create a rounded square
         const squareGeometry = new THREE.BoxGeometry(1.5, 1.5, 5); // Adjust the size and depth
-        const squareMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff }); // Red color, adjust as needed
+        const squareMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff }); 
         const square = new THREE.Mesh(squareGeometry, squareMaterial);
         tile.add(square);
         }
@@ -241,10 +241,45 @@ function createPiP2Tile(index, PiP) {
         if( [11, 13, 65, 67 ].includes(index)){
             // Create a rounded square
             const squareGeometry = new THREE.BoxGeometry(1.5, 1.5, 5); // Adjust the size and depth
-            const squareMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 }); // Red color, adjust as needed
+            const squareMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 });
             const square = new THREE.Mesh(squareGeometry, squareMaterial);
             tile.add(square);
             }
+    }
+
+    if(PiP == 3){
+        //Draw Square Up
+        if([29,31,53].includes(index)){
+            const squareGeometry = new THREE.BoxGeometry(1.5, 5.6, 2); // Adjust the size and depth
+            const squareMaterial = new THREE.MeshStandardMaterial({ color:  0xFFA500 }); 
+            const square = new THREE.Mesh(squareGeometry, squareMaterial);
+            square.position.set(0,-5.1,0);
+            tile.add(square);
+
+        }
+
+        //Draw Square right
+        if([67,33].includes(index)){
+            const squareGeometry = new THREE.BoxGeometry(5.6, 1.5, 2); // Adjust the size and depth
+            const squareMaterial = new THREE.MeshStandardMaterial({ color:  0xFFA500 }); 
+            const square = new THREE.Mesh(squareGeometry, squareMaterial);
+            square.position.set(5.1,0,0);
+            tile.add(square);
+
+
+        }
+
+        //Draw Circle
+        if([66,34].includes(index)){
+            const circleGeometry =  new THREE.CylinderGeometry(2.5, 1, 2, 32);
+            const circleMaterial = new THREE.MeshStandardMaterial({ color: 0x000000}); 
+            const circle = new THREE.Mesh(circleGeometry, circleMaterial);
+            circle.rotation.set(Math.PI / 2, Math.PI / 2, 0);
+            //circle.position.set(0,0,1);
+            tile.add(circle);
+
+
+        }
     }
 
     const tilePosition = tile.position.clone();
@@ -305,9 +340,9 @@ function drawPiP(container, omittedTiles = [], PiP) {
     for (let i = 0; i < numRows; i++) {
         for (let j = 0; j < numCols; j++) {
             const tileNumber = i * numCols + j + 1;    
-                    const tile = createPiP2Tile(tileNumber,PiP);
-                    const xOffset = (i - numRows / 2) * (tileSize + gapSize);
-                    const yOffset = (j - numCols / 2) * (tileSize + gapSize);
+                    const tile = createPiPTile(tileNumber,PiP);
+                    const xOffset = (i - numRows / 2) * (tileSize);
+                    const yOffset = (j - numCols / 2) * (tileSize);
                     tile.name = 'tile';
                     tile.litUp = false;
                     tile.position.set(xOffset, yOffset, 0);
@@ -605,6 +640,9 @@ function makeMazes() {
     drawPiP(PiP2,[],2);
     changePathColor(PiP2, pathPiP2AND3, 0xff00ff);
 
+    drawPiP(PiP3,[],3);
+    changePathColor(PiP3, pathPiP2AND3, 0xFFA500);
+
     
 
 
@@ -731,6 +769,9 @@ function tileLights() {
                 // TODO: Make tiles sink also upon intersection, just shift slightly in the z
                 // How do I position the tiles, is it within the floor container, using current position -= 1 for z for example or do I do a local transformation in floor?
                 // TODO: Elevate tiles a bit from the ground they are on or simply shift the whole floor container
+                const whiteTile = new THREE.Color(255,255,255);
+                PiP3.children[tile.userData.tileNumber - 1].material.color.copy(whiteTile);
+                console.log("Index: " + tile.userData.tileNumber);
             }
         });
     }
@@ -817,16 +858,13 @@ export const floorContainerRed = new THREE.Group();
 export const floorContainerBlue = new THREE.Group();
 export const PiP2 = new THREE.Group();
 export const PiP1 = new THREE.Group();
+export const PiP3 = new THREE.Group();
 makeMazes();
 
 
 addFloorBodies();
 
 
-//pip
-
-//export const PiP2 = floorContainerRed.clone();
-export const PiP3 = floorContainerBlue.clone();
 PiP();
 
 
