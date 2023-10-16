@@ -1999,12 +1999,12 @@ export function loadModels(loader, scene, world, blockWidth){
             modelLeft.scale.set(0.2, height, depth);
             modelLeft.position.set(positionX - 33.5, positionY, positionZ - offsetCurvedEdgesShift - partWidth / 2 - gapWidth / 2);
 
-<<<<<<< HEAD
+
             modelRight.scale.set(0.2, height, depth);
             modelRight.position.set(positionX - 33.5, positionY, positionZ + partWidth / 2 + gapWidth / 2);
             
             adjustment10 -= 18.7;
-=======
+
 // export function loadModels(loader, scene, world, blockWidth) {
 
 //     // loader.load('/ground_material.glb', function (gltf) {
@@ -2014,7 +2014,7 @@ export function loadModels(loader, scene, world, blockWidth){
 //     //     gltf.scene.position.x = 0;
 //     //     gltf.scene.position.z = 0;
 //     //     scene.add(gltf.scene);
->>>>>>> new_b
+
 
             modelLeft.rotateY(-Math.PI / 2);
             modelRight.rotateY(-Math.PI / 2);
