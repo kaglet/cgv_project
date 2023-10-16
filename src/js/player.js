@@ -409,7 +409,7 @@ class BasicCharacterControllerInput {
 
 
   //key press listeners
-  moveForwardSoundPlaying = false ;
+  //moveForwardSoundPlaying = false ;
 
   _onKeyDown(event) {
     if (!paused) {
@@ -438,7 +438,7 @@ class BasicCharacterControllerInput {
 
   _onKeyUp(event) {
     //moveSound.stop();
-    this._checkAndPlayMoveSound();
+   // this._checkAndPlayMoveSound();
     switch (event.keyCode) {
       case 87: // w
         moveForward = false;
@@ -458,6 +458,11 @@ class BasicCharacterControllerInput {
         moveRight = false;
        // moveSound.stop();
         break;
+    }
+    if (moveForward || moveBackward || moveRight || moveLeft) {
+      moveSound.play();
+    } else {
+      moveSound.stop();
     }
   }
 };
