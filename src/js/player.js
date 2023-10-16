@@ -25,10 +25,10 @@ const listener = new THREE.AudioListener();
 //camera.add( listener );
 const moveSound = new THREE.Audio(listener);
 const moveSoundLoader = new THREE.AudioLoader();
-moveSoundLoader.load('./Audio/footsteps-dirt-gravel-6823.mp3', function (buffer) {
+moveSoundLoader.load('Audio/footsteps-dirt-gravel-6823.mp3', function (buffer) {
   moveSound.setBuffer(buffer);
   moveSound.setLoop( true );
-  moveSound.setVolume(10); // Set the volume as needed
+  moveSound.setVolume(1); // Set the volume as needed
 });
 
 let velocity = new THREE.Vector3();
@@ -38,7 +38,8 @@ let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
 let moveRight = false;
-let paused = false;
+export var paused = false;
+
 export let playerBody;
 export let characterModel = null;
 let height;

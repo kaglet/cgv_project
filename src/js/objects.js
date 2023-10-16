@@ -657,7 +657,7 @@ function tileLights() {
                 tile.material.color.copy(tileColor);
                 tile.litUp = true;
                 litUpTiles2.push(tile.userData.tileNumber);
-                console.log(litUpTiles2);
+
                 const haveSameValues = path2.every(value => litUpTiles2.includes(value) && litUpTiles2.length === path2.length);
                 if (haveSameValues) {
                     console.log("Path 2 correct.");
@@ -761,7 +761,28 @@ const tileMaterial = new THREE.MeshStandardMaterial({
     transparent: true,
 });
 
-
+//const radius = 4; // Radius of the semicircle
+//const height = 1.3; // Height of the semicircle
+//
+//// Create a 2D shape for the semicircle
+//const semicircleShape = new THREE.Shape();
+//semicircleShape.moveTo(20, 0);
+//semicircleShape.absarc(0, 0, radius, 0, Math.PI, false);
+//
+//// Extrude the shape to create a 3D geometry
+//const extrudeSettings = {
+//  steps: 1, // Number of steps (1 for a flat semicircle)
+//  depth: height, // Extrusion depth
+//  bevelEnabled: false, // No bevel
+//};
+//
+//const semicircleGeometry = new THREE.ExtrudeGeometry(semicircleShape, extrudeSettings);
+//
+//// Create a mesh using the semicircle geometry
+//const semicircleMesh = new THREE.Mesh(semicircleGeometry, new THREE.MeshBasicMaterial({ color: 0xff0000 }));
+//
+//// Add the semicircle to your scene
+//scene.add(semicircleMesh);
 
 const tiles = [];
 
