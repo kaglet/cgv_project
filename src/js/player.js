@@ -67,7 +67,7 @@ class BasicCharacterController {
     playerBody = new CANNON.Body({
       mass: 100, // Adjust the mass as needed
       //     shape: new CANNON.Box(new CANNON.Vec3(1, 5, 1)),
-      position: new CANNON.Vec3(125, 5, 125),
+      position: new CANNON.Vec3(200, 10, -400),
       material: playerPhysMat
     });
 

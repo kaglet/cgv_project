@@ -90,9 +90,9 @@ export function loadModels(loader, scene, world, blockWidth){
 
     loader.load('/luffy.glb', function (gltf) {
         const luffyModel = gltf.scene;
-        luffyModel.rotation.y = -Math.PI / 2;
+        luffyModel.rotation.y = -Math.PI / 4;
         luffyModel.scale.set(0.15, 0.15, 0.15);
-        luffyModel.position.set(60, 35, 0);
+        luffyModel.position.set(225, -2, -385);
 
         // Calculate dimensions of the Luffy model
         const boundingBox = new THREE.Box3().setFromObject(luffyModel);
@@ -100,21 +100,109 @@ export function loadModels(loader, scene, world, blockWidth){
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
 
-        // Create Cannon.js body shape for Luffy model
-        // const luffyShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        //
-        // // Create Cannon.js body for Luffy model
-        // const luffyBody = new CANNON.Body({
-        //     mass: 0, // Adjust mass as needed
-        //     position: new CANNON.Vec3(0, -2, -40) // Initial position of the model
-        // });
-        // luffyBody.addShape(luffyShape);
-        // world.addBody(luffyBody);
+       // Create Cannon.js body shape for Luffy model
+        const luffyShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
+
+        // Create Cannon.js body for Luffy model
+        const luffyBody = new CANNON.Body({
+            mass: 0, // Adjust mass as needed
+            position: new CANNON.Vec3(225, -2, -385) // Initial position of the model
+        });
+        luffyBody.addShape(luffyShape);
+        world.addBody(luffyBody);
 
         scene.add(luffyModel);
 
         // Print the size of the Luffy model
         console.log('Luffy Model Size - Width:', width, 'Height:', height, 'Depth:', depth);
+
+        // Create wireframe mesh for visualization
+        const wireframeGeometry = new THREE.BoxGeometry(width, height, depth);
+        const wireframeMaterial = new THREE.MeshBasicMaterial({
+            color: 0x00ff00,
+            wireframe: true
+        });
+        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
+
+        // Position the wireframe mesh at the same position as the model
+        wireframeMesh.position.set(0, 10, -40);
+
+        // Add the wireframe mesh to the scene
+        scene.add(wireframeMesh);
+    }, undefined, function (error) {
+        console.error(error);
+    });
+    loader.load('/lucy.glb', function (gltf) {
+        const lucyModel = gltf.scene;
+        lucyModel.rotation.y = Math.PI ;
+        lucyModel.scale.set(30, 30, 30);
+        lucyModel.position.set(100, -5, -300);
+
+        // Calculate dimensions of the Luffy model
+        const boundingBox = new THREE.Box3().setFromObject(lucyModel);
+        const width = boundingBox.max.x - boundingBox.min.x;
+        const height = boundingBox.max.y - boundingBox.min.y;
+        const depth = boundingBox.max.z - boundingBox.min.z;
+
+        // Create Cannon.js body shape for Luffy model
+        const lucyShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
+
+        // Create Cannon.js body for Luffy model
+        const lucyBody = new CANNON.Body({
+            mass: 0, // Adjust mass as needed
+            position: new CANNON.Vec3(100, -5, -300) // Initial position of the model
+        });
+        lucyBody.addShape(lucyShape);
+        world.addBody(lucyBody);
+
+        scene.add(lucyModel);
+
+        // Print the size of the Luffy model
+        console.log('Luffy Model Size - Width:', width, 'Height:', height, 'Depth:', depth);
+
+        // Create wireframe mesh for visualization
+        const wireframeGeometry = new THREE.BoxGeometry(width, height, depth);
+        const wireframeMaterial = new THREE.MeshBasicMaterial({
+            color: 0x00ff00,
+            wireframe: true
+        });
+        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
+
+        // Position the wireframe mesh at the same position as the model
+        wireframeMesh.position.set(0, 10, -40);
+
+        // Add the wireframe mesh to the scene
+        scene.add(wireframeMesh);
+    }, undefined, function (error) {
+        console.error(error);
+    });
+    loader.load('/nami.glb', function (gltf) {
+        const lucyModel = gltf.scene;
+        lucyModel.rotation.y = Math.PI ;
+        lucyModel.scale.set(1400, 1400, 1400);
+        lucyModel.position.set(151, 0, -300);
+
+        // Calculate dimensions of the Luffy model
+        const boundingBox = new THREE.Box3().setFromObject(lucyModel);
+        const width = boundingBox.max.x - boundingBox.min.x;
+        const height = boundingBox.max.y - boundingBox.min.y;
+        const depth = boundingBox.max.z - boundingBox.min.z;
+
+        // Create Cannon.js body shape for Luffy model
+        const lucyShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
+
+        // Create Cannon.js body for Luffy model
+        const lucyBody = new CANNON.Body({
+            mass: 0, // Adjust mass as needed
+            position: new CANNON.Vec3(150, 0, -325) // Initial position of the model
+        });
+        lucyBody.addShape(lucyShape);
+        world.addBody(lucyBody);
+
+        scene.add(lucyModel);
+
+        // Print the size of the Luffy model
+        console.log('Nami Model Size - Width:', width, 'Height:', height, 'Depth:', depth);
 
         // Create wireframe mesh for visualization
         const wireframeGeometry = new THREE.BoxGeometry(width, height, depth);
@@ -318,7 +406,7 @@ export function loadModels(loader, scene, world, blockWidth){
         // Adjust rotation, scale, and position as needed
         fairyForestSkybox.rotation.y = Math.PI / 4; // Example rotation: 45 degrees around the y-axis
         fairyForestSkybox.scale.set(0.02, 0.02, 0.02); // Example scale: adjust as needed
-        fairyForestSkybox.position.set(103, 51, -33); // Place it on top of the pillar
+        fairyForestSkybox.position.set(103, 55, -33); // Place it on top of the pillar
 
         // Add the Fairy Forest Skybox model to the scene
         scene.add(fairyForestSkybox);
