@@ -5,7 +5,7 @@ import * as lighting from './lighting.js';
 import * as camera from './camera.js';
 
 import * as THREE from 'three';
-import { getLastTimestamp, setLastTimestamp } from './player.js';
+
 
 
 
@@ -68,8 +68,7 @@ function startGame() {
       }
 
       if (!player.paused) {
-        const deltaTime = (t - getLastTimestamp()) / 1000; // Convert milliseconds to seconds
-        setLastTimestamp(t);
+
 
         objects.world.step(1/60);
         objects.animate_objects();

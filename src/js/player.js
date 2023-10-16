@@ -39,25 +39,11 @@ let moveBackward = false;
 let moveLeft = false;
 let moveRight = false;
 export var paused = false;
-let _lastTimestamp=0;
+
 export let playerBody;
 export let characterModel = null;
 let height;
 // export let playerPhysMat = new CANNON.Material();
-
-
-function getLastTimestamp() {
-  return _lastTimestamp;
-}
-
-// Define a setter method
-function setLastTimestamp(value) {
-  _lastTimestamp = value;
-}
-
-// Export the getter and setter
-export { getLastTimestamp, setLastTimestamp };
-
 
 class BasicCharacterControllerProxy {
   constructor(animations) {
@@ -401,11 +387,9 @@ class BasicCharacterControllerInput {
 
     controls.addEventListener('lock', function () {
       paused=false;
-      _lastTimestamp=performance.now;
       instructions.style.display = 'none';
       blocker.style.display = 'none';
       pausedScreen.style.display = 'none';
-       playerBody.mass = 0;
     });
 
     controls.addEventListener('unlock', function () {
@@ -417,7 +401,6 @@ class BasicCharacterControllerInput {
       moveBackward=false;
       moveRight=false;
       moveLeft=false;
-      playerBody.mass = 0;
     });
 
     objects.scene.add(controls.getObject());
@@ -427,7 +410,7 @@ class BasicCharacterControllerInput {
 
 
   //key press listeners
-  moveForwardSoundPlaying = false ;
+  //moveForwardSoundPlaying = false ;
 
   _onKeyDown(event) {
     if (!paused) {
@@ -456,7 +439,7 @@ class BasicCharacterControllerInput {
 
   _onKeyUp(event) {
     //moveSound.stop();
-    //this._checkAndPlayMoveSound();
+   // this._checkAndPlayMoveSound();
     switch (event.keyCode) {
       case 87: // w
         moveForward = false;
