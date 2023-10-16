@@ -188,10 +188,6 @@ class Gate {
 }
 
 
-
-
-
-
 class floorContBody {
     constructor(scene, world, container) {
         // Create floors bodies
@@ -226,8 +222,10 @@ class floorContBody {
     }
 }
 
+function puzzComplete(puzNum){
 
-// DEFINE FUNCTIONS
+}
+
 
 function createTile(index,round,container) {
 let tile;
@@ -434,11 +432,6 @@ function createPiPTile(index, PiP) {
 
     return tile;
 }
-
-
-
-
-
 
 // Function to add or omit tiles based on tile numbers
 function drawGridWithOmissions(container, omittedTiles = [],round) {
@@ -827,6 +820,7 @@ function tileLights() {
                 const haveSameValues = path1.every(value => litUpTiles1.includes(value) && litUpTiles1.length === path1.length);
                 if (haveSameValues) {
                     console.log("Path 1 correct.");
+                    puzzComplete(Green);
                 }
                 // TODO: Make tiles sink also upon intersection, just shift slightly in the z
                 // How do I position the tiles, is it within the floor container, using current position -= 1 for z for example or do I do a local transformation in floor?
@@ -864,6 +858,7 @@ function tileLights() {
                 const haveSameValues = path2.every(value => litUpTiles2.includes(value) && litUpTiles2.length === path2.length);
                 if (haveSameValues) {
                     console.log("Path 2 correct.");
+                    puzzComplete(Red);
                 }
                 // TODO: Make tiles sink also upon intersection, just shift slightly in the z
                 // How do I position the tiles, is it within the floor container, using current position -= 1 for z for example or do I do a local transformation in floor?
@@ -901,6 +896,7 @@ function tileLights() {
                 const haveSameValues = path3.every(value => litUpTiles3.includes(value) && litUpTiles3.length === path3.length);
                 if (haveSameValues) {
                     console.log("Path 3 correct.");
+                    puzzComplete(Blue);
                 }
                 // TODO: Make tiles sink also upon intersection, just shift slightly in the z
                 // How do I position the tiles, is it within the floor container, using current position -= 1 for z for example or do I do a local transformation in floor?
