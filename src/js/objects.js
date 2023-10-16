@@ -102,9 +102,10 @@ class floorContBody {
 
 // DEFINE FUNCTIONS
 
-function createTile(index,round) {
+function createTile(index,round,container) {
 let tile;
     if(index!=81){
+
          tile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
           // Add cylinders at each corner of the tile
              const cornerCylinderGeometry = new THREE.CylinderGeometry(0.1, 0.1, 5, 32); // Adjusted size
@@ -121,6 +122,34 @@ let tile;
                  tilePosition.clone().add(new THREE.Vector3(-tileSize / 2, tileSize / 2, 0)),
                  tilePosition.clone().add(new THREE.Vector3(tileSize / 2, tileSize / 2, 0)),
              ];
+
+             if(index==1 && container== floorContainerGreen ){
+                     // Create a mesh using the semicircle geometry
+                     const semicircleMesh = new THREE.Mesh(semicircleGeometry, tileMaterial);
+
+                     semicircleMesh.position.set(0,-2.5,0);
+                     semicircleMesh.rotation.x = Math.PI;
+                     // Add the semicircle to your scene
+                     tile.add(semicircleMesh);
+                 }
+              if(index==5 && container== floorContainerRed ){
+                  // Create a mesh using the semicircle geometry
+                  const semicircleMesh = new THREE.Mesh(semicircleGeometry, tileMaterial);
+
+                  semicircleMesh.position.set(-2.5,0,0);
+                  semicircleMesh.rotation.z = Math.PI/2;
+                  // Add the semicircle to your scene
+                  tile.add(semicircleMesh);
+              }
+               if(index==19 && container== floorContainerBlue ){
+                   // Create a mesh using the semicircle geometry
+                   const semicircleMesh = new THREE.Mesh(semicircleGeometry, tileMaterial);
+
+                   semicircleMesh.position.set(0,-2.5,0);
+                   semicircleMesh.rotation.x = Math.PI;
+                   // Add the semicircle to your scene
+                   tile.add(semicircleMesh);
+               }
 
              const halfCylinderHeight = 5 / 2; // Half of the cylinder's height
 
@@ -257,7 +286,7 @@ function drawGridWithOmissions(container, omittedTiles = [],round) {
             if (!omittedTiles.includes(tileNumber)) {
                 const isMissingTile = (i % 2 === 0 && j % 2 === 0) || (i % 2 === 1 && j % 2 === 1);
                 if (!isMissingTile || i % 4 === 0 || (i - 2) % 4 === 0) {
-                    const tile = createTile(tileNumber,round);
+                    const tile = createTile(tileNumber,round,container);
                     const xOffset = (i - numRows / 2) * (tileSize + gapSize);
                     const yOffset = (j - numCols / 2) * (tileSize + gapSize);
                     tile.name = 'tile';
@@ -761,28 +790,24 @@ const tileMaterial = new THREE.MeshStandardMaterial({
     transparent: true,
 });
 
-//const radius = 4; // Radius of the semicircle
-//const height = 1.3; // Height of the semicircle
-//
-//// Create a 2D shape for the semicircle
-//const semicircleShape = new THREE.Shape();
-//semicircleShape.moveTo(20, 0);
-//semicircleShape.absarc(0, 0, radius, 0, Math.PI, false);
-//
-//// Extrude the shape to create a 3D geometry
-//const extrudeSettings = {
-//  steps: 1, // Number of steps (1 for a flat semicircle)
-//  depth: height, // Extrusion depth
-//  bevelEnabled: false, // No bevel
-//};
-//
-//const semicircleGeometry = new THREE.ExtrudeGeometry(semicircleShape, extrudeSettings);
-//
-//// Create a mesh using the semicircle geometry
-//const semicircleMesh = new THREE.Mesh(semicircleGeometry, new THREE.MeshBasicMaterial({ color: 0xff0000 }));
-//
-//// Add the semicircle to your scene
-//scene.add(semicircleMesh);
+const radius = 2.5; // Radius of the semicircle
+const height = 0.8; // Height of the semicircle
+
+// Create a 2D shape for the semicircle
+const semicircleShape = new THREE.Shape();
+
+semicircleShape.absarc(0, 0, radius, 0, Math.PI, false);
+
+// Extrude the shape to create a 3D geometry
+const extrudeSettings = {
+  steps: 1, // Number of steps (1 for a flat semicircle)
+  depth: height, // Extrusion depth
+  bevelEnabled: false, // No bevel
+};
+
+const semicircleGeometry = new THREE.ExtrudeGeometry(semicircleShape, extrudeSettings);
+
+
 
 const tiles = [];
 
