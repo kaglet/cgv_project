@@ -151,9 +151,54 @@ class InnerWall {
     }
 }
 
+class Gate {
+    
 
+    constructor(scene, world, position, rotation) {
+        // Create Three.js wall
+        const gateGeometry = new THREE.BoxGeometry(50, 70, 2);
+        const gateMaterial = new THREE.MeshStandardMaterial({
+            color: "red",
+            side: THREE.DoubleSide,
+            wireframe: false,
+        });
 
+        this.mesh = new THREE.Mesh(gateGeometry, gateMaterial);
+        scene.add(this.mesh);
 
+        // Create Cannon.js wall
+        const gatePhysMat = new CANNON.Material()
+        const gateShape = new CANNON.Box(new CANNON.Vec3(25 / 2, 35, 1));
+        this.body = new CANNON.Body({
+            mass: 0,
+            shape: gateShape,
+            material: gatePhysMat,
+        });
+
+        // Set the initial position and rotation for the Cannon.js body
+        this.body.position.copy(position);
+        this.body.quaternion.setFromEuler(rotation.x, rotation.y, rotation.z);
+
+        // Add the Cannon.js body to the world
+        world.addBody(this.body);
+
+        // Update the Three.js mesh position and rotation based on the Cannon.js body
+        this.mesh.position.copy(this.body.position);
+        this.mesh.quaternion.copy(this.body.quaternion);
+    }
+
+    opengate(angle) {
+        // Calculate the rotation in radians (assuming angle is in degrees)
+        const rotationAngle = (Math.PI / 180) * angle;
+        
+
+        // Rotate the Cannon.js body
+        this.body.quaternion.setFromEuler(0, rotationAngle, 0);
+
+        // Update the Three.js mesh rotation based on the Cannon.js body
+        this.mesh.quaternion.copy(this.body.quaternion);
+    }
+}
 
 
 class floorContBody {
@@ -190,8 +235,19 @@ class floorContBody {
     }
 }
 
+function puzzComplete(puzz){
+    if (puzz == 'Blue'){
 
-// DEFINE FUNCTIONS
+        puzz1Gate.opengate(90);
+
+    }
+    else{
+        puzz2Gate.opengate(90);
+    }
+    
+
+}
+
 
 function createTile(index, round, container) {
     let tile;
@@ -214,33 +270,39 @@ function createTile(index, round, container) {
             tilePosition.clone().add(new THREE.Vector3(tileSize / 2, tileSize / 2, 0)),
         ];
 
-        if (index == 1 && container == floorContainerGreen) {
-            // Create a mesh using the semicircle geometry
-            const semicircleMesh = new THREE.Mesh(semicircleGeometry, tileMaterial);
+             if(index==1 && container== floorContainerGreen ){
+                     // Create a mesh using the semicircle geometry
+                    const semicircleMesh1 = new THREE.Mesh(semicircleGeometry, tileMaterial.clone());
+                    semicircleMesh1.litUp=false;
 
-            semicircleMesh.position.set(0, -2.5, 0);
-            semicircleMesh.rotation.x = Math.PI;
-            // Add the semicircle to your scene
-            tile.add(semicircleMesh);
-        }
-        if (index == 5 && container == floorContainerRed) {
-            // Create a mesh using the semicircle geometry
-            const semicircleMesh = new THREE.Mesh(semicircleGeometry, tileMaterial);
+                     semicircleMesh1.position.set(0,-2.5,0);
+                     semicircleMesh1.rotation.x = Math.PI;
+                     // Add the semicircle to your scene
+                     tile.add(semicircleMesh1);
+                     tile.semicircleMesh1 = semicircleMesh1;
+                 }
+              if(index==5 && container== floorContainerRed ){
+                  // Create a mesh using the semicircle geometry
+                    const semicircleMesh = new THREE.Mesh(semicircleGeometry, tileMaterial.clone());
+                    semicircleMesh.litUp=false;
 
-            semicircleMesh.position.set(-2.5, 0, 0);
-            semicircleMesh.rotation.z = Math.PI / 2;
-            // Add the semicircle to your scene
-            tile.add(semicircleMesh);
-        }
-        if (index == 19 && container == floorContainerBlue) {
-            // Create a mesh using the semicircle geometry
-            const semicircleMesh = new THREE.Mesh(semicircleGeometry, tileMaterial);
+                  semicircleMesh.position.set(-2.5,0,0);
+                  semicircleMesh.rotation.z = Math.PI/2;
+                  // Add the semicircle to your scene
+                  tile.add(semicircleMesh);
+                  tile.semicircleMesh = semicircleMesh;
+              }
+               if(index==19 && container== floorContainerBlue ){
+                   // Create a mesh using the semicircle geometry
+                    const semicircleMesh3 = new THREE.Mesh(semicircleGeometry, tileMaterial.clone());
+                    semicircleMesh3.litUp=false;
 
-            semicircleMesh.position.set(0, -2.5, 0);
-            semicircleMesh.rotation.x = Math.PI;
-            // Add the semicircle to your scene
-            tile.add(semicircleMesh);
-        }
+                   semicircleMesh3.position.set(0,-2.5,0);
+                   semicircleMesh3.rotation.x = Math.PI;
+                   // Add the semicircle to your scene
+                   tile.add(semicircleMesh3);
+                   tile.semicircleMesh3 = semicircleMesh3;
+               }
 
         const halfCylinderHeight = 5 / 2; // Half of the cylinder's height
 
@@ -266,7 +328,7 @@ function createTile(index, round, container) {
 
 
 
-    return tile;
+     return tile;
 }
 
 function createPiPTile(index, PiP) {
@@ -399,11 +461,6 @@ function createPiPTile(index, PiP) {
     return tile;
 }
 
-
-
-
-
-
 // Function to add or omit tiles based on tile numbers
 function drawGridWithOmissions(container, omittedTiles = [], round) {
     for (let i = 0; i < numRows; i++) {
@@ -412,14 +469,15 @@ function drawGridWithOmissions(container, omittedTiles = [], round) {
             if (!omittedTiles.includes(tileNumber)) {
                 const isMissingTile = (i % 2 === 0 && j % 2 === 0) || (i % 2 === 1 && j % 2 === 1);
                 if (!isMissingTile || i % 4 === 0 || (i - 2) % 4 === 0) {
-                    const tile = createTile(tileNumber, round, container);
+                    const tile = createTile(tileNumber,round,container);
+
                     const xOffset = (i - numRows / 2) * (tileSize + gapSize);
                     const yOffset = (j - numCols / 2) * (tileSize + gapSize);
                     tile.name = 'tile';
                     tile.litUp = false;
                     tile.position.set(xOffset, yOffset, 0);
                     tile.updateWorldMatrix(true, false);
-                    container.add(tile); // Add the tile to the specified container
+                    container.add(tile);                    // Add the tile to the specified container
                 }
             }
         }
@@ -476,6 +534,12 @@ function addWalls() {
     const lobbyExit = new InnerWall(scene, world, new CANNON.Vec3(blockWidth / 2, 0, blockWidth / 2 - 9), new CANNON.Vec3(0, (Math.PI / 1), 0));
     const puzz1Exit = new InnerWall(scene, world, new CANNON.Vec3(blockWidth / 2, 0, -blockWidth / 2 + 9), new CANNON.Vec3(0, (Math.PI / 1), 0));
     const puzz2Exit = new InnerWall(scene, world, new CANNON.Vec3(-24.5, 0, -blockWidth), new CANNON.Vec3(0, (Math.PI / 2), 0));
+
+    lobbyGate = new Gate(scene, world, new CANNON.Vec3(blockWidth / 2, 0, blockWidth / 2), new CANNON.Vec3(0, (Math.PI / 1), 0));
+   
+    puzz1Gate = new Gate(scene, world, new CANNON.Vec3(blockWidth / 2, 0, -blockWidth / 2), new CANNON.Vec3(0, (Math.PI / 1), 0));
+
+    puzz2Gate = new Gate(scene, world, new CANNON.Vec3(0, 0, -blockWidth), new CANNON.Vec3(0, (Math.PI / 2), 0));
 
 }
 
@@ -677,9 +741,9 @@ function makeMazes() {
     drawGridWithOmissions(floorContainerRed, [30, 38, 78], 5);
     drawGridWithOmissions(floorContainerBlue, [28, 30, 42, 52, 76], 19);
 
-    changePathColor(floorContainerGreen, path1, 0x00ff00); // Green
-    changePathColor(floorContainerRed, path2, 0xff0000); // Red
-    changePathColor(floorContainerBlue, path3, 0x0000FF);//blue
+   changePathColor(floorContainerGreen, path1, 0x00ff00); // Green
+   changePathColor(floorContainerRed, path2, 0xff0000); // Red
+   changePathColor(floorContainerBlue, path3, 0x0000FF);//blue
 
     //Draw PiPs
     drawPiP(PiP1, [], 1);
@@ -731,14 +795,19 @@ function tileLights() {
             let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
 
             if (tile.litUp === false && inXBounds && inZBounds && Math.abs(player.characterModel.position.y - tileWorldPosition.y) < epsilon) {
-                const tileColor = new THREE.Color(255, 255, 0);
+                const tileColor = new THREE.Color(0, 255, 0);
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
                 tile.litUp = true;
+                if(tile.userData.tileNumber==1){
+                    tile.semicircleMesh1.litUp=true;
+                    tile.semicircleMesh1.material.color.copy(tileColor);
+                }
                 litUpTiles1.push(tile.userData.tileNumber);
                 const haveSameValues = path1.every(value => litUpTiles1.includes(value) && litUpTiles1.length === path1.length);
                 if (haveSameValues) {
                     console.log("Path 1 correct.");
+                    puzzComplete("Green");
                 }
                 // TODO: Make tiles sink also upon intersection, just shift slightly in the z
                 // How do I position the tiles, is it within the floor container, using current position -= 1 for z for example or do I do a local transformation in floor?
@@ -750,7 +819,7 @@ function tileLights() {
 
 
 
-        floorContainerRed.children.forEach((tile, index) => {
+        floorContainerRed.children.forEach((tile,semicircleMesh, index) => {
             const epsilon = 3; // Small epsilon value to handle floating point errors
             const tileWorldPosition = new THREE.Vector3();
             tile.getWorldPosition(tileWorldPosition);
@@ -767,15 +836,20 @@ function tileLights() {
             let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
 
             if (tile.litUp === false && inXBounds && inZBounds && Math.abs(player.characterModel.position.y - tileWorldPosition.y) < epsilon) {
-                const tileColor = new THREE.Color(255, 255, 0);
+                const tileColor = new THREE.Color(255, 0, 0);
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
                 tile.litUp = true;
+                if(tile.userData.tileNumber==5){
+                    tile.semicircleMesh.litUp=true;
+                    tile.semicircleMesh.material.color.copy(tileColor);
+                }
                 litUpTiles2.push(tile.userData.tileNumber);
 
                 const haveSameValues = path2.every(value => litUpTiles2.includes(value) && litUpTiles2.length === path2.length);
                 if (haveSameValues) {
                     console.log("Path 2 correct.");
+                    puzzComplete("Red");
                 }
                 // TODO: Make tiles sink also upon intersection, just shift slightly in the z
                 // How do I position the tiles, is it within the floor container, using current position -= 1 for z for example or do I do a local transformation in floor?
@@ -805,14 +879,20 @@ function tileLights() {
             let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
 
             if (tile.litUp === false && inXBounds && inZBounds && Math.abs(player.characterModel.position.y - tileWorldPosition.y) < epsilon) {
-                const tileColor = new THREE.Color(255, 255, 0);
+                const tileColor = new THREE.Color(0, 0, 255);
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
+
                 tile.litUp = true;
+                if(tile.userData.tileNumber==19){
+                    tile.semicircleMesh3.litUp=true;
+                    tile.semicircleMesh3.material.color.copy(tileColor);
+                }
                 litUpTiles3.push(tile.userData.tileNumber);
                 const haveSameValues = path3.every(value => litUpTiles3.includes(value) && litUpTiles3.length === path3.length);
                 if (haveSameValues) {
                     console.log("Path 3 correct.");
+                    puzzComplete("Blue");
                 }
                 // TODO: Make tiles sink also upon intersection, just shift slightly in the z
                 // How do I position the tiles, is it within the floor container, using current position -= 1 for z for example or do I do a local transformation in floor?
@@ -914,10 +994,77 @@ addFloorBodies();
 PiP();
 
 
-
+let lobbyGate;
+let puzz1Gate;
+let puzz2Gate;
 addWalls();
+lobbyGate.opengate(90);
 
-//Sound
+document.addEventListener('keydown', (event) => {
+    if (event.key === ' ' || event.key === 'Spacebar') {
+     const tileColor = 0xffffff;
+        levelAreas.forEach((area, index) => {
+            let rangeInX = area.sizeFromBoundingBox.x / 2;
+            let rangeInZ = area.sizeFromBoundingBox.z / 2;
+
+            const areaWorldPosition = new THREE.Vector3();
+            area.getWorldPosition(areaWorldPosition);
+
+            let inXBounds = areaWorldPosition.x - rangeInX <= player.characterModel.position.x && player.characterModel.position.x <= areaWorldPosition.x + rangeInX;
+            let inZBounds = areaWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= areaWorldPosition.z + rangeInZ;
+
+            if (inXBounds && inZBounds) {
+              if (index == 0) {
+                console.log('Reset green');
+                litUpTiles1=[];
+                 PiP1.children.forEach((tile) => {
+                   tile.material.color.set(0x444444);
+               });
+               changePathColor(PiP1, pathPiP2AND3, 0x006400);
+                floorContainerGreen.children.forEach((tile) => {
+                    tile.material.color.set(tileColor);
+                    tile.litUp = false;
+                    if(tile.userData.tileNumber==1){
+                         tile.semicircleMesh1.litUp=false;
+                         tile.semicircleMesh1.material.color.set(tileColor);
+                     }
+                });
+                } else if (index == 3) {
+                    console.log('Reset red');
+                    litUpTiles2=[];
+                    PiP2.children.forEach((tile) => {
+                           tile.material.color.set(0x444444);
+                       });
+                       changePathColor(PiP2, pathPiP2AND3, 0xff00ff);
+                    floorContainerRed.children.forEach((tile) => {
+                        tile.material.color.set(tileColor);
+                        tile.litUp = false;
+                        if(tile.userData.tileNumber==5){
+                             tile.semicircleMesh.litUp=false;
+                             tile.semicircleMesh.material.color.set(tileColor);
+                         }
+                    });
+                } else if (index == 4) {
+                    console.log('Reset blue');
+                    litUpTiles3=[];
+                    PiP3.children.forEach((tile) => {
+                       tile.material.color.set(0x444444);
+                   });
+                   changePathColor(PiP3, pathPiP2AND3, 0xFFA500);
+                    floorContainerBlue.children.forEach((tile) => {
+                        tile.material.color.set(tileColor);
+                        tile.litUp = false;
+                         if(tile.userData.tileNumber==19){
+                             tile.semicircleMesh3.litUp=false;
+                             tile.semicircleMesh3.material.color.set(tileColor);
+                         }
+                    });
+                    console.log(litUpTiles3);
+                }
+            }
+        });
+    }
+});
 
 
 

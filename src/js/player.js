@@ -6,9 +6,6 @@ import * as camera from './camera.js';
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 //import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import woodTextureImage from '../img/woodenfloor.jpg'; // Make sure the path to your wood texture image is correct
-import walltextureImage from '../img/wall.jpg';
-import ceilingtextureImage from '../img/Ceiling.jpg';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls.js';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';

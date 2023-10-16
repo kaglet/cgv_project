@@ -232,7 +232,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const dungeonModel = gltf.scene;
         dungeonModel.scale.set(15, 15, 15);
         dungeonModel.position.set(105, 17, 487);
-        console.log("Dungeon Model Properties:");
+        //console.log("Dungeon Model Properties:");
         //    for (const property in lionStatueModel) {
         //        console.log(`${property}:`, lionStatueModel[property]);
         // }
@@ -242,7 +242,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+       // console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Dungeon model
         const dungeonModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -278,7 +278,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const dungeonModel = gltf.scene;
         dungeonModel.scale.set(15, 15, 15);
         dungeonModel.position.set(245, 17, 487);
-        console.log("Dungeon Model Properties:");
+       // console.log("Dungeon Model Properties:");
         //    for (const property in lionStatueModel) {
         //        console.log(`${property}:`, lionStatueModel[property]);
         // }
@@ -288,7 +288,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+       // console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Dungeon model
         const dungeonModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -328,7 +328,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const stoneWallModel = gltf.scene;
         stoneWallModel.scale.set(30, 30, 30);
         stoneWallModel.position.set(265, 0, 490);
-        console.log("Stone Wall Model Properties:");
+      //  console.log("Stone Wall Model Properties:");
         //    for (const property in lionStatueModel) {
         //        console.log(`${property}:`, lionStatueModel[property]);
         // }
@@ -338,7 +338,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+      //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Stone Wall model
         const stoneWallModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -375,7 +375,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const stoneWallModel = gltf.scene;
         stoneWallModel.scale.set(30, 30, 30);
         stoneWallModel.position.set(215, 0, 490);
-        console.log("Stone Wall Model Properties:");
+      //  console.log("Stone Wall Model Properties:");
         //    for (const property in lionStatueModel) {
         //        console.log(`${property}:`, lionStatueModel[property]);
         // }
@@ -385,7 +385,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+       // console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Stone Wall model
         const stoneWallModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -421,7 +421,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const stoneWallModel = gltf.scene;
         stoneWallModel.scale.set(30, 30, 30);
         stoneWallModel.position.set(165, 0, 490);
-        console.log("Stone Wall Model Properties:");
+       // console.log("Stone Wall Model Properties:");
         //    for (const property in lionStatueModel) {
         //        console.log(`${property}:`, lionStatueModel[property]);
         // }
@@ -431,7 +431,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+       // console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Stone Wall model
         const stoneWallModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -467,7 +467,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const stoneWallModel = gltf.scene;
         stoneWallModel.scale.set(30, 30, 30);
         stoneWallModel.position.set(115, 0, 490);
-        console.log("Stone Wall Model Properties:");
+       // console.log("Stone Wall Model Properties:");
         //    for (const property in lionStatueModel) {
         //        console.log(`${property}:`, lionStatueModel[property]);
         // }
@@ -477,7 +477,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+      //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Stone Wall model
         const stoneWallModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -513,7 +513,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const stoneWallModel = gltf.scene;
         stoneWallModel.scale.set(30, 30, 30);
         stoneWallModel.position.set(65, 0, 490);
-        console.log("Stone Wall Model Properties:");
+      //  console.log("Stone Wall Model Properties:");
         //    for (const property in lionStatueModel) {
         //        console.log(`${property}:`, lionStatueModel[property]);
         // }
@@ -523,7 +523,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+      //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Stone Wall model
         const stoneWallModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -559,7 +559,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const stoneWallModel = gltf.scene;
         stoneWallModel.scale.set(30, 30, 30);
         stoneWallModel.position.set(15, 0, 490);
-        console.log("Stone Wall Model Properties:");
+      //  console.log("Stone Wall Model Properties:");
         //    for (const property in lionStatueModel) {
         //        console.log(`${property}:`, lionStatueModel[property]);
         // }
@@ -569,7 +569,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+      //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Stone Wall model
         const stoneWallModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -605,7 +605,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const stoneWallModel = gltf.scene;
         stoneWallModel.scale.set(30, 30, 30);
         stoneWallModel.position.set(-6, 0, 416);
-        console.log("Stone Wall Model Properties:");
+     //   console.log("Stone Wall Model Properties:");
         //    for (const property in lionStatueModel) {
         //        console.log(`${property}:`, lionStatueModel[property]);
         // }
@@ -615,7 +615,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+     //   console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Stone Wall model
         const stoneWallModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -651,7 +651,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const stoneWallModel = gltf.scene;
         stoneWallModel.scale.set(30, 30, 30);
         stoneWallModel.position.set(278, 0, 416);
-        console.log("Stone Wall Model Properties:");
+     //   console.log("Stone Wall Model Properties:");
         //    for (const property in lionStatueModel) {
         //        console.log(`${property}:`, lionStatueModel[property]);
         // }
@@ -661,7 +661,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+       // console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Stone Wall model
         const stoneWallModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -697,7 +697,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const stoneWallModel = gltf.scene;
         stoneWallModel.scale.set(30, 30, 30);
         stoneWallModel.position.set(135, 0, 416);
-        console.log("Stone Wall Model Properties:");
+     //   console.log("Stone Wall Model Properties:");
         //    for (const property in lionStatueModel) {
         //        console.log(`${property}:`, lionStatueModel[property]);
         // }
@@ -707,7 +707,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+       // console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Stone Wall model
         const stoneWallModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -746,14 +746,14 @@ export function loadModels(loader, scene, world, blockWidth){
         const watchTowerModel = gltf.scene;
         watchTowerModel.scale.set(0.2, 0.2, 0.2);
         watchTowerModel.position.set(18, 2, 507);
-        console.log("Watch Tower Model Properties:");
+     //   console.log("Watch Tower Model Properties:");
     
         // Calculate dimensions of the watch tower model
         const boundingBox = new THREE.Box3().setFromObject(watchTowerModel);
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+      //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Watch Tower model
         const watchTowerModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -791,14 +791,14 @@ export function loadModels(loader, scene, world, blockWidth){
         const chairModel = gltf.scene; // Changed variable name to chair
         chairModel.scale.set(14, 14, 14);
         chairModel.position.set(172, 3.5, 435);
-        console.log("Chair Model Properties:");
+      //  console.log("Chair Model Properties:");
         
         // Calculate dimensions of the chair model
         const boundingBox = new THREE.Box3().setFromObject(chairModel);
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+      //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
         
         // Add Cannon.js body for Chair model
         const chairModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -837,7 +837,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const barrelsModel = gltf.scene;
         barrelsModel.scale.set(4, 4, 4);
         barrelsModel.position.set(334, 0, 427);
-        console.log("Barrels Model Properties:");
+      //  console.log("Barrels Model Properties:");
         //    for (const property in lionStatueModel) {
         //        console.log(`${property}:`, lionStatueModel[property]);
         // }
@@ -847,7 +847,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+       // console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Barrels model
         const barrelsModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -887,7 +887,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const freedomStatueModel = gltf.scene;
         freedomStatueModel.scale.set(0.9, 0.9, 0.9);
         freedomStatueModel.position.set(38, 17, 235);
-        console.log("Freedom Statue Model Properties:");
+      //  console.log("Freedom Statue Model Properties:");
         // for (const property in freedomStatueModel) {
         //     console.log(`${property}:`, freedomStatueModel[property]);
         // }
@@ -897,7 +897,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+      //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Freedom Statue model
         const freedomStatueModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -935,14 +935,14 @@ export function loadModels(loader, scene, world, blockWidth){
         const bushModel = gltf.scene;
         bushModel.scale.set(8, 8, 8);
         bushModel.position.set(50, 1.2, 258);
-        console.log("Bush Model Properties:");
+      //  console.log("Bush Model Properties:");
     
         // Calculate dimensions of the bush model
         const boundingBox = new THREE.Box3().setFromObject(bushModel);
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+     //   console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Bush model
         const bushModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -981,7 +981,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const coconutPalmModel = gltf.scene;
         coconutPalmModel.scale.set(14, 14, 14);
         coconutPalmModel.position.set(300, 0, 200);
-        console.log("Coconut Palm Model Properties:");
+      //  console.log("Coconut Palm Model Properties:");
         //    for (const property in lionStatueModel) {
         //        console.log(`${property}:`, lionStatueModel[property]);
         //    }
@@ -991,7 +991,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+      //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Lion Statue model
         const coconutPalmModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -1028,14 +1028,14 @@ export function loadModels(loader, scene, world, blockWidth){
         const coconutModel = gltf.scene;
         coconutModel.scale.set(2, 2, 2);
         coconutModel.position.set(285, 2.5, 205);
-        console.log("Coconut Model Properties:");
+      //  console.log("Coconut Model Properties:");
         
         // Calculate dimensions of the coconut model
         const boundingBox = new THREE.Box3().setFromObject(coconutModel);
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+      //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Coconut model
         const coconutModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -1073,14 +1073,14 @@ export function loadModels(loader, scene, world, blockWidth){
         const smallTreesModel = gltf.scene;
         smallTreesModel.scale.set(12, 12, 12);
         smallTreesModel.position.set(40, 0, 320);
-        console.log("Small Trees Model Properties:");
+      //  console.log("Small Trees Model Properties:");
         
         // Calculate dimensions of the small trees model
         const boundingBox = new THREE.Box3().setFromObject(smallTreesModel);
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+    //    console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Small Trees model
         const smallTreesModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -1118,7 +1118,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const birdBathModel = gltf.scene;
         birdBathModel.scale.set(12, 12, 12);
         birdBathModel.position.set(40, 0, 370);
-        console.log("Bird Bath Model Properties:");
+       // console.log("Bird Bath Model Properties:");
         // for (const property in birdBathModel) {
         //     console.log(`${property}:`, birdBathModel[property]);
         // }
@@ -1128,7 +1128,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+      //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Bird Bath model
         const birdBathModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -1166,14 +1166,14 @@ export function loadModels(loader, scene, world, blockWidth){
         const fernModel = gltf.scene;
         fernModel.scale.set(1.6, 1.6, 1.6);
         fernModel.position.set(46, 0, 376);
-        console.log("Fern Model Properties:");
+      //  console.log("Fern Model Properties:");
         
         // Calculate dimensions of the fern model
         const boundingBox = new THREE.Box3().setFromObject(fernModel);
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+     //   console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
         
         // Add Cannon.js body for Fern model
         const fernModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -1212,14 +1212,14 @@ export function loadModels(loader, scene, world, blockWidth){
         const wellModel = gltf.scene;
         wellModel.scale.set(20, 20, 20);
         wellModel.position.set(315, 19, 220);
-        console.log("Well Model Properties:");
+      //  console.log("Well Model Properties:");
         
         // Calculate dimensions of the well model
         const boundingBox = new THREE.Box3().setFromObject(wellModel);
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+      //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
         
         // Add Cannon.js body for Well model
         const wellModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -1257,7 +1257,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const woodenCrateModel = gltf.scene; // Change the variable name
         woodenCrateModel.scale.set(10, 10, 10);
         woodenCrateModel.position.set(336, 0, 413);
-        console.log("Wooden Crate Model Properties:"); // Update the log message
+      //  console.log("Wooden Crate Model Properties:"); // Update the log message
         // for (const property in woodenCrateModel) {
         //     console.log(`${property}:`, woodenCrateModel[property]);
         // }
@@ -1267,7 +1267,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+       // console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Wooden Crate model
         const woodenCrateModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -1306,14 +1306,14 @@ export function loadModels(loader, scene, world, blockWidth){
         const TreesModel = gltf.scene;
         TreesModel.scale.set(360, 360, 360);
         TreesModel.position.set(320, 0, 290);
-        console.log("Trees Model Properties:");
+      //  console.log("Trees Model Properties:");
     
         // Calculate dimensions of the Trees model
         const boundingBox = new THREE.Box3().setFromObject(TreesModel);
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+      //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Trees model
         const TreesModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -1349,14 +1349,14 @@ export function loadModels(loader, scene, world, blockWidth){
         const TreesModel = gltf.scene;
         TreesModel.scale.set(360, 360, 360);
         TreesModel.position.set(320, 0, 345);
-        console.log("Trees Model Properties:");
+     //   console.log("Trees Model Properties:");
     
         // Calculate dimensions of the Trees model
         const boundingBox = new THREE.Box3().setFromObject(TreesModel);
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+     //   console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Trees model
         const TreesModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -1393,14 +1393,14 @@ export function loadModels(loader, scene, world, blockWidth){
         const rocksModel = gltf.scene;
         rocksModel.scale.set(0.3, 0.3, 0.3);
         rocksModel.position.set(315, 0, 345);
-        console.log("Rocks Model Properties:");
+      //  console.log("Rocks Model Properties:");
     
         // Calculate dimensions of the rocks model
         const boundingBox = new THREE.Box3().setFromObject(rocksModel);
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+     //   console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Rocks model
         const rocksModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -1438,7 +1438,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const purplePlantModel = gltf.scene;
         purplePlantModel.scale.set(35, 35, 35);
         purplePlantModel.position.set(317, 0, 295);
-        console.log("Purple Plant Model Properties:");
+    //    console.log("Purple Plant Model Properties:");
         // for (const property in purplePlantModel) {
         //     console.log(`${property}:`, purplePlantModel[property]);
         // }
@@ -1448,7 +1448,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+    //    console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Purple Plant model
         const purplePlantModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -1484,7 +1484,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const purplePlantModel = gltf.scene;
         purplePlantModel.scale.set(35, 35, 35);
         purplePlantModel.position.set(314, 0, 290);
-        console.log("Purple Plant Model Properties:");
+     //   console.log("Purple Plant Model Properties:");
         // for (const property in purplePlantModel) {
         //     console.log(`${property}:`, purplePlantModel[property]);
         // }
@@ -1494,7 +1494,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+    //    console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Purple Plant model
         const purplePlantModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -1530,7 +1530,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const purplePlantModel = gltf.scene;
         purplePlantModel.scale.set(35, 35, 35);
         purplePlantModel.position.set(317, 0, 285);
-        console.log("Purple Plant Model Properties:");
+     //   console.log("Purple Plant Model Properties:");
         // for (const property in purplePlantModel) {
         //     console.log(`${property}:`, purplePlantModel[property]);
         // }
@@ -1540,7 +1540,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+     //   console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
     
         // Add Cannon.js body for Purple Plant model
         const purplePlantModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
