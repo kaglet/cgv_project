@@ -151,22 +151,59 @@ class InnerWall {
     }
 }
 
-class Gate {
+// class Gate {
     
 
+//     constructor(scene, world, position, rotation) {
+//         // Create Three.js wall
+//         const gateGeometry = new THREE.BoxGeometry(50, 70, 2);
+//         const gateMaterial = new THREE.MeshStandardMaterial({
+//             color: "red",
+//             side: THREE.DoubleSide,
+//             wireframe: false,
+//         });
+
+//         this.mesh = new THREE.Mesh(gateGeometry, gateMaterial);
+//         scene.add(this.mesh);
+
+//         // Create Cannon.js wall
+//         const gatePhysMat = new CANNON.Material()
+//         const gateShape = new CANNON.Box(new CANNON.Vec3(25 / 2, 35, 1));
+//         this.body = new CANNON.Body({
+//             mass: 0,
+//             shape: gateShape,
+//             material: gatePhysMat,
+//         });
+
+//         // Set the initial position and rotation for the Cannon.js body
+//         this.body.position.copy(position);
+//         this.body.quaternion.setFromEuler(rotation.x, rotation.y, rotation.z);
+
+//         // Add the Cannon.js body to the world
+//         world.addBody(this.body);
+
+//         // Update the Three.js mesh position and rotation based on the Cannon.js body
+//         this.mesh.position.copy(this.body.position);
+//         this.mesh.quaternion.copy(this.body.quaternion);
+//     }
+
+//     opengate(angle) {
+//         // Calculate the rotation in radians (assuming angle is in degrees)
+//         const rotationAngle = (Math.PI / 180) * angle;
+        
+
+//         // Rotate the Cannon.js body
+//         this.body.quaternion.setFromEuler(0, rotationAngle, 0);
+
+//         // Update the Three.js mesh rotation based on the Cannon.js body
+//         this.mesh.quaternion.copy(this.body.quaternion);
+//     }
+// }
+
+class Gate {
     constructor(scene, world, position, rotation) {
-        // Create Three.js wall
-        const gateGeometry = new THREE.BoxGeometry(50, 70, 2);
-        const gateMaterial = new THREE.MeshStandardMaterial({
-            color: "red",
-            side: THREE.DoubleSide,
-            wireframe: false,
-        });
 
-        this.mesh = new THREE.Mesh(gateGeometry, gateMaterial);
-        scene.add(this.mesh);
-
-        // Create Cannon.js wall
+      //  Create Cannon.js wall
         const gatePhysMat = new CANNON.Material()
         const gateShape = new CANNON.Box(new CANNON.Vec3(25 / 2, 35, 1));
         this.body = new CANNON.Body({
@@ -182,23 +219,44 @@ class Gate {
         // Add the Cannon.js body to the world
         world.addBody(this.body);
 
-        // Update the Three.js mesh position and rotation based on the Cannon.js body
-        this.mesh.position.copy(this.body.position);
-        this.mesh.quaternion.copy(this.body.quaternion);
+        // Load the GLTF model for the gate
+        let model;
+        this.model = this.model;
+        assetLoader.load('./assets/medieval_arched_wooden_door/scene.gltf', (gltf) => {
+            // Get the gate model from the loaded GLTF scene
+            this.model = gltf.scene;
+            this.model.scale.set(0.6, 0.25, 0.25);
+            
+            // Set the initial position and rotation of the model
+            this.model.position.copy(position);
+            this.model.rotation.set(rotation.x, rotation.y, rotation.z);
+
+            // Update the Three.js model position and rotation based on the Cannon.js body
+            this.model.position.copy(this.body.position);
+            this.model.quaternion.copy(this.body.quaternion);
+
+            // Add the gate model to the scene
+            scene.add(this.model);
+        });
     }
 
-    opengate(angle) {
+         opengate(angle) {
         // Calculate the rotation in radians (assuming angle is in degrees)
-        const rotationAngle = (Math.PI / 180) * angle;
-        
+        if (this.model) {
+            // Calculate the rotation in radians (assuming angle is in degrees)
+            const rotationAngle = (Math.PI / 180) * angle;
 
-        // Rotate the Cannon.js body
-        this.body.quaternion.setFromEuler(0, rotationAngle, 0);
+            // Rotate the Cannon.js body
+            this.body.quaternion.setFromEuler(0, rotationAngle, 0);
+            this.model.position.copy(this.body.position);
+            this.model.quaternion.copy(this.body.quaternion);
+        }
 
         // Update the Three.js mesh rotation based on the Cannon.js body
-        this.mesh.quaternion.copy(this.body.quaternion);
+       // this.model.rotation.copy(this.body.quaternion);
     }
 }
+
 
 
 class floorContBody {
@@ -241,7 +299,7 @@ function puzzComplete(puzz){
         puzz1Gate.opengate(90);
 
     }
-    else{
+    else if (puzz == 'Red') {
         puzz2Gate.opengate(90);
     }
     
@@ -953,6 +1011,8 @@ function tileLights() {
 
 }
 
+
+
 // Create material array
 
 const path1 = [1, 2, 3, 12, 21, 30, 39, 48, 57, 66, 75, 76, 77, 78, 79, 70, 61, 52, 43, 42, 41, 32, 23, 24, 25, 26, 27, 36, 45, 54, 63, 72, 81];
@@ -966,22 +1026,24 @@ let litUpTiles3 = [];
 
 const pathPiP2AND3 = [11,13,15,17,29,31,33,35,47,49,51,53,65,67,69,71]
 
-
-sky();
-
-
-// const axesHelper = new THREE.AxesHelper(200); //so we can see the axes for debugging
-// scene.add(axesHelper);
-
-const axesHelper = new THREE.AxesHelper(200); //so we can see the axes for debugging
-scene.add(axesHelper);
-ground();
-
 //helper squares
 const gridSizeX = 2;
 const gridSizeZ = 3;
 const blockWidth = 350;
 const blockDepth = 350;
+
+let assetLoader = new GLTFLoader();
+loadModels(assetLoader, scene, world, blockWidth);
+
+
+sky();
+
+
+
+
+ground();
+
+
 helperSquares();
 
 
@@ -1132,8 +1194,7 @@ export function animate_lights() {
 
 // create instance of GLTF loader and call load on it
 // 
-let assetLoader = new GLTFLoader();
-loadModels(assetLoader, scene, world, blockWidth);
+
 // load takes three arguments, path to file, and a callback function, another function that tells about the progress of the loading process (don't need it so set to undefined), foruth parameter is a function we can use to tell if an error occurs
 // use asset loader to load .gltf from path
 // model is stored as property of gltf object whose key is scene
