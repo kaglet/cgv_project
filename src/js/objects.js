@@ -152,6 +152,7 @@ class InnerWall {
 }
 
 class Gate {
+    
 
     constructor(scene, world, position, rotation) {
         // Create Three.js wall
@@ -183,6 +184,18 @@ class Gate {
 
         // Update the Three.js mesh position and rotation based on the Cannon.js body
         this.mesh.position.copy(this.body.position);
+        this.mesh.quaternion.copy(this.body.quaternion);
+    }
+
+    opengate(angle) {
+        // Calculate the rotation in radians (assuming angle is in degrees)
+        const rotationAngle = (Math.PI / 180) * angle;
+        
+
+        // Rotate the Cannon.js body
+        this.body.quaternion.setFromEuler(0, rotationAngle, 0);
+
+        // Update the Three.js mesh rotation based on the Cannon.js body
         this.mesh.quaternion.copy(this.body.quaternion);
     }
 }
@@ -222,7 +235,16 @@ class floorContBody {
     }
 }
 
-function puzzComplete(puzNum){
+function puzzComplete(puzz){
+    if (puzz == 'Blue'){
+
+        puzz1Gate.opengate(90);
+
+    }
+    else{
+        puzz2Gate.opengate(90);
+    }
+    
 
 }
 
@@ -510,13 +532,14 @@ function addWalls() {
     const wallPuzz3back = new Wall(scene, world, new CANNON.Vec3(-blockWidth, 0, -blockWidth), new CANNON.Vec3(0, rotationAngle, 0));
 
     const lobbyExit = new InnerWall(scene, world, new CANNON.Vec3(blockWidth / 2, 0, blockWidth / 2), new CANNON.Vec3(0, (Math.PI / 1), 0));
-    const lobbyGate = new Gate(scene, world, new CANNON.Vec3(blockWidth / 2, 0, blockWidth / 2), new CANNON.Vec3(0, (Math.PI / 1), 0));
+    lobbyGate = new Gate(scene, world, new CANNON.Vec3(blockWidth / 2, 0, blockWidth / 2), new CANNON.Vec3(0, (Math.PI / 1), 0));
+   
 
     const puzz1Exit = new InnerWall(scene, world, new CANNON.Vec3(blockWidth / 2, 0, -blockWidth / 2), new CANNON.Vec3(0, (Math.PI / 1), 0));
-    const puzz1Gate = new Gate(scene, world, new CANNON.Vec3(blockWidth / 2, 0, -blockWidth / 2), new CANNON.Vec3(0, (Math.PI / 1), 0));
+    puzz1Gate = new Gate(scene, world, new CANNON.Vec3(blockWidth / 2, 0, -blockWidth / 2), new CANNON.Vec3(0, (Math.PI / 1), 0));
 
     const puzz2Exit = new InnerWall(scene, world, new CANNON.Vec3(0, 0, -blockWidth), new CANNON.Vec3(0, (Math.PI / 2), 0));
-    const puzz2Gate = new Gate(scene, world, new CANNON.Vec3(0, 0, -blockWidth), new CANNON.Vec3(0, (Math.PI / 2), 0));
+    puzz2Gate = new Gate(scene, world, new CANNON.Vec3(0, 0, -blockWidth), new CANNON.Vec3(0, (Math.PI / 2), 0));
 
 }
 
@@ -765,9 +788,9 @@ function makeMazes() {
     drawGridWithOmissions(floorContainerRed, [30, 38, 78],5);
     drawGridWithOmissions(floorContainerBlue, [28, 30, 42, 52, 76],19);
 
-//    changePathColor(floorContainerGreen, path1, 0x00ff00); // Green
-//    changePathColor(floorContainerRed, path2, 0xff0000); // Red
-//    changePathColor(floorContainerBlue, path3, 0x0000FF);//blue
+   changePathColor(floorContainerGreen, path1, 0x00ff00); // Green
+   changePathColor(floorContainerRed, path2, 0xff0000); // Red
+   changePathColor(floorContainerBlue, path3, 0x0000FF);//blue
 
     //Draw PiPs
     drawPiP(PiP1,[],1);
@@ -831,7 +854,7 @@ function tileLights() {
                 const haveSameValues = path1.every(value => litUpTiles1.includes(value) && litUpTiles1.length === path1.length);
                 if (haveSameValues) {
                     console.log("Path 1 correct.");
-                    puzzComplete(Green);
+                    puzzComplete("Green");
                 }
                 // TODO: Make tiles sink also upon intersection, just shift slightly in the z
                 // How do I position the tiles, is it within the floor container, using current position -= 1 for z for example or do I do a local transformation in floor?
@@ -873,7 +896,7 @@ function tileLights() {
                 const haveSameValues = path2.every(value => litUpTiles2.includes(value) && litUpTiles2.length === path2.length);
                 if (haveSameValues) {
                     console.log("Path 2 correct.");
-                    puzzComplete(Red);
+                    puzzComplete("Red");
                 }
                 // TODO: Make tiles sink also upon intersection, just shift slightly in the z
                 // How do I position the tiles, is it within the floor container, using current position -= 1 for z for example or do I do a local transformation in floor?
@@ -916,7 +939,7 @@ function tileLights() {
                 const haveSameValues = path3.every(value => litUpTiles3.includes(value) && litUpTiles3.length === path3.length);
                 if (haveSameValues) {
                     console.log("Path 3 correct.");
-                    puzzComplete(Blue);
+                    puzzComplete("Blue");
                 }
                 // TODO: Make tiles sink also upon intersection, just shift slightly in the z
                 // How do I position the tiles, is it within the floor container, using current position -= 1 for z for example or do I do a local transformation in floor?
@@ -1018,8 +1041,11 @@ addFloorBodies();
 PiP();
 
 
-
+let lobbyGate;
+let puzz1Gate;
+let puzz2Gate;
 addWalls();
+lobbyGate.opengate(90);
 
 document.addEventListener('keydown', (event) => {
     if (event.key === ' ' || event.key === 'Spacebar') {
