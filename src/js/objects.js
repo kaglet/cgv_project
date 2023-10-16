@@ -37,7 +37,7 @@ class Wall {
         const wallMaterial = new THREE.MeshStandardMaterial({
             color: "#DEC4B0",
             side: THREE.DoubleSide,
-            wireframe: false,
+            wireframe: true,
         });
 
         this.mesh = new THREE.Mesh(wallGeometry, wallMaterial);
