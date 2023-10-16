@@ -65,6 +65,97 @@ class Wall {
     }
 }
 
+class InnerWall {
+    constructor(scene, world, position, rotation) {
+        // Calculate the total width of the inner wall (including the gap)
+        const totalWidth = blockWidth;
+        const gapWidth = 50;
+        
+        // Calculate the width of each part of the inner wall
+        const partWidth = (totalWidth - gapWidth) / 2;
+
+        // Create Three.js inner wall parts and materials
+        const wallGeometry1 = new THREE.BoxGeometry(partWidth, 70, 5);
+        const wallMaterial1 = new THREE.MeshStandardMaterial({
+            color: "#DEC4B0",
+            side: THREE.DoubleSide,
+            wireframe: false,
+        });
+        this.mesh1 = new THREE.Mesh(wallGeometry1, wallMaterial1);
+        
+        const wallGeometry2 = new THREE.BoxGeometry(partWidth, 70, 5);
+        const wallMaterial2 = new THREE.MeshStandardMaterial({
+            color: "#DEC4B0",
+            side: THREE.DoubleSide,
+            wireframe: false,
+        });
+        this.mesh2 = new THREE.Mesh(wallGeometry2, wallMaterial2);
+        
+        scene.add(this.mesh1);
+        scene.add(this.mesh2);
+
+        // Create Cannon.js inner wall
+        const wallPhysMat = new CANNON.Material();
+
+        // Create two Cannon.js boxes for each part of the inner wall
+        const wallShape1 = new CANNON.Box(new CANNON.Vec3(partWidth / 2, 35, 2.5));
+        const wallShape2 = new CANNON.Box(new CANNON.Vec3(partWidth / 2, 35, 2.5));
+
+        // Create Cannon.js bodies for each part
+        this.body1 = new CANNON.Body({
+            mass: 0,
+            shape: wallShape1,
+            material: wallPhysMat,
+        });
+        this.body2 = new CANNON.Body({
+            mass: 0,
+            shape: wallShape2,
+            material: wallPhysMat,
+        });
+
+        let position1;
+        let position2;
+        if (rotation.y == (Math.PI / 2) ){
+             // Set the initial position for each Cannon.js body
+        position1 = new CANNON.Vec3(position.x, position.y, position.z  - partWidth / 2 - gapWidth / 2);
+        position2 = new CANNON.Vec3(position.x, position.y, position.z + partWidth / 2 + gapWidth / 2);
+
+        }
+        else{
+             // Set the initial position for each Cannon.js body
+        position1 = new CANNON.Vec3(position.x - partWidth / 2 - gapWidth / 2, position.y, position.z);
+        position2 = new CANNON.Vec3(position.x + partWidth / 2 + gapWidth / 2, position.y, position.z);
+        }
+
+       
+
+        this.body1.position.copy(position1);
+        this.body2.position.copy(position2);
+
+        // Set the same rotation for both Cannon.js bodies
+        const initialRotation = new CANNON.Quaternion();
+        initialRotation.setFromEuler(rotation.x, rotation.y, rotation.z);
+        this.body1.quaternion.copy(initialRotation);
+        this.body2.quaternion.copy(initialRotation);
+
+        // Add the Cannon.js bodies to the world
+        world.addBody(this.body1);
+        world.addBody(this.body2);
+
+        // Update the Three.js mesh position and rotation based on the Cannon.js bodies
+        this.mesh1.position.copy(position1);
+        this.mesh2.position.copy(position2);
+
+        this.mesh1.quaternion.copy(initialRotation);
+        this.mesh2.quaternion.copy(initialRotation);
+    }
+}
+
+
+
+
+
+
 class floorContBody {
     constructor(scene, world, container) {
         // Create floors bodies
@@ -318,6 +409,10 @@ function addWalls() {
     const wallPuzz3Left = new Wall(scene, world, new CANNON.Vec3(-blockWidth / 2, 0, -blockWidth / 2), new CANNON.Vec3(0, (Math.PI / 1), 0));
     const wallPuzz3back = new Wall(scene, world, new CANNON.Vec3(-blockWidth, 0, -blockWidth), new CANNON.Vec3(0, rotationAngle, 0));
 
+    const lobbyExit = new InnerWall(scene, world, new CANNON.Vec3(blockWidth / 2, 0, blockWidth / 2), new CANNON.Vec3(0, (Math.PI / 1), 0));
+    const puzz1Exit = new InnerWall(scene, world, new CANNON.Vec3(blockWidth / 2, 0, -blockWidth / 2), new CANNON.Vec3(0, (Math.PI / 1), 0));
+    const puzz2Exit = new InnerWall(scene, world, new CANNON.Vec3(0, 0, -blockWidth), new CANNON.Vec3(0, (Math.PI / 2), 0));
+
 }
 
 
@@ -530,7 +625,7 @@ function ground() {
     // Create ground
     const groundGeo = new THREE.PlaneGeometry(10000, 10000);
     const groundMat = new THREE.MeshStandardMaterial({
-        color: 0x78BE21,
+     //   color: 0x78BE21,
         receiveShadow: true,
         castShadow: true,
     });
