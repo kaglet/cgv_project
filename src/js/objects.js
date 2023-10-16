@@ -37,7 +37,7 @@ class Wall {
         const wallMaterial = new THREE.MeshStandardMaterial({
             color: "#DEC4B0",
             side: THREE.DoubleSide,
-            wireframe: false,
+            wireframe: true,
         });
 
         this.mesh = new THREE.Mesh(wallGeometry, wallMaterial);
@@ -932,8 +932,6 @@ sky();
 
 const axesHelper = new THREE.AxesHelper(200); //so we can see the axes for debugging
 scene.add(axesHelper);
-const loader = new GLTFLoader();
-loadModels(loader, scene, world);
 ground();
 
 //helper squares
@@ -1021,3 +1019,12 @@ export function animate_lights() {
 
 
 }
+
+// create instance of GLTF loader and call load on it
+// 
+let assetLoader = new GLTFLoader();
+loadModels(assetLoader, scene, world, blockWidth);
+// load takes three arguments, path to file, and a callback function, another function that tells about the progress of the loading process (don't need it so set to undefined), foruth parameter is a function we can use to tell if an error occurs
+// use asset loader to load .gltf from path
+// model is stored as property of gltf object whose key is scene
+

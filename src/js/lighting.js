@@ -2,6 +2,9 @@ import * as THREE from 'three'
 import * as objects from './objects.js'
 import * as player from './player.js';
 
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+objects.scene.add(ambientLight);
+
 // Add lighting (point light)
 const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
 objects.scene.add(directionalLight);
