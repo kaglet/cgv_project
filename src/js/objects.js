@@ -216,30 +216,36 @@ let tile;
 
              if(index==1 && container== floorContainerGreen ){
                      // Create a mesh using the semicircle geometry
-                     const semicircleMesh = new THREE.Mesh(semicircleGeometry, tileMaterial);
+                    const semicircleMesh1 = new THREE.Mesh(semicircleGeometry, tileMaterial.clone());
+                    semicircleMesh1.litUp=false;
 
-                     semicircleMesh.position.set(0,-2.5,0);
-                     semicircleMesh.rotation.x = Math.PI;
+                     semicircleMesh1.position.set(0,-2.5,0);
+                     semicircleMesh1.rotation.x = Math.PI;
                      // Add the semicircle to your scene
-                     tile.add(semicircleMesh);
+                     tile.add(semicircleMesh1);
+                     tile.semicircleMesh1 = semicircleMesh1;
                  }
               if(index==5 && container== floorContainerRed ){
                   // Create a mesh using the semicircle geometry
-                  const semicircleMesh = new THREE.Mesh(semicircleGeometry, tileMaterial);
+                    const semicircleMesh = new THREE.Mesh(semicircleGeometry, tileMaterial.clone());
+                    semicircleMesh.litUp=false;
 
                   semicircleMesh.position.set(-2.5,0,0);
                   semicircleMesh.rotation.z = Math.PI/2;
                   // Add the semicircle to your scene
                   tile.add(semicircleMesh);
+                  tile.semicircleMesh = semicircleMesh;
               }
                if(index==19 && container== floorContainerBlue ){
                    // Create a mesh using the semicircle geometry
-                   const semicircleMesh = new THREE.Mesh(semicircleGeometry, tileMaterial);
+                    const semicircleMesh3 = new THREE.Mesh(semicircleGeometry, tileMaterial.clone());
+                    semicircleMesh3.litUp=false;
 
-                   semicircleMesh.position.set(0,-2.5,0);
-                   semicircleMesh.rotation.x = Math.PI;
+                   semicircleMesh3.position.set(0,-2.5,0);
+                   semicircleMesh3.rotation.x = Math.PI;
                    // Add the semicircle to your scene
-                   tile.add(semicircleMesh);
+                   tile.add(semicircleMesh3);
+                   tile.semicircleMesh3 = semicircleMesh3;
                }
 
              const halfCylinderHeight = 5 / 2; // Half of the cylinder's height
@@ -266,7 +272,7 @@ let tile;
 
 
 
-    return tile;
+     return tile;
 }
 
 function createPiPTile(index, PiP) {
@@ -413,13 +419,14 @@ function drawGridWithOmissions(container, omittedTiles = [],round) {
                 const isMissingTile = (i % 2 === 0 && j % 2 === 0) || (i % 2 === 1 && j % 2 === 1);
                 if (!isMissingTile || i % 4 === 0 || (i - 2) % 4 === 0) {
                     const tile = createTile(tileNumber,round,container);
+
                     const xOffset = (i - numRows / 2) * (tileSize + gapSize);
                     const yOffset = (j - numCols / 2) * (tileSize + gapSize);
                     tile.name = 'tile';
                     tile.litUp = false;
                     tile.position.set(xOffset, yOffset, 0);
                     tile.updateWorldMatrix(true, false);
-                    container.add(tile); // Add the tile to the specified container
+                    container.add(tile);                    // Add the tile to the specified container
                 }
             }
         }
@@ -724,9 +731,9 @@ function makeMazes() {
     drawGridWithOmissions(floorContainerRed, [30, 38, 78],5);
     drawGridWithOmissions(floorContainerBlue, [28, 30, 42, 52, 76],19);
 
-    changePathColor(floorContainerGreen, path1, 0x00ff00); // Green
-    changePathColor(floorContainerRed, path2, 0xff0000); // Red
-    changePathColor(floorContainerBlue, path3, 0x0000FF);//blue
+//    changePathColor(floorContainerGreen, path1, 0x00ff00); // Green
+//    changePathColor(floorContainerRed, path2, 0xff0000); // Red
+//    changePathColor(floorContainerBlue, path3, 0x0000FF);//blue
 
     //Draw PiPs
     drawPiP(PiP1,[],1);
@@ -778,10 +785,14 @@ function tileLights() {
             let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
 
             if (tile.litUp === false && inXBounds && inZBounds && Math.abs(player.characterModel.position.y - tileWorldPosition.y) < epsilon) {
-                const tileColor = new THREE.Color(255, 255, 0);
+                const tileColor = new THREE.Color(0, 255, 0);
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
                 tile.litUp = true;
+                if(tile.userData.tileNumber==1){
+                    tile.semicircleMesh1.litUp=true;
+                    tile.semicircleMesh1.material.color.copy(tileColor);
+                }
                 litUpTiles1.push(tile.userData.tileNumber);
                 const haveSameValues = path1.every(value => litUpTiles1.includes(value) && litUpTiles1.length === path1.length);
                 if (haveSameValues) {
@@ -797,7 +808,7 @@ function tileLights() {
 
 
 
-        floorContainerRed.children.forEach((tile, index) => {
+        floorContainerRed.children.forEach((tile,semicircleMesh, index) => {
             const epsilon = 3; // Small epsilon value to handle floating point errors
             const tileWorldPosition = new THREE.Vector3();
             tile.getWorldPosition(tileWorldPosition);
@@ -814,10 +825,14 @@ function tileLights() {
             let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
 
             if (tile.litUp === false && inXBounds && inZBounds && Math.abs(player.characterModel.position.y - tileWorldPosition.y) < epsilon) {
-                const tileColor = new THREE.Color(255, 255, 0);
+                const tileColor = new THREE.Color(255, 0, 0);
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
                 tile.litUp = true;
+                if(tile.userData.tileNumber==5){
+                    tile.semicircleMesh.litUp=true;
+                    tile.semicircleMesh.material.color.copy(tileColor);
+                }
                 litUpTiles2.push(tile.userData.tileNumber);
 
                 const haveSameValues = path2.every(value => litUpTiles2.includes(value) && litUpTiles2.length === path2.length);
@@ -852,10 +867,15 @@ function tileLights() {
             let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
 
             if (tile.litUp === false && inXBounds && inZBounds && Math.abs(player.characterModel.position.y - tileWorldPosition.y) < epsilon) {
-                const tileColor = new THREE.Color(255, 255, 0);
+                const tileColor = new THREE.Color(0, 0, 255);
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
+
                 tile.litUp = true;
+                if(tile.userData.tileNumber==19){
+                    tile.semicircleMesh3.litUp=true;
+                    tile.semicircleMesh3.material.color.copy(tileColor);
+                }
                 litUpTiles3.push(tile.userData.tileNumber);
                 const haveSameValues = path3.every(value => litUpTiles3.includes(value) && litUpTiles3.length === path3.length);
                 if (haveSameValues) {
@@ -964,7 +984,71 @@ PiP();
 
 addWalls();
 
-//Sound
+document.addEventListener('keydown', (event) => {
+    if (event.key === ' ' || event.key === 'Spacebar') {
+     const tileColor = 0xffffff;
+        levelAreas.forEach((area, index) => {
+            let rangeInX = area.sizeFromBoundingBox.x / 2;
+            let rangeInZ = area.sizeFromBoundingBox.z / 2;
+
+            const areaWorldPosition = new THREE.Vector3();
+            area.getWorldPosition(areaWorldPosition);
+
+            let inXBounds = areaWorldPosition.x - rangeInX <= player.characterModel.position.x && player.characterModel.position.x <= areaWorldPosition.x + rangeInX;
+            let inZBounds = areaWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= areaWorldPosition.z + rangeInZ;
+
+            if (inXBounds && inZBounds) {
+              if (index == 0) {
+                console.log('Reset green');
+                litUpTiles1=[];
+                 PiP1.children.forEach((tile) => {
+                   tile.material.color.set(0x444444);
+               });
+               changePathColor(PiP1, pathPiP2AND3, 0x006400);
+                floorContainerGreen.children.forEach((tile) => {
+                    tile.material.color.set(tileColor);
+                    tile.litUp = false;
+                    if(tile.userData.tileNumber==1){
+                         tile.semicircleMesh1.litUp=false;
+                         tile.semicircleMesh1.material.color.set(tileColor);
+                     }
+                });
+                } else if (index == 3) {
+                    console.log('Reset red');
+                    litUpTiles2=[];
+                    PiP2.children.forEach((tile) => {
+                           tile.material.color.set(0x444444);
+                       });
+                       changePathColor(PiP2, pathPiP2AND3, 0xff00ff);
+                    floorContainerRed.children.forEach((tile) => {
+                        tile.material.color.set(tileColor);
+                        tile.litUp = false;
+                        if(tile.userData.tileNumber==5){
+                             tile.semicircleMesh.litUp=false;
+                             tile.semicircleMesh.material.color.set(tileColor);
+                         }
+                    });
+                } else if (index == 4) {
+                    console.log('Reset blue');
+                    litUpTiles3=[];
+                    PiP3.children.forEach((tile) => {
+                       tile.material.color.set(0x444444);
+                   });
+                   changePathColor(PiP3, pathPiP2AND3, 0xFFA500);
+                    floorContainerBlue.children.forEach((tile) => {
+                        tile.material.color.set(tileColor);
+                        tile.litUp = false;
+                         if(tile.userData.tileNumber==19){
+                             tile.semicircleMesh3.litUp=false;
+                             tile.semicircleMesh3.material.color.set(tileColor);
+                         }
+                    });
+                    console.log(litUpTiles3);
+                }
+            }
+        });
+    }
+});
 
 
 
