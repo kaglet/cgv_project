@@ -151,6 +151,42 @@ class InnerWall {
     }
 }
 
+class Gate {
+
+    constructor(scene, world, position, rotation) {
+        // Create Three.js wall
+        const gateGeometry = new THREE.BoxGeometry(50, 70, 2);
+        const gateMaterial = new THREE.MeshStandardMaterial({
+            color: "red",
+            side: THREE.DoubleSide,
+            wireframe: false,
+        });
+
+        this.mesh = new THREE.Mesh(gateGeometry, gateMaterial);
+        scene.add(this.mesh);
+
+        // Create Cannon.js wall
+        const gatePhysMat = new CANNON.Material()
+        const gateShape = new CANNON.Box(new CANNON.Vec3(25 / 2, 35, 1));
+        this.body = new CANNON.Body({
+            mass: 0,
+            shape: gateShape,
+            material: gatePhysMat,
+        });
+
+        // Set the initial position and rotation for the Cannon.js body
+        this.body.position.copy(position);
+        this.body.quaternion.setFromEuler(rotation.x, rotation.y, rotation.z);
+
+        // Add the Cannon.js body to the world
+        world.addBody(this.body);
+
+        // Update the Three.js mesh position and rotation based on the Cannon.js body
+        this.mesh.position.copy(this.body.position);
+        this.mesh.quaternion.copy(this.body.quaternion);
+    }
+}
+
 
 
 
@@ -474,8 +510,13 @@ function addWalls() {
     const wallPuzz3back = new Wall(scene, world, new CANNON.Vec3(-blockWidth, 0, -blockWidth), new CANNON.Vec3(0, rotationAngle, 0));
 
     const lobbyExit = new InnerWall(scene, world, new CANNON.Vec3(blockWidth / 2, 0, blockWidth / 2), new CANNON.Vec3(0, (Math.PI / 1), 0));
+    const lobbyGate = new Gate(scene, world, new CANNON.Vec3(blockWidth / 2, 0, blockWidth / 2), new CANNON.Vec3(0, (Math.PI / 1), 0));
+
     const puzz1Exit = new InnerWall(scene, world, new CANNON.Vec3(blockWidth / 2, 0, -blockWidth / 2), new CANNON.Vec3(0, (Math.PI / 1), 0));
+    const puzz1Gate = new Gate(scene, world, new CANNON.Vec3(blockWidth / 2, 0, -blockWidth / 2), new CANNON.Vec3(0, (Math.PI / 1), 0));
+
     const puzz2Exit = new InnerWall(scene, world, new CANNON.Vec3(0, 0, -blockWidth), new CANNON.Vec3(0, (Math.PI / 2), 0));
+    const puzz2Gate = new Gate(scene, world, new CANNON.Vec3(0, 0, -blockWidth), new CANNON.Vec3(0, (Math.PI / 2), 0));
 
 }
 
