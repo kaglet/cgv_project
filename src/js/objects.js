@@ -98,8 +98,8 @@ class InnerWall {
         const wallPhysMat = new CANNON.Material();
 
         // Create two Cannon.js boxes for each part of the inner wall
-        const wallShape1 = new CANNON.Box(new CANNON.Vec3(partWidth / 2, 35, 2.5));
-        const wallShape2 = new CANNON.Box(new CANNON.Vec3(partWidth / 2, 35, 2.5));
+        const wallShape1 = new CANNON.Box(new CANNON.Vec3(partWidth / 2, 35, 15));
+        const wallShape2 = new CANNON.Box(new CANNON.Vec3(partWidth / 2, 35, 15));
 
         // Create Cannon.js bodies for each part
         this.body1 = new CANNON.Body({
@@ -473,7 +473,7 @@ function addWalls() {
     const wallPuzz3Left = new Wall(scene, world, new CANNON.Vec3(-blockWidth / 2, 0, -blockWidth / 2), new CANNON.Vec3(0, (Math.PI / 1), 0));
     const wallPuzz3back = new Wall(scene, world, new CANNON.Vec3(-blockWidth, 0, -blockWidth), new CANNON.Vec3(0, rotationAngle, 0));
 
-    const lobbyExit = new InnerWall(scene, world, new CANNON.Vec3(blockWidth / 2, 0, blockWidth / 2), new CANNON.Vec3(0, (Math.PI / 1), 0));
+    const lobbyExit = new InnerWall(scene, world, new CANNON.Vec3(blockWidth / 2, 0, blockWidth / 2 - 9), new CANNON.Vec3(0, (Math.PI / 1), 0));
     const puzz1Exit = new InnerWall(scene, world, new CANNON.Vec3(blockWidth / 2, 0, -blockWidth / 2 + 20), new CANNON.Vec3(0, (Math.PI / 1), 0));
     const puzz2Exit = new InnerWall(scene, world, new CANNON.Vec3(-33.5, 0, -blockWidth), new CANNON.Vec3(0, (Math.PI / 2), 0));
 
