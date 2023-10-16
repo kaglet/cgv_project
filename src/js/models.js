@@ -1620,7 +1620,7 @@ export function loadModels(loader, scene, world, blockWidth){
 
 
 
-        // TODO: For variation adjust scaling in z, y, x for narrower/extended walls or taller/shotter walls
+    // TODO: For variation adjust scaling in z, y, x for narrower/extended walls or taller/shotter walls
     // Based off that you can also adjust the adjustment length to shift by before pasting the next model but that's a bit too advanced
     // I think I will choose a uniform adjustment for all and work only with scaling, and have same number of pieces too just vary length and heights and ensure they reach end
     // Plan for minimum in scale each time for max i in iterations
@@ -1629,6 +1629,13 @@ export function loadModels(loader, scene, world, blockWidth){
     let offsetCurvedEdgesShift = 27;
     // for wall spawn right
     let adjustment1 = 0;
+    // Calculate the total width of the inner wall (including the gap)
+    const totalWidth = blockWidth;
+    const gapWidth = 50;
+    
+    // Calculate the width of each part of the inner wall
+    const partWidth = (totalWidth - gapWidth) / 2;
+
     for (let i = 0; i < 13; i++) {
         loader.load(pathToWall , (gltf) => {
             const model = gltf.scene;
@@ -1727,191 +1734,90 @@ export function loadModels(loader, scene, world, blockWidth){
             console.log(error);
         });
     }
+
+    // lobby exit
+    let adjustment8 = 0;
+    for (let i = 0; i < 2; i++) {
+        loader.load(pathToWall, (gltf) => {
+            const modelLeft = gltf.scene;
+            const modelRight = modelLeft.clone();
+            
+            scene.add(modelLeft);
+            scene.add(modelRight);
+            // I must position two models at the same place in one coordinate so maybe add model twice or just different variables
+            // try work on one side for now before other side
+            let height = generateRandomNumberForVariation();
+            let depth = generateRandomNumberForVariation();
+            let positionX = blockWidth / 2;
+            let positionY = 0;
+            let positionZ = blockWidth / 2;
+            modelLeft.scale.set(0.2, height, depth);
+            modelLeft.position.set((positionX - partWidth / 2 - gapWidth / 2) - offsetCurvedEdgesShift - 35 - adjustment8, positionY, positionZ);
+
+            modelRight.scale.set(0.2, height, depth);
+            modelRight.position.set((positionX - partWidth / 2 + gapWidth / 2) + offsetCurvedEdgesShift + 139 + adjustment8, positionY, positionZ);
+            
+            adjustment8 -= 18.7;
+            // model.rotateY(-Math.PI / 2);
+        }, undefined, (error) => {
+            console.log(error);
+        });
+    }
+    // puzzle 1 exit
+    let adjustment9 = 0;
+    for (let i = 0; i < 2; i++) {
+        loader.load(pathToWall, (gltf) => {
+            const modelLeft = gltf.scene;
+            const modelRight = modelLeft.clone();
+            
+            scene.add(modelLeft);
+            scene.add(modelRight);
+            // I must position two models at the same place in one coordinate so maybe add model twice or just different variables
+            // try work on one side for now before other side
+            let height = generateRandomNumberForVariation();
+            let depth = generateRandomNumberForVariation();
+            let positionX = blockWidth / 2;
+            let positionY = 0;
+            let positionZ = - blockWidth / 2;
+            modelLeft.scale.set(0.2, height, depth);
+            modelLeft.position.set((positionX - partWidth / 2 - gapWidth / 2) - offsetCurvedEdgesShift - 35 - adjustment9, positionY, positionZ + 20);
+
+            modelRight.scale.set(0.2, height, depth);
+            modelRight.position.set((positionX - partWidth / 2 + gapWidth / 2) + offsetCurvedEdgesShift + 139 + adjustment9, positionY, positionZ + 20);
+            
+            adjustment9 -= 18.7;
+        }, undefined, (error) => {
+            console.log(error);
+        });
+    }
+    // puzzle 2 exit
+    let adjustment10 = 0;
+    for (let i = 0; i < 2; i++) {
+        loader.load(pathToWall, (gltf) => {
+            const modelLeft = gltf.scene;
+            const modelRight = modelLeft.clone();
+            
+            scene.add(modelLeft);
+            scene.add(modelRight);
+            // I must position two models at the same place in one coordinate so maybe add model twice or just different variables
+            // try work on one side for now before other side
+            let height = generateRandomNumberForVariation();
+            let depth = generateRandomNumberForVariation();
+            let positionX = 0;
+            let positionY = 0;
+            let positionZ = - blockWidth;
+            modelLeft.scale.set(0.2, height, depth);
+            modelLeft.position.set(positionX - 33.5, positionY, positionZ - offsetCurvedEdgesShift - partWidth / 2 - gapWidth / 2);
+
+            modelRight.scale.set(0.2, height, depth);
+            modelRight.position.set(positionX - 33.5, positionY, positionZ + partWidth / 2 + gapWidth / 2);
+            
+            adjustment10 -= 18.7;
+
+            modelLeft.rotateY(-Math.PI / 2);
+            modelRight.rotateY(-Math.PI / 2);
+        }, undefined, (error) => {
+            console.log(error);
+        });
+    }
 }
-
-
-
-
-// export function loadModels(loader, scene, world, blockWidth) {
-//     // loader.load('/ground_material.glb', function (gltf) {
-//     //     gltf.scene.rotation.y = Math.PI / 2;
-//     //     gltf.scene.scale.set(1, 1, 1);
-//     //     gltf.scene.position.y = -1;
-//     //     gltf.scene.position.x = 0;
-//     //     gltf.scene.position.z = 0;
-//     //     scene.add(gltf.scene);
-
-//     // }, undefined, function (error) {
-//     //     console.error(error);
-//     // });
-
-
-
-//     // TODO: Return a model from constructor that loads the same model for repetitions
-//     // Check how to repeat a model, or clone it. 
-//     // TODO: Make wall transparent so I can see other walls I put in and repeat just by increasing size in for loop while returning it from constructor along a side
-//     // Repetetive work can be done in loop
-//     // That gets me walls not high enough and not fully wrapped in 3D texture which doesn't have a topping, it has a strange top
-//     // Goal is to obscure outside with high walls
-//     // TODO: Check if walls can be cut out
-
-//     // loader.load('assets/damaged_wall/scene.gltf', (gltf) => {
-//     //     const model = gltf.scene;
-//     //     // add to scene and position like any other object
-//     //     scene.add(model);
-//     //     model.scale.set(0.1, 0.1, 0.1);
-//     //     model.position.set(200, 0, 300);
-//     //     // model.position.set(-10, 0, -100);
-//     // }, undefined, (error) => {
-//     //     console.log(error);
-//     // });
-
-//     // loader.load('assets/stone_wall/scene.gltf', (gltf) => {
-//     //     const model = gltf.scene;
-//     //     // add to scene and position like any other object
-//     //     scene.add(model);
-//     //     model.scale.set(0.1, 0.1, 0.1);
-//     //     model.position.set(50, 0, 200);
-//     //     // model.position.set(-10, 0, -100);
-//     // }, undefined, (error) => {
-//     //     console.log(error);
-//     // });
-
-//     // loader.load('/luffy.glb', function (gltf) {
-//     //     const luffyModel = gltf.scene;
-//     //     luffyModel.rotation.y = -Math.PI / 2;
-//     //     luffyModel.scale.set(0.15, 0.15, 0.15);
-//     //     luffyModel.position.set(0, -2, -40);
-
-//     //     // Calculate dimensions of the Luffy model
-//     //     const boundingBox = new THREE.Box3().setFromObject(luffyModel);
-//     //     const width = boundingBox.max.x - boundingBox.min.x;
-//     //     const height = boundingBox.max.y - boundingBox.min.y;
-//     //     const depth = boundingBox.max.z - boundingBox.min.z;
-
-//     //     // Create Cannon.js body shape for Luffy model
-//     //     const luffyShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-
-//     //     // Create Cannon.js body for Luffy model
-//     //     const luffyBody = new CANNON.Body({
-//     //         mass: 0, // Adjust mass as needed
-//     //         position: new CANNON.Vec3(0, -2, -40) // Initial position of the model
-//     //     });
-//     //     luffyBody.addShape(luffyShape);
-//     //     world.addBody(luffyBody);
-
-//     //     scene.add(luffyModel);
-
-//     //     // Print the size of the Luffy model
-//     //     console.log('Luffy Model Size - Width:', width, 'Height:', height, 'Depth:', depth);
-
-//     //     // Create wireframe mesh for visualization
-//     //     const wireframeGeometry = new THREE.BoxGeometry(width, height, depth);
-//     //     const wireframeMaterial = new THREE.MeshBasicMaterial({
-//     //         color: 0x00ff00,
-//     //         wireframe: true
-//     //     });
-//     //     const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-//     //     // Position the wireframe mesh at the same position as the model
-//     //     wireframeMesh.position.set(0, 10, -40);
-
-//     //     // Add the wireframe mesh to the scene
-//     //     scene.add(wireframeMesh);
-//     // }, undefined, function (error) {
-//     //     console.error(error);
-//     // });
-
-//     // loader.load('/lion_statue.glb', function (gltf) {
-//     //     const lionStatueModel = gltf.scene;
-//     //     lionStatueModel.scale.set(20, 20, 20);
-//     //     lionStatueModel.position.set(-40, -5, 0);
-//     //     console.log("Lion Statue Properties:");
-//     //     //    for (const property in lionStatueModel) {
-//     //     //        console.log(`${property}:`, lionStatueModel[property]);
-//     //     //    }
-
-//     //     // Calculate dimensions of the lion statue model
-//     //     const boundingBox = new THREE.Box3().setFromObject(lionStatueModel);
-//     //     const width = boundingBox.max.x - boundingBox.min.x;
-//     //     const height = boundingBox.max.y - boundingBox.min.y;
-//     //     const depth = boundingBox.max.z - boundingBox.min.z;
-//     //     console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-//     //     // Add Cannon.js body for Lion Statue model
-//     //     const lionStatueShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-//     //     const lionStatueBody = new CANNON.Body({
-//     //         mass: 0, // Static object, so mass is 0
-//     //         position: new CANNON.Vec3(-40, -5, 0) // Initial position of the model
-//     //     });
-//     //     lionStatueBody.addShape(lionStatueShape);
-//     //     world.addBody(lionStatueBody);
-
-//     //     scene.add(lionStatueModel);
-
-//     //     // Create wireframe mesh for visualization
-//     //     const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-//     //     const wireframeMaterial = new THREE.MeshBasicMaterial({
-//     //         color: 0x00ff00,
-//     //         wireframe: true
-//     //     });
-//     //     const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-//     //     // Position the wireframe mesh at the same position as the model
-//     //     wireframeMesh.position.set(-40, 8, 0);
-
-//     //     // Add the wireframe mesh to the scene
-//     //     scene.add(wireframeMesh);
-//     // }, undefined, function (error) {
-//     //     console.error(error);
-//     // });
-
-//     // // Load Dragon Ball Z - Guko Character model
-//     // loader.load('/dragon_ball_z_-_guko_character.glb', function (gltf) {
-//     //     const gukoModel = gltf.scene;
-//     //     gukoModel.rotation.y = -Math.PI / 2;
-//     //     gukoModel.scale.set(1, 1, 1);
-//     //     gukoModel.position.set(40, 35, 0);
-
-//     //     // Calculate dimensions of the Goku model
-//     //     const boundingBox = new THREE.Box3().setFromObject(gukoModel);
-//     //     const width = boundingBox.max.x - boundingBox.min.x;
-//     //     const height = boundingBox.max.y - boundingBox.min.y;
-//     //     const depth = boundingBox.max.z - boundingBox.min.z;
-//     //     console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-//     //     // Create Cannon.js body shape for Goku model
-//     //     const gukoShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-
-//     //     // Create Cannon.js body for Goku model
-//     //     const gukoBody = new CANNON.Body({
-//     //         mass: 0, // Adjust mass as needed based on your scene's requirements
-//     //         position: new CANNON.Vec3(40, 35, 0) // Initial position of the model
-//     //     });
-
-//     //     // Add the shape to the body
-//     //     gukoBody.addShape(gukoShape);
-
-//     //     // Add the body to the world
-//     //     world.addBody(gukoBody);
-
-//     //     // Add the model to the scene
-//     //     scene.add(gukoModel);
-
-//     //     // Create wireframe mesh for visualization
-//     //     const wireframeGeometry = new THREE.BoxGeometry(width, height - 2, depth);
-//     //     const wireframeMaterial = new THREE.MeshBasicMaterial({
-//     //         color: 0x00ff00,
-//     //         wireframe: true
-//     //     });
-//     //     const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-//     //     // Position the wireframe mesh at the same position as the model
-//     //     wireframeMesh.position.set(27, 12, 0);
-
-//     //     // Add the wireframe mesh to the scene
-//     //     scene.add(wireframeMesh);
-//     // }, undefined, function (error) {
-//     //     console.error(error);
-//     // });
-// }

@@ -63,8 +63,9 @@ class BasicCharacterController {
     playerPhysMat.friction = 1000;
     playerBody = new CANNON.Body({
       mass: 100, // Adjust the mass as needed
+      // TODO: Check why this shape was commented out and only added in later
       //     shape: new CANNON.Box(new CANNON.Vec3(1, 5, 1)),
-      position: new CANNON.Vec3(125, 5, 125),
+      position: new CANNON.Vec3(125, 3, 325),
       material: playerPhysMat
     });
 
@@ -77,7 +78,7 @@ class BasicCharacterController {
   _Init(params) {
     this._params = params;
     this._decceleration = new THREE.Vector3(-5.0, -0.25, -5.0);
-    this._acceleration = new THREE.Vector3(100, 1, 100);
+    this._acceleration = new THREE.Vector3(200, 1, 200);
     this._velocity = new THREE.Vector3(0, 0, 0);
 
     this._animations = {};
