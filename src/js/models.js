@@ -135,8 +135,8 @@ export function loadModels(loader, scene, world, blockWidth){
 
     loader.load('/lion_statue.glb', function (gltf) {
         const lionStatueModel = gltf.scene;
-        lionStatueModel.scale.set(20, 20, 20);
-        lionStatueModel.position.set(-40, -5, 0);
+        lionStatueModel.scale.set(30, 30, 30);
+        lionStatueModel.position.set(103, -5, 50);
         console.log("Lion Statue Properties:");
         //    for (const property in lionStatueModel) {
         //        console.log(`${property}:`, lionStatueModel[property]);
@@ -153,7 +153,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const lionStatueShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
         const lionStatueBody = new CANNON.Body({
             mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(-40, -5, 0) // Initial position of the model
+            position: new CANNON.Vec3(103, -5, 50) // Initial position of the model
         });
         lionStatueBody.addShape(lionStatueShape);
         world.addBody(lionStatueBody);
@@ -222,6 +222,106 @@ export function loadModels(loader, scene, world, blockWidth){
 
         // Add the wireframe mesh to the scene
         scene.add(wireframeMesh);
+    }, undefined, function (error) {
+        console.error(error);
+    });
+    loader.load('/batman.glb', function (gltf) {
+        const batmanModel = gltf.scene;
+        // Adjust rotation, scale, and position as needed
+        batmanModel.rotation.y = -Math.PI/4;
+        batmanModel.scale.set(15, 15, 15);
+        batmanModel.position.set(227, 0, -71);
+        // ...
+        const boundingBox = new THREE.Box3().setFromObject(batmanModel);
+        const width = boundingBox.max.x - boundingBox.min.x;
+        const height = boundingBox.max.y - boundingBox.min.y;
+        const depth = boundingBox.max.z - boundingBox.min.z;
+        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+
+        // Add Cannon.js body for Lion Statue model
+        const batmanShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
+        const batmanBody = new CANNON.Body({
+            mass: 0, // Static object, so mass is 0
+            position: new CANNON.Vec3(227, 0, -71) // Initial position of the model
+        });
+        batmanBody.addShape(batmanShape);
+        world.addBody(batmanBody);
+
+        scene.add(batmanModel);
+    }, undefined, function (error) {
+        console.error(error);
+    });
+    loader.load('/ancient_doric_column.glb', function (gltf) {
+        const columnModel = gltf.scene;
+        // Adjust rotation, scale, and position as needed
+        columnModel.rotation.y = Math.PI / 4; // Example rotation: 45 degrees around the y-axis
+        columnModel.scale.set(4, 4, 4); // Example scale: adjust as needed
+        columnModel.position.set(103, 0, -33); // Example position: adjust as needed
+
+        // Calculate dimensions of the Doric column model
+        const boundingBox = new THREE.Box3().setFromObject(columnModel);
+        const width = boundingBox.max.x - boundingBox.min.x;
+        const height = boundingBox.max.y - boundingBox.min.y;
+        const depth = boundingBox.max.z - boundingBox.min.z;
+        console.log(`Doric Column Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+
+        // Create Cannon.js body shape for Doric column model
+        const columnShape = new CANNON.Box(new CANNON.Vec3(width / 3, height / 3, depth / 3));
+
+        // Create Cannon.js body for Doric column model
+        const columnBody = new CANNON.Body({
+            mass: 0, // Static object, so mass is 0
+            position: new CANNON.Vec3(103, 0, -33) // Initial position of the model
+        });
+        columnBody.addShape(columnShape);
+        world.addBody(columnBody); // Assuming you have the Cannon.js world variable
+
+        // Add the Doric column model to the scene
+        scene.add(columnModel);
+    }, undefined, function (error) {
+        console.error(error);
+    });loader.load('/foutain.glb', function (gltf) {
+        const columnModel = gltf.scene;
+
+        // Adjust rotation, scale, and position as needed
+        columnModel.rotation.y = Math.PI / 4; // Example rotation: 45 degrees around the y-axis
+        columnModel.scale.set(60, 60, 60); // Example scale: adjust as needed
+        columnModel.position.set(185, 0, 10); // Example position: adjust as needed
+
+        // Calculate dimensions of the Doric column model
+        const boundingBox = new THREE.Box3().setFromObject(columnModel);
+        const width = boundingBox.max.x - boundingBox.min.x;
+        const height = boundingBox.max.y - boundingBox.min.y;
+        const depth = boundingBox.max.z - boundingBox.min.z;
+        console.log(`Doric Column Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+
+        // Create Cannon.js body shape for Doric column model
+        const columnShape = new CANNON.Box(new CANNON.Vec3(width / 3, height / 3, depth / 3));
+
+        // Create Cannon.js body for Doric column model
+        const columnBody = new CANNON.Body({
+            mass: 0, // Static object, so mass is 0
+            position: new CANNON.Vec3(185, 0, 10) // Initial position of the model
+        });
+        columnBody.addShape(columnShape);
+        world.addBody(columnBody); // Assuming you have the Cannon.js world variable
+
+        // Add the Doric column model to the scene
+        scene.add(columnModel); // Assuming you have the Three.js scene variable
+    }, undefined, function (error) {
+        console.error(error);
+    });
+
+// Load Fairy Forest Skybox model
+    loader.load('/free_-_skybox_fairy_forest_day.glb', function (gltf) {
+        const fairyForestSkybox = gltf.scene;
+        // Adjust rotation, scale, and position as needed
+        fairyForestSkybox.rotation.y = Math.PI / 4; // Example rotation: 45 degrees around the y-axis
+        fairyForestSkybox.scale.set(0.02, 0.02, 0.02); // Example scale: adjust as needed
+        fairyForestSkybox.position.set(103, 51, -33); // Place it on top of the pillar
+
+        // Add the Fairy Forest Skybox model to the scene
+        scene.add(fairyForestSkybox);
     }, undefined, function (error) {
         console.error(error);
     });
@@ -1572,6 +1672,8 @@ export function loadModels(loader, scene, world, blockWidth){
         console.error(error);
     });
 
+
+
     // //KEYS
     // loader.load('/keys.glb', function (gltf) {
     //     const keys = gltf.scene;
@@ -1733,6 +1835,7 @@ export function loadModels(loader, scene, world, blockWidth){
 
 
 // export function loadModels(loader, scene, world, blockWidth) {
+
 //     // loader.load('/ground_material.glb', function (gltf) {
 //     //     gltf.scene.rotation.y = Math.PI / 2;
 //     //     gltf.scene.scale.set(1, 1, 1);
