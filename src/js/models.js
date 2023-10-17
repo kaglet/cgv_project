@@ -10,7 +10,7 @@ function generateRandomNumberForVariation(){
 }
 
 function trees(loader, scene, world) {
-    const numTrees = 20;
+    const numTrees = 10;
     const minDistanceFromCenter = 600;
     const maxDistanceFromCenter = 700;
     const center = new THREE.Vector3(-100, 0, 0); // New center position
@@ -77,7 +77,7 @@ function plants(loader, scene, world) {
     centers.push(new THREE.Vector3(blockWidth / 2, 0, -blockWidth / 2 + 9));
     centers.push(new THREE.Vector3(-24.5, 0, -blockWidth));
 
-    const numPlants = 20;
+    const numPlants = 10;
     const minDistanceFromCenter = 0;
     const maxDistanceFromCenter = 350;
 

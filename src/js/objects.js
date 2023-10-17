@@ -677,26 +677,26 @@ function PiP() {
 
     //PiP3 Creation
     PiP3.scale.set(0.12, 0.12, 0.12);
-    PiP3.position.set(blockWidth / 2 + 0.5 + 30, 20, 141);
+    PiP3.position.set(blockWidth / 2 + 0.5 + 30, 20, 111);
     PiP3.rotation.set(Math.PI, 0, 0);
     //PiP3 Pole
     const poleGeometry = new THREE.CylinderGeometry(0.75, 0.75, 35, 50);
     const poleMaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
     const pole3 = new THREE.Mesh(poleGeometry, poleMaterial);
     scene.add(pole3);
-    pole3.position.set(175 + 30, 0, 140);
+    pole3.position.set(175 + 30, 0, 110);
     //PiP3 Sign
     const signwallgeometry = new THREE.BoxGeometry(10, 10, 1.4);
     const signmaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
     const signwall3 = new THREE.Mesh(signwallgeometry, signmaterial);
     scene.add(signwall3)
-    signwall3.position.set(175 + 30, 20, 140);
+    signwall3.position.set(175 + 30, 20, 110);
     //PiP3 base
     const PiPBaseGeometry = new THREE.BoxGeometry(7,7,0.5);
     const PiPBaseMaterial3 = new THREE.MeshStandardMaterial({color: 0xFFA500});
     const PiPBase3 = new THREE.Mesh(PiPBaseGeometry,PiPBaseMaterial3);
     scene.add(PiPBase3);
-    PiPBase3.position.set(175 + 30, 20, 140.5);
+    PiPBase3.position.set(175 + 30, 20, 110.5);
     
 
     //PiP1 Creation
