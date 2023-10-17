@@ -23,7 +23,7 @@ export let levelAreas = [];
 
 // world - this is for cannon objects
 export var world = new CANNON.World({
-    gravity: new CANNON.Vec3(0, -20, 0)
+    gravity: new CANNON.Vec3(0, -30, 0)
 });
 
 // TODO: Figure out what this does where its exported and why it is required
@@ -151,54 +151,6 @@ class InnerWall {
     }
 }
 
-// class Gate {
-    
-
-//     constructor(scene, world, position, rotation) {
-//         // Create Three.js wall
-//         const gateGeometry = new THREE.BoxGeometry(50, 70, 2);
-//         const gateMaterial = new THREE.MeshStandardMaterial({
-//             color: "red",
-//             side: THREE.DoubleSide,
-//             wireframe: false,
-//         });
-
-//         this.mesh = new THREE.Mesh(gateGeometry, gateMaterial);
-//         scene.add(this.mesh);
-
-//         // Create Cannon.js wall
-//         const gatePhysMat = new CANNON.Material()
-//         const gateShape = new CANNON.Box(new CANNON.Vec3(25 / 2, 35, 1));
-//         this.body = new CANNON.Body({
-//             mass: 0,
-//             shape: gateShape,
-//             material: gatePhysMat,
-//         });
-
-//         // Set the initial position and rotation for the Cannon.js body
-//         this.body.position.copy(position);
-//         this.body.quaternion.setFromEuler(rotation.x, rotation.y, rotation.z);
-
-//         // Add the Cannon.js body to the world
-//         world.addBody(this.body);
-
-//         // Update the Three.js mesh position and rotation based on the Cannon.js body
-//         this.mesh.position.copy(this.body.position);
-//         this.mesh.quaternion.copy(this.body.quaternion);
-//     }
-
-//     opengate(angle) {
-//         // Calculate the rotation in radians (assuming angle is in degrees)
-//         const rotationAngle = (Math.PI / 180) * angle;
-        
-
-//         // Rotate the Cannon.js body
-//         this.body.quaternion.setFromEuler(0, rotationAngle, 0);
-
-//         // Update the Three.js mesh rotation based on the Cannon.js body
-//         this.mesh.quaternion.copy(this.body.quaternion);
-//     }
-// }
 
 class Gate {
     constructor(scene, world, position, rotation) {
@@ -220,8 +172,6 @@ class Gate {
         world.addBody(this.body);
 
         // Load the GLTF model for the gate
-        let model;
-        this.model = this.model;
         assetLoader.load('./assets/medieval_arched_wooden_door/scene.gltf', (gltf) => {
             // Get the gate model from the loaded GLTF scene
             this.model = gltf.scene;
@@ -237,6 +187,7 @@ class Gate {
 
             // Add the gate model to the scene
             scene.add(this.model);
+            this.opengate(90);
         });
     }
 
@@ -262,16 +213,16 @@ class Gate {
 class floorContBody {
     constructor(scene, world, container) {
         // Create floors bodies
-        const floorContGeo = new THREE.PlaneGeometry(190, 190);
-        const floorContMat = new THREE.MeshStandardMaterial({
-            color: 0x78BE21,
-            side: THREE.DoubleSide,
-            wireframe: true
-        });
+        // const floorContGeo = new THREE.PlaneGeometry(190, 190);
+        // const floorContMat = new THREE.MeshStandardMaterial({
+        //     color: 0x78BE21,
+        //     side: THREE.DoubleSide,
+        //     wireframe: false
+        // });
 
 
-        this.mesh = new THREE.Mesh(floorContGeo, floorContMat);
-        scene.add(this.mesh);
+        // this.mesh = new THREE.Mesh(floorContGeo, floorContMat);
+        // scene.add(this.mesh);
 
         // Physics floor
         const floorContPhysMat = new CANNON.Material();
@@ -288,19 +239,19 @@ class floorContBody {
         this.body.quaternion.setFromEuler(rotationAngle, 0, 0);
         world.addBody(this.body);
 
-        this.mesh.position.copy(this.body.position);
-        this.mesh.quaternion.copy(this.body.quaternion);
+        // this.mesh.position.copy(this.body.position);
+        // this.mesh.quaternion.copy(this.body.quaternion);
     }
 }
 
 function puzzComplete(puzz){
     if (puzz == 'Blue'){
 
-        puzz1Gate.opengate(90);
+     //   puzz1Gate.opengate(90);
 
     }
     else if (puzz == 'Red') {
-        puzz2Gate.opengate(90);
+       // puzz2Gate.opengate(90);
     }
     
 
@@ -1060,7 +1011,7 @@ let lobbyGate;
 let puzz1Gate;
 let puzz2Gate;
 addWalls();
-lobbyGate.opengate(90);
+//lobbyGate.opengate(90);
 
 document.addEventListener('keydown', (event) => {
     if (event.key === ' ' || event.key === 'Spacebar') {

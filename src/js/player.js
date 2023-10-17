@@ -66,7 +66,7 @@ class BasicCharacterController {
       // TODO: Check why this shape was commented out and only added in later
       //     shape: new CANNON.Box(new CANNON.Vec3(1, 5, 1)),
 //<<<<<<< HEAD
-      position: new CANNON.Vec3(-50, 3, -350),
+      position: new CANNON.Vec3(300, 10, 300),
 //=======
      // position: new CANNON.Vec3(200, 10, -400),
 //>>>>>>> new_b
