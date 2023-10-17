@@ -1,0 +1,323 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 12320,
+      "max": [
+        48.48807907104492,
+        6.845563888549805,
+        52.8934326171875
+      ],
+      "min": [
+        5.326272010803223,
+        -9.932564735412598,
+        7.129868030548096
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 147840,
+      "componentType": 5126,
+      "count": 12320,
+      "max": [
+        0.9547950625419617,
+        0.9993805885314941,
+        0.9934269785881042
+      ],
+      "min": [
+        -0.9606161713600159,
+        -0.9999951124191284,
+        -0.9934269785881042
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 12320,
+      "max": [
+        1.0,
+        1.0
+      ],
+      "min": [
+        0.0,
+        0.0
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 42702,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 295680,
+      "componentType": 5126,
+      "count": 24640,
+      "max": [
+        57.98388671875,
+        1.2534812688827515,
+        15.637435913085938
+      ],
+      "min": [
+        48.75820541381836,
+        -3.4290127754211426,
+        5.855637073516846
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 591360,
+      "componentType": 5126,
+      "count": 24640,
+      "max": [
+        0.9548848271369934,
+        0.9993808269500732,
+        0.9934274554252625
+      ],
+      "min": [
+        -0.9749043583869934,
+        -0.9999951124191284,
+        -0.9934263229370117
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 98560,
+      "componentType": 5126,
+      "count": 24640,
+      "max": [
+        1.0,
+        1.0
+      ],
+      "min": [
+        0.0,
+        0.0
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 170808,
+      "componentType": 5125,
+      "count": 85404,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "Chanti (https://sketchfab.com/estevezmary1)",
+      "license": "CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)",
+      "source": "https://sketchfab.com/3d-models/shrub-pack-500b4e919f134717a2571a4342302e35",
+      "title": "Shrub Pack"
+    },
+    "generator": "Sketchfab-12.68.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 512424,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 295680,
+      "byteOffset": 512424,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 887040,
+      "byteOffset": 808104,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 1695144,
+      "uri": "scene.bin"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "name": "lambert1",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          7.526371760356411e-05,
+          0.0396002401328494,
+          0.005620548376064667,
+          1.0
+        ],
+        "metallicFactor": 0.0,
+        "roughnessFactor": 0.6
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "pPlane67_lambert1_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TEXCOORD_0": 2
+          },
+          "indices": 3,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "pPlane70_lambert1_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 5,
+            "POSITION": 4,
+            "TEXCOORD_0": 6
+          },
+          "indices": 7,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        -1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "ef4767c5842b4ff283e5f5fa89588454.fbx"
+    },
+    {
+      "children": [
+        3,
+        5
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        4
+      ],
+      "matrix": [
+        0.35807883739471436,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.35807883739471436,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.35807883739471436,
+        0.0,
+        -3.5431902408599854,
+        1.7355577945709229,
+        3.552713678800501e-15,
+        1.0
+      ],
+      "name": "pPlane67"
+    },
+    {
+      "mesh": 0,
+      "name": "pPlane67_lambert1_0"
+    },
+    {
+      "children": [
+        6
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        -60.97554016113281,
+        1.4652267694473267,
+        0.0,
+        1.0
+      ],
+      "name": "pPlane70"
+    },
+    {
+      "mesh": 1,
+      "name": "pPlane70_lambert1_0"
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ]
+}
