@@ -343,7 +343,14 @@ function createTile(index, round, container) {
 }
 
 function createPiPTile(index, PiP) {
-    const tile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
+    let tile;
+    if(index != 81){
+        tile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
+    }else{
+        tile = new THREE.Mesh(tileGeoRound, tileMaterial.clone());
+        tile.rotation.x = Math.PI / 2;
+    }
+   
     tile.userData.tileNumber = index; // Store the tile number in user data
     tile.castShadow = true;
     tile.receiveShadow = true;
@@ -391,6 +398,20 @@ function createPiPTile(index, PiP) {
 
 
         }
+
+        if(index == 1 ){
+            const semicircleMaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
+            const semicircleMesh1 = new THREE.Mesh(semicircleGeometry, semicircleMaterial);
+            semicircleMesh1.litUp=false;
+           
+             semicircleMesh1.position.set(-2.6,0,0);
+             semicircleMesh1.rotation.x = Math.PI;
+             // Add the semicircle to your scene
+             tile.add(semicircleMesh1);
+             tile.semicircleMesh1 = semicircleMesh1;
+             semicircleMesh1.rotation.z = Math.PI/2;
+
+}
     }
 
     if (PiP == 2) {
@@ -408,6 +429,20 @@ function createPiPTile(index, PiP) {
             const squareMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 });
             const square = new THREE.Mesh(squareGeometry, squareMaterial);
             tile.add(square);
+        }
+
+        if(index == 6 ){
+                    const semicircleMaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
+                    const semicircleMesh1 = new THREE.Mesh(semicircleGeometry, semicircleMaterial);
+                    semicircleMesh1.litUp=false;
+                   
+                     semicircleMesh1.position.set(-2.8,-4,0);
+                     semicircleMesh1.rotation.x = Math.PI;
+                     // Add the semicircle to your scene
+                     tile.add(semicircleMesh1);
+                     tile.semicircleMesh1 = semicircleMesh1;
+                     semicircleMesh1.rotation.z = Math.PI/2;
+
         }
     }
 
@@ -444,6 +479,20 @@ function createPiPTile(index, PiP) {
 
 
         }
+
+        if(index == 19 ){
+            const semicircleMaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
+            const semicircleMesh1 = new THREE.Mesh(semicircleGeometry, semicircleMaterial);
+            semicircleMesh1.litUp=false;
+           
+             semicircleMesh1.position.set(2.5,-2.2,0);
+             semicircleMesh1.rotation.x = Math.PI;
+             // Add the semicircle to your scene
+             tile.add(semicircleMesh1);
+             tile.semicircleMesh1 = semicircleMesh1;
+             //semicircleMesh1.rotation.z = Math.PI/2;
+
+}
     }
 
     const tilePosition = tile.position.clone();
@@ -628,48 +677,68 @@ function PiP() {
 
     //PiP3 Creation
     PiP3.scale.set(0.12, 0.12, 0.12);
-    PiP3.position.set(blockWidth / 2 + 0.5, 20, 141);
+    PiP3.position.set(blockWidth / 2 + 0.5 + 30, 20, 141);
     PiP3.rotation.set(Math.PI, 0, 0);
     //PiP3 Pole
     const poleGeometry = new THREE.CylinderGeometry(0.75, 0.75, 35, 50);
-    const poleMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+    const poleMaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
     const pole3 = new THREE.Mesh(poleGeometry, poleMaterial);
     scene.add(pole3);
-    pole3.position.set(175, 0, 140);
+    pole3.position.set(175 + 30, 0, 140);
     //PiP3 Sign
-    const signwallgeometry = new THREE.BoxGeometry(10, 10, 1.5);
-    const signmaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+    const signwallgeometry = new THREE.BoxGeometry(10, 10, 1.4);
+    const signmaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
     const signwall3 = new THREE.Mesh(signwallgeometry, signmaterial);
     scene.add(signwall3)
-    signwall3.position.set(175, 20, 140);
+    signwall3.position.set(175 + 30, 20, 140);
+    //PiP3 base
+    const PiPBaseGeometry = new THREE.BoxGeometry(7,7,0.5);
+    const PiPBaseMaterial3 = new THREE.MeshStandardMaterial({color: 0xFFA500});
+    const PiPBase3 = new THREE.Mesh(PiPBaseGeometry,PiPBaseMaterial3);
+    scene.add(PiPBase3);
+    PiPBase3.position.set(175 + 30, 20, 140.5);
+    
 
     //PiP1 Creation
     PiP1.scale.set(0.12, 0.12, 0.12);
-    PiP1.position.set(-blockWidth / 2 + 142.5, 20, - blockWidth + 0.6);
+    PiP1.position.set(-blockWidth / 2 + 142.5 - 30, 20, - blockWidth + 0.6 + 30);
     PiP1.rotation.set(-Math.PI / 2, -Math.PI / 2, -Math.PI);
     //PiP1 Pole
     const pole1 = new THREE.Mesh(poleGeometry, poleMaterial);
     scene.add(pole1);
-    pole1.position.set(-blockWidth / 2 + 141, 0, - blockWidth + 0.5);
+    pole1.position.set(-blockWidth / 2 + 141 - 30, 0, - blockWidth + 0.5 + 30);
     //PiP1 Sign
     const signwall1 = new THREE.Mesh(signwallgeometry, signmaterial);
     scene.add(signwall1);
-    signwall1.position.set(-blockWidth / 2 + 141, 20, - blockWidth + 0.8);
+    signwall1.position.set(-blockWidth / 2 + 141 - 30, 20, - blockWidth + 0.8 + 30);
     signwall1.rotation.set(0, Math.PI / 2, 0);
+    //PiP Base 1
+    const PiPBaseMaterial1 = new THREE.MeshStandardMaterial({color: 0x006400});
+    const PiPBase1 = new THREE.Mesh(PiPBaseGeometry,PiPBaseMaterial1);
+    scene.add(PiPBase1);
+    PiPBase1.position.set(-blockWidth / 2 + 142 - 30, 20.3, - blockWidth + 0.8 - 0.4 + 30);
+    PiPBase1.rotation.set(0, Math.PI / 2, 0);
+    scene.add(PiPBase1);
 
 
     //PiP2 Creation
     PiP2.scale.set(0.12, 0.12, 0.12);
-    PiP2.position.set(blockWidth / 2 + 0.65, 20, -218);
+    PiP2.position.set(blockWidth / 2 + 0.65 + 30, 20, -218);
     PiP2.rotation.set(Math.PI, 0, 0);
     //PiP2 Pole
     const pole2 = new THREE.Mesh(poleGeometry, poleMaterial);
     scene.add(pole2);
-    pole2.position.set(blockWidth / 2 + 0.5, 0, -220);
+    pole2.position.set(blockWidth / 2 + 0.5 + 30, 0, -220);
     //PiP2 Sign
     const signwall2 = new THREE.Mesh(signwallgeometry, signmaterial);
     scene.add(signwall2);
-    signwall2.position.set(blockWidth / 2 + 0.5, 20, -220);
+    signwall2.position.set(blockWidth / 2 + 0.5 + 30, 20, -220);
+    //PiP Base 2
+    const PiPBaseMaterial2 = new THREE.MeshStandardMaterial({color: 0xff00ff});
+    const PiPBase2 = new THREE.Mesh(PiPBaseGeometry,PiPBaseMaterial2);
+    scene.add(PiPBase2);
+    PiPBase2.position.set(blockWidth / 2 + 0.3 + 30, 20.2, -219);
+    scene.add(PiPBase2);
 
     scene.add(PiP1);
     scene.add(PiP2);
