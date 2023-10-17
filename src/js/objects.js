@@ -5,13 +5,6 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { loadModels } from './models.js';
 import groundImg from './textures/avinash-kumar-rEIDzqczN7s-unsplash.jpg';
-import soil2 from './textures/soil2-pinterest.jpg';
-import soil3 from './textures/soil3-pinterest.jpg';
-import soil4 from './textures/soil4-pinterest.jpg';
-import beach1 from './textures/beach1.jpg';
-import beach2 from './textures/beach2.jpg';
-import brownsoil1 from './textures/brownsoil1.jpg';
-import darksoil1 from './textures/darksoil1.jpg';
 
 //import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as camera from './camera.js';
