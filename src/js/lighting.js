@@ -1,16 +1,16 @@
 import * as THREE from 'three'
 import * as objects from './objects.js'
-import * as player from './player.js';
 
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 objects.scene.add(ambientLight);
 
 // Add lighting (point light)
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
 objects.scene.add(directionalLight);
 directionalLight.castShadow = true;
 //directionalLight.position.set(-30, 50, 0);
-directionalLight.position.set(350/2,22,140);
+// adjust for the angle it will strike 0, 0, 0 at if it was the sun
+directionalLight.position.set(-200, 400, 60);
 // You can adjust the edges of the shadow camera to capture a wider area where shadows are rendered
 directionalLight.shadow.camera.bottom = -100;
 directionalLight.shadow.camera.top = 100;
