@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import * as CANNON from 'cannon-es';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import ceilingtextureImage from '../img/exosystem/lambert1_baseColor.png';
 
 function generateRandomNumberForVariation() {
     // Generate a random nubmer between 0.1 and 0.3
@@ -69,10 +70,151 @@ function trees(loader, scene, world) {
     }
 }
 
+function plants(loader, scene, world) {
+    const centers = [];
+    const blockWidth = 350;
+    centers.push(new THREE.Vector3(blockWidth / 2, 0, blockWidth / 2 - 9));
+    centers.push(new THREE.Vector3(blockWidth / 2, 0, -blockWidth / 2 + 9));
+    centers.push(new THREE.Vector3(-24.5, 0, -blockWidth));
+
+    const numPlants = 20;
+    const minDistanceFromCenter = 0;
+    const maxDistanceFromCenter = 350;
+
+    // Create a seeded random number generator
+    function seededRandom(seed) {
+        let x = Math.sin(seed) * 10000;
+        return x - Math.floor(x);
+    }
+
+    for (let j = 0; j < 3; j++) {
+        for (let i = 0; i < numPlants; i++) {
+            loader.load('./assets/shrub_pack/scene.gltf', function (gltf) {
+                const plantModel = gltf.scene; // Clone the model
+                plantModel.scale.set(1.5, 1.5, 1.5);
+
+                // Use the seeded random function to generate consistent random positions
+                const randomAngle = seededRandom(100 + i) * Math.PI * 2;
+                const randomDistance = minDistanceFromCenter + (seededRandom(100 - i) * (maxDistanceFromCenter - minDistanceFromCenter));
+                const randomYRotation = Math.random() * Math.PI * 2; // Random Y-axis rotation
+
+                // Calculate the X and Z coordinates based on the polar coordinates
+                const randomX = centers[j].x + randomDistance * Math.cos(randomAngle);
+                const randomZ = centers[j].z + randomDistance * Math.sin(randomAngle);
+
+                // Ensure the plant is above the ground (adjust the height as needed)
+                const groundHeight = 0.1;
+
+                plantModel.position.set(randomX, groundHeight, randomZ);
+                plantModel.rotation.y = randomYRotation;
+
+                scene.add(plantModel);
+            });
+
+
+
+            loader.load('./assets/tropical_plant/scene.gltf', function (gltf) {
+                const plantModel = gltf.scene; // Clone the model
+                plantModel.scale.set(2, 2, 2);
+
+                // Use the seeded random function to generate consistent random positions
+                const randomAngle = seededRandom(50 + i) * Math.PI * 2;
+                const randomDistance = minDistanceFromCenter + (seededRandom(50 - i) * (maxDistanceFromCenter - minDistanceFromCenter));
+                const randomYRotation = Math.random() * Math.PI * 2; // Random Y-axis rotation
+
+                // Calculate the X and Z coordinates based on the polar coordinates
+                const randomX = centers[j].x + randomDistance * Math.cos(randomAngle);
+                const randomZ = centers[j].z + randomDistance * Math.sin(randomAngle);
+
+                // Ensure the plant is above the ground (adjust the height as needed)
+                const groundHeight = 0.1;
+
+                plantModel.position.set(randomX, groundHeight, randomZ);
+                plantModel.rotation.y = randomYRotation;
+
+                scene.add(plantModel);
+            });
+
+
+            loader.load('./assets/tropical_plant_2/scene.gltf', function (gltf) {
+                const plantModel = gltf.scene; // Clone the model
+                plantModel.scale.set(0.025, 0.025, 0.025);
+
+                // Use the seeded random function to generate consistent random positions
+                const randomAngle = seededRandom(42 + i) * Math.PI * 2;
+                const randomDistance = minDistanceFromCenter + (seededRandom(42 - i) * (maxDistanceFromCenter - minDistanceFromCenter));
+                const randomYRotation = Math.random() * Math.PI * 2; // Random Y-axis rotation
+
+                // Calculate the X and Z coordinates based on the polar coordinates
+                const randomX = centers[j].x + randomDistance * Math.cos(randomAngle);
+                const randomZ = centers[j].z + randomDistance * Math.sin(randomAngle);
+
+                // Ensure the plant is above the ground (adjust the height as needed)
+                const groundHeight = 0.1;
+
+                plantModel.position.set(randomX, groundHeight, randomZ);
+                plantModel.rotation.y = randomYRotation;
+
+                scene.add(plantModel);
+            });
+
+            loader.load('./assets/tropical_plant_monstera_deliciosa/scene.gltf', function (gltf) {
+                const plantModel = gltf.scene; // Clone the model
+                plantModel.scale.set(6, 6, 6);
+
+                // Use the seeded random function to generate consistent random positions
+                const randomAngle = seededRandom(100 + i) * Math.PI * 2;
+                const randomDistance = minDistanceFromCenter + (seededRandom(100 - i) * (maxDistanceFromCenter - minDistanceFromCenter));
+                const randomYRotation = Math.random() * Math.PI * 2; // Random Y-axis rotation
+
+                // Calculate the X and Z coordinates based on the polar coordinates
+                const randomX = centers[j].x + randomDistance * Math.cos(randomAngle);
+                const randomZ = centers[j].z + randomDistance * Math.sin(randomAngle);
+
+                // Ensure the plant is above the ground (adjust the height as needed)
+                const groundHeight = 0.1;
+
+                plantModel.position.set(randomX, groundHeight, randomZ);
+                plantModel.rotation.y = randomYRotation;
+
+                scene.add(plantModel);
+            });
+
+            loader.load('./assets/tropical_plant_3/scene.gltf', function (gltf) {
+                const plantModel = gltf.scene; // Clone the model
+                plantModel.scale.set(6, 6, 6);
+
+                // Use the seeded random function to generate consistent random positions
+                const randomAngle = seededRandom(13 + i) * Math.PI * 2;
+                const randomDistance = minDistanceFromCenter + (seededRandom(13 - i) * (maxDistanceFromCenter - minDistanceFromCenter));
+                const randomYRotation = Math.random() * Math.PI * 2; // Random Y-axis rotation
+
+                // Calculate the X and Z coordinates based on the polar coordinates
+                const randomX = centers[j].x + randomDistance * Math.cos(randomAngle);
+                const randomZ = centers[j].z + randomDistance * Math.sin(randomAngle);
+
+                // Ensure the plant is above the ground (adjust the height as needed)
+                const groundHeight = 0.1;
+
+                plantModel.position.set(randomX, groundHeight, randomZ);
+                plantModel.rotation.y = randomYRotation;
+
+                scene.add(plantModel);
+            });
+
+
+
+
+        }
+    }
+}
+
+
+
 export function loadModels(loader, scene, world, blockWidth) {
 
     trees(loader, scene, world);
-
+    plants(loader, scene, world);
 
 
 
@@ -88,55 +230,12 @@ export function loadModels(loader, scene, world, blockWidth) {
         console.error(error);
     });
 
-    loader.load('/luffy.glb', function (gltf) {
-        const luffyModel = gltf.scene;
-        luffyModel.rotation.y = -Math.PI / 2;
-        luffyModel.scale.set(0.15, 0.15, 0.15);
-        luffyModel.position.set(60, 35, 0);
 
-        // Calculate dimensions of the Luffy model
-        const boundingBox = new THREE.Box3().setFromObject(luffyModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-
-        // Create Cannon.js body shape for Luffy model
-        // const luffyShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        //
-        // // Create Cannon.js body for Luffy model
-        // const luffyBody = new CANNON.Body({
-        //     mass: 0, // Adjust mass as needed
-        //     position: new CANNON.Vec3(0, -2, -40) // Initial position of the model
-        // });
-        // luffyBody.addShape(luffyShape);
-        // world.addBody(luffyBody);
-
-        scene.add(luffyModel);
-
-        // Print the size of the Luffy model
-        console.log('Luffy Model Size - Width:', width, 'Height:', height, 'Depth:', depth);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(0, 10, -40);
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
 
     loader.load('/lion_statue.glb', function (gltf) {
         const lionStatueModel = gltf.scene;
-        lionStatueModel.scale.set(20, 20, 20);
-        lionStatueModel.position.set(-40, -5, 0);
+        lionStatueModel.scale.set(30, 30, 30);
+        lionStatueModel.position.set(103, -5, 50);
         console.log("Lion Statue Properties:");
         //    for (const property in lionStatueModel) {
         //        console.log(`${property}:`, lionStatueModel[property]);
@@ -153,7 +252,7 @@ export function loadModels(loader, scene, world, blockWidth) {
         const lionStatueShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
         const lionStatueBody = new CANNON.Body({
             mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(-40, -5, 0) // Initial position of the model
+            position: new CANNON.Vec3(103, -5, 50) // Initial position of the model
         });
         lionStatueBody.addShape(lionStatueShape);
         world.addBody(lionStatueBody);
@@ -177,61 +276,12 @@ export function loadModels(loader, scene, world, blockWidth) {
         console.error(error);
     });
 
-    // Load Dragon Ball Z - Guko Character model
-    loader.load('/dragon_ball_z_-_guko_character.glb', function (gltf) {
-        const gukoModel = gltf.scene;
-        gukoModel.rotation.y = -Math.PI / 2;
-        gukoModel.scale.set(1, 1, 1);
-        gukoModel.position.set(40, 35, 0);
 
-        // Calculate dimensions of the Goku model
-        const boundingBox = new THREE.Box3().setFromObject(gukoModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Create Cannon.js body shape for Goku model
-        const gukoShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-
-        // Create Cannon.js body for Goku model
-        const gukoBody = new CANNON.Body({
-            mass: 0, // Adjust mass as needed based on your scene's requirements
-            position: new CANNON.Vec3(40, 35, 0) // Initial position of the model
-        });
-
-        // Add the shape to the body
-        gukoBody.addShape(gukoShape);
-
-        // Add the body to the world
-        world.addBody(gukoBody);
-
-        // Add the model to the scene
-        scene.add(gukoModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 2, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(27, 12, 0);
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-
-    //DUNGEON CELLS
+    //DUNGEON CELLSS
     loader.load('/dungeon.glb', function (gltf) {
         const dungeonModel = gltf.scene;
         dungeonModel.scale.set(15, 15, 15);
-        dungeonModel.position.set(105, 17, 487);
+        dungeonModel.position.set(106, 17, 487);
         //console.log("Dungeon Model Properties:");
         //    for (const property in lionStatueModel) {
         //        console.log(`${property}:`, lionStatueModel[property]);
@@ -1210,8 +1260,8 @@ export function loadModels(loader, scene, world, blockWidth) {
     //WELL
     loader.load('/well.glb', function (gltf) {
         const wellModel = gltf.scene;
-        wellModel.scale.set(20, 20, 20);
-        wellModel.position.set(315, 19, 220);
+        wellModel.scale.set(15, 15, 15);
+        wellModel.position.set(-205, 15, -380);
         //  console.log("Well Model Properties:");
 
         // Calculate dimensions of the well model
@@ -1225,7 +1275,7 @@ export function loadModels(loader, scene, world, blockWidth) {
         const wellModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
         const wellModelBody = new CANNON.Body({
             mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(315, 19, 220) // Initial position of the model
+            position: new CANNON.Vec3(-205, 15, -380) // Initial position of the model
         });
         wellModelBody.addShape(wellModelShape);
         world.addBody(wellModelBody);
@@ -1250,6 +1300,129 @@ export function loadModels(loader, scene, world, blockWidth) {
     }, undefined, function (error) {
         console.error(error);
     });
+
+    loader.load('/boer_war_statue.glb', function (gltf) {
+        const wellModel = gltf.scene;
+        wellModel.rotation.y = -Math.PI / 4;
+        wellModel.scale.set(1.5, 1.5, 1.5);
+        wellModel.position.set(-205, -10, -300);
+        //  console.log("Well Model Properties:");
+
+        // Calculate dimensions of the well model
+        const boundingBox = new THREE.Box3().setFromObject(wellModel);
+        const width = boundingBox.max.x - boundingBox.min.x;
+        const height = boundingBox.max.y - boundingBox.min.y;
+        const depth = boundingBox.max.z - boundingBox.min.z;
+        //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+
+        // Add Cannon.js body for Well model
+        const wellModelShape = new CANNON.Box(new CANNON.Vec3(width / 4.5, height / 4.5, depth / 4.5));
+        const wellModelBody = new CANNON.Body({
+            mass: 0, // Static object, so mass is 0
+            position: new CANNON.Vec3(-205, -10, -300) // Initial position of the model
+        });
+        wellModelBody.addShape(wellModelShape);
+        world.addBody(wellModelBody);
+
+        wellModel.rotation.y = -Math.PI / 4;
+        scene.add(wellModel);
+
+        // Create a wireframe mesh for visualization
+        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
+        const wireframeMaterial = new THREE.MeshBasicMaterial({
+            color: 0x00ff00,
+            wireframe: true
+        });
+        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
+
+        // Position the wireframe mesh at the same position as the model
+        wireframeMesh.position.set(315, 19, 220);
+        wireframeMesh.visible = false;
+
+        // Add the wireframe mesh to the scene
+        scene.add(wireframeMesh);
+    }, undefined, function (error) {
+        console.error(error);
+    });
+
+
+    const lambertMaterial = new THREE.MeshLambertMaterial({ color: 0x000000 }); // Black color
+
+    // Loader to load the texture
+    const textureLoader = new THREE.TextureLoader();
+    const texture = textureLoader.load('exosystem_bk.jpg'); // Replace with the path to your texture file
+
+    const textureScaleX = 0.1; // Adjust the texture tiling in the X direction
+    const textureScaleY = 0.11; // Adjust the texture tiling in the Y direction
+
+    // Apply texture transformation matrix for tiling
+    texture.matrixAutoUpdate = false; // Prevent Three.js from auto-updating texture matrix
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+
+    // Set texture matrix to control tiling
+    const textureMatrix = new THREE.Matrix4().identity();
+    textureMatrix.scale(new THREE.Vector3(textureScaleX, textureScaleY, 1)); // Scale texture coordinates
+    texture.matrix = textureMatrix;
+    // Apply the texture to the Lambert material
+    lambertMaterial.map = texture;
+//    loader.load('/iron_man_mark_85.glb', function (gltf) {
+//        const wellModel = gltf.scene;
+//        wellModel.rotation.y = -Math.PI / 4;
+//        wellModel.scale.set(0.1, 0.10, 0.1);
+//        wellModel.position.set(-120, 0, -420);
+//
+//        // Create a blue Lambert material
+//        const blueMaterial = new THREE.MeshLambertMaterial({ color: 0x0000ff }); // Blue color
+//        const textureLoader = new THREE.TextureLoader();
+//        const texture = textureLoader.load(ceilingtextureImage); // Replace with the path to your PNG texture file
+//
+//        // Create a material using the loaded texture
+//        const pngMaterial = new THREE.MeshLambertMaterial({ map: texture });
+//        console.log(pngMaterial);
+//        wellModel.traverse(function (child) {
+//            if (child.isMesh) {
+//                child.material = pngMaterial;
+//            }
+//        });
+//        // Apply the blue material to the wellModel
+//        // wellModel.material=pngMaterial;
+//
+//        // Calculate dimensions of the well model
+//        const boundingBox = new THREE.Box3().setFromObject(wellModel);
+//        const width = boundingBox.max.x - boundingBox.min.x;
+//        const height = boundingBox.max.y - boundingBox.min.y;
+//        const depth = boundingBox.max.z - boundingBox.min.z;
+//
+//        // Add Cannon.js body for Well model
+//        const wellModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
+//        const wellModelBody = new CANNON.Body({
+//            mass: 0, // Static object, so mass is 0
+//            position: new CANNON.Vec3(-120, 0, -420) // Initial position of the model
+//        });
+//        wellModelBody.addShape(wellModelShape);
+//        world.addBody(wellModelBody);
+//
+//        wellModel.rotation.y = -Math.PI / 4;
+//        scene.add(wellModel);
+//
+//        // Create a wireframe mesh for visualization
+//        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
+//        const wireframeMaterial = new THREE.MeshBasicMaterial({
+//            color: 0x00ff00, // Green color (for wireframe)
+//            wireframe: true
+//        });
+//
+//        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
+//
+//        // Position the wireframe mesh at the same position as the model
+//        wireframeMesh.position.set(315, 19, 220);
+//        wireframeMesh.visible = false;
+//
+//        // Add the wireframe mesh to the scene
+//        scene.add(wireframeMesh);
+//    }, undefined, function (error) {
+//        console.error(error);
+//    });
 
 
     //WOODEN CRATE
@@ -1872,10 +2045,22 @@ function addWallModels(loader, scene, world, blockWidth) {
             modelLeft.scale.set(0.2, height, depth);
             modelLeft.position.set(positionX - 33.5, positionY, positionZ - offsetCurvedEdgesShift - partWidth / 2 - gapWidth / 2);
 
+
             modelRight.scale.set(0.2, height, depth);
             modelRight.position.set(positionX - 33.5, positionY, positionZ + partWidth / 2 + gapWidth / 2);
 
             adjustment10 -= 18.7;
+
+            // export function loadModels(loader, scene, world, blockWidth) {
+
+            //     // loader.load('/ground_material.glb', function (gltf) {
+            //     //     gltf.scene.rotation.y = Math.PI / 2;
+            //     //     gltf.scene.scale.set(1, 1, 1);
+            //     //     gltf.scene.position.y = -1;
+            //     //     gltf.scene.position.x = 0;
+            //     //     gltf.scene.position.z = 0;
+            //     //     scene.add(gltf.scene);
+
 
             modelLeft.rotateY(-Math.PI / 2);
             modelRight.rotateY(-Math.PI / 2);

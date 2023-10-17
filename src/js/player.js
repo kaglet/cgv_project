@@ -17,7 +17,7 @@ let raycaster = objects.raycaster;
 
 //const moveForwardSoundPlaying = false; // Add a flag to track if the sound is already playing
 
-
+let sound=false;
 const listener = new THREE.AudioListener();
 //camera.add( listener );
 const moveSound = new THREE.Audio(listener);
@@ -65,7 +65,11 @@ class BasicCharacterController {
       mass: 100, // Adjust the mass as needed
       // TODO: Check why this shape was commented out and only added in later
       //     shape: new CANNON.Box(new CANNON.Vec3(1, 5, 1)),
-      position: new CANNON.Vec3(125, 3, 325),
+//<<<<<<< HEAD
+      position: new CANNON.Vec3(300, 10, 300),
+//=======
+     // position: new CANNON.Vec3(200, 10, -400),
+//>>>>>>> new_b
       material: playerPhysMat
     });
 
@@ -412,7 +416,7 @@ class BasicCharacterControllerInput {
 
   _onKeyDown(event) {
     if (!paused) {
-    // Play the sound for all directions
+      // Play the sound for all directions
       switch (event.keyCode) {
         case 87: // w
           moveForward = true;
@@ -427,10 +431,9 @@ class BasicCharacterControllerInput {
           moveRight = true;
           break;
       }
-      if (moveForward || moveBackward || moveRight || moveLeft) {
+      if ((moveForward || moveBackward || moveRight || moveLeft) && sound==false) {
+      sound=true;
         moveSound.play();
-      } else {
-        moveSound.stop();
       }
     }
   };
@@ -458,10 +461,9 @@ class BasicCharacterControllerInput {
        // moveSound.stop();
         break;
     }
-    if (moveForward || moveBackward || moveRight || moveLeft) {
-      moveSound.play();
-    } else {
+    if (!moveForward && !moveBackward && !moveRight && !moveLeft) {
       moveSound.stop();
+      sound=false;
     }
   }
 };

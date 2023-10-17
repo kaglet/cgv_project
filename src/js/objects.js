@@ -25,7 +25,7 @@ export let levelAreas = [];
 
 // world - this is for cannon objects
 export var world = new CANNON.World({
-    gravity: new CANNON.Vec3(0, -20, 0)
+    gravity: new CANNON.Vec3(0, -30, 0)
 });
 
 // TODO: Figure out what this does where its exported and why it is required
@@ -150,25 +150,16 @@ class InnerWall {
 
         this.mesh1.quaternion.copy(initialRotation);
         this.mesh2.quaternion.copy(initialRotation);
+        //const loader = new THREE.GLTFLoader();
+
     }
 }
 
+
 class Gate {
-    
-
     constructor(scene, world, position, rotation) {
-        // Create Three.js wall
-        const gateGeometry = new THREE.BoxGeometry(50, 70, 2);
-        const gateMaterial = new THREE.MeshStandardMaterial({
-            color: "red",
-            side: THREE.DoubleSide,
-            wireframe: false,
-        });
 
-        this.mesh = new THREE.Mesh(gateGeometry, gateMaterial);
-        scene.add(this.mesh);
-
-        // Create Cannon.js wall
+      //  Create Cannon.js wall
         const gatePhysMat = new CANNON.Material()
         const gateShape = new CANNON.Box(new CANNON.Vec3(25 / 2, 35, 1));
         this.body = new CANNON.Body({
@@ -184,38 +175,58 @@ class Gate {
         // Add the Cannon.js body to the world
         world.addBody(this.body);
 
-        // Update the Three.js mesh position and rotation based on the Cannon.js body
-        this.mesh.position.copy(this.body.position);
-        this.mesh.quaternion.copy(this.body.quaternion);
+        // Load the GLTF model for the gate
+        assetLoader.load('./assets/medieval_arched_wooden_door/scene.gltf', (gltf) => {
+            // Get the gate model from the loaded GLTF scene
+            this.model = gltf.scene;
+            this.model.scale.set(0.6, 0.25, 0.25);
+            
+            // Set the initial position and rotation of the model
+            this.model.position.copy(position);
+            this.model.rotation.set(rotation.x, rotation.y, rotation.z);
+
+            // Update the Three.js model position and rotation based on the Cannon.js body
+            this.model.position.copy(this.body.position);
+            this.model.quaternion.copy(this.body.quaternion);
+
+            // Add the gate model to the scene
+            scene.add(this.model);
+            this.opengate(90);
+        });
     }
 
-    opengate(angle) {
+         opengate(angle) {
         // Calculate the rotation in radians (assuming angle is in degrees)
-        const rotationAngle = (Math.PI / 180) * angle;
-        
+        if (this.model) {
+            // Calculate the rotation in radians (assuming angle is in degrees)
+            const rotationAngle = (Math.PI / 180) * angle;
 
-        // Rotate the Cannon.js body
-        this.body.quaternion.setFromEuler(0, rotationAngle, 0);
+            // Rotate the Cannon.js body
+            this.body.quaternion.setFromEuler(0, rotationAngle, 0);
+            this.model.position.copy(this.body.position);
+            this.model.quaternion.copy(this.body.quaternion);
+        }
 
         // Update the Three.js mesh rotation based on the Cannon.js body
-        this.mesh.quaternion.copy(this.body.quaternion);
+       // this.model.rotation.copy(this.body.quaternion);
     }
 }
+
 
 
 class floorContBody {
     constructor(scene, world, container) {
         // Create floors bodies
-        const floorContGeo = new THREE.PlaneGeometry(190, 190);
-        const floorContMat = new THREE.MeshStandardMaterial({
-            color: 0x78BE21,
-            side: THREE.DoubleSide,
-            wireframe: true
-        });
+        // const floorContGeo = new THREE.PlaneGeometry(190, 190);
+        // const floorContMat = new THREE.MeshStandardMaterial({
+        //     color: 0x78BE21,
+        //     side: THREE.DoubleSide,
+        //     wireframe: false
+        // });
 
 
-        this.mesh = new THREE.Mesh(floorContGeo, floorContMat);
-        scene.add(this.mesh);
+        // this.mesh = new THREE.Mesh(floorContGeo, floorContMat);
+        // scene.add(this.mesh);
 
         // Physics floor
         const floorContPhysMat = new CANNON.Material();
@@ -232,19 +243,19 @@ class floorContBody {
         this.body.quaternion.setFromEuler(rotationAngle, 0, 0);
         world.addBody(this.body);
 
-        this.mesh.position.copy(this.body.position);
-        this.mesh.quaternion.copy(this.body.quaternion);
+        // this.mesh.position.copy(this.body.position);
+        // this.mesh.quaternion.copy(this.body.quaternion);
     }
 }
 
 function puzzComplete(puzz){
     if (puzz == 'Blue'){
 
-        puzz1Gate.opengate(90);
+     //   puzz1Gate.opengate(90);
 
     }
-    else{
-        puzz2Gate.opengate(90);
+    else if (puzz == 'Red') {
+       // puzz2Gate.opengate(90);
     }
     
 
@@ -334,7 +345,14 @@ function createTile(index, round, container) {
 }
 
 function createPiPTile(index, PiP) {
-    const tile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
+    let tile;
+    if(index != 81){
+        tile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
+    }else{
+        tile = new THREE.Mesh(tileGeoRound, tileMaterial.clone());
+        tile.rotation.x = Math.PI / 2;
+    }
+   
     tile.userData.tileNumber = index; // Store the tile number in user data
     tile.castShadow = true;
     tile.receiveShadow = true;
@@ -382,6 +400,20 @@ function createPiPTile(index, PiP) {
 
 
         }
+
+        if(index == 1 ){
+            const semicircleMaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
+            const semicircleMesh1 = new THREE.Mesh(semicircleGeometry, semicircleMaterial);
+            semicircleMesh1.litUp=false;
+           
+             semicircleMesh1.position.set(-2.6,0,0);
+             semicircleMesh1.rotation.x = Math.PI;
+             // Add the semicircle to your scene
+             tile.add(semicircleMesh1);
+             tile.semicircleMesh1 = semicircleMesh1;
+             semicircleMesh1.rotation.z = Math.PI/2;
+
+}
     }
 
     if (PiP == 2) {
@@ -399,6 +431,20 @@ function createPiPTile(index, PiP) {
             const squareMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 });
             const square = new THREE.Mesh(squareGeometry, squareMaterial);
             tile.add(square);
+        }
+
+        if(index == 6 ){
+                    const semicircleMaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
+                    const semicircleMesh1 = new THREE.Mesh(semicircleGeometry, semicircleMaterial);
+                    semicircleMesh1.litUp=false;
+                   
+                     semicircleMesh1.position.set(-2.8,-4,0);
+                     semicircleMesh1.rotation.x = Math.PI;
+                     // Add the semicircle to your scene
+                     tile.add(semicircleMesh1);
+                     tile.semicircleMesh1 = semicircleMesh1;
+                     semicircleMesh1.rotation.z = Math.PI/2;
+
         }
     }
 
@@ -435,6 +481,20 @@ function createPiPTile(index, PiP) {
 
 
         }
+
+        if(index == 19 ){
+            const semicircleMaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
+            const semicircleMesh1 = new THREE.Mesh(semicircleGeometry, semicircleMaterial);
+            semicircleMesh1.litUp=false;
+           
+             semicircleMesh1.position.set(2.5,-2.2,0);
+             semicircleMesh1.rotation.x = Math.PI;
+             // Add the semicircle to your scene
+             tile.add(semicircleMesh1);
+             tile.semicircleMesh1 = semicircleMesh1;
+             //semicircleMesh1.rotation.z = Math.PI/2;
+
+}
     }
 
     const tilePosition = tile.position.clone();
@@ -619,48 +679,68 @@ function PiP() {
 
     //PiP3 Creation
     PiP3.scale.set(0.12, 0.12, 0.12);
-    PiP3.position.set(blockWidth / 2 + 0.5, 20, 141);
+    PiP3.position.set(blockWidth / 2 + 0.5 + 30, 20, 141);
     PiP3.rotation.set(Math.PI, 0, 0);
     //PiP3 Pole
     const poleGeometry = new THREE.CylinderGeometry(0.75, 0.75, 35, 50);
-    const poleMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+    const poleMaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
     const pole3 = new THREE.Mesh(poleGeometry, poleMaterial);
     scene.add(pole3);
-    pole3.position.set(175, 0, 140);
+    pole3.position.set(175 + 30, 0, 140);
     //PiP3 Sign
-    const signwallgeometry = new THREE.BoxGeometry(10, 10, 1.5);
-    const signmaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+    const signwallgeometry = new THREE.BoxGeometry(10, 10, 1.4);
+    const signmaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
     const signwall3 = new THREE.Mesh(signwallgeometry, signmaterial);
     scene.add(signwall3)
-    signwall3.position.set(175, 20, 140);
+    signwall3.position.set(175 + 30, 20, 140);
+    //PiP3 base
+    const PiPBaseGeometry = new THREE.BoxGeometry(7,7,0.5);
+    const PiPBaseMaterial3 = new THREE.MeshStandardMaterial({color: 0xFFA500});
+    const PiPBase3 = new THREE.Mesh(PiPBaseGeometry,PiPBaseMaterial3);
+    scene.add(PiPBase3);
+    PiPBase3.position.set(175 + 30, 20, 140.5);
+    
 
     //PiP1 Creation
     PiP1.scale.set(0.12, 0.12, 0.12);
-    PiP1.position.set(-blockWidth / 2 + 142.5, 20, - blockWidth + 0.6);
+    PiP1.position.set(-blockWidth / 2 + 142.5 - 30, 20, - blockWidth + 0.6 + 30);
     PiP1.rotation.set(-Math.PI / 2, -Math.PI / 2, -Math.PI);
     //PiP1 Pole
     const pole1 = new THREE.Mesh(poleGeometry, poleMaterial);
     scene.add(pole1);
-    pole1.position.set(-blockWidth / 2 + 141, 0, - blockWidth + 0.5);
+    pole1.position.set(-blockWidth / 2 + 141 - 30, 0, - blockWidth + 0.5 + 30);
     //PiP1 Sign
     const signwall1 = new THREE.Mesh(signwallgeometry, signmaterial);
     scene.add(signwall1);
-    signwall1.position.set(-blockWidth / 2 + 141, 20, - blockWidth + 0.8);
+    signwall1.position.set(-blockWidth / 2 + 141 - 30, 20, - blockWidth + 0.8 + 30);
     signwall1.rotation.set(0, Math.PI / 2, 0);
+    //PiP Base 1
+    const PiPBaseMaterial1 = new THREE.MeshStandardMaterial({color: 0x006400});
+    const PiPBase1 = new THREE.Mesh(PiPBaseGeometry,PiPBaseMaterial1);
+    scene.add(PiPBase1);
+    PiPBase1.position.set(-blockWidth / 2 + 142 - 30, 20.3, - blockWidth + 0.8 - 0.4 + 30);
+    PiPBase1.rotation.set(0, Math.PI / 2, 0);
+    scene.add(PiPBase1);
 
 
     //PiP2 Creation
     PiP2.scale.set(0.12, 0.12, 0.12);
-    PiP2.position.set(blockWidth / 2 + 0.65, 20, -218);
+    PiP2.position.set(blockWidth / 2 + 0.65 + 30, 20, -218);
     PiP2.rotation.set(Math.PI, 0, 0);
     //PiP2 Pole
     const pole2 = new THREE.Mesh(poleGeometry, poleMaterial);
     scene.add(pole2);
-    pole2.position.set(blockWidth / 2 + 0.5, 0, -220);
+    pole2.position.set(blockWidth / 2 + 0.5 + 30, 0, -220);
     //PiP2 Sign
     const signwall2 = new THREE.Mesh(signwallgeometry, signmaterial);
     scene.add(signwall2);
-    signwall2.position.set(blockWidth / 2 + 0.5, 20, -220);
+    signwall2.position.set(blockWidth / 2 + 0.5 + 30, 20, -220);
+    //PiP Base 2
+    const PiPBaseMaterial2 = new THREE.MeshStandardMaterial({color: 0xff00ff});
+    const PiPBase2 = new THREE.Mesh(PiPBaseGeometry,PiPBaseMaterial2);
+    scene.add(PiPBase2);
+    PiPBase2.position.set(blockWidth / 2 + 0.3 + 30, 20.2, -219);
+    scene.add(PiPBase2);
 
     scene.add(PiP1);
     scene.add(PiP2);
@@ -751,9 +831,9 @@ function makeMazes() {
     drawGridWithOmissions(floorContainerRed, [30, 38, 78], 5);
     drawGridWithOmissions(floorContainerBlue, [28, 30, 42, 52, 76], 19);
 
-   changePathColor(floorContainerGreen, path1, 0x00ff00); // Green
-   changePathColor(floorContainerRed, path2, 0xff0000); // Red
-   changePathColor(floorContainerBlue, path3, 0x0000FF);//blue
+//   changePathColor(floorContainerGreen, path1, 0x00ff00); // Green
+//   changePathColor(floorContainerRed, path2, 0xff0000); // Red
+//   changePathColor(floorContainerBlue, path3, 0x0000FF);//blue
 
     //Draw PiPs
     drawPiP(PiP1, [], 1);
@@ -867,7 +947,7 @@ function tileLights() {
                 //Light up PiP2 tiles:
                 const whiteTile = new THREE.Color(255, 255, 255);
                 PiP2.children[tile.userData.tileNumber - 1].material.color.copy(whiteTile);
-                console.log("Index: " + tile.userData.tileNumber);
+
 
 
             }
@@ -909,12 +989,14 @@ function tileLights() {
                 // TODO: Elevate tiles a bit from the ground they are on or simply shift the whole floor container
                 const whiteTile = new THREE.Color(255, 255, 255);
                 PiP3.children[tile.userData.tileNumber - 1].material.color.copy(whiteTile);
-                console.log("Index: " + tile.userData.tileNumber);
+
             }
         });
     }
 
 }
+
+
 
 // Create material array
 
@@ -928,17 +1010,6 @@ let litUpTiles2 = [];
 let litUpTiles3 = [];
 
 const pathPiP2AND3 = [11, 13, 15, 17, 29, 31, 33, 35, 47, 49, 51, 53, 65, 67, 69, 71]
-
-
-sky();
-
-
-// const axesHelper = new THREE.AxesHelper(200); //so we can see the axes for debugging
-// scene.add(axesHelper);
-
-const axesHelper = new THREE.AxesHelper(200); //so we can see the axes for debugging
-scene.add(axesHelper);
-ground();
 
 //helper squares
 const gridSizeX = 2;
@@ -1008,7 +1079,7 @@ let lobbyGate;
 let puzz1Gate;
 let puzz2Gate;
 addWalls();
-lobbyGate.opengate(90);
+//lobbyGate.opengate(90);
 
 document.addEventListener('keydown', (event) => {
     if (event.key === ' ' || event.key === 'Spacebar') {
@@ -1025,7 +1096,7 @@ document.addEventListener('keydown', (event) => {
 
             if (inXBounds && inZBounds) {
               if (index == 0) {
-                console.log('Reset green');
+
                 litUpTiles1=[];
                  PiP1.children.forEach((tile) => {
                    tile.material.color.set(0x444444);
@@ -1040,7 +1111,7 @@ document.addEventListener('keydown', (event) => {
                      }
                 });
                 } else if (index == 3) {
-                    console.log('Reset red');
+
                     litUpTiles2=[];
                     PiP2.children.forEach((tile) => {
                            tile.material.color.set(0x444444);
@@ -1055,7 +1126,7 @@ document.addEventListener('keydown', (event) => {
                          }
                     });
                 } else if (index == 4) {
-                    console.log('Reset blue');
+
                     litUpTiles3=[];
                     PiP3.children.forEach((tile) => {
                        tile.material.color.set(0x444444);
@@ -1069,7 +1140,7 @@ document.addEventListener('keydown', (event) => {
                              tile.semicircleMesh3.material.color.set(tileColor);
                          }
                     });
-                    console.log(litUpTiles3);
+
                 }
             }
         });
