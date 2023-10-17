@@ -10,7 +10,7 @@ function generateRandomNumberForVariation(){
 }
 
 function trees(loader, scene, world) {
-    const numTrees = 20;
+    const numTrees = 10;
     const minDistanceFromCenter = 600;
     const maxDistanceFromCenter = 700;
     const center = new THREE.Vector3(-100, 0, 0); // New center position
@@ -69,16 +69,155 @@ function trees(loader, scene, world) {
         });
     }
 }
+function plants(loader, scene, world) {
+    const centers = [];
+    const blockWidth = 350;
+    centers.push(new THREE.Vector3(blockWidth / 2, 0, blockWidth / 2 - 9));
+    centers.push(new THREE.Vector3(blockWidth / 2, 0, -blockWidth / 2 + 9));
+    centers.push(new THREE.Vector3(-24.5, 0, -blockWidth));
+
+    const numPlants = 10;
+    const minDistanceFromCenter = 0;
+    const maxDistanceFromCenter = 350;
+
+    // Create a seeded random number generator
+    function seededRandom(seed) {
+        let x = Math.sin(seed) * 10000;
+        return x - Math.floor(x);
+    }
+
+    for (let j = 0; j < 3; j++) {
+        for (let i = 0; i < numPlants; i++) {
+            loader.load('./assets/shrub_pack/scene.gltf', function (gltf) {
+                const plantModel = gltf.scene.add(); // Clone the model
+                plantModel.scale.set(1.5, 1.5, 1.5);
+
+                // Use the seeded random function to generate consistent random positions
+                const randomAngle = seededRandom(100 + i) * Math.PI * 2;
+                const randomDistance = minDistanceFromCenter + (seededRandom(100 - i) * (maxDistanceFromCenter - minDistanceFromCenter));
+                const randomYRotation = Math.random() * Math.PI * 2; // Random Y-axis rotation
+
+                // Calculate the X and Z coordinates based on the polar coordinates
+                const randomX = centers[j].x + randomDistance * Math.cos(randomAngle);
+                const randomZ = centers[j].z + randomDistance * Math.sin(randomAngle);
+
+                // Ensure the plant is above the ground (adjust the height as needed)
+                const groundHeight = 0.1;
+
+                plantModel.position.set(randomX, groundHeight, randomZ);
+                plantModel.rotation.y = randomYRotation;
+
+                scene.add(plantModel);
+            });
+
+
+
+            loader.load('./assets/tropical_plant/scene.gltf', function (gltf) {
+                const plantModel = gltf.scene.add(); // Clone the model
+                plantModel.scale.set(2, 2, 2);
+
+                // Use the seeded random function to generate consistent random positions
+                const randomAngle = seededRandom(50 + i) * Math.PI * 2;
+                const randomDistance = minDistanceFromCenter + (seededRandom(50 - i) * (maxDistanceFromCenter - minDistanceFromCenter));
+                const randomYRotation = Math.random() * Math.PI * 2; // Random Y-axis rotation
+
+                // Calculate the X and Z coordinates based on the polar coordinates
+                const randomX = centers[j].x + randomDistance * Math.cos(randomAngle);
+                const randomZ = centers[j].z + randomDistance * Math.sin(randomAngle);
+
+                // Ensure the plant is above the ground (adjust the height as needed)
+                const groundHeight = 0.1;
+
+                plantModel.position.set(randomX, groundHeight, randomZ);
+                plantModel.rotation.y = randomYRotation;
+
+                scene.add(plantModel);
+            });
+
+
+            loader.load('./assets/tropical_plant_2/scene.gltf', function (gltf) {
+                const plantModel = gltf.scene.add(); // Clone the model
+                plantModel.scale.set(0.025, 0.025, 0.025);
+
+                // Use the seeded random function to generate consistent random positions
+                const randomAngle = seededRandom(42 + i) * Math.PI * 2;
+                const randomDistance = minDistanceFromCenter + (seededRandom(42 - i) * (maxDistanceFromCenter - minDistanceFromCenter));
+                const randomYRotation = Math.random() * Math.PI * 2; // Random Y-axis rotation
+
+                // Calculate the X and Z coordinates based on the polar coordinates
+                const randomX = centers[j].x + randomDistance * Math.cos(randomAngle);
+                const randomZ = centers[j].z + randomDistance * Math.sin(randomAngle);
+
+                // Ensure the plant is above the ground (adjust the height as needed)
+                const groundHeight = 0.1;
+
+                plantModel.position.set(randomX, groundHeight, randomZ);
+                plantModel.rotation.y = randomYRotation;
+
+                scene.add(plantModel);
+            });
+
+            loader.load('./assets/tropical_plant_monstera_deliciosa/scene.gltf', function (gltf) {
+                const plantModel = gltf.scene.clone(); // Clone the model
+                plantModel.scale.set(6, 6, 6);
+
+                // Use the seeded random function to generate consistent random positions
+                const randomAngle = seededRandom(100 + i) * Math.PI * 2;
+                const randomDistance = minDistanceFromCenter + (seededRandom(100 - i) * (maxDistanceFromCenter - minDistanceFromCenter));
+                const randomYRotation = Math.random() * Math.PI * 2; // Random Y-axis rotation
+
+                // Calculate the X and Z coordinates based on the polar coordinates
+                const randomX = centers[j].x + randomDistance * Math.cos(randomAngle);
+                const randomZ = centers[j].z + randomDistance * Math.sin(randomAngle);
+
+                // Ensure the plant is above the ground (adjust the height as needed)
+                const groundHeight = 0.1;
+
+                plantModel.position.set(randomX, groundHeight, randomZ);
+                plantModel.rotation.y = randomYRotation;
+
+                scene.add(plantModel);
+            });
+
+            loader.load('./assets/tropical_plant_3/scene.gltf', function (gltf) {
+                const plantModel = gltf.scene.clone(); // Clone the model
+                plantModel.scale.set(6, 6, 6);
+
+                // Use the seeded random function to generate consistent random positions
+                const randomAngle = seededRandom(13 + i) * Math.PI * 2;
+                const randomDistance = minDistanceFromCenter + (seededRandom(13 - i) * (maxDistanceFromCenter - minDistanceFromCenter));
+                const randomYRotation = Math.random() * Math.PI * 2; // Random Y-axis rotation
+
+                // Calculate the X and Z coordinates based on the polar coordinates
+                const randomX = centers[j].x + randomDistance * Math.cos(randomAngle);
+                const randomZ = centers[j].z + randomDistance * Math.sin(randomAngle);
+
+                // Ensure the plant is above the ground (adjust the height as needed)
+                const groundHeight = 0.1;
+
+                plantModel.position.set(randomX, groundHeight, randomZ);
+                plantModel.rotation.y = randomYRotation;
+
+                scene.add(plantModel);
+            });
+
+
+
+
+        }
+    }
+}
+
 
 export function loadModels(loader, scene, world, blockWidth){
 
     trees(loader, scene, world);
-
+    plants(loader, scene, world);
 
 
 
     loader.load('/ground_material.glb', function (gltf) {
-        gltf.scene.rotation.y = Math.PI / 2;
+        gltf.scene.rotation.y = Math.PI / 2.0;
         gltf.scene.scale.set(1, 1, 1);
         gltf.scene.position.y = -1;
         gltf.scene.position.x = 0;
