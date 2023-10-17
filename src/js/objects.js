@@ -4,10 +4,15 @@ import * as CANNON from 'cannon-es';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { loadModels } from './models.js';
-import groundImg from './tim-ponce-soil-unsplash.jpg';
+import groundImg from './textures/avinash-kumar-rEIDzqczN7s-unsplash.jpg';
 import soil2 from './textures/soil2-pinterest.jpg';
 import soil3 from './textures/soil3-pinterest.jpg';
 import soil4 from './textures/soil4-pinterest.jpg';
+import beach1 from './textures/beach1.jpg';
+import beach2 from './textures/beach2.jpg';
+import brownsoil1 from './textures/brownsoil1.jpg';
+import darksoil1 from './textures/darksoil1.jpg';
+
 //import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as camera from './camera.js';
 import * as player from './player.js';
@@ -707,19 +712,16 @@ function sky() {
 
 
 function ground() {
-    let groundTexture = new THREE.TextureLoader().load( soil2 );
+    let groundTexture = new THREE.TextureLoader().load( groundImg );
     groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
-    groundTexture.repeat.set( 100, 100 );
-    groundTexture.anisotropy = 2;
+    groundTexture.repeat.set( -500, 500 );
+    groundTexture.anisotropy = 16;
     groundTexture.encoding = THREE.sRGBEncoding;
-    // let groundMaterial = new THREE.MeshStandardMaterial( { map: groundTexture } );
 
     // Create ground
     const groundGeo = new THREE.PlaneGeometry(10000, 10000);
     const groundMat = new THREE.MeshStandardMaterial({
-        // color: 0x78BE21,
-        // receiveShadow: true,
-        // castShadow: true,
+        receiveShadow: true,
         map: groundTexture,
         side: THREE.DoubleSide,
     });
