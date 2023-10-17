@@ -1580,7 +1580,7 @@ export function loadModels(loader, scene, world, blockWidth) {
     let adjustmentInZ = 0;
     let startX = 0;
     let startY = 0;
-    let startZ = blockWidth * 1.5;
+    let startZ = blockWidth;
     addGrassPatches(loader, scene, world, blockWidth, adjustmentInX, adjustmentInY, adjustmentInZ, startX, startY, startZ);
 
     adjustmentInY = 0;
@@ -1588,7 +1588,7 @@ export function loadModels(loader, scene, world, blockWidth) {
     adjustmentInZ = 0;
     startX = 0;
     startY = 0;
-    startZ = blockWidth;
+    startZ = 0;
     addGrassPatches(loader, scene, world, blockWidth, adjustmentInX, adjustmentInY, adjustmentInZ, startX, startY, startZ);
 
     adjustmentInY = 0;
@@ -1596,7 +1596,7 @@ export function loadModels(loader, scene, world, blockWidth) {
     adjustmentInZ = 0;
     startX = -blockWidth;
     startY = 0;
-    startZ = -blockWidth * 1.5;  
+    startZ = -blockWidth;  
     addGrassPatches(loader, scene, world, blockWidth, adjustmentInX, adjustmentInY, adjustmentInZ, startX, startY, startZ);
 }
 
