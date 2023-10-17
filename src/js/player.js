@@ -434,38 +434,33 @@ class BasicCharacterControllerInput {
       if (moveForward || moveBackward || moveRight || moveLeft) {
         moveSound.play();
       } else {
-        moveSound.stop();
+        moveSound.pause();
       }
     }
   };
 
   _onKeyUp(event) {
     //moveSound.stop();
-   // this._checkAndPlayMoveSound();
+    // this._checkAndPlayMoveSound();
     switch (event.keyCode) {
       case 87: // w
         moveForward = false;
-       // Stop the move sound
+        // Stop the move sound
 
         // this.moveForwardSoundPlaying = false;
         break;
       case 65: // a
         moveLeft = false;
-       // moveSound.stop();
+        // moveSound.stop();
         break;
       case 83: // s
         moveBackward = false;
-       // moveSound.stop();
+        // moveSound.stop();
         break;
       case 68: // d
         moveRight = false;
-       // moveSound.stop();
+        // moveSound.stop();
         break;
-    }
-    if (moveForward || moveBackward || moveRight || moveLeft) {
-      moveSound.play();
-    } else {
-      moveSound.stop();
     }
   }
 };
