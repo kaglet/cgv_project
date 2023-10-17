@@ -22,6 +22,5 @@ directionalLight.shadow.camera.right = 3000;
 
 // The object that casts a shadow has an implicit shadow camera setup
 // Different light types have different camera types
-const directionalLightShadowHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
-objects.scene.add(directionalLightShadowHelper);
-
+// const directionalLightShadowHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
+// objects.scene.add(directionalLightShadowHelper);

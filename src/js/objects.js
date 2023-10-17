@@ -5,7 +5,6 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { loadModels } from './models.js';
 import groundImg from './textures/avinash-kumar-rEIDzqczN7s-unsplash.jpg';
-
 //import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as camera from './camera.js';
 import * as player from './player.js';
@@ -615,42 +614,6 @@ function addFloorBodies() {
 
 }
 
-// function helperSquares() {
-
-//     //white and gray squares (will be removed later)
-
-
-//     const planeGeometry = new THREE.PlaneGeometry(gridSizeX * blockWidth, gridSizeZ * blockDepth);
-//     const planeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff }); // White color
-
-//     const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-//     plane.rotation.x = -Math.PI / 2; // Rotate it to be horizontal
-//     plane.position.set(0, 0, 0); // Position it on the X-Z plane
-
-//     scene.add(plane);
-
-//     // Create alternating grey and white blocks
-//     for (let i = 0; i < gridSizeX; i++) {
-//         for (let j = 0; j < gridSizeZ; j++) {
-//             const color = (i + j) % 2 === 0 ? 0x808080 : 0xffffff; // Alternating grey and white
-//             const blockMaterial = new THREE.MeshBasicMaterial({ color });
-//             const blockGeometry = new THREE.BoxGeometry(blockWidth, 1, blockDepth);
-//             const blockMesh = new THREE.Mesh(blockGeometry, blockMaterial);
-//             blockMesh.position.set((i - gridSizeX / 2 + 0.5) * blockWidth, 0, (j - gridSizeZ / 2 + 0.5) * blockDepth);
-//             blockMesh.updateWorldMatrix(true, false);
-
-//             scene.add(blockMesh);
-//             let boundingBox = new THREE.Box3().setFromObject(blockMesh);
-//             let size = new THREE.Vector3();
-//             boundingBox.getSize(size);
-//             blockMesh.sizeFromBoundingBox = size;
-//             levelAreas.push(blockMesh);
-//         }
-//     }
-
-
-// }
-
 function PiP() {
 
     // Iterate through all objects in PiP2
@@ -679,26 +642,26 @@ function PiP() {
 
     //PiP3 Creation
     PiP3.scale.set(0.12, 0.12, 0.12);
-    PiP3.position.set(blockWidth / 2 + 0.5 + 30, 20, 141);
+    PiP3.position.set(blockWidth / 2 + 0.5 + 30, 20, 111);
     PiP3.rotation.set(Math.PI, 0, 0);
     //PiP3 Pole
     const poleGeometry = new THREE.CylinderGeometry(0.75, 0.75, 35, 50);
     const poleMaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
     const pole3 = new THREE.Mesh(poleGeometry, poleMaterial);
     scene.add(pole3);
-    pole3.position.set(175 + 30, 0, 140);
+    pole3.position.set(175 + 30, 0, 110);
     //PiP3 Sign
     const signwallgeometry = new THREE.BoxGeometry(10, 10, 1.4);
     const signmaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
     const signwall3 = new THREE.Mesh(signwallgeometry, signmaterial);
     scene.add(signwall3)
-    signwall3.position.set(175 + 30, 20, 140);
+    signwall3.position.set(175 + 30, 20, 110);
     //PiP3 base
     const PiPBaseGeometry = new THREE.BoxGeometry(7,7,0.5);
     const PiPBaseMaterial3 = new THREE.MeshStandardMaterial({color: 0xFFA500});
     const PiPBase3 = new THREE.Mesh(PiPBaseGeometry,PiPBaseMaterial3);
     scene.add(PiPBase3);
-    PiPBase3.position.set(175 + 30, 20, 140.5);
+    PiPBase3.position.set(175 + 30, 20, 110.5);
     
 
     //PiP1 Creation
@@ -782,7 +745,6 @@ function sky() {
     scene.add(skybox);
 
 }
-
 
 function ground() {
     let groundTexture = new THREE.TextureLoader().load( groundImg );
@@ -1016,7 +978,18 @@ const gridSizeX = 2;
 const gridSizeZ = 3;
 const blockWidth = 350;
 const blockDepth = 350;
-// helperSquares();
+
+let assetLoader = new GLTFLoader();
+loadModels(assetLoader, scene, world, blockWidth);
+
+
+sky();
+
+
+
+
+ground();
+
 
 
 
@@ -1164,19 +1137,11 @@ export function animate_lights() {
 
 }
 
+
+
 // create instance of GLTF loader and call load on it
-let assetLoader = new GLTFLoader();
+// 
 
-/* 
-    load takes three arguments:
-    - path to file
-    - and a callback function
-    - another function that tells about the progress of the loading process (don't need it so set to undefined), 
-    - fourth parameter is a function we can use to tell if an error occurs
-*/
-
+// load takes three arguments, path to file, and a callback function, another function that tells about the progress of the loading process (don't need it so set to undefined), foruth parameter is a function we can use to tell if an error occurs
 // use asset loader to load .gltf from path
 // model is stored as property of gltf object whose key is scene
-loadModels(assetLoader, scene, world, blockWidth);
-
-

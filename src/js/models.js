@@ -4,13 +4,13 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import ceilingtextureImage from '../img/exosystem/lambert1_baseColor.png';
 
-function generateRandomNumberForVariation() {
+function generateRandomNumberForVariation(){
     // Generate a random nubmer between 0.1 and 0.3
     return Math.random() * 0.1 + 0.2;
 }
 
 function trees(loader, scene, world) {
-    const numTrees = 20;
+    const numTrees = 10;
     const minDistanceFromCenter = 600;
     const maxDistanceFromCenter = 700;
     const center = new THREE.Vector3(-100, 0, 0); // New center position
@@ -77,7 +77,7 @@ function plants(loader, scene, world) {
     centers.push(new THREE.Vector3(blockWidth / 2, 0, -blockWidth / 2 + 9));
     centers.push(new THREE.Vector3(-24.5, 0, -blockWidth));
 
-    const numPlants = 20;
+    const numPlants = 10;
     const minDistanceFromCenter = 0;
     const maxDistanceFromCenter = 350;
 
@@ -538,7 +538,7 @@ export function loadModels(loader, scene, world, blockWidth) {
         stoneWallModelBody.addShape(stoneWallModelShape);
         world.addBody(stoneWallModelBody);
 
-        stoneWallModel.rotation.y = Math.PI / 2;
+        stoneWallModel.rotation.y = Math.PI/2;
         scene.add(stoneWallModel);
 
         // Create wireframe mesh for visualization
@@ -584,7 +584,7 @@ export function loadModels(loader, scene, world, blockWidth) {
         stoneWallModelBody.addShape(stoneWallModelShape);
         world.addBody(stoneWallModelBody);
 
-        stoneWallModel.rotation.y = Math.PI / 2;
+        stoneWallModel.rotation.y = Math.PI/2;
         scene.add(stoneWallModel);
 
         // Create wireframe mesh for visualization
@@ -619,7 +619,7 @@ export function loadModels(loader, scene, world, blockWidth) {
         const width = boundingBox.max.x - boundingBox.min.x;
         const height = boundingBox.max.y - boundingBox.min.y;
         const depth = boundingBox.max.z - boundingBox.min.z;
-        //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+      //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
 
         // Add Cannon.js body for Stone Wall model
         const stoneWallModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
@@ -630,7 +630,7 @@ export function loadModels(loader, scene, world, blockWidth) {
         stoneWallModelBody.addShape(stoneWallModelShape);
         world.addBody(stoneWallModelBody);
 
-        stoneWallModel.rotation.y = Math.PI / 2;
+        stoneWallModel.rotation.y = Math.PI/2;
         scene.add(stoneWallModel);
 
         // Create wireframe mesh for visualization
@@ -676,7 +676,7 @@ export function loadModels(loader, scene, world, blockWidth) {
         stoneWallModelBody.addShape(stoneWallModelShape);
         world.addBody(stoneWallModelBody);
 
-        stoneWallModel.rotation.y = Math.PI / 2;
+        stoneWallModel.rotation.y = Math.PI/2;
         scene.add(stoneWallModel);
 
         // Create wireframe mesh for visualization
@@ -722,7 +722,7 @@ export function loadModels(loader, scene, world, blockWidth) {
         stoneWallModelBody.addShape(stoneWallModelShape);
         world.addBody(stoneWallModelBody);
 
-        stoneWallModel.rotation.y = Math.PI / 2;
+        stoneWallModel.rotation.y = Math.PI/2;
         scene.add(stoneWallModel);
 
         // Create wireframe mesh for visualization
@@ -1745,7 +1745,7 @@ export function loadModels(loader, scene, world, blockWidth) {
         console.error(error);
     });
 
-    
+
     addWallModels(loader, scene, world, blockWidth);
 
     let adjustmentInY = 0;
@@ -1771,7 +1771,9 @@ export function loadModels(loader, scene, world, blockWidth) {
     startY = 0;
     startZ = -blockWidth;  
     addGrassPatches(loader, scene, world, blockWidth, adjustmentInX, adjustmentInY, adjustmentInZ, startX, startY, startZ);
+
 }
+
 
 function clonePatchesInRoom(model, posInX, posInY, posInZ) {
     let clone = model.clone();
