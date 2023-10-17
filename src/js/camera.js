@@ -50,7 +50,7 @@ document.addEventListener('keydown', (event) => {
                 // this square has an index x
                 // can set camera based off this square's coordinates or simply from known coordinates from knowing if square 1 needs certain coordinates
                 // calculate position of topDownCamera from here
-                console.log(`I am in box ${index}`);
+
                 if (index==0){
                     topDownCamera.position.set(-180, 1000, -360);
                     topDownCamera.lookAt(-180, 0, -360);
