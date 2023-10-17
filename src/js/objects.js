@@ -5,6 +5,9 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { loadModels } from './models.js';
 import groundImg from './tim-ponce-soil-unsplash.jpg';
+import soil2 from './textures/soil2-pinterest.jpg';
+import soil3 from './textures/soil3-pinterest.jpg';
+import soil4 from './textures/soil4-pinterest.jpg';
 //import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as camera from './camera.js';
 import * as player from './player.js';
@@ -704,10 +707,10 @@ function sky() {
 
 
 function ground() {
-    let groundTexture = new THREE.TextureLoader().load( groundImg );
+    let groundTexture = new THREE.TextureLoader().load( soil2 );
     groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
-    groundTexture.repeat.set( 10000, 10000 );
-    groundTexture.anisotropy = 16;
+    groundTexture.repeat.set( 100, 100 );
+    groundTexture.anisotropy = 2;
     groundTexture.encoding = THREE.sRGBEncoding;
     // let groundMaterial = new THREE.MeshStandardMaterial( { map: groundTexture } );
 
@@ -723,21 +726,6 @@ function ground() {
 
     const groundMesh = new THREE.Mesh(groundGeo, groundMat);
     scene.add(groundMesh);
-
-
-    let groundTexture2 = new THREE.TextureLoader().load( groundImg );
-
-    const groundGeo2 = new THREE.PlaneGeometry(100, 100);
-    const groundMat2 = new THREE.MeshStandardMaterial({
-        // color: 0x78BE21,
-        // receiveShadow: true,
-        map: groundTexture2,
-        side: THREE.DoubleSide,
-    });
-
-    const groundMesh2 = new THREE.Mesh(groundGeo2, groundMat2);
-    scene.add(groundMesh2);
-
 
     const groundPhysMat = new CANNON.Material();
     // physics ground
