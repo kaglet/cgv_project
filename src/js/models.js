@@ -1639,13 +1639,15 @@ export function loadModels(loader, scene, world, blockWidth){
     for (let i = 0; i < 13; i++) {
         loader.load(pathToWall , (gltf) => {
             const model = gltf.scene;
+            model.traverse( function(node) {
+                if (node.isMesh) {node.castShadow = true;}
+            });
             // add to scene and position like any other object
             scene.add(model);
             model.scale.set(0.3, generateRandomNumberForVariation(), generateRandomNumberForVariation());
             model.position.set(blockWidth, 0, blockWidth + offsetCurvedEdgesShift + adjustment1);
             adjustment1 -= 67.5;
             model.rotateY(-Math.PI / 2);
-            // model.position.set(-10, 0, -100);
         }, undefined, (error) => {
             console.log(error);
         });
@@ -1657,6 +1659,9 @@ export function loadModels(loader, scene, world, blockWidth){
         loader.load(pathToWall, (gltf) => {
             const model = gltf.scene;
             // add to scene and position like any other object
+            model.traverse( function(node) {
+                if (node.isMesh) {node.castShadow = true;}
+            });
             scene.add(model);
 
             model.scale.set(0.3, generateRandomNumberForVariation(), generateRandomNumberForVariation());
@@ -1672,6 +1677,9 @@ export function loadModels(loader, scene, world, blockWidth){
     for (let i = 0; i < 7; i++) {
         loader.load(pathToWall, (gltf) => {
             const model = gltf.scene;
+            model.traverse( function(node) {
+                if (node.isMesh) {node.castShadow = true;}
+            });
             // add to scene and position like any other object
             scene.add(model);
 
@@ -1689,6 +1697,9 @@ export function loadModels(loader, scene, world, blockWidth){
     for (let i = 0; i < 8; i++) {
         loader.load(pathToWall, (gltf) => {
             const model = gltf.scene;
+            model.traverse( function(node) {
+                if (node.isMesh) {node.castShadow = true;}
+            });
             // add to scene and position like any other object
             scene.add(model);
 
@@ -1706,6 +1717,9 @@ export function loadModels(loader, scene, world, blockWidth){
     for (let i = 0; i < 3; i++) {
         loader.load(pathToWall, (gltf) => {
             const model = gltf.scene;
+            model.traverse( function(node) {
+                if (node.isMesh) {node.castShadow = true;}
+            });
             // add to scene and position like any other object
             scene.add(model);
 
@@ -1723,6 +1737,9 @@ export function loadModels(loader, scene, world, blockWidth){
     for (let i = 0; i < 2; i++) {
         loader.load(pathToWall, (gltf) => {
             const model = gltf.scene;
+            model.traverse( function(node) {
+                if (node.isMesh) {node.castShadow = true;}
+            });
             // add to scene and position like any other object
             scene.add(model);
 
@@ -1742,6 +1759,17 @@ export function loadModels(loader, scene, world, blockWidth){
             const modelLeft = gltf.scene;
             const modelRight = modelLeft.clone();
             
+            modelLeft.traverse( function(node) {
+                if (node.isMesh) {
+                    node.castShadow = true;
+                }
+            });
+            modelRight.traverse( function(node) {
+                if (node.isMesh) {
+                    node.castShadow = true;
+                }
+            });
+
             scene.add(modelLeft);
             scene.add(modelRight);
             // I must position two models at the same place in one coordinate so maybe add model twice or just different variables
@@ -1769,7 +1797,16 @@ export function loadModels(loader, scene, world, blockWidth){
         loader.load(pathToWall, (gltf) => {
             const modelLeft = gltf.scene;
             const modelRight = modelLeft.clone();
-            
+            modelLeft.traverse( function(node) {
+                if (node.isMesh) {
+                    node.castShadow = true;
+                }
+            });
+            modelRight.traverse( function(node) {
+                if (node.isMesh) {
+                    node.castShadow = true;
+                }
+            });
             scene.add(modelLeft);
             scene.add(modelRight);
             // I must position two models at the same place in one coordinate so maybe add model twice or just different variables
@@ -1797,6 +1834,17 @@ export function loadModels(loader, scene, world, blockWidth){
             const modelLeft = gltf.scene;
             const modelRight = modelLeft.clone();
             
+            modelLeft.traverse( function(node) {
+                if (node.isMesh) {
+                    node.castShadow = true;
+                }
+            });
+            modelRight.traverse( function(node) {
+                if (node.isMesh) {
+                    node.castShadow = true;
+                }
+            });
+
             scene.add(modelLeft);
             scene.add(modelRight);
             // I must position two models at the same place in one coordinate so maybe add model twice or just different variables

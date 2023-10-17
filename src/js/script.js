@@ -30,6 +30,7 @@ const renderer = new THREE.WebGLRenderer({
 renderer.outputEncoding = THREE.sRGBEncoding;
 renderer.gammaInput = true;
 renderer.gammaOutput = true;
+renderer.shadowMap.enabled = true;
 
 function showStartButton() {
   const startButton = document.getElementById('start-button');
