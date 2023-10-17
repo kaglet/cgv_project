@@ -148,6 +148,8 @@ class InnerWall {
 
         this.mesh1.quaternion.copy(initialRotation);
         this.mesh2.quaternion.copy(initialRotation);
+        //const loader = new THREE.GLTFLoader();
+
     }
 }
 

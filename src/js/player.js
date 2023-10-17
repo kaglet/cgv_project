@@ -416,7 +416,7 @@ class BasicCharacterControllerInput {
 
   _onKeyDown(event) {
     if (!paused) {
-    // Play the sound for all directions
+      // Play the sound for all directions
       switch (event.keyCode) {
         case 87: // w
           moveForward = true;
@@ -429,11 +429,12 @@ class BasicCharacterControllerInput {
           break;
         case 68: // d
           moveRight = true;
+          ///2222
           break;
       }
-      if (moveForward || moveBackward || moveRight || moveLeft) {
+      if ((moveForward || moveBackward || moveRight || moveLeft) && !moveSound.isPlaying) {
         moveSound.play();
-      } else {
+      } else if (!(moveForward || moveBackward || moveRight || moveLeft) && moveSound.isPlaying) {
         moveSound.pause();
       }
     }
