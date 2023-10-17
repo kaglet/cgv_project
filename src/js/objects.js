@@ -752,9 +752,9 @@ function makeMazes() {
     drawGridWithOmissions(floorContainerRed, [30, 38, 78], 5);
     drawGridWithOmissions(floorContainerBlue, [28, 30, 42, 52, 76], 19);
 
-   changePathColor(floorContainerGreen, path1, 0x00ff00); // Green
-   changePathColor(floorContainerRed, path2, 0xff0000); // Red
-   changePathColor(floorContainerBlue, path3, 0x0000FF);//blue
+//   changePathColor(floorContainerGreen, path1, 0x00ff00); // Green
+//   changePathColor(floorContainerRed, path2, 0xff0000); // Red
+//   changePathColor(floorContainerBlue, path3, 0x0000FF);//blue
 
     //Draw PiPs
     drawPiP(PiP1, [], 1);
@@ -868,7 +868,7 @@ function tileLights() {
                 //Light up PiP2 tiles:
                 const whiteTile = new THREE.Color(255, 255, 255);
                 PiP2.children[tile.userData.tileNumber - 1].material.color.copy(whiteTile);
-                console.log("Index: " + tile.userData.tileNumber);
+
 
 
             }
@@ -910,7 +910,7 @@ function tileLights() {
                 // TODO: Elevate tiles a bit from the ground they are on or simply shift the whole floor container
                 const whiteTile = new THREE.Color(255, 255, 255);
                 PiP3.children[tile.userData.tileNumber - 1].material.color.copy(whiteTile);
-                console.log("Index: " + tile.userData.tileNumber);
+
             }
         });
     }
@@ -1030,7 +1030,7 @@ document.addEventListener('keydown', (event) => {
 
             if (inXBounds && inZBounds) {
               if (index == 0) {
-                console.log('Reset green');
+
                 litUpTiles1=[];
                  PiP1.children.forEach((tile) => {
                    tile.material.color.set(0x444444);
@@ -1045,7 +1045,7 @@ document.addEventListener('keydown', (event) => {
                      }
                 });
                 } else if (index == 3) {
-                    console.log('Reset red');
+
                     litUpTiles2=[];
                     PiP2.children.forEach((tile) => {
                            tile.material.color.set(0x444444);
@@ -1060,7 +1060,7 @@ document.addEventListener('keydown', (event) => {
                          }
                     });
                 } else if (index == 4) {
-                    console.log('Reset blue');
+
                     litUpTiles3=[];
                     PiP3.children.forEach((tile) => {
                        tile.material.color.set(0x444444);
@@ -1074,7 +1074,7 @@ document.addEventListener('keydown', (event) => {
                              tile.semicircleMesh3.material.color.set(tileColor);
                          }
                     });
-                    console.log(litUpTiles3);
+
                 }
             }
         });

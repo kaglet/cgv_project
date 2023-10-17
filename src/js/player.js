@@ -17,7 +17,7 @@ let raycaster = objects.raycaster;
 
 //const moveForwardSoundPlaying = false; // Add a flag to track if the sound is already playing
 
-
+let sound=false;
 const listener = new THREE.AudioListener();
 //camera.add( listener );
 const moveSound = new THREE.Audio(listener);
@@ -429,39 +429,41 @@ class BasicCharacterControllerInput {
           break;
         case 68: // d
           moveRight = true;
-          ///2222
           break;
       }
-      if ((moveForward || moveBackward || moveRight || moveLeft) && !moveSound.isPlaying) {
+      if ((moveForward || moveBackward || moveRight || moveLeft) && sound==false) {
+      sound=true;
         moveSound.play();
-      } else if (!(moveForward || moveBackward || moveRight || moveLeft) && moveSound.isPlaying) {
-        moveSound.pause();
       }
     }
   };
 
   _onKeyUp(event) {
     //moveSound.stop();
-    // this._checkAndPlayMoveSound();
+   // this._checkAndPlayMoveSound();
     switch (event.keyCode) {
       case 87: // w
         moveForward = false;
-        // Stop the move sound
+       // Stop the move sound
 
         // this.moveForwardSoundPlaying = false;
         break;
       case 65: // a
         moveLeft = false;
-        // moveSound.stop();
+       // moveSound.stop();
         break;
       case 83: // s
         moveBackward = false;
-        // moveSound.stop();
+       // moveSound.stop();
         break;
       case 68: // d
         moveRight = false;
-        // moveSound.stop();
+       // moveSound.stop();
         break;
+    }
+    if (!moveForward && !moveBackward && !moveRight && !moveLeft) {
+      moveSound.stop();
+      sound=false;
     }
   }
 };
