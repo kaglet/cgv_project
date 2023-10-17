@@ -4,6 +4,7 @@ import * as CANNON from 'cannon-es';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { loadModels } from './models.js';
+import groundImg from './tim-ponce-soil-unsplash.jpg';
 //import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as camera from './camera.js';
 import * as player from './player.js';
@@ -553,41 +554,41 @@ function addFloorBodies() {
 
 }
 
-function helperSquares() {
+// function helperSquares() {
 
-    //white and gray squares (will be removed later)
-
-
-    const planeGeometry = new THREE.PlaneGeometry(gridSizeX * blockWidth, gridSizeZ * blockDepth);
-    const planeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff }); // White color
-
-    const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-    plane.rotation.x = -Math.PI / 2; // Rotate it to be horizontal
-    plane.position.set(0, 0, 0); // Position it on the X-Z plane
-
-    scene.add(plane);
-
-    // Create alternating grey and white blocks
-    for (let i = 0; i < gridSizeX; i++) {
-        for (let j = 0; j < gridSizeZ; j++) {
-            const color = (i + j) % 2 === 0 ? 0x808080 : 0xffffff; // Alternating grey and white
-            const blockMaterial = new THREE.MeshBasicMaterial({ color });
-            const blockGeometry = new THREE.BoxGeometry(blockWidth, 1, blockDepth);
-            const blockMesh = new THREE.Mesh(blockGeometry, blockMaterial);
-            blockMesh.position.set((i - gridSizeX / 2 + 0.5) * blockWidth, 0, (j - gridSizeZ / 2 + 0.5) * blockDepth);
-            blockMesh.updateWorldMatrix(true, false);
-
-            scene.add(blockMesh);
-            let boundingBox = new THREE.Box3().setFromObject(blockMesh);
-            let size = new THREE.Vector3();
-            boundingBox.getSize(size);
-            blockMesh.sizeFromBoundingBox = size;
-            levelAreas.push(blockMesh);
-        }
-    }
+//     //white and gray squares (will be removed later)
 
 
-}
+//     const planeGeometry = new THREE.PlaneGeometry(gridSizeX * blockWidth, gridSizeZ * blockDepth);
+//     const planeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff }); // White color
+
+//     const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+//     plane.rotation.x = -Math.PI / 2; // Rotate it to be horizontal
+//     plane.position.set(0, 0, 0); // Position it on the X-Z plane
+
+//     scene.add(plane);
+
+//     // Create alternating grey and white blocks
+//     for (let i = 0; i < gridSizeX; i++) {
+//         for (let j = 0; j < gridSizeZ; j++) {
+//             const color = (i + j) % 2 === 0 ? 0x808080 : 0xffffff; // Alternating grey and white
+//             const blockMaterial = new THREE.MeshBasicMaterial({ color });
+//             const blockGeometry = new THREE.BoxGeometry(blockWidth, 1, blockDepth);
+//             const blockMesh = new THREE.Mesh(blockGeometry, blockMaterial);
+//             blockMesh.position.set((i - gridSizeX / 2 + 0.5) * blockWidth, 0, (j - gridSizeZ / 2 + 0.5) * blockDepth);
+//             blockMesh.updateWorldMatrix(true, false);
+
+//             scene.add(blockMesh);
+//             let boundingBox = new THREE.Box3().setFromObject(blockMesh);
+//             let size = new THREE.Vector3();
+//             boundingBox.getSize(size);
+//             blockMesh.sizeFromBoundingBox = size;
+//             levelAreas.push(blockMesh);
+//         }
+//     }
+
+
+// }
 
 function PiP() {
 
@@ -703,24 +704,50 @@ function sky() {
 
 
 function ground() {
+    let groundTexture = new THREE.TextureLoader().load( groundImg );
+    groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
+    groundTexture.repeat.set( 10000, 10000 );
+    groundTexture.anisotropy = 16;
+    groundTexture.encoding = THREE.sRGBEncoding;
+    // let groundMaterial = new THREE.MeshStandardMaterial( { map: groundTexture } );
+
     // Create ground
     const groundGeo = new THREE.PlaneGeometry(10000, 10000);
     const groundMat = new THREE.MeshStandardMaterial({
-        //   color: 0x78BE21,
-        receiveShadow: true,
-        castShadow: true,
+        // color: 0x78BE21,
+        // receiveShadow: true,
+        // castShadow: true,
+        map: groundTexture,
+        side: THREE.DoubleSide,
     });
 
-    const groundPhysMat = new CANNON.Material()
     const groundMesh = new THREE.Mesh(groundGeo, groundMat);
     scene.add(groundMesh);
 
-    //physics ground
+
+    let groundTexture2 = new THREE.TextureLoader().load( groundImg );
+
+    const groundGeo2 = new THREE.PlaneGeometry(100, 100);
+    const groundMat2 = new THREE.MeshStandardMaterial({
+        // color: 0x78BE21,
+        // receiveShadow: true,
+        map: groundTexture2,
+        side: THREE.DoubleSide,
+    });
+
+    const groundMesh2 = new THREE.Mesh(groundGeo2, groundMat2);
+    scene.add(groundMesh2);
+
+
+    const groundPhysMat = new CANNON.Material();
+    // physics ground
     const groundBody = new CANNON.Body({
         shape: new CANNON.Plane(),
         type: CANNON.Body.STATIC,
         material: groundPhysMat
     });
+
+    // Transform ground body by rotation
     groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
     world.addBody(groundBody);
     groundMesh.position.copy(groundBody.position);
@@ -935,7 +962,7 @@ const gridSizeX = 2;
 const gridSizeZ = 3;
 const blockWidth = 350;
 const blockDepth = 350;
-helperSquares();
+// helperSquares();
 
 
 
@@ -1084,10 +1111,18 @@ export function animate_lights() {
 }
 
 // create instance of GLTF loader and call load on it
-// 
 let assetLoader = new GLTFLoader();
-loadModels(assetLoader, scene, world, blockWidth);
-// load takes three arguments, path to file, and a callback function, another function that tells about the progress of the loading process (don't need it so set to undefined), foruth parameter is a function we can use to tell if an error occurs
+
+/* 
+    load takes three arguments:
+    - path to file
+    - and a callback function
+    - another function that tells about the progress of the loading process (don't need it so set to undefined), 
+    - fourth parameter is a function we can use to tell if an error occurs
+*/
+
 // use asset loader to load .gltf from path
 // model is stored as property of gltf object whose key is scene
+loadModels(assetLoader, scene, world, blockWidth);
+
 
