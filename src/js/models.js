@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import * as CANNON from 'cannon-es';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import ceilingtextureImage from '../img/exosystem/lambert1_baseColor.png';
 
 function generateRandomNumberForVariation(){
     // Generate a random nubmer between 0.1 and 0.3
@@ -94,6 +95,18 @@ export function loadModels(loader, scene, world, blockWidth){
         luffyModel.scale.set(0.15, 0.15, 0.15);
         luffyModel.position.set(225, -2, -385);
 
+        const textureLoader = new THREE.TextureLoader();
+        const texture = textureLoader.load(ceilingtextureImage); // Replace with the path to your PNG texture file
+
+// Create a material using the loaded texture
+        const pngMaterial = new THREE.MeshLambertMaterial({ map: texture });
+        console.log(pngMaterial);
+        luffyModel.traverse(function (child) {
+            if (child.isMesh) {
+                child.material = pngMaterial;
+            }
+        });
+
         // Calculate dimensions of the Luffy model
         const boundingBox = new THREE.Box3().setFromObject(luffyModel);
         const width = boundingBox.max.x - boundingBox.min.x;
@@ -138,6 +151,17 @@ export function loadModels(loader, scene, world, blockWidth){
         lucyModel.scale.set(30, 30, 30);
         lucyModel.position.set(100, -5, -300);
 
+        const textureLoader = new THREE.TextureLoader();
+        const texture = textureLoader.load(ceilingtextureImage); // Replace with the path to your PNG texture file
+
+// Create a material using the loaded texture
+        const pngMaterial = new THREE.MeshLambertMaterial({ map: texture });
+        console.log(pngMaterial);
+        lucyModel.traverse(function (child) {
+            if (child.isMesh) {
+                child.material = pngMaterial;
+            }
+        });
         // Calculate dimensions of the Luffy model
         const boundingBox = new THREE.Box3().setFromObject(lucyModel);
         const width = boundingBox.max.x - boundingBox.min.x;
@@ -181,6 +205,18 @@ export function loadModels(loader, scene, world, blockWidth){
         lucyModel.rotation.y = Math.PI ;
         lucyModel.scale.set(1400, 1400, 1400);
         lucyModel.position.set(151, 0, -300);
+
+        const textureLoader = new THREE.TextureLoader();
+        const texture = textureLoader.load(ceilingtextureImage); // Replace with the path to your PNG texture file
+
+// Create a material using the loaded texture
+        const pngMaterial = new THREE.MeshLambertMaterial({ map: texture });
+        console.log(pngMaterial);
+        lucyModel.traverse(function (child) {
+            if (child.isMesh) {
+                child.material = pngMaterial;
+            }
+        });
 
         // Calculate dimensions of the Luffy model
         const boundingBox = new THREE.Box3().setFromObject(lucyModel);
@@ -319,6 +355,18 @@ export function loadModels(loader, scene, world, blockWidth){
         batmanModel.rotation.y = -Math.PI/4;
         batmanModel.scale.set(15, 15, 15);
         batmanModel.position.set(227, 0, -71);
+
+        const textureLoader = new THREE.TextureLoader();
+        const texture = textureLoader.load(ceilingtextureImage); // Replace with the path to your PNG texture file
+
+// Create a material using the loaded texture
+        const pngMaterial = new THREE.MeshLambertMaterial({ map: texture });
+        console.log(pngMaterial);
+        batmanModel.traverse(function (child) {
+            if (child.isMesh) {
+                child.material = pngMaterial;
+            }
+        });
         // ...
         const boundingBox = new THREE.Box3().setFromObject(batmanModel);
         const width = boundingBox.max.x - boundingBox.min.x;
@@ -415,7 +463,7 @@ export function loadModels(loader, scene, world, blockWidth){
     });
 
 
-    //DUNGEON CELLS
+    //DUNGEON CELLSS
     loader.load('/dungeon.glb', function (gltf) {
         const dungeonModel = gltf.scene;
         dungeonModel.scale.set(15, 15, 15);
@@ -1398,8 +1446,8 @@ export function loadModels(loader, scene, world, blockWidth){
     //WELL
     loader.load('/well.glb', function (gltf) {
         const wellModel = gltf.scene;
-        wellModel.scale.set(20, 20, 20);
-        wellModel.position.set(315, 19, 220);
+        wellModel.scale.set(15, 15, 15);
+        wellModel.position.set(-205, 15, -380);
       //  console.log("Well Model Properties:");
         
         // Calculate dimensions of the well model
@@ -1413,7 +1461,7 @@ export function loadModels(loader, scene, world, blockWidth){
         const wellModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
         const wellModelBody = new CANNON.Body({
             mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(315, 19, 220) // Initial position of the model
+            position: new CANNON.Vec3(-205, 15, -380) // Initial position of the model
         });
         wellModelBody.addShape(wellModelShape);
         world.addBody(wellModelBody);
@@ -1433,6 +1481,127 @@ export function loadModels(loader, scene, world, blockWidth){
         wireframeMesh.position.set(315, 19, 220);
         wireframeMesh.visible = false;
         
+        // Add the wireframe mesh to the scene
+        scene.add(wireframeMesh);
+    }, undefined, function (error) {
+        console.error(error);
+    });
+
+    loader.load('/boer_war_statue.glb', function (gltf) {
+        const wellModel = gltf.scene;
+        wellModel.rotation.y = -Math.PI / 4;
+        wellModel.scale.set(1.5, 1.5, 1.5);
+        wellModel.position.set(-205, -10, -300);
+        //  console.log("Well Model Properties:");
+
+        // Calculate dimensions of the well model
+        const boundingBox = new THREE.Box3().setFromObject(wellModel);
+        const width = boundingBox.max.x - boundingBox.min.x;
+        const height = boundingBox.max.y - boundingBox.min.y;
+        const depth = boundingBox.max.z - boundingBox.min.z;
+        //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+
+        // Add Cannon.js body for Well model
+        const wellModelShape = new CANNON.Box(new CANNON.Vec3(width / 4.5, height / 4.5, depth / 4.5));
+        const wellModelBody = new CANNON.Body({
+            mass: 0, // Static object, so mass is 0
+            position: new CANNON.Vec3(-205, -10, -300) // Initial position of the model
+        });
+        wellModelBody.addShape(wellModelShape);
+        world.addBody(wellModelBody);
+
+        wellModel.rotation.y = -Math.PI/4;
+        scene.add(wellModel);
+
+        // Create a wireframe mesh for visualization
+        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
+        const wireframeMaterial = new THREE.MeshBasicMaterial({
+            color: 0x00ff00,
+            wireframe: true
+        });
+        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
+
+        // Position the wireframe mesh at the same position as the model
+        wireframeMesh.position.set(315, 19, 220);
+        wireframeMesh.visible = false;
+
+        // Add the wireframe mesh to the scene
+        scene.add(wireframeMesh);
+    }, undefined, function (error) {
+        console.error(error);
+    });
+    const lambertMaterial = new THREE.MeshLambertMaterial({ color: 0x000000 }); // Black color
+
+// Loader to load the texture
+    const textureLoader = new THREE.TextureLoader();
+    const texture = textureLoader.load('exosystem_bk.jpg'); // Replace with the path to your texture file
+
+    const textureScaleX = 0.1; // Adjust the texture tiling in the X direction
+    const textureScaleY = 0.11; // Adjust the texture tiling in the Y direction
+
+// Apply texture transformation matrix for tiling
+    texture.matrixAutoUpdate = false; // Prevent Three.js from auto-updating texture matrix
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+
+// Set texture matrix to control tiling
+    const textureMatrix = new THREE.Matrix4().identity();
+    textureMatrix.scale(new THREE.Vector3(textureScaleX, textureScaleY, 1)); // Scale texture coordinates
+    texture.matrix = textureMatrix;
+// Apply the texture to the Lambert material
+    lambertMaterial.map = texture;
+    loader.load('/iron_man_mark_85.glb', function (gltf) {
+        const wellModel = gltf.scene;
+        wellModel.rotation.y = -Math.PI / 4;
+        wellModel.scale.set(0.1, 0.10, 0.1);
+        wellModel.position.set(-120, 0, -420);
+
+        // Create a blue Lambert material
+        const blueMaterial = new THREE.MeshLambertMaterial({ color: 0x0000ff }); // Blue color
+        const textureLoader = new THREE.TextureLoader();
+        const texture = textureLoader.load(ceilingtextureImage); // Replace with the path to your PNG texture file
+
+// Create a material using the loaded texture
+        const pngMaterial = new THREE.MeshLambertMaterial({ map: texture });
+        console.log(pngMaterial);
+        wellModel.traverse(function (child) {
+            if (child.isMesh) {
+                child.material = pngMaterial;
+            }
+        });
+        // Apply the blue material to the wellModel
+       // wellModel.material=pngMaterial;
+
+        // Calculate dimensions of the well model
+        const boundingBox = new THREE.Box3().setFromObject(wellModel);
+        const width = boundingBox.max.x - boundingBox.min.x;
+        const height = boundingBox.max.y - boundingBox.min.y;
+        const depth = boundingBox.max.z - boundingBox.min.z;
+
+        // Add Cannon.js body for Well model
+        const wellModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
+        const wellModelBody = new CANNON.Body({
+            mass: 0, // Static object, so mass is 0
+            position: new CANNON.Vec3(-120, 0, -420) // Initial position of the model
+        });
+        wellModelBody.addShape(wellModelShape);
+        world.addBody(wellModelBody);
+
+        wellModel.rotation.y = -Math.PI / 4;
+        scene.add(wellModel);
+
+        // Create a wireframe mesh for visualization
+        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
+        const wireframeMaterial = new THREE.MeshBasicMaterial({
+            color: 0x00ff00, // Green color (for wireframe)
+            wireframe: true
+        });
+
+        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
+
+        // Position the wireframe mesh at the same position as the model
+        wireframeMesh.position.set(315, 19, 220);
+        wireframeMesh.visible = false;
+
         // Add the wireframe mesh to the scene
         scene.add(wireframeMesh);
     }, undefined, function (error) {
