@@ -714,7 +714,7 @@ function sky() {
 function ground() {
     let groundTexture = new THREE.TextureLoader().load( groundImg );
     groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
-    groundTexture.repeat.set( -500, 500 );
+    groundTexture.repeat.set( -500, -500 );
     groundTexture.anisotropy = 16;
     groundTexture.encoding = THREE.sRGBEncoding;
 
