@@ -4,10 +4,10 @@ import * as CANNON from 'cannon-es';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { loadModels } from './models.js';
-import groundImg from './textures/avinash-kumar-rEIDzqczN7s-unsplash.jpg';
 //import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as camera from './camera.js';
 import * as player from './player.js';
+import groundImg from './textures/avinash-kumar-rEIDzqczN7s-unsplash.jpg';
 
 // Import texture images
 import exosystemFtImage from '../img/exosystem/exosystem_ft.jpg';
@@ -34,15 +34,15 @@ class Wall {
 
     constructor(scene, world, position, rotation) {
         // Create Three.js wall
-        const wallGeometry = new THREE.BoxGeometry(blockWidth, 70, 5);
-        const wallMaterial = new THREE.MeshStandardMaterial({
-            color: "#DEC4B0",
-            side: THREE.DoubleSide,
-            wireframe: true,
-        });
+        // const wallGeometry = new THREE.BoxGeometry(blockWidth, 70, 5);
+        // const wallMaterial = new THREE.MeshStandardMaterial({
+        //     color: "#DEC4B0",
+        //     side: THREE.DoubleSide,
+        //     wireframe: true,
+        // });
 
-        this.mesh = new THREE.Mesh(wallGeometry, wallMaterial);
-        scene.add(this.mesh);
+        // this.mesh = new THREE.Mesh(wallGeometry, wallMaterial);
+        // scene.add(this.mesh);
 
         // Create Cannon.js wall
         const wallPhysMat = new CANNON.Material()
@@ -61,8 +61,8 @@ class Wall {
         world.addBody(this.body);
 
         // Update the Three.js mesh position and rotation based on the Cannon.js body
-        this.mesh.position.copy(this.body.position);
-        this.mesh.quaternion.copy(this.body.quaternion);
+        // this.mesh.position.copy(this.body.position);
+        // this.mesh.quaternion.copy(this.body.quaternion);
     }
 }
 
@@ -76,25 +76,25 @@ class InnerWall {
         // Calculate the width of each part of the inner wall
         const partWidth = (totalWidth - gapWidth) / 2;
 
-        // Create Three.js inner wall parts and materials
-        const wallGeometry1 = new THREE.BoxGeometry(partWidth, 70, 5);
-        const wallMaterial1 = new THREE.MeshStandardMaterial({
-            color: "#DEC4B0",
-            side: THREE.DoubleSide,
-            wireframe: true,
-        });
-        this.mesh1 = new THREE.Mesh(wallGeometry1, wallMaterial1);
+        // // Create Three.js inner wall parts and materials
+        // const wallGeometry1 = new THREE.BoxGeometry(partWidth, 70, 5);
+        // const wallMaterial1 = new THREE.MeshStandardMaterial({
+        //     color: "#DEC4B0",
+        //     side: THREE.DoubleSide,
+        //     wireframe: true,
+        // });
+        // this.mesh1 = new THREE.Mesh(wallGeometry1, wallMaterial1);
 
-        const wallGeometry2 = new THREE.BoxGeometry(partWidth, 70, 5);
-        const wallMaterial2 = new THREE.MeshStandardMaterial({
-            color: "#DEC4B0",
-            side: THREE.DoubleSide,
-            wireframe: true,
-        });
-        this.mesh2 = new THREE.Mesh(wallGeometry2, wallMaterial2);
+        // const wallGeometry2 = new THREE.BoxGeometry(partWidth, 70, 5);
+        // const wallMaterial2 = new THREE.MeshStandardMaterial({
+        //     color: "#DEC4B0",
+        //     side: THREE.DoubleSide,
+        //     wireframe: true,
+        // });
+        // this.mesh2 = new THREE.Mesh(wallGeometry2, wallMaterial2);
 
-        scene.add(this.mesh1);
-        scene.add(this.mesh2);
+        // scene.add(this.mesh1);
+        // scene.add(this.mesh2);
 
         // Create Cannon.js inner wall
         const wallPhysMat = new CANNON.Material();
@@ -143,12 +143,12 @@ class InnerWall {
         world.addBody(this.body1);
         world.addBody(this.body2);
 
-        // Update the Three.js mesh position and rotation based on the Cannon.js bodies
-        this.mesh1.position.copy(position1);
-        this.mesh2.position.copy(position2);
+        // // Update the Three.js mesh position and rotation based on the Cannon.js bodies
+        // this.mesh1.position.copy(position1);
+        // this.mesh2.position.copy(position2);
 
-        this.mesh1.quaternion.copy(initialRotation);
-        this.mesh2.quaternion.copy(initialRotation);
+        // this.mesh1.quaternion.copy(initialRotation);
+        // this.mesh2.quaternion.copy(initialRotation);
         //const loader = new THREE.GLTFLoader();
 
     }
@@ -190,7 +190,7 @@ class Gate {
 
             // Add the gate model to the scene
             scene.add(this.model);
-            this.opengate(90);
+           // this.opengate(90);
         });
     }
 
@@ -250,11 +250,11 @@ class floorContBody {
 function puzzComplete(puzz){
     if (puzz == 'Blue'){
 
-     //   puzz1Gate.opengate(90);
+        puzz1Gate.opengate(90);
 
     }
     else if (puzz == 'Red') {
-       // puzz2Gate.opengate(90);
+        puzz2Gate.opengate(90);
     }
     
 
@@ -614,6 +614,42 @@ function addFloorBodies() {
 
 }
 
+function helperSquares() {
+
+    //white and gray squares (will be removed later)
+
+
+    const planeGeometry = new THREE.PlaneGeometry(gridSizeX * blockWidth, gridSizeZ * blockDepth);
+    const planeMaterial = new THREE.MeshBasicMaterial({ opacity: 0.0, transparent: true }); // White color
+
+    const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+    plane.rotation.x = -Math.PI / 2; // Rotate it to be horizontal
+    plane.position.set(0, -30, 0); // Position it on the X-Z plane
+
+    scene.add(plane);
+
+    // Create alternating grey and white blocks
+    for (let i = 0; i < gridSizeX; i++) {
+        for (let j = 0; j < gridSizeZ; j++) {
+            const color = (i + j) % 2 === 0 ? 0x808080 : 0xffffff; // Alternating grey and white
+            const blockMaterial = new THREE.MeshBasicMaterial({ color });
+            const blockGeometry = new THREE.BoxGeometry(blockWidth, 1, blockDepth);
+            const blockMesh = new THREE.Mesh(blockGeometry, blockMaterial);
+            blockMesh.position.set((i - gridSizeX / 2 + 0.5) * blockWidth, -30, (j - gridSizeZ / 2 + 0.5) * blockDepth);
+            blockMesh.updateWorldMatrix(true, false);
+
+            scene.add(blockMesh);
+            let boundingBox = new THREE.Box3().setFromObject(blockMesh);
+            let size = new THREE.Vector3();
+            boundingBox.getSize(size);
+            blockMesh.sizeFromBoundingBox = size;
+            levelAreas.push(blockMesh);
+        }
+    }
+
+
+}
+
 function PiP() {
 
     // Iterate through all objects in PiP2
@@ -745,6 +781,7 @@ function sky() {
     scene.add(skybox);
 
 }
+
 
 function ground() {
     let groundTexture = new THREE.TextureLoader().load( groundImg );
@@ -991,6 +1028,8 @@ sky();
 ground();
 
 
+helperSquares();
+
 
 
 // DEFINE MAZE GRID
@@ -1136,8 +1175,6 @@ export function animate_lights() {
 
 
 }
-
-
 
 // create instance of GLTF loader and call load on it
 // 
