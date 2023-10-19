@@ -213,8 +213,8 @@ function plants(loader, scene, world) {
 
 export function loadModels(loader, scene, world, blockWidth) {
 
-    trees(loader, scene, world);
-    plants(loader, scene, world);
+    //trees(loader, scene, world);
+    //plants(loader, scene, world);
 
 
 

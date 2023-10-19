@@ -279,10 +279,15 @@ class BasicCharacterController {
       controlObject.rotation.y = Math.atan2(cameraDirection.x, cameraDirection.z);
 
       // Update camera's position to match the character's position
-      cameraObject.position.copy(controlObject.position);
-      // Set the camera's vertical position (Y-axis) to maintain it above the character's head
+      const cameraOffset = new THREE.Vector3(0, 20, -10); // Adjust these values as needed
 
-      cameraObject.position.y += 20;
+      const characterRotationY = controlObject.rotation.y;
+      const relativeCameraOffset = cameraOffset.clone().applyAxisAngle(new THREE.Vector3(0, 1, 0), characterRotationY);
+      cameraObject.position.copy(controlObject.position).add(relativeCameraOffset);
+
+      // Make the camera look at the character's back
+      const lookAtPosition = controlObject.position.clone();
+      //cameraObject.lookAt(lookAtPosition);
       if (this._mixer) {
         this._mixer.update(timeInSeconds);
       }
