@@ -1094,7 +1094,7 @@ addWalls();
 //lobbyGate.opengate(90);
 
 document.addEventListener('keydown', (event) => {
-    if (event.key === ' ' || event.key === 'Spacebar') {
+    if (event.key === 'r') {
      const tileColor = 0xffffff;
         levelAreas.forEach((area, index) => {
             let rangeInX = area.sizeFromBoundingBox.x / 2;

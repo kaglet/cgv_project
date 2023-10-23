@@ -35,6 +35,7 @@ let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
 let moveRight = false;
+let jumping=false;
 export var paused = false;
 
 export let playerBody;
@@ -81,8 +82,8 @@ class BasicCharacterController {
 
   _Init(params) {
     this._params = params;
-    this._decceleration = new THREE.Vector3(-5.0, -0.25, -5.0);
-    this._acceleration = new THREE.Vector3(200, 1, 200);
+    this._decceleration = new THREE.Vector3(-5.0, -9.8, -5.0);
+    this._acceleration = new THREE.Vector3(200, 80, 200);
     this._velocity = new THREE.Vector3(0, 0, 0);
 
     this._animations = {};
@@ -197,6 +198,7 @@ class BasicCharacterController {
       loader.load('./alex/Idle.fbx', (a) => { _OnLoad('idle', a); });
       loader.load('./alex/WalkLeft.fbx', (a) => { _OnLoad('left', a); });
       loader.load('./alex/WalkRight.fbx', (a) => { _OnLoad('right', a); });
+      loader.load('./alex/Jumping.fbx', (a) => { _OnLoad('jump', a); });
     });
   }
 
@@ -251,7 +253,7 @@ class BasicCharacterController {
       // Where movement is done
 
       if (!moveForward){
-        velocity.z -= 0.0046*acc.z * timeInSeconds;
+        velocity.z -= 0.00046*acc.z * timeInSeconds;
       }
       if (moveForward) {
         velocity.z += acc.z * timeInSeconds;
@@ -264,6 +266,9 @@ class BasicCharacterController {
       }
       if (moveLeft) {
         velocity.x += acc.x * timeInSeconds;
+      }
+      if(jumping){
+        velocity.y +=acc.y*timeInSeconds;
       }
 
 //    if (!moveForward){
@@ -334,6 +339,9 @@ class BasicCharacterController {
         _Q.setFromAxisAngle(_A, 4.0 * -Math.PI * timeInSeconds * (this._acceleration.y * 0.5));
         _R.multiply(_Q);
       }
+       if(jumping){
+          velocity.y +=acc.y*timeInSeconds;
+        }
 
       controlObject.quaternion.copy(_R);
 
@@ -369,7 +377,13 @@ class BasicCharacterController {
   }
 
 };
+function handleSpacebarPress() {
 
+        setTimeout(function() {
+            jumping = false;
+        }, 1000); // 1000 milliseconds (1 second)
+
+}
 class BasicCharacterControllerInput {
   //const  moveForwardSoundPlaying = false;
   constructor() {
@@ -435,6 +449,9 @@ class BasicCharacterControllerInput {
         case 68: // d
           moveRight = true;
           break;
+       case 32: // d
+        jumping = true;
+        break;
       }
       if ((moveForward || moveBackward || moveRight || moveLeft) && sound==false) {
       sound=true;
@@ -465,6 +482,9 @@ class BasicCharacterControllerInput {
         moveRight = false;
        // moveSound.stop();
         break;
+      case 32: // d
+        handleSpacebarPress();
+         break;
     }
     if (!moveForward && !moveBackward && !moveRight && !moveLeft) {
       moveSound.stop();
@@ -522,6 +542,7 @@ class CharacterFSM extends FiniteStateMachine {
     this._AddState('back', BackState);
     this._AddState('left', LeftState);
     this._AddState('right', RightState);
+    this._AddState('jump', JumpState);
 
   }
 };
@@ -538,7 +559,47 @@ class State {
 };
 
 
+class JumpState extends State {
+  constructor(parent) {
+    super(parent);
+  }
 
+  get Name() {
+    return 'jump';
+  }
+
+  Enter(prevState) {
+    const curAction = this._parent._proxy._animations['jump'].action;
+    if (prevState) {
+      const prevAction = this._parent._proxy._animations[prevState.Name].action;
+
+      curAction.enabled = true;
+
+
+      curAction.time = 0.0;
+      curAction.setEffectiveTimeScale(1.0);
+      curAction.setEffectiveWeight(1.0);
+
+
+      curAction.crossFadeFrom(prevAction, 0.5, true);
+      curAction.play();
+    } else {
+      curAction.play();
+    }
+  }
+
+  Exit() {
+  }
+
+  Update(timeElapsed, input) {
+    if (jumping) {
+
+      return;
+    }
+
+    this._parent.SetState('idle');
+  }
+};
 
 
 class WalkState extends State {
@@ -574,7 +635,9 @@ class WalkState extends State {
   }
 
   Update(timeElapsed, input) {
-    if (moveForward) {
+  if (jumping) {
+        this._parent.SetState('jump');
+      }else if (moveForward) {
 
       return;
     }
@@ -616,6 +679,9 @@ class BackState extends State {
   }
 
   Update(timeElapsed, input) {
+  if (jumping) {
+            this._parent.SetState('jump');
+          }else
     if (moveBackward) {
 
       return;
@@ -658,6 +724,9 @@ class LeftState extends State {
   }
 
   Update(timeElapsed, input) {
+  if (jumping) {
+            this._parent.SetState('jump');
+          }else
     if (moveLeft) {
 
       return;
@@ -700,6 +769,9 @@ class RightState extends State {
   }
 
   Update(timeElapsed, input) {
+  if (jumping) {
+            this._parent.SetState('jump');
+          }else
     if (moveRight) {
 
       return;
@@ -750,6 +822,9 @@ class IdleState extends State {
     if (moveLeft) {
       this._parent.SetState('left');
     }
+    if (jumping) {
+          this._parent.SetState('jump');
+        }
   }
 };
 
