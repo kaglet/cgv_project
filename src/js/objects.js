@@ -366,7 +366,7 @@ function createPiPTile(index, PiP) {
 
     if (PiP == 1) {
         //Draw 4 squares
-        if (index == 11) {
+        if (index == 65) {
             const squareGeometry = new THREE.BoxGeometry(0.5, 0.5, 5); // Adjust the size and depth
             const squareMaterial = new THREE.MeshStandardMaterial({ color: 0xffff00 }); // Yellow color
 
@@ -377,12 +377,12 @@ function createPiPTile(index, PiP) {
                 square.position.set(0, i - 1.8, 0); // Adjusted positions
                 tile.add(square);
             }
-
+            tile.rotation.set(0,0,Math.PI/2);
 
         }
 
         //Draw L
-        if (index == 67) {
+        if (index == 53) {
             const squareGeometry = new THREE.BoxGeometry(0.5, 0.5, 5); // Adjust the size and depth
             const squareMaterial = new THREE.MeshStandardMaterial({ color: 0xffff00 }); // Yellow color
 
@@ -396,7 +396,7 @@ function createPiPTile(index, PiP) {
                 square.position.set(0, i - 1.4, 0); // Adjusted positions
                 tile.add(square);
             }
-
+               tile.rotation.set(0,0,Math.PI/2);
 
         }
 
@@ -612,6 +612,7 @@ function addFloorBodies() {
     const floorBody3 = new floorContBody(scene, world, floorContainerBlue);
 
 
+
 }
 
 function helperSquares() {
@@ -702,22 +703,22 @@ function PiP() {
 
     //PiP1 Creation
     PiP1.scale.set(0.12, 0.12, 0.12);
-    PiP1.position.set(-blockWidth / 2 + 142.5 - 30, 20, - blockWidth + 0.6 + 30);
-    PiP1.rotation.set(-Math.PI / 2, -Math.PI / 2, -Math.PI);
+    PiP1.position.set(-blockWidth / 2 + 142.5 - 30, 20, - blockWidth + 0.6 + 7);
+    PiP1.rotation.set(0, -Math.PI / 2, -Math.PI);
     //PiP1 Pole
     const pole1 = new THREE.Mesh(poleGeometry, poleMaterial);
     scene.add(pole1);
-    pole1.position.set(-blockWidth / 2 + 141 - 30, 0, - blockWidth + 0.5 + 30);
+    pole1.position.set(-blockWidth / 2 + 141 - 30, 0, - blockWidth + 0.5 + 7);
     //PiP1 Sign
     const signwall1 = new THREE.Mesh(signwallgeometry, signmaterial);
     scene.add(signwall1);
-    signwall1.position.set(-blockWidth / 2 + 141 - 30, 20, - blockWidth + 0.8 + 30);
+    signwall1.position.set(-blockWidth / 2 + 141 - 30, 20, - blockWidth + 0.8 + 7);
     signwall1.rotation.set(0, Math.PI / 2, 0);
     //PiP Base 1
     const PiPBaseMaterial1 = new THREE.MeshStandardMaterial({color: 0x006400});
     const PiPBase1 = new THREE.Mesh(PiPBaseGeometry,PiPBaseMaterial1);
     scene.add(PiPBase1);
-    PiPBase1.position.set(-blockWidth / 2 + 142 - 30, 20.3, - blockWidth + 0.8 - 0.4 + 30);
+    PiPBase1.position.set(-blockWidth / 2 + 142 - 30, 20.3, - blockWidth + 0.8 - 0.4 + 7.5);
     PiPBase1.rotation.set(0, Math.PI / 2, 0);
     scene.add(PiPBase1);
 
@@ -852,13 +853,14 @@ function makeMazes() {
     floorContainerRed.scale.set(4, 4, 1);
     floorContainerBlue.scale.set(4, 4, 1);
 
-    floorContainerGreen.position.set(-blockWidth / 2, 5, - blockWidth);
+    floorContainerGreen.position.set(-blockWidth / 2, 5, - blockWidth -22);
     floorContainerRed.position.set(blockWidth / 2, 5, - blockWidth);
     floorContainerBlue.position.set(blockWidth / 2, 5, 0);
 
 
 
-    floorContainerGreen.rotation.set(rotationAngle, 0, 0);
+    floorContainerGreen.rotation.set(rotationAngle, 0, -Math.PI/2);
+
     floorContainerRed.rotation.set(rotationAngle, 0, 0);
     floorContainerBlue.rotation.set(rotationAngle, 0, 0);
 
