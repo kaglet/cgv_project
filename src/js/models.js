@@ -23,7 +23,9 @@ function generateRandomNumberForVariation() {
 
 
 
-function trees(loader, scene, world) {
+
+
+function trees() {
     const numTrees = 100;
     const minDistanceFromCenter = 600;
     const maxDistanceFromCenter = 700;
@@ -37,10 +39,11 @@ function trees(loader, scene, world) {
         return x - Math.floor(x);
     }
 
-    let loadedTreeModels = 0;
     const totalModels = 2; // The total number of models to load (2 in this case)
 
-    function cloneAndAddTree(model, num) {
+    function generateTreePositions(modelPath, scale, num) {
+        const positions = [];
+
         for (let i = 0; i < numTrees; i++) {
             const randomAngle = seededRandom(num + i) * Math.PI * 2;
             const randomDistance = minDistanceFromCenter + (seededRandom(num - i) * (maxDistanceFromCenter - minDistanceFromCenter));
@@ -48,34 +51,88 @@ function trees(loader, scene, world) {
             const randomX = center.x + randomDistance * Math.cos(randomAngle);
             const randomZ = center.z + randomDistance * Math.sin(randomAngle);
 
-            const treeClone = model.clone();
-            treeClone.scale.set(0.1, 0.1, 0.1);
-            treeClone.position.set(randomX, 0, randomZ);
-            treeClone.rotation.y = randomYRotation;
-            scene.add(treeClone);
+            positions.push({
+                modelPath: modelPath,
+                scale: scale,
+                position: [randomX, 0, randomZ],
+                rotation: randomYRotation,
+            });
         }
+
+        return positions;
     }
 
-    loader.load('./coconut_tree/scene.gltf', function (gltf) {
-        const coconutTreeModel = gltf.scene;
-        loadedTreeModels++;
+    const coconutTreePositions = generateTreePositions('./coconut_tree/scene.gltf', 0.1, randomSeed1);
+    const bendedCoconutTreePositions = generateTreePositions('./bended_coconut_tree/scene.gltf', 0.1, randomSeed2);
 
-        if (loadedTreeModels === totalModels) {
-            cloneAndAddTree(coconutTreeModel, randomSeed1);
-        }
-    });
-
-    loader.load('./bended_coconut_tree/scene.gltf', function (gltf) {
-        const bendedCoconutTreeModel = gltf.scene;
-        loadedTreeModels++;
-
-        if (loadedTreeModels === totalModels) {
-            cloneAndAddTree(bendedCoconutTreeModel, randomSeed2);
-        }
-    });
+    modelsToLoad.push(...coconutTreePositions, ...bendedCoconutTreePositions);
 }
 
-function plants(loader, scene, world) {
+
+// function plants(loader, scene, world) {
+//     const centers = [];
+//     const blockWidth = 350;
+//     centers.push(new THREE.Vector3(blockWidth / 2, 0, blockWidth / 2 - 9));
+//     centers.push(new THREE.Vector3(blockWidth / 2, 0, -blockWidth / 2 + 9));
+//     centers.push(new THREE.Vector3(-24.5, 0, -blockWidth));
+
+//     const numPlants = 100;
+//     const minDistanceFromCenter = 0;
+//     const maxDistanceFromCenter = 350;
+
+//     // Create a seeded random number generator
+//     function seededRandom(seed) {
+//         let x = Math.sin(seed) * 10000;
+//         return x - Math.floor(x);
+//     }
+
+//     const modelsToLoad = [
+//         './assets/shrub_pack/scene.gltf',
+//         './assets/tropical_plant/scene.gltf',
+//         './assets/tropical_plant_2/scene.gltf',
+//         './assets/tropical_plant_monstera_deliciosa/scene.gltf',
+//         './assets/tropical_plant_3/scene.gltf'
+//     ];
+
+//     // Load all models first
+//     const loadedModels = [];
+//     const loadModelPromises = modelsToLoad.map((modelPath) => {
+//         return new Promise((resolve) => {
+//             loader.load(modelPath, (gltf) => {
+//                 const model = gltf.scene;
+//                 loadedModels.push(model);
+//                 resolve();
+//             });
+//         });
+//     });
+
+//     Promise.all(loadModelPromises).then(() => {
+//         // Loop through the loaded models
+//         loadedModels.forEach((model, modelIndex) => {
+//             const scaleFactors = [1.5, 2, 0.025, 6, 6]; // Modify scale factors accordingly
+
+//             for (let centerIndex = 0; centerIndex < centers.length; centerIndex++) {
+//                 for (let i = 0; i < numPlants; i++) {
+//                     const plantModel = model.clone();
+//                     const randomAngle = seededRandom(100 * (modelIndex + 1) + i) * Math.PI * 2;
+//                     const randomDistance = minDistanceFromCenter + (seededRandom(100 * (modelIndex + 1) - i) * (maxDistanceFromCenter - minDistanceFromCenter));
+//                     const randomYRotation = Math.random() * Math.PI * 2;
+//                     const randomX = centers[centerIndex].x + randomDistance * Math.cos(randomAngle);
+//                     const randomZ = centers[centerIndex].z + randomDistance * Math.sin(randomAngle);
+//                     const groundHeight = 0.1;
+
+//                     plantModel.scale.set(scaleFactors[modelIndex], scaleFactors[modelIndex], scaleFactors[modelIndex]);
+//                     plantModel.position.set(randomX, groundHeight, randomZ);
+//                     plantModel.rotation.y = randomYRotation;
+
+//                     scene.add(plantModel);
+//                 }
+//             }
+//         });
+//     });
+// }
+
+function plants(modelsToLoad) {
     const centers = [];
     const blockWidth = 350;
     centers.push(new THREE.Vector3(blockWidth / 2, 0, blockWidth / 2 - 9));
@@ -92,49 +149,36 @@ function plants(loader, scene, world) {
         return x - Math.floor(x);
     }
 
-    const modelsToLoad = [
-        './assets/shrub_pack/scene.gltf',
-        './assets/tropical_plant/scene.gltf',
-        './assets/tropical_plant_2/scene.gltf',
-        './assets/tropical_plant_monstera_deliciosa/scene.gltf',
-        './assets/tropical_plant_3/scene.gltf'
+    const models = [
+        { modelPath: './assets/shrub_pack/scene.gltf', scale: 1.5 },
+        { modelPath: './assets/tropical_plant/scene.gltf', scale: 2 },
+        { modelPath: './assets/tropical_plant_2/scene.gltf', scale: 0.025 },
+        { modelPath: './assets/tropical_plant_monstera_deliciosa/scene.gltf', scale: 6 },
+        { modelPath: './assets/tropical_plant_3/scene.gltf', scale: 6 }
     ];
 
-    // Load all models first
-    const loadedModels = [];
-    const loadModelPromises = modelsToLoad.map((modelPath) => {
-        return new Promise((resolve) => {
-            loader.load(modelPath, (gltf) => {
-                const model = gltf.scene;
-                loadedModels.push(model);
-                resolve();
-            });
-        });
-    });
+    // Loop through the models to load
+    models.forEach((modelDescription, modelIndex) => {
+        const modelPath = modelDescription.modelPath;
+        const scale = modelDescription.scale;
 
-    Promise.all(loadModelPromises).then(() => {
-        // Loop through the loaded models
-        loadedModels.forEach((model, modelIndex) => {
-            const scaleFactors = [1.5, 2, 0.025, 6, 6]; // Modify scale factors accordingly
+        for (let centerIndex = 0; centerIndex < centers.length; centerIndex++) {
+            for (let i = 0; i < numPlants; i++) {
+                const randomAngle = seededRandom(100 * (modelIndex + 1) + i) * Math.PI * 2;
+                const randomDistance = minDistanceFromCenter + (seededRandom(100 * (modelIndex + 1) - i) * (maxDistanceFromCenter - minDistanceFromCenter));
+                const randomYRotation = Math.random() * Math.PI * 2;
+                const randomX = centers[centerIndex].x + randomDistance * Math.cos(randomAngle);
+                const randomZ = centers[centerIndex].z + randomDistance * Math.sin(randomAngle);
 
-            for (let centerIndex = 0; centerIndex < centers.length; centerIndex++) {
-                for (let i = 0; i < numPlants; i++) {
-                    const plantModel = model.clone();
-                    const randomAngle = seededRandom(100 * (modelIndex + 1) + i) * Math.PI * 2;
-                    const randomDistance = minDistanceFromCenter + (seededRandom(100 * (modelIndex + 1) - i) * (maxDistanceFromCenter - minDistanceFromCenter));
-                    const randomYRotation = Math.random() * Math.PI * 2;
-                    const randomX = centers[centerIndex].x + randomDistance * Math.cos(randomAngle);
-                    const randomZ = centers[centerIndex].z + randomDistance * Math.sin(randomAngle);
-                    const groundHeight = 0.1;
-
-                    plantModel.scale.set(scaleFactors[modelIndex], scaleFactors[modelIndex], scaleFactors[modelIndex]);
-                    plantModel.position.set(randomX, groundHeight, randomZ);
-                    plantModel.rotation.y = randomYRotation;
-
-                    scene.add(plantModel);
-                }
+                // Push the position data to modelsToLoad
+                modelsToLoad.push({
+                    modelPath: modelPath,
+                    scale: scale,
+                    position: [randomX, 0.1, randomZ],
+                    rotation: randomYRotation,
+                });
             }
-        });
+        }
     });
 }
 
@@ -172,8 +216,6 @@ function loadAndSetupModels(loader, scene, world, models) {
 
 function lobby(loader, scene, world) {
 
-
-
     modelsToLoad.push({ modelPath: '/dungeon.glb', scale: 15, position: [106, 17, 487], rotation: Math.PI / 2 });
     modelsToLoad.push({ modelPath: '/dungeon.glb', scale: 15, position: [245, 17, 487], rotation: Math.PI / 2 });
     modelsToLoad.push({ modelPath: '/watch_tower.glb', scale: 0.2, position: [18, 2, 507], rotation: Math.PI / 2 });
@@ -198,8 +240,6 @@ function lobby(loader, scene, world) {
     modelsToLoad.push({ modelPath: '/wall_ruins.glb', scale: 30, position: [278, 0, 416], rotation: Math.PI / 2 });
     modelsToLoad.push({ modelPath: '/wall_ruins.glb', scale: 30, position: [135, 0, 416], rotation: Math.PI / 2 });
 
-
-
    
 }
 
@@ -208,81 +248,11 @@ function lobby(loader, scene, world) {
 
 export function loadModels(loader, scene, world, blockWidth) {
 
-    //trees(loader, scene, world);
-    //plants(loader, scene, world);
+    trees();
+    //plants();
 
-
-
-    loader.load('/ground_material.glb', function (gltf) {
-        gltf.scene.rotation.y = Math.PI / 2;
-        gltf.scene.scale.set(1, 1, 1);
-        gltf.scene.position.y = -1;
-        gltf.scene.position.x = 0;
-        gltf.scene.position.z = 0;
-        scene.add(gltf.scene);
-
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-
-
-    loader.load('/lion_statue.glb', function (gltf) {
-        const lionStatueModel = gltf.scene;
-        lionStatueModel.scale.set(30, 30, 30);
-        lionStatueModel.position.set(103, -5, 50);
-        console.log("Lion Statue Properties:");
-        //    for (const property in lionStatueModel) {
-        //        console.log(`${property}:`, lionStatueModel[property]);
-        //    }
-
-        // Calculate dimensions of the lion statue model
-        const boundingBox = new THREE.Box3().setFromObject(lionStatueModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Lion Statue model
-        const lionStatueShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const lionStatueBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(103, -5, 50) // Initial position of the model
-        });
-        lionStatueBody.addShape(lionStatueShape);
-        world.addBody(lionStatueBody);
-
-        scene.add(lionStatueModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(-40, 8, 0);
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-
-
-
-
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-    // const newPosition = new THREE.Vector3(10, 0, 0); // Example position
-    // const newRotation = new THREE.Euler(0, Math.PI / 4, 0); // Example rotation
-    // const newScale = new THREE.Vector3(2, 2, 2); // Example scale
-    // cloneModel(lionStatueModel, newPosition, newRotation, newScale);
-
-    // Call the setup function to set up all stone wall models
-    //   setupStoneWallModels(loader, scene, world);
-
+    modelsToLoad.push({ modelPath: '/ground_material.glb', scale: 1, position: [0, -1, 0], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: '/lion_statue.glb', scale: 30, position: [103, -5, 50], rotation: 0 });
 
     lobby(loader, scene, world);
 
