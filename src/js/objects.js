@@ -157,6 +157,10 @@ class InnerWall {
 
 class Gate {
     constructor(position, rotation) {
+        this.open = false;
+        this.currentAngle = rotation.y;       // Current angle of the door
+        this.targetAngle = rotation.y;        // Target angle for the door
+        this.isAnimating = false;    // Flag to track if the door is currently animating
 
         //  Create Cannon.js wall
         const gatePhysMat = new CANNON.Material()
@@ -200,7 +204,7 @@ class Gate {
         // Wait for the model to be loaded before performing any operations on it
         await this.loadModelPromise;
 
-        if (this.model) {
+        if (this.model && (!this.open)) {
             // Set the hinge point (pivot) at the left vertical edge of the door
             let hingePoint = new THREE.Vector3(-20, 0, 0); // Adjust the values as needed
             if (gateNum == 2){
@@ -211,17 +215,54 @@ class Gate {
             const rotationAngle = (Math.PI / 180) * angle;
     
             // Step 1: Translate the door to the hinge point
-            const inverseHingePoint = hingePoint.clone().negate();
-            this.model.position.add(inverseHingePoint);
+          this.inverseHingePoint = hingePoint.clone().negate();
            
-    
-            // Step 2: Rotate the door
+        
+            // this.model.rotation.set(0, rotationAngle, 0); // Update the Three.js rotation
+            this.startOpeningAnimation(rotationAngle);
+            this.model.position.add(this.inverseHingePoint);
+
             this.body.quaternion.setFromEuler(0, rotationAngle, 0);
-            this.model.rotation.set(0, rotationAngle, 0); // Update the Three.js rotation
             this.body.position.copy(this.model.position);
     
             // Step 3: Translate the door back to its original position
           //  this.model.position.sub(inverseHingePoint);
+        }
+    }
+
+    // New method to start the opening animation
+    startOpeningAnimation(angle) {
+        if (this.isAnimating) {
+            // If an animation is already in progress, ignore the request
+            return;
+        }
+        
+        this.targetAngle += angle;
+        this.animateOpen();
+    }
+
+    // Animation loop to gradually open the door
+    animateOpen() {
+        this.isAnimating = true;
+
+        // Calculate the rotation increment per frame
+        const increment = (this.targetAngle - this.currentAngle) * 0.015;  // Adjust the speed as needed
+
+        if (Math.abs(increment) > 0.0025) {
+            // Continue opening the door
+            this.currentAngle += increment;
+
+            // Rotate the Cannon.js body
+
+            // Set the position of the model's pivot point
+            // this.model.position.copy(this.body.position);
+            // this.model.quaternion.copy(this.body.quaternion);
+            this.model.rotation.set(0, this.currentAngle, 0); // 
+
+            // Request the next frame
+            requestAnimationFrame(() => this.animateOpen());
+        } else {
+            this.isAnimating = false;
         }
     }
 
@@ -270,7 +311,7 @@ function puzzComplete(puzz) {
 
     }
     else if (puzz == 'Red') {
-        puzz2Gate.opengate(0, 2);
+        puzz2Gate.opengate(90, 2);
     }
 
 
@@ -617,10 +658,10 @@ function addWalls() {
     lobbyGate.opengate(90, 0);
 
     puzz1Gate = new Gate(new CANNON.Vec3(blockWidth / 2, 0, -blockWidth / 2 + 20), new CANNON.Vec3(0, (Math.PI / 1), 0));
-    puzz1Gate.opengate(90, 3);
+   // puzz1Gate.opengate(90, 3);
 
     puzz2Gate = new Gate(new CANNON.Vec3(-10, 0, -blockWidth + 10), new CANNON.Vec3(0, (Math.PI / 2), 0));
-    puzz2Gate.opengate(0, 2);
+  //  puzz2Gate.opengate(90, 2);
 
 }
 
