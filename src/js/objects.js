@@ -308,10 +308,12 @@ function puzzComplete(puzz) {
     if (puzz == 'Blue') {
 
         puzz1Gate.opengate((Math.PI / 2),3);
+        Level2Primitives();
 
     }
     else if (puzz == 'Red') {
         puzz2Gate.opengate((Math.PI / 2), 2);
+        Level3Primitives();
     }
 
 
@@ -1156,10 +1158,6 @@ export const PiP3 = new THREE.Group();
 //makeMazes();
 
 Level1Primitives();
-Level2Primitives();
-Level3Primitives();
-
-
 addFloorBodies();
 
 
