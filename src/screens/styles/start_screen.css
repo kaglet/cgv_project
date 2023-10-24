@@ -1,3 +1,99 @@
+@font-face {
+    font-family: Pangolin;
+    src: url(../fonts/Pangolin/Pangolin-Regular.ttf);
+}
+
+@font-face {
+    font-family: Frozito;
+    src: url(../fonts/frozito-font/Frozito-eZ99g.ttf);
+}
+
+
+@font-face {
+    font-family: Quicksand;
+    src: url(../fonts/Quicksand/Quicksand-VariableFont_wght.ttf);
+}
+
+:root {
+    --orange-shade: rgb(214, 140, 2);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: aliceblue;
+}
+
 body {
+    font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+/* Content of this layer is defined with its own height */
+.screen {
     height: 100vh;
+    padding: 4rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(rgba(18, 18, 18, 0.9), rgba(68, 68, 68, 0.6)), 
+    url(../../img/prison_corridor.jpg);
+    background-size: 100% 100%;
+}
+
+h1 {
+    margin-bottom: 1rem;
+    letter-spacing: 2.2rem;
+    font-size: 4rem;
+    font-style: normal;
+    font-family: Frozito;
+    position: relative;
+}
+
+p {
+    color: var(--orange-shade);
+    font-size: 6rem;
+    top: 30px;
+    left: 0px;
+    display: inline-block;
+    position: relative;
+    top: 0.8rem;
+}
+
+h3 {
+    margin-bottom: 9rem;
+    font-size: 3.4rem;
+    letter-spacing: 0.6rem;
+    font-family: Pangolin;
+    font-weight: 0;
+}
+
+ul {
+    list-style: none;
+}
+
+li {
+    font-size: 2.4rem;
+    font-family: Quicksand;
+    font-weight: 800;
+    letter-spacing: 0.2rem;
+    text-align: center;
+    padding: 0.5rem 0rem;
+}
+
+/* Give special styling to first list element child */
+li:first-child {
+    border: 1px solid var(--orange-shade);
+    color: var(--orange-shade);
+}
+
+li:first-child:hover {
+    background-color: var(--orange-shade);
+    color: rgba(155, 0, 0, 0);
+}
+
+/* Give light special styling to active buttons */
+li.active,
+li:hover {
+
 }
