@@ -302,6 +302,7 @@ function createTile(index, round, container) {
             // Create a mesh using the semicircle geometry
             const semicircleMesh1 = new THREE.Mesh(semicircleGeometry, tileMaterial.clone());
             semicircleMesh1.litUp = false;
+            semicircleMesh1.playerWithinBounds = false;
 
             semicircleMesh1.position.set(0, -2.5, 0);
             semicircleMesh1.rotation.x = Math.PI;
@@ -313,6 +314,7 @@ function createTile(index, round, container) {
             // Create a mesh using the semicircle geometry
             const semicircleMesh = new THREE.Mesh(semicircleGeometry, tileMaterial.clone());
             semicircleMesh.litUp = false;
+            semicircleMesh.playerWithinBounds = false;
 
             semicircleMesh.position.set(-2.5, 0, 0);
             semicircleMesh.rotation.z = Math.PI / 2;
@@ -324,6 +326,7 @@ function createTile(index, round, container) {
             // Create a mesh using the semicircle geometry
             const semicircleMesh3 = new THREE.Mesh(semicircleGeometry, tileMaterial.clone());
             semicircleMesh3.litUp = false;
+            semicircleMesh3.playerWithinBounds = false;
 
             semicircleMesh3.position.set(0, -2.5, 0);
             semicircleMesh3.rotation.x = Math.PI;
@@ -353,7 +356,6 @@ function createTile(index, round, container) {
     tile.userData.tileNumber = index; // Store the tile number in user data
     tile.castShadow = true;
     tile.receiveShadow = true;
-
 
 
     return tile;
@@ -552,6 +554,7 @@ function drawGridWithOmissions(container, omittedTiles = [], round) {
                     const yOffset = (j - numCols / 2) * (tileSize + gapSize);
                     tile.name = 'tile';
                     tile.litUp = false;
+                    tile.playerWithinBounds = false;
                     tile.position.set(xOffset, yOffset, 0);
                     tile.updateWorldMatrix(true, false);
                     container.add(tile);                    // Add the tile to the specified container
@@ -892,6 +895,8 @@ function tileLights() {
     if (player.characterModel) {
 
         floorContainerGreen.children.forEach((tile, index) => {
+            tile.playerWithinBounds = false;
+
             const epsilon = 3; // Small epsilon value to handle floating point errors
             const tileWorldPosition = new THREE.Vector3();
             tile.getWorldPosition(tileWorldPosition); // Get the world position of the tile instead of the position in the local coordinate system of the floor container
@@ -910,6 +915,7 @@ function tileLights() {
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
                 tile.litUp = true;
+                tile.playerWithinBounds = true;
                 if (tile.userData.tileNumber == 1) {
                     tile.semicircleMesh1.litUp = true;
                     tile.semicircleMesh1.material.color.copy(tileColor);
@@ -931,6 +937,7 @@ function tileLights() {
 
 
         floorContainerRed.children.forEach((tile, semicircleMesh, index) => {
+            tile.playerWithinBounds = false;
             const epsilon = 3; // Small epsilon value to handle floating point errors
             const tileWorldPosition = new THREE.Vector3();
             tile.getWorldPosition(tileWorldPosition);
@@ -951,6 +958,7 @@ function tileLights() {
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
                 tile.litUp = true;
+                tile.playerWithinBounds = true;
                 if (tile.userData.tileNumber == 5) {
                     tile.semicircleMesh.litUp = true;
                     tile.semicircleMesh.material.color.copy(tileColor);
@@ -989,17 +997,28 @@ function tileLights() {
             let inXBounds = tileWorldPosition.x - rangeInX <= player.characterModel.position.x && player.characterModel.position.x <= tileWorldPosition.x + rangeInX;
             let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
 
-            if (tile.litUp === false && inXBounds && inZBounds && Math.abs(player.characterModel.position.y - tileWorldPosition.y) < epsilon) {
-                const tileColor = new THREE.Color(0, 0, 255);
-                // TODO: Change color of all faces of cube to blue currently only default front face is changed
-                tile.material.color.copy(tileColor);
+            // on encounter of tile light or unlight
+            if (inXBounds && inZBounds && Math.abs(player.characterModel.position.y - tileWorldPosition.y) < epsilon) {
+                if (tile.litUp === true && tile.playerWithinBounds === false) {
+                    const tileColor = new THREE.Color(0, 0, 0, 0);
+                    // TODO: Change color of all faces of cube to blue currently only default front face is changed
+                    tile.material.color.copy(tileColor);
+                    tile.litUp === false;
+                } else if (tile.litUp === false && tile.playerWithinBounds === false) {
+                    const tileColor = new THREE.Color(0, 0, 255);
+                    // TODO: Change color of all faces of cube to blue currently only default front face is changed
+                    tile.material.color.copy(tileColor);
+                    tile.litUp = true;
+                }
+                tile.playerWithinBounds = true;
 
-                tile.litUp = true;
                 if (tile.userData.tileNumber == 19) {
                     tile.semicircleMesh3.litUp = true;
                     tile.semicircleMesh3.material.color.copy(tileColor);
                 }
                 litUpTiles3.push(tile.userData.tileNumber);
+
+                // TODO: This might be causing more lag for double loop per tile
                 const haveSameValues = path3.every(value => litUpTiles3.includes(value) && litUpTiles3.length === path3.length);
                 if (haveSameValues) {
                     console.log("Path 3 correct.");
@@ -1011,6 +1030,8 @@ function tileLights() {
                 const whiteTile = new THREE.Color(255, 255, 255);
                 PiP3.children[tile.userData.tileNumber - 1].material.color.copy(whiteTile);
 
+            } else {
+                tile.playerWithinBounds = false;
             }
         });
     }
