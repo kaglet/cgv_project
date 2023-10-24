@@ -4,13 +4,27 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import ceilingtextureImage from '../img/exosystem/lambert1_baseColor.png';
 
-function generateRandomNumberForVariation(){
+const modelsToLoad = []
+
+
+function cloneModel(model, positon, rotation, scale) {
+    const clonedModel = model.clone();
+    clonedModel.scale.set(scale);
+    clonedModel.position.set(position);
+    clonedModel.rotation.set(rotation)
+
+    scene.add(clonedModel);
+}
+
+function generateRandomNumberForVariation() {
     // Generate a random nubmer between 0.1 and 0.3
     return Math.random() * 0.1 + 0.2;
 }
 
+
+
 function trees(loader, scene, world) {
-    const numTrees = 10;
+    const numTrees = 100;
     const minDistanceFromCenter = 600;
     const maxDistanceFromCenter = 700;
     const center = new THREE.Vector3(-100, 0, 0); // New center position
@@ -23,51 +37,42 @@ function trees(loader, scene, world) {
         return x - Math.floor(x);
     }
 
-    for (let i = 0; i < numTrees; i++) {
-        loader.load('./coconut_tree/scene.gltf', function (gltf) {
-            const coconutTreeModel = gltf.scene;
-            coconutTreeModel.scale.set(0.1, 0.1, 0.1);
+    let loadedTreeModels = 0;
+    const totalModels = 2; // The total number of models to load (2 in this case)
 
-            // Use the seeded random function to generate consistent random positions
-            const randomAngle = seededRandom(randomSeed1 + i) * Math.PI * 2;
-            const randomDistance = minDistanceFromCenter + (seededRandom(randomSeed1 - i) * (maxDistanceFromCenter - minDistanceFromCenter));
-            const randomYRotation = Math.random() * Math.PI * 2; // Random Y-axis rotation
-
-            // Calculate the X and Z coordinates based on the polar coordinates
+    function cloneAndAddTree(model, num) {
+        for (let i = 0; i < numTrees; i++) {
+            const randomAngle = seededRandom(num + i) * Math.PI * 2;
+            const randomDistance = minDistanceFromCenter + (seededRandom(num - i) * (maxDistanceFromCenter - minDistanceFromCenter));
+            const randomYRotation = Math.random() * Math.PI * 2;
             const randomX = center.x + randomDistance * Math.cos(randomAngle);
             const randomZ = center.z + randomDistance * Math.sin(randomAngle);
 
-            // Ensure the tree is above the ground (adjust the height as needed)
-            const groundHeight = 0.1;
-
-            coconutTreeModel.position.set(randomX, 0, randomZ);
-            coconutTreeModel.rotation.y = randomYRotation;
-
-            scene.add(coconutTreeModel);
-        });
-
-        loader.load('./bended_coconut_tree/scene.gltf', function (gltf) {
-            const bendedCoconutTreeModel = gltf.scene;
-            bendedCoconutTreeModel.scale.set(0.1, 0.1, 0.1);
-
-            // Use the seeded random function to generate consistent random positions
-            const randomAngle = seededRandom(randomSeed2 + i) * Math.PI * 2;
-            const randomDistance = minDistanceFromCenter + (seededRandom(randomSeed2 - i) * (maxDistanceFromCenter - minDistanceFromCenter));
-            const randomYRotation = Math.random() * Math.PI * 2; // Random Y-axis rotation
-
-            // Calculate the X and Z coordinates based on the polar coordinates
-            const randomX = center.x + randomDistance * Math.cos(randomAngle);
-            const randomZ = center.z + randomDistance * Math.sin(randomAngle);
-
-            // Ensure the tree is above the ground (adjust the height as needed)
-            const groundHeight = 0.1;
-
-            bendedCoconutTreeModel.position.set(randomX, 0, randomZ);
-            bendedCoconutTreeModel.rotation.y = randomYRotation;
-
-            scene.add(bendedCoconutTreeModel);
-        });
+            const treeClone = model.clone();
+            treeClone.scale.set(0.1, 0.1, 0.1);
+            treeClone.position.set(randomX, 0, randomZ);
+            treeClone.rotation.y = randomYRotation;
+            scene.add(treeClone);
+        }
     }
+
+    loader.load('./coconut_tree/scene.gltf', function (gltf) {
+        const coconutTreeModel = gltf.scene;
+        loadedTreeModels++;
+
+        if (loadedTreeModels === totalModels) {
+            cloneAndAddTree(coconutTreeModel, randomSeed1);
+        }
+    });
+
+    loader.load('./bended_coconut_tree/scene.gltf', function (gltf) {
+        const bendedCoconutTreeModel = gltf.scene;
+        loadedTreeModels++;
+
+        if (loadedTreeModels === totalModels) {
+            cloneAndAddTree(bendedCoconutTreeModel, randomSeed2);
+        }
+    });
 }
 
 function plants(loader, scene, world) {
@@ -77,7 +82,7 @@ function plants(loader, scene, world) {
     centers.push(new THREE.Vector3(blockWidth / 2, 0, -blockWidth / 2 + 9));
     centers.push(new THREE.Vector3(-24.5, 0, -blockWidth));
 
-    const numPlants = 10;
+    const numPlants = 100;
     const minDistanceFromCenter = 0;
     const maxDistanceFromCenter = 350;
 
@@ -87,127 +92,117 @@ function plants(loader, scene, world) {
         return x - Math.floor(x);
     }
 
-    for (let j = 0; j < 3; j++) {
-        for (let i = 0; i < numPlants; i++) {
-            loader.load('./assets/shrub_pack/scene.gltf', function (gltf) {
-                const plantModel = gltf.scene; // Clone the model
-                plantModel.scale.set(1.5, 1.5, 1.5);
+    const modelsToLoad = [
+        './assets/shrub_pack/scene.gltf',
+        './assets/tropical_plant/scene.gltf',
+        './assets/tropical_plant_2/scene.gltf',
+        './assets/tropical_plant_monstera_deliciosa/scene.gltf',
+        './assets/tropical_plant_3/scene.gltf'
+    ];
 
-                // Use the seeded random function to generate consistent random positions
-                const randomAngle = seededRandom(100 + i) * Math.PI * 2;
-                const randomDistance = minDistanceFromCenter + (seededRandom(100 - i) * (maxDistanceFromCenter - minDistanceFromCenter));
-                const randomYRotation = Math.random() * Math.PI * 2; // Random Y-axis rotation
-
-                // Calculate the X and Z coordinates based on the polar coordinates
-                const randomX = centers[j].x + randomDistance * Math.cos(randomAngle);
-                const randomZ = centers[j].z + randomDistance * Math.sin(randomAngle);
-
-                // Ensure the plant is above the ground (adjust the height as needed)
-                const groundHeight = 0.1;
-
-                plantModel.position.set(randomX, groundHeight, randomZ);
-                plantModel.rotation.y = randomYRotation;
-
-                scene.add(plantModel);
+    // Load all models first
+    const loadedModels = [];
+    const loadModelPromises = modelsToLoad.map((modelPath) => {
+        return new Promise((resolve) => {
+            loader.load(modelPath, (gltf) => {
+                const model = gltf.scene;
+                loadedModels.push(model);
+                resolve();
             });
+        });
+    });
 
+    Promise.all(loadModelPromises).then(() => {
+        // Loop through the loaded models
+        loadedModels.forEach((model, modelIndex) => {
+            const scaleFactors = [1.5, 2, 0.025, 6, 6]; // Modify scale factors accordingly
 
+            for (let centerIndex = 0; centerIndex < centers.length; centerIndex++) {
+                for (let i = 0; i < numPlants; i++) {
+                    const plantModel = model.clone();
+                    const randomAngle = seededRandom(100 * (modelIndex + 1) + i) * Math.PI * 2;
+                    const randomDistance = minDistanceFromCenter + (seededRandom(100 * (modelIndex + 1) - i) * (maxDistanceFromCenter - minDistanceFromCenter));
+                    const randomYRotation = Math.random() * Math.PI * 2;
+                    const randomX = centers[centerIndex].x + randomDistance * Math.cos(randomAngle);
+                    const randomZ = centers[centerIndex].z + randomDistance * Math.sin(randomAngle);
+                    const groundHeight = 0.1;
 
-            loader.load('./assets/tropical_plant/scene.gltf', function (gltf) {
-                const plantModel = gltf.scene; // Clone the model
-                plantModel.scale.set(2, 2, 2);
+                    plantModel.scale.set(scaleFactors[modelIndex], scaleFactors[modelIndex], scaleFactors[modelIndex]);
+                    plantModel.position.set(randomX, groundHeight, randomZ);
+                    plantModel.rotation.y = randomYRotation;
 
-                // Use the seeded random function to generate consistent random positions
-                const randomAngle = seededRandom(50 + i) * Math.PI * 2;
-                const randomDistance = minDistanceFromCenter + (seededRandom(50 - i) * (maxDistanceFromCenter - minDistanceFromCenter));
-                const randomYRotation = Math.random() * Math.PI * 2; // Random Y-axis rotation
-
-                // Calculate the X and Z coordinates based on the polar coordinates
-                const randomX = centers[j].x + randomDistance * Math.cos(randomAngle);
-                const randomZ = centers[j].z + randomDistance * Math.sin(randomAngle);
-
-                // Ensure the plant is above the ground (adjust the height as needed)
-                const groundHeight = 0.1;
-
-                plantModel.position.set(randomX, groundHeight, randomZ);
-                plantModel.rotation.y = randomYRotation;
-
-                scene.add(plantModel);
-            });
-
-
-            loader.load('./assets/tropical_plant_2/scene.gltf', function (gltf) {
-                const plantModel = gltf.scene; // Clone the model
-                plantModel.scale.set(0.025, 0.025, 0.025);
-
-                // Use the seeded random function to generate consistent random positions
-                const randomAngle = seededRandom(42 + i) * Math.PI * 2;
-                const randomDistance = minDistanceFromCenter + (seededRandom(42 - i) * (maxDistanceFromCenter - minDistanceFromCenter));
-                const randomYRotation = Math.random() * Math.PI * 2; // Random Y-axis rotation
-
-                // Calculate the X and Z coordinates based on the polar coordinates
-                const randomX = centers[j].x + randomDistance * Math.cos(randomAngle);
-                const randomZ = centers[j].z + randomDistance * Math.sin(randomAngle);
-
-                // Ensure the plant is above the ground (adjust the height as needed)
-                const groundHeight = 0.1;
-
-                plantModel.position.set(randomX, groundHeight, randomZ);
-                plantModel.rotation.y = randomYRotation;
-
-                scene.add(plantModel);
-            });
-
-            loader.load('./assets/tropical_plant_monstera_deliciosa/scene.gltf', function (gltf) {
-                const plantModel = gltf.scene; // Clone the model
-                plantModel.scale.set(6, 6, 6);
-
-                // Use the seeded random function to generate consistent random positions
-                const randomAngle = seededRandom(100 + i) * Math.PI * 2;
-                const randomDistance = minDistanceFromCenter + (seededRandom(100 - i) * (maxDistanceFromCenter - minDistanceFromCenter));
-                const randomYRotation = Math.random() * Math.PI * 2; // Random Y-axis rotation
-
-                // Calculate the X and Z coordinates based on the polar coordinates
-                const randomX = centers[j].x + randomDistance * Math.cos(randomAngle);
-                const randomZ = centers[j].z + randomDistance * Math.sin(randomAngle);
-
-                // Ensure the plant is above the ground (adjust the height as needed)
-                const groundHeight = 0.1;
-
-                plantModel.position.set(randomX, groundHeight, randomZ);
-                plantModel.rotation.y = randomYRotation;
-
-                scene.add(plantModel);
-            });
-
-            loader.load('./assets/tropical_plant_3/scene.gltf', function (gltf) {
-                const plantModel = gltf.scene; // Clone the model
-                plantModel.scale.set(6, 6, 6);
-
-                // Use the seeded random function to generate consistent random positions
-                const randomAngle = seededRandom(13 + i) * Math.PI * 2;
-                const randomDistance = minDistanceFromCenter + (seededRandom(13 - i) * (maxDistanceFromCenter - minDistanceFromCenter));
-                const randomYRotation = Math.random() * Math.PI * 2; // Random Y-axis rotation
-
-                // Calculate the X and Z coordinates based on the polar coordinates
-                const randomX = centers[j].x + randomDistance * Math.cos(randomAngle);
-                const randomZ = centers[j].z + randomDistance * Math.sin(randomAngle);
-
-                // Ensure the plant is above the ground (adjust the height as needed)
-                const groundHeight = 0.1;
-
-                plantModel.position.set(randomX, groundHeight, randomZ);
-                plantModel.rotation.y = randomYRotation;
-
-                scene.add(plantModel);
-            });
-
-
-
-
-        }
-    }
+                    scene.add(plantModel);
+                }
+            }
+        });
+    });
 }
+
+
+function loadAndSetupModels(loader, scene, world, models) {
+    models.forEach(modelDescription => {
+        const { modelPath, scale, position, rotation } = modelDescription;
+
+        loader.load(modelPath, function (gltf) {
+            const model = gltf.scene;
+            model.scale.set(scale, scale, scale);
+            model.position.set(...position);
+
+            const boundingBox = new THREE.Box3().setFromObject(model);
+            const width = boundingBox.max.x - boundingBox.min.x;
+            const height = boundingBox.max.y - boundingBox.min.y;
+            const depth = boundingBox.max.z - boundingBox.min.z;
+
+            const shape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
+            const body = new CANNON.Body({
+                mass: 0,
+                position: new CANNON.Vec3(...position)
+            });
+            body.addShape(shape);
+            world.addBody(body);
+
+            model.rotation.y = rotation;
+            scene.add(model);
+        }, undefined, function (error) {
+            console.error(error);
+        });
+    });
+}
+
+
+function lobby(loader, scene, world) {
+
+
+
+    modelsToLoad.push({ modelPath: '/dungeon.glb', scale: 15, position: [106, 17, 487], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: '/dungeon.glb', scale: 15, position: [245, 17, 487], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: '/watch_tower.glb', scale: 0.2, position: [18, 2, 507], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: '/bench.glb', scale: 14, position: [172, 3.5, 435], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/barrels.glb', scale: 4, position: [334, 0, 427], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/bush.glb', scale: 8, position: [50, 1.2, 258], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/coconut_palm.glb', scale: 14, position: [300, 0, 200], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/coconut.glb', scale: 2, position: [285, 2.5, 205], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/small_trees.glb', scale: 12, position: [40, 0, 320], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/bird_bath.glb', scale: 12, position: [40, 0, 370], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/fern.glb', scale: 1.6, position: [46, 0, 376], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/well.glb', scale: 15, position: [-205, 15, -380], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/boer_war_statue.glb', scale: 1.5, position: [-205, -10, -300], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/wooden_crate.glb', scale: 10, position: [336, 0, 413], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: '/tree_1.glb', scale: 360, position: [320, 0, 290], rotation: Math.PI });
+    modelsToLoad.push({ modelPath: '/tree_2.glb', scale: 360, position: [320, 0, 345], rotation: Math.PI });
+    modelsToLoad.push({ modelPath: '/rocks.glb', scale: 0.3, position: [315, 0, 345], rotation: Math.PI });
+    modelsToLoad.push({ modelPath: '/purple_plant.glb', scale: 35, position: [317, 0, 295], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/purple_plant.glb', scale: 35, position: [314, 0, 290], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/purple_plant.glb', scale: 35, position: [317, 0, 285], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/wall_ruins.glb', scale: 30, position: [-6, 0, 416], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: '/wall_ruins.glb', scale: 30, position: [278, 0, 416], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: '/wall_ruins.glb', scale: 30, position: [135, 0, 416], rotation: Math.PI / 2 });
+
+
+
+   
+}
+
 
 
 
@@ -272,1079 +267,39 @@ export function loadModels(loader, scene, world, blockWidth) {
 
         // Add the wireframe mesh to the scene
         scene.add(wireframeMesh);
+
+
+
+
     }, undefined, function (error) {
         console.error(error);
     });
 
+    // const newPosition = new THREE.Vector3(10, 0, 0); // Example position
+    // const newRotation = new THREE.Euler(0, Math.PI / 4, 0); // Example rotation
+    // const newScale = new THREE.Vector3(2, 2, 2); // Example scale
+    // cloneModel(lionStatueModel, newPosition, newRotation, newScale);
 
-    //DUNGEON CELLSS
-    loader.load('/dungeon.glb', function (gltf) {
-        const dungeonModel = gltf.scene;
-        dungeonModel.scale.set(15, 15, 15);
-        dungeonModel.position.set(106, 17, 487);
-        //console.log("Dungeon Model Properties:");
-        //    for (const property in lionStatueModel) {
-        //        console.log(`${property}:`, lionStatueModel[property]);
-        // }
+    // Call the setup function to set up all stone wall models
+    //   setupStoneWallModels(loader, scene, world);
 
-        // Calculate dimensions of the dungeon model
-        const boundingBox = new THREE.Box3().setFromObject(dungeonModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        // console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
 
-        // Add Cannon.js body for Dungeon model
-        const dungeonModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const dungeonModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(105, 17, 487) // Initial position of the model
-        });
-        dungeonModelBody.addShape(dungeonModelShape);
-        world.addBody(dungeonModelBody);
+    lobby(loader, scene, world);
 
-        dungeonModel.rotation.y = Math.PI / 2;
-        scene.add(dungeonModel);
 
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
 
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(105, 17, 487);
-        wireframeMesh.visible = false;
+    addWallModels(loader, scene, world, blockWidth);
 
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
 
-    loader.load('/dungeon.glb', function (gltf) {
-        const dungeonModel = gltf.scene;
-        dungeonModel.scale.set(15, 15, 15);
-        dungeonModel.position.set(245, 17, 487);
-        // console.log("Dungeon Model Properties:");
-        //    for (const property in lionStatueModel) {
-        //        console.log(`${property}:`, lionStatueModel[property]);
-        // }
 
-        // Calculate dimensions of the dungeon model
-        const boundingBox = new THREE.Box3().setFromObject(dungeonModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        // console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
+    // First set of grass patches
+    generateGrassPatches(loader, scene, world, blockWidth, 100, 0, 100, 100, 0, blockWidth);
 
-        // Add Cannon.js body for Dungeon model
-        const dungeonModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const dungeonModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(245, 17, 487) // Initial position of the model
-        });
-        dungeonModelBody.addShape(dungeonModelShape);
-        world.addBody(dungeonModelBody);
+    // Second set of grass patches
+    generateGrassPatches(loader, scene, world, blockWidth, 100, 0, 100, 100, 0, 0);
 
-        dungeonModel.rotation.y = Math.PI / 2;
-        scene.add(dungeonModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(245, 17, 487);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-
-
-
-    //STONE WALL
-    loader.load('/wall_ruins.glb', function (gltf) {
-        const stoneWallModel = gltf.scene;
-        stoneWallModel.scale.set(30, 30, 30);
-        stoneWallModel.position.set(265, 0, 490);
-        //  console.log("Stone Wall Model Properties:");
-        //    for (const property in lionStatueModel) {
-        //        console.log(`${property}:`, lionStatueModel[property]);
-        // }
-
-        // Calculate dimensions of the stone wall model
-        const boundingBox = new THREE.Box3().setFromObject(stoneWallModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Stone Wall model
-        const stoneWallModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const stoneWallModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(265, 0, 490) // Initial position of the model
-        });
-        stoneWallModelBody.addShape(stoneWallModelShape);
-        world.addBody(stoneWallModelBody);
-
-        stoneWallModel.rotation.y = Math.PI / 2;
-        scene.add(stoneWallModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(265, 0, 490);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-
-    loader.load('/wall_ruins.glb', function (gltf) {
-        const stoneWallModel = gltf.scene;
-        stoneWallModel.scale.set(30, 30, 30);
-        stoneWallModel.position.set(215, 0, 490);
-        //  console.log("Stone Wall Model Properties:");
-        //    for (const property in lionStatueModel) {
-        //        console.log(`${property}:`, lionStatueModel[property]);
-        // }
-
-        // Calculate dimensions of the stone wall model
-        const boundingBox = new THREE.Box3().setFromObject(stoneWallModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        // console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Stone Wall model
-        const stoneWallModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const stoneWallModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(215, 0, 490) // Initial position of the model
-        });
-        stoneWallModelBody.addShape(stoneWallModelShape);
-        world.addBody(stoneWallModelBody);
-
-        stoneWallModel.rotation.y = Math.PI / 2;
-        scene.add(stoneWallModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(215, 0, 490);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-    loader.load('/wall_ruins.glb', function (gltf) {
-        const stoneWallModel = gltf.scene;
-        stoneWallModel.scale.set(30, 30, 30);
-        stoneWallModel.position.set(165, 0, 490);
-        // console.log("Stone Wall Model Properties:");
-        //    for (const property in lionStatueModel) {
-        //        console.log(`${property}:`, lionStatueModel[property]);
-        // }
-
-        // Calculate dimensions of the stone wall model
-        const boundingBox = new THREE.Box3().setFromObject(stoneWallModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        // console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Stone Wall model
-        const stoneWallModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const stoneWallModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(165, 0, 490) // Initial position of the model
-        });
-        stoneWallModelBody.addShape(stoneWallModelShape);
-        world.addBody(stoneWallModelBody);
-
-        stoneWallModel.rotation.y = Math.PI / 2;
-        scene.add(stoneWallModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(165, 0, 490);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-    loader.load('/wall_ruins.glb', function (gltf) {
-        const stoneWallModel = gltf.scene;
-        stoneWallModel.scale.set(30, 30, 30);
-        stoneWallModel.position.set(115, 0, 490);
-        // console.log("Stone Wall Model Properties:");
-        //    for (const property in lionStatueModel) {
-        //        console.log(`${property}:`, lionStatueModel[property]);
-        // }
-
-        // Calculate dimensions of the stone wall model
-        const boundingBox = new THREE.Box3().setFromObject(stoneWallModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Stone Wall model
-        const stoneWallModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const stoneWallModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(115, 0, 490) // Initial position of the model
-        });
-        stoneWallModelBody.addShape(stoneWallModelShape);
-        world.addBody(stoneWallModelBody);
-
-        stoneWallModel.rotation.y = Math.PI/2;
-        scene.add(stoneWallModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(115, 0, 490);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-    loader.load('/wall_ruins.glb', function (gltf) {
-        const stoneWallModel = gltf.scene;
-        stoneWallModel.scale.set(30, 30, 30);
-        stoneWallModel.position.set(65, 0, 490);
-        //  console.log("Stone Wall Model Properties:");
-        //    for (const property in lionStatueModel) {
-        //        console.log(`${property}:`, lionStatueModel[property]);
-        // }
-
-        // Calculate dimensions of the stone wall model
-        const boundingBox = new THREE.Box3().setFromObject(stoneWallModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Stone Wall model
-        const stoneWallModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const stoneWallModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(65, 0, 490) // Initial position of the model
-        });
-        stoneWallModelBody.addShape(stoneWallModelShape);
-        world.addBody(stoneWallModelBody);
-
-        stoneWallModel.rotation.y = Math.PI/2;
-        scene.add(stoneWallModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(65, 0, 490);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-    loader.load('/wall_ruins.glb', function (gltf) {
-        const stoneWallModel = gltf.scene;
-        stoneWallModel.scale.set(30, 30, 30);
-        stoneWallModel.position.set(15, 0, 490);
-        //  console.log("Stone Wall Model Properties:");
-        //    for (const property in lionStatueModel) {
-        //        console.log(`${property}:`, lionStatueModel[property]);
-        // }
-
-        // Calculate dimensions of the stone wall model
-        const boundingBox = new THREE.Box3().setFromObject(stoneWallModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-      //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Stone Wall model
-        const stoneWallModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const stoneWallModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(15, 0, 490) // Initial position of the model
-        });
-        stoneWallModelBody.addShape(stoneWallModelShape);
-        world.addBody(stoneWallModelBody);
-
-        stoneWallModel.rotation.y = Math.PI/2;
-        scene.add(stoneWallModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(15, 0, 490);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-    loader.load('/wall_ruins.glb', function (gltf) {
-        const stoneWallModel = gltf.scene;
-        stoneWallModel.scale.set(30, 30, 30);
-        stoneWallModel.position.set(-6, 0, 416);
-        //   console.log("Stone Wall Model Properties:");
-        //    for (const property in lionStatueModel) {
-        //        console.log(`${property}:`, lionStatueModel[property]);
-        // }
-
-        // Calculate dimensions of the stone wall model
-        const boundingBox = new THREE.Box3().setFromObject(stoneWallModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        //   console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Stone Wall model
-        const stoneWallModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const stoneWallModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(-6, 0, 416) // Initial position of the model
-        });
-        stoneWallModelBody.addShape(stoneWallModelShape);
-        world.addBody(stoneWallModelBody);
-
-        stoneWallModel.rotation.y = Math.PI/2;
-        scene.add(stoneWallModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(-6, 0, 416);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-    loader.load('/wall_ruins.glb', function (gltf) {
-        const stoneWallModel = gltf.scene;
-        stoneWallModel.scale.set(30, 30, 30);
-        stoneWallModel.position.set(278, 0, 416);
-        //   console.log("Stone Wall Model Properties:");
-        //    for (const property in lionStatueModel) {
-        //        console.log(`${property}:`, lionStatueModel[property]);
-        // }
-
-        // Calculate dimensions of the stone wall model
-        const boundingBox = new THREE.Box3().setFromObject(stoneWallModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        // console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Stone Wall model
-        const stoneWallModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const stoneWallModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(278, 0, 416) // Initial position of the model
-        });
-        stoneWallModelBody.addShape(stoneWallModelShape);
-        world.addBody(stoneWallModelBody);
-
-        stoneWallModel.rotation.y = Math.PI/2;
-        scene.add(stoneWallModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(278, 0, 416);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-    loader.load('/wall_ruins.glb', function (gltf) {
-        const stoneWallModel = gltf.scene;
-        stoneWallModel.scale.set(30, 30, 30);
-        stoneWallModel.position.set(135, 0, 416);
-        //   console.log("Stone Wall Model Properties:");
-        //    for (const property in lionStatueModel) {
-        //        console.log(`${property}:`, lionStatueModel[property]);
-        // }
-
-        // Calculate dimensions of the stone wall model
-        const boundingBox = new THREE.Box3().setFromObject(stoneWallModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        // console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Stone Wall model
-        const stoneWallModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const stoneWallModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(135, 0, 416) // Initial position of the model
-        });
-        stoneWallModelBody.addShape(stoneWallModelShape);
-        world.addBody(stoneWallModelBody);
-
-        stoneWallModel.rotation.y = Math.PI / 2;
-        scene.add(stoneWallModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(135, 0, 416);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-
-
-    //WATCH TOWER
-    loader.load('/watch_tower.glb', function (gltf) {
-        const watchTowerModel = gltf.scene;
-        watchTowerModel.scale.set(0.2, 0.2, 0.2);
-        watchTowerModel.position.set(18, 2, 507);
-        //   console.log("Watch Tower Model Properties:");
-
-        // Calculate dimensions of the watch tower model
-        const boundingBox = new THREE.Box3().setFromObject(watchTowerModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Watch Tower model
-        const watchTowerModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const watchTowerModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(18, 2, 507) // Initial position of the model
-        });
-        watchTowerModelBody.addShape(watchTowerModelShape);
-        world.addBody(watchTowerModelBody);
-
-        // watchTowerModel.rotation.y = Math.PI;
-        scene.add(watchTowerModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(18, 2, 507);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-
-    //BENCH
-    loader.load('/bench.glb', function (gltf) {
-        const chairModel = gltf.scene; // Changed variable name to chair
-        chairModel.scale.set(14, 14, 14);
-        chairModel.position.set(172, 3.5, 435);
-        //  console.log("Chair Model Properties:");
-
-        // Calculate dimensions of the chair model
-        const boundingBox = new THREE.Box3().setFromObject(chairModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Chair model
-        const chairModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const chairModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(172, 3.5, 435) // Initial position of the model
-        });
-        chairModelBody.addShape(chairModelShape);
-        world.addBody(chairModelBody);
-
-        chairModel.rotation.y = Math.PI;
-        scene.add(chairModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(172, 3.5, 435);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-
-
-    //BARRELS
-    loader.load('/barrels.glb', function (gltf) {
-        const barrelsModel = gltf.scene;
-        barrelsModel.scale.set(4, 4, 4);
-        barrelsModel.position.set(334, 0, 427);
-        //  console.log("Barrels Model Properties:");
-        //    for (const property in lionStatueModel) {
-        //        console.log(`${property}:`, lionStatueModel[property]);
-        // }
-
-        // Calculate dimensions of the barrels model
-        const boundingBox = new THREE.Box3().setFromObject(barrelsModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        // console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Barrels model
-        const barrelsModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const barrelsModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(334, 0, 427) // Initial position of the model
-        });
-        barrelsModelBody.addShape(barrelsModelShape);
-        world.addBody(barrelsModelBody);
-
-        // Uncomment and fix the rotation if needed
-        // barrelsModel.rotation.y = Math.PI;
-
-        scene.add(barrelsModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(334, 0, 427);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-
-    //FREEDOM STATUE
-    loader.load('/freedom_statue.glb', function (gltf) {
-        const freedomStatueModel = gltf.scene;
-        freedomStatueModel.scale.set(0.9, 0.9, 0.9);
-        freedomStatueModel.position.set(38, 17, 235);
-        //  console.log("Freedom Statue Model Properties:");
-        // for (const property in freedomStatueModel) {
-        //     console.log(`${property}:`, freedomStatueModel[property]);
-        // }
-
-        // Calculate dimensions of the freedom statue model
-        const boundingBox = new THREE.Box3().setFromObject(freedomStatueModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Freedom Statue model
-        const freedomStatueModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const freedomStatueModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(38, 17, 235)// Initial position of the model
-        });
-        freedomStatueModelBody.addShape(freedomStatueModelShape);
-        world.addBody(freedomStatueModelBody);
-
-        freedomStatueModel.rotation.y = Math.PI / 2;
-        scene.add(freedomStatueModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(38, 17, 235);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-
-    //BUSH
-    loader.load('/bush.glb', function (gltf) {
-        const bushModel = gltf.scene;
-        bushModel.scale.set(8, 8, 8);
-        bushModel.position.set(50, 1.2, 258);
-        //  console.log("Bush Model Properties:");
-
-        // Calculate dimensions of the bush model
-        const boundingBox = new THREE.Box3().setFromObject(bushModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        //   console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Bush model
-        const bushModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const bushModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(50, 1.2, 258) // Initial position of the model
-        });
-        bushModelBody.addShape(bushModelShape);
-        world.addBody(bushModelBody);
-
-        //bushModel.rotation.y = Math.PI;
-        scene.add(bushModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(50, 1.2, 258);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-
-
-    //COCONUT TREE
-    loader.load('/coconut_palm.glb', function (gltf) {
-        const coconutPalmModel = gltf.scene;
-        coconutPalmModel.scale.set(14, 14, 14);
-        coconutPalmModel.position.set(300, 0, 200);
-        //  console.log("Coconut Palm Model Properties:");
-        //    for (const property in lionStatueModel) {
-        //        console.log(`${property}:`, lionStatueModel[property]);
-        //    }
-
-        // Calculate dimensions of the lion statue model
-        const boundingBox = new THREE.Box3().setFromObject(coconutPalmModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Lion Statue model
-        const coconutPalmModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const coconutPalmModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(300, 0, 200)// Initial position of the model
-        });
-        coconutPalmModelBody.addShape(coconutPalmModelShape);
-        world.addBody(coconutPalmModelBody);
-
-        //coconutPalmModel.rotation.y = Math.PI;
-        scene.add(coconutPalmModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(300, 0, 200);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-    //COCONUT
-    loader.load('/coconut.glb', function (gltf) {
-        const coconutModel = gltf.scene;
-        coconutModel.scale.set(2, 2, 2);
-        coconutModel.position.set(285, 2.5, 205);
-        //  console.log("Coconut Model Properties:");
-
-        // Calculate dimensions of the coconut model
-        const boundingBox = new THREE.Box3().setFromObject(coconutModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Coconut model
-        const coconutModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const coconutModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(283, 2.5, 205)// Initial position of the model
-        });
-        coconutModelBody.addShape(coconutModelShape);
-        world.addBody(coconutModelBody);
-
-        //coconutModel.rotation.y = Math.PI;
-        scene.add(coconutModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(285, 2.5, 205);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-
-    //TREES NEAR WATCH TOWER
-    loader.load('/small_trees.glb', function (gltf) {
-        const smallTreesModel = gltf.scene;
-        smallTreesModel.scale.set(12, 12, 12);
-        smallTreesModel.position.set(40, 0, 320);
-        //  console.log("Small Trees Model Properties:");
-
-        // Calculate dimensions of the small trees model
-        const boundingBox = new THREE.Box3().setFromObject(smallTreesModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        //    console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Small Trees model
-        const smallTreesModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const smallTreesModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(40, 0, 320) // Initial position of the model
-        });
-        smallTreesModelBody.addShape(smallTreesModelShape);
-        world.addBody(smallTreesModelBody);
-
-        smallTreesModel.rotation.y = Math.PI;
-        scene.add(smallTreesModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(40, 0, 320);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-
-    //BIRD BATH
-    loader.load('/bird_bath.glb', function (gltf) {
-        const birdBathModel = gltf.scene;
-        birdBathModel.scale.set(12, 12, 12);
-        birdBathModel.position.set(40, 0, 370);
-        // console.log("Bird Bath Model Properties:");
-        // for (const property in birdBathModel) {
-        //     console.log(`${property}:`, birdBathModel[property]);
-        // }
-
-        // Calculate dimensions of the bird bath model
-        const boundingBox = new THREE.Box3().setFromObject(birdBathModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Bird Bath model
-        const birdBathModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const birdBathModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(40, 0, 370)// Initial position of the model
-        });
-        birdBathModelBody.addShape(birdBathModelShape);
-        world.addBody(birdBathModelBody);
-
-        //birdBathModel.rotation.y = Math.PI;
-        scene.add(birdBathModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(40, 0, 370);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-
-    //FERN 
-    loader.load('/fern.glb', function (gltf) {
-        const fernModel = gltf.scene;
-        fernModel.scale.set(1.6, 1.6, 1.6);
-        fernModel.position.set(46, 0, 376);
-        //  console.log("Fern Model Properties:");
-
-        // Calculate dimensions of the fern model
-        const boundingBox = new THREE.Box3().setFromObject(fernModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        //   console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Fern model
-        const fernModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const fernModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(46, 0, 376) // Initial position of the model
-        });
-        fernModelBody.addShape(fernModelShape);
-        world.addBody(fernModelBody);
-
-        //fernModel.rotation.y = Math.PI;
-        scene.add(fernModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(46, 0, 376);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-
-
-    //WELL
-    loader.load('/well.glb', function (gltf) {
-        const wellModel = gltf.scene;
-        wellModel.scale.set(15, 15, 15);
-        wellModel.position.set(-205, 15, -380);
-        //  console.log("Well Model Properties:");
-
-        // Calculate dimensions of the well model
-        const boundingBox = new THREE.Box3().setFromObject(wellModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Well model
-        const wellModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const wellModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(-205, 15, -380) // Initial position of the model
-        });
-        wellModelBody.addShape(wellModelShape);
-        world.addBody(wellModelBody);
-
-        wellModel.rotation.y = -Math.PI / 4;
-        scene.add(wellModel);
-
-        // Create a wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(315, 19, 220);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-    loader.load('/boer_war_statue.glb', function (gltf) {
-        const wellModel = gltf.scene;
-        wellModel.rotation.y = -Math.PI / 4;
-        wellModel.scale.set(1.5, 1.5, 1.5);
-        wellModel.position.set(-205, -10, -300);
-        //  console.log("Well Model Properties:");
-
-        // Calculate dimensions of the well model
-        const boundingBox = new THREE.Box3().setFromObject(wellModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Well model
-        const wellModelShape = new CANNON.Box(new CANNON.Vec3(width / 4.5, height / 4.5, depth / 4.5));
-        const wellModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(-205, -10, -300) // Initial position of the model
-        });
-        wellModelBody.addShape(wellModelShape);
-        world.addBody(wellModelBody);
-
-        wellModel.rotation.y = -Math.PI / 4;
-        scene.add(wellModel);
-
-        // Create a wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(315, 19, 220);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
+    // Third set of grass patches
+    generateGrassPatches(loader, scene, world, blockWidth, 100, 0, 100, -blockWidth, 0, -blockWidth);
 
     const lambertMaterial = new THREE.MeshLambertMaterial({ color: 0x000000 }); // Black color
 
@@ -1365,426 +320,22 @@ export function loadModels(loader, scene, world, blockWidth) {
     texture.matrix = textureMatrix;
     // Apply the texture to the Lambert material
     lambertMaterial.map = texture;
-//    loader.load('/iron_man_mark_85.glb', function (gltf) {
-//        const wellModel = gltf.scene;
-//        wellModel.rotation.y = -Math.PI / 4;
-//        wellModel.scale.set(0.1, 0.10, 0.1);
-//        wellModel.position.set(-120, 0, -420);
-//
-//        // Create a blue Lambert material
-//        const blueMaterial = new THREE.MeshLambertMaterial({ color: 0x0000ff }); // Blue color
-//        const textureLoader = new THREE.TextureLoader();
-//        const texture = textureLoader.load(ceilingtextureImage); // Replace with the path to your PNG texture file
-//
-//        // Create a material using the loaded texture
-//        const pngMaterial = new THREE.MeshLambertMaterial({ map: texture });
-//        console.log(pngMaterial);
-//        wellModel.traverse(function (child) {
-//            if (child.isMesh) {
-//                child.material = pngMaterial;
-//            }
-//        });
-//        // Apply the blue material to the wellModel
-//        // wellModel.material=pngMaterial;
-//
-//        // Calculate dimensions of the well model
-//        const boundingBox = new THREE.Box3().setFromObject(wellModel);
-//        const width = boundingBox.max.x - boundingBox.min.x;
-//        const height = boundingBox.max.y - boundingBox.min.y;
-//        const depth = boundingBox.max.z - boundingBox.min.z;
-//
-//        // Add Cannon.js body for Well model
-//        const wellModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-//        const wellModelBody = new CANNON.Body({
-//            mass: 0, // Static object, so mass is 0
-//            position: new CANNON.Vec3(-120, 0, -420) // Initial position of the model
-//        });
-//        wellModelBody.addShape(wellModelShape);
-//        world.addBody(wellModelBody);
-//
-//        wellModel.rotation.y = -Math.PI / 4;
-//        scene.add(wellModel);
-//
-//        // Create a wireframe mesh for visualization
-//        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-//        const wireframeMaterial = new THREE.MeshBasicMaterial({
-//            color: 0x00ff00, // Green color (for wireframe)
-//            wireframe: true
-//        });
-//
-//        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-//
-//        // Position the wireframe mesh at the same position as the model
-//        wireframeMesh.position.set(315, 19, 220);
-//        wireframeMesh.visible = false;
-//
-//        // Add the wireframe mesh to the scene
-//        scene.add(wireframeMesh);
-//    }, undefined, function (error) {
-//        console.error(error);
-//    });
 
-
-    //WOODEN CRATE
-    loader.load('/wooden_crate.glb', function (gltf) {
-        const woodenCrateModel = gltf.scene; // Change the variable name
-        woodenCrateModel.scale.set(10, 10, 10);
-        woodenCrateModel.position.set(336, 0, 413);
-        //  console.log("Wooden Crate Model Properties:"); // Update the log message
-        // for (const property in woodenCrateModel) {
-        //     console.log(`${property}:`, woodenCrateModel[property]);
-        // }
-
-        // Calculate dimensions of the wooden crate model
-        const boundingBox = new THREE.Box3().setFromObject(woodenCrateModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        // console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Wooden Crate model
-        const woodenCrateModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const woodenCrateModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(336, 0, 413) // Initial position of the model
-        });
-        woodenCrateModelBody.addShape(woodenCrateModelShape);
-        world.addBody(woodenCrateModelBody);
-
-        //woodenCrateModel.rotation.y = Math.PI; // You can apply rotation if needed
-        scene.add(woodenCrateModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(336, 0, 413);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-
-
-    //TREES NEAR WELL
-    loader.load('/tree_1.glb', function (gltf) {
-        const TreesModel = gltf.scene;
-        TreesModel.scale.set(360, 360, 360);
-        TreesModel.position.set(320, 0, 290);
-        //  console.log("Trees Model Properties:");
-
-        // Calculate dimensions of the Trees model
-        const boundingBox = new THREE.Box3().setFromObject(TreesModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        //  console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Trees model
-        const TreesModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const TreesModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(320, 0, 290) // Initial position of the model
-        });
-        TreesModelBody.addShape(TreesModelShape);
-        world.addBody(TreesModelBody);
-
-        // TreesModel.rotation.y = Math.PI;
-        scene.add(TreesModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(320, 0, 290);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-    loader.load('/tree_2.glb', function (gltf) {
-        const TreesModel = gltf.scene;
-        TreesModel.scale.set(360, 360, 360);
-        TreesModel.position.set(320, 0, 345);
-        //   console.log("Trees Model Properties:");
-
-        // Calculate dimensions of the Trees model
-        const boundingBox = new THREE.Box3().setFromObject(TreesModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        //   console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Trees model
-        const TreesModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const TreesModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(320, 0, 345) // Initial position of the model
-        });
-        TreesModelBody.addShape(TreesModelShape);
-        world.addBody(TreesModelBody);
-
-        // TreesModel.rotation.y = Math.PI;
-        scene.add(TreesModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(320, 0, 345);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-    //ROCKS
-    loader.load('/rocks.glb', function (gltf) {
-        const rocksModel = gltf.scene;
-        rocksModel.scale.set(0.3, 0.3, 0.3);
-        rocksModel.position.set(315, 0, 345);
-        //  console.log("Rocks Model Properties:");
-
-        // Calculate dimensions of the rocks model
-        const boundingBox = new THREE.Box3().setFromObject(rocksModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        //   console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Rocks model
-        const rocksModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const rocksModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(315, 0, 345) // Initial position of the model
-        });
-        rocksModelBody.addShape(rocksModelShape);
-        world.addBody(rocksModelBody);
-
-        // rocksModel.rotation.y = Math.PI;
-        scene.add(rocksModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(315, 0, 345);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-
-    //PURPLE PLANT
-    loader.load('/purple_plant.glb', function (gltf) {
-        const purplePlantModel = gltf.scene;
-        purplePlantModel.scale.set(35, 35, 35);
-        purplePlantModel.position.set(317, 0, 295);
-        //    console.log("Purple Plant Model Properties:");
-        // for (const property in purplePlantModel) {
-        //     console.log(`${property}:`, purplePlantModel[property]);
-        // }
-
-        // Calculate dimensions of the purple plant model
-        const boundingBox = new THREE.Box3().setFromObject(purplePlantModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        //    console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Purple Plant model
-        const purplePlantModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const purplePlantModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(317, 0, 295)// Initial position of the model
-        });
-        purplePlantModelBody.addShape(purplePlantModelShape);
-        world.addBody(purplePlantModelBody);
-
-        //purplePlantModel.rotation.y = Math.PI;
-        scene.add(purplePlantModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(317, 0, 295);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-    loader.load('/purple_plant.glb', function (gltf) {
-        const purplePlantModel = gltf.scene;
-        purplePlantModel.scale.set(35, 35, 35);
-        purplePlantModel.position.set(314, 0, 290);
-        //   console.log("Purple Plant Model Properties:");
-        // for (const property in purplePlantModel) {
-        //     console.log(`${property}:`, purplePlantModel[property]);
-        // }
-
-        // Calculate dimensions of the purple plant model
-        const boundingBox = new THREE.Box3().setFromObject(purplePlantModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        //    console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Purple Plant model
-        const purplePlantModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const purplePlantModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(314, 0, 290) // Initial position of the model
-        });
-        purplePlantModelBody.addShape(purplePlantModelShape);
-        world.addBody(purplePlantModelBody);
-
-        //purplePlantModel.rotation.y = Math.PI;
-        scene.add(purplePlantModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(314, 0, 290);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-    loader.load('/purple_plant.glb', function (gltf) {
-        const purplePlantModel = gltf.scene;
-        purplePlantModel.scale.set(35, 35, 35);
-        purplePlantModel.position.set(317, 0, 285);
-        //   console.log("Purple Plant Model Properties:");
-        // for (const property in purplePlantModel) {
-        //     console.log(`${property}:`, purplePlantModel[property]);
-        // }
-
-        // Calculate dimensions of the purple plant model
-        const boundingBox = new THREE.Box3().setFromObject(purplePlantModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
-        //   console.log(`Box Dimensions: Width: ${width}, Height: ${height}, Depth: ${depth}`);
-
-        // Add Cannon.js body for Purple Plant model
-        const purplePlantModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-        const purplePlantModelBody = new CANNON.Body({
-            mass: 0, // Static object, so mass is 0
-            position: new CANNON.Vec3(317, 0, 285) // Initial position of the model
-        });
-        purplePlantModelBody.addShape(purplePlantModelShape);
-        world.addBody(purplePlantModelBody);
-
-        //purplePlantModel.rotation.y = Math.PI;
-        scene.add(purplePlantModel);
-
-        // Create wireframe mesh for visualization
-        const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        // Position the wireframe mesh at the same position as the model
-        wireframeMesh.position.set(317, 0, 285);
-        wireframeMesh.visible = false;
-
-        // Add the wireframe mesh to the scene
-        scene.add(wireframeMesh);
-    }, undefined, function (error) {
-        console.error(error);
-    });
-
-
-    addWallModels(loader, scene, world, blockWidth);
-
-    let adjustmentInY = 0;
-    let adjustmentInX = 2;
-    let adjustmentInZ = 0;
-    let startX = 0;
-    let startY = 0;
-    let startZ = blockWidth;
-    addGrassPatches(loader, scene, world, blockWidth, adjustmentInX, adjustmentInY, adjustmentInZ, startX, startY, startZ);
-
-    adjustmentInY = 0;
-    adjustmentInX = 2;
-    adjustmentInZ = 0;
-    startX = 0;
-    startY = 0;
-    startZ = 0;
-    addGrassPatches(loader, scene, world, blockWidth, adjustmentInX, adjustmentInY, adjustmentInZ, startX, startY, startZ);
-
-    adjustmentInY = 0;
-    adjustmentInX = 2;
-    adjustmentInZ = 0;
-    startX = -blockWidth;
-    startY = 0;
-    startZ = -blockWidth;  
-    addGrassPatches(loader, scene, world, blockWidth, adjustmentInX, adjustmentInY, adjustmentInZ, startX, startY, startZ);
+    loadAndSetupModels(loader, scene, world, modelsToLoad);
 
 }
-
 
 function clonePatchesInRoom(model, posInX, posInY, posInZ) {
     let clone = model.clone();
     clone.position.set(posInX, posInY, posInZ);
 }
 
-function addGrassPatches(loader, scene, world, blockWidth, adjustmentInX, adjustmentInY, adjustmentInZ, startX, startY, startZ) {
+function generateGrassPatches(loader, scene, world, blockWidth, adjustmentInX, adjustmentInY, adjustmentInZ, startX, startY, startZ) {
     let pathToGrassPatch = 'assets/grass_patches_02/scene.gltf';
 
     loader.load(pathToGrassPatch, (gltf) => {
         const model = gltf.scene;
+
 
         model.traverse(function (node) {
             if (node.isMesh) {
@@ -1794,23 +345,42 @@ function addGrassPatches(loader, scene, world, blockWidth, adjustmentInX, adjust
 
         scene.add(model);
 
-        model.scale.set(10, 15, 10);
+        model.scale.set(5, 7, 5);
         model.position.set(startX, startY, startZ);
 
         let posInX = startX + adjustmentInX;
         let posInY = startY + adjustmentInY;
-        let posInZ = startZ + adjustmentInZ; 
-        for (let j = 0; j < 10; j++) {
-            clonePatchesInRoom(model, posInX, posInY, posInZ);
+        let posInZ = startZ + adjustmentInZ;
+
+        const numClones = 10;
+
+        // Create a seeded random number generator
+        function seededRandom(seed) {
+            let x = Math.sin(seed) * 10000;
+            return x - Math.floor(x);
+        }
+
+        for (let j = 0; j < numClones; j++) {
+            const clonedModel = model.clone();
+
+            // Use the seeded random function to generate consistent random positions
+            const randomSeed = j * 10; // Adjust as needed
+            const randomAdjustmentX = seededRandom(randomSeed) * adjustmentInX;
+            const randomAdjustmentY = seededRandom(randomSeed) * adjustmentInY;
+            const randomAdjustmentZ = seededRandom(randomSeed) * adjustmentInZ;
+
+            clonedModel.position.set(posInX + randomAdjustmentX, posInY + randomAdjustmentY, posInZ + randomAdjustmentZ);
+            scene.add(clonedModel);
+
             posInX += adjustmentInX;
             posInY += adjustmentInY;
             posInZ += adjustmentInZ;
         }
-
     }, undefined, (error) => {
         console.log(error);
     });
 }
+
 
 function addWallModels(loader, scene, world, blockWidth) {
     // For variation adjust scaling in z, y, x for narrower/extended walls or taller/shotter walls
@@ -1842,6 +412,7 @@ function addWallModels(loader, scene, world, blockWidth) {
             console.log(error);
         });
     }
+
 
     // // for wall spawn back
     let adjustment2 = 0;
@@ -2071,3 +642,4 @@ function addWallModels(loader, scene, world, blockWidth) {
         });
     }
 }
+
