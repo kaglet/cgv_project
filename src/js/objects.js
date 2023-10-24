@@ -617,10 +617,10 @@ function addWalls() {
     lobbyGate.opengate(90, 0);
 
     puzz1Gate = new Gate(new CANNON.Vec3(blockWidth / 2, 0, -blockWidth / 2 + 20), new CANNON.Vec3(0, (Math.PI / 1), 0));
- //   puzz1Gate.opengate(90, 3);
+    puzz1Gate.opengate(90, 3);
 
     puzz2Gate = new Gate(new CANNON.Vec3(-10, 0, -blockWidth + 10), new CANNON.Vec3(0, (Math.PI / 2), 0));
-   // puzz2Gate.opengate(0, 2);
+    puzz2Gate.opengate(0, 2);
 
 }
 
