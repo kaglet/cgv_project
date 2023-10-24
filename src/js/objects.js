@@ -212,7 +212,7 @@ class Gate {
             }
     
             // Calculate the rotation in radians (assuming angle is in degrees)
-            const rotationAngle = (Math.PI / 180) * angle;
+            const rotationAngle = angle;
     
             // Step 1: Translate the door to the hinge point
           this.inverseHingePoint = hingePoint.clone().negate();
@@ -226,7 +226,7 @@ class Gate {
             this.body.position.copy(this.model.position);
     
             // Step 3: Translate the door back to its original position
-          //  this.model.position.sub(inverseHingePoint);
+          //  this.model.position.sub(this.inverseHingePoint);
         }
     }
 
@@ -307,11 +307,11 @@ class floorContBody {
 function puzzComplete(puzz) {
     if (puzz == 'Blue') {
 
-        puzz1Gate.opengate(90,3);
+        puzz1Gate.opengate((Math.PI / 2),3);
 
     }
     else if (puzz == 'Red') {
-        puzz2Gate.opengate(90, 2);
+        puzz2Gate.opengate((Math.PI / 2), 2);
     }
 
 
@@ -654,10 +654,10 @@ function addWalls() {
     const puzz2Exit = new InnerWall(new CANNON.Vec3(-24.5, 0, -blockWidth), new CANNON.Vec3(0, (Math.PI / 2), 0));
 
    
-    lobbyGate = new Gate(new CANNON.Vec3(blockWidth / 2, 0, blockWidth / 2 + 10), new CANNON.Vec3(0, (Math.PI / 1), 0));
-    lobbyGate.opengate(90, 0);
+    lobbyGate = new Gate(new CANNON.Vec3(blockWidth / 2, 0, blockWidth / 2 + 10), new CANNON.Vec3(0, 0, 0));
+    lobbyGate.opengate((Math.PI / 2), 0);
 
-    puzz1Gate = new Gate(new CANNON.Vec3(blockWidth / 2, 0, -blockWidth / 2 + 20), new CANNON.Vec3(0, (Math.PI / 1), 0));
+    puzz1Gate = new Gate(new CANNON.Vec3(blockWidth / 2, 0, -blockWidth / 2 + 20), new CANNON.Vec3(0, 0, 0));
    // puzz1Gate.opengate(90, 3);
 
     puzz2Gate = new Gate(new CANNON.Vec3(-10, 0, -blockWidth + 10), new CANNON.Vec3(0, (Math.PI / 2), 0));
