@@ -4,6 +4,8 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import ceilingtextureImage from '../img/exosystem/lambert1_baseColor.png';
 
+const modelsToLoad = []
+
 
 function cloneModel(model, positon, rotation, scale) {
     const clonedModel = model.clone();
@@ -18,6 +20,7 @@ function generateRandomNumberForVariation() {
     // Generate a random nubmer between 0.1 and 0.3
     return Math.random() * 0.1 + 0.2;
 }
+
 
 
 function trees(loader, scene, world) {
@@ -136,157 +139,68 @@ function plants(loader, scene, world) {
 }
 
 
-function setupStoneWallModels(loader, scene, world) {
-    let stoneWallModel;
-    const positions = [
-        new THREE.Vector3(265, 0, 490),
-        new THREE.Vector3(215, 0, 490),
-        new THREE.Vector3(165, 0, 490),
-        new THREE.Vector3(115, 0, 490),
-        new THREE.Vector3(-6, 0, 416),
-        new THREE.Vector3(278, 0, 416),
-        new THREE.Vector3(135, 0, 416)
-    ];
+function loadAndSetupModels(loader, scene, world, models) {
+    models.forEach(modelDescription => {
+        const { modelPath, scale, position, rotation } = modelDescription;
 
-    loader.load('/wall_ruins.glb', function (gltf) {
-        stoneWallModel = gltf.scene;
-        stoneWallModel.scale.set(30, 30, 30);
+        loader.load(modelPath, function (gltf) {
+            const model = gltf.scene;
+            model.scale.set(scale, scale, scale);
+            model.position.set(...position);
 
-        const boundingBox = new THREE.Box3().setFromObject(stoneWallModel);
-        const width = boundingBox.max.x - boundingBox.min.x;
-        const height = boundingBox.max.y - boundingBox.min.y;
-        const depth = boundingBox.max.z - boundingBox.min.z;
+            const boundingBox = new THREE.Box3().setFromObject(model);
+            const width = boundingBox.max.x - boundingBox.min.x;
+            const height = boundingBox.max.y - boundingBox.min.y;
+            const depth = boundingBox.max.z - boundingBox.min.z;
 
-        const stoneWallModelShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-
-        positions.forEach(position => {
-            const stoneWallClone = stoneWallModel.clone();
-            stoneWallClone.position.copy(position);
-
-            const stoneWallModelBody = new CANNON.Body({
+            const shape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
+            const body = new CANNON.Body({
                 mass: 0,
-                position: new CANNON.Vec3(position.x, position.y, position.z)
+                position: new CANNON.Vec3(...position)
             });
-            stoneWallModelBody.addShape(stoneWallModelShape);
-            world.addBody(stoneWallModelBody);
+            body.addShape(shape);
+            world.addBody(body);
 
-            stoneWallClone.rotation.y = Math.PI / 2;
-            scene.add(stoneWallClone);
-
-            const wireframeGeometry = new THREE.BoxGeometry(width, height - 3, depth);
-            const wireframeMaterial = new THREE.MeshBasicMaterial({
-                color: 0x00ff00,
-                wireframe: true
-            });
-            const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-            wireframeMesh.position.copy(position);
-            wireframeMesh.visible = false;
-
-            scene.add(wireframeMesh);
+            model.rotation.y = rotation;
+            scene.add(model);
+        }, undefined, function (error) {
+            console.error(error);
         });
-    }, undefined, function (error) {
-        console.error(error);
-    });
-}
-
-
-function loadModelsAndClones(loader, scene, world, stoneWallModel, stoneWallModelShape) {
-    const positions = [
-        new THREE.Vector3(265, 0, 490),
-        new THREE.Vector3(215, 0, 490),
-        new THREE.Vector3(165, 0, 490),
-        new THREE.Vector3(115, 0, 490),
-        new THREE.Vector3(-6, 0, 416),
-        new THREE.Vector3(278, 0, 416),
-        new THREE.Vector3(135, 0, 416)
-    ];
-
-    positions.forEach(position => {
-        const stoneWallClone = stoneWallModel.clone();
-        stoneWallClone.position.copy(position);
-
-        const stoneWallModelBody = new CANNON.Body({
-            mass: 0,
-            position: new CANNON.Vec3(position.x, position.y, position.z)
-        });
-        stoneWallModelBody.addShape(stoneWallModelShape);
-        world.addBody(stoneWallModelBody);
-
-        stoneWallClone.rotation.y = Math.PI / 2;
-        scene.add(stoneWallClone);
-
-        const wireframeGeometry = new THREE.BoxGeometry(position.x, height - 3, depth);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            wireframe: true
-        });
-        const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-
-        wireframeMesh.position.copy(position);
-        wireframeMesh.visible = false;
-
-        scene.add(wireframeMesh);
     });
 }
 
 
 function lobby(loader, scene, world) {
-    function loadAndSetupModels(models) {
-        models.forEach(modelDescription => {
-            const { modelPath, scale, position, rotation } = modelDescription;
 
-            loader.load(modelPath, function (gltf) {
-                const model = gltf.scene;
-                model.scale.set(scale, scale, scale);
-                model.position.set(...position);
 
-                const boundingBox = new THREE.Box3().setFromObject(model);
-                const width = boundingBox.max.x - boundingBox.min.x;
-                const height = boundingBox.max.y - boundingBox.min.y;
-                const depth = boundingBox.max.z - boundingBox.min.z;
 
-                const shape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-                const body = new CANNON.Body({
-                    mass: 0,
-                    position: new CANNON.Vec3(...position)
-                });
-                body.addShape(shape);
-                world.addBody(body);
+    modelsToLoad.push({ modelPath: '/dungeon.glb', scale: 15, position: [106, 17, 487], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: '/dungeon.glb', scale: 15, position: [245, 17, 487], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: '/watch_tower.glb', scale: 0.2, position: [18, 2, 507], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: '/bench.glb', scale: 14, position: [172, 3.5, 435], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/barrels.glb', scale: 4, position: [334, 0, 427], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/bush.glb', scale: 8, position: [50, 1.2, 258], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/coconut_palm.glb', scale: 14, position: [300, 0, 200], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/coconut.glb', scale: 2, position: [285, 2.5, 205], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/small_trees.glb', scale: 12, position: [40, 0, 320], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/bird_bath.glb', scale: 12, position: [40, 0, 370], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/fern.glb', scale: 1.6, position: [46, 0, 376], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/well.glb', scale: 15, position: [-205, 15, -380], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/boer_war_statue.glb', scale: 1.5, position: [-205, -10, -300], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/wooden_crate.glb', scale: 10, position: [336, 0, 413], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: '/tree_1.glb', scale: 360, position: [320, 0, 290], rotation: Math.PI });
+    modelsToLoad.push({ modelPath: '/tree_2.glb', scale: 360, position: [320, 0, 345], rotation: Math.PI });
+    modelsToLoad.push({ modelPath: '/rocks.glb', scale: 0.3, position: [315, 0, 345], rotation: Math.PI });
+    modelsToLoad.push({ modelPath: '/purple_plant.glb', scale: 35, position: [317, 0, 295], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/purple_plant.glb', scale: 35, position: [314, 0, 290], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/purple_plant.glb', scale: 35, position: [317, 0, 285], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/wall_ruins.glb', scale: 30, position: [-6, 0, 416], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: '/wall_ruins.glb', scale: 30, position: [278, 0, 416], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: '/wall_ruins.glb', scale: 30, position: [135, 0, 416], rotation: Math.PI / 2 });
 
-                model.rotation.y = rotation;
-                scene.add(model);
-            }, undefined, function (error) {
-                console.error(error);
-            });
-        });
-    }
 
-    const modelsToLoad = [
-        { modelPath: '/dungeon.glb', scale: 15, position: [106, 17, 487], rotation: Math.PI / 2 },
-        { modelPath: '/dungeon.glb', scale: 15, position: [245, 17, 487], rotation: Math.PI / 2 },
-        { modelPath: '/wall_ruins.glb', scale: 30, position: [265, 0, 490], rotation: 0 },
-        { modelPath: '/watch_tower.glb', scale: 0.2, position: [18, 2, 507], rotation: Math.PI / 2 },
-        { modelPath: '/bench.glb', scale: 14, position: [172, 3.5, 435], rotation: 0 },
-        { modelPath: '/barrels.glb', scale: 4, position: [334, 0, 427], rotation: 0 },
-        { modelPath: '/bush.glb', scale: 8, position: [50, 1.2, 258], rotation: 0 },
-        { modelPath: '/coconut_palm.glb', scale: 14, position: [300, 0, 200], rotation: 0 },
-        { modelPath: '/coconut.glb', scale: 2, position: [285, 2.5, 205], rotation: 0 },
-        { modelPath: '/small_trees.glb', scale: 12, position: [40, 0, 320], rotation: 0 },
-        { modelPath: '/bird_bath.glb', scale: 12, position: [40, 0, 370], rotation: 0 },
-        { modelPath: '/fern.glb', scale: 1.6, position: [46, 0, 376], rotation: 0 },
-        { modelPath: '/well.glb', scale: 15, position: [-205, 15, -380], rotation: 0 },
-        { modelPath: '/boer_war_statue.glb', scale: 1.5, position: [-205, -10, -300], rotation: 0 },
-        { modelPath: '/wooden_crate.glb', scale: 10, position: [336, 0, 413], rotation: Math.PI / 2 },
-        { modelPath: '/tree_1.glb', scale: 360, position: [320, 0, 290], rotation: Math.PI },
-        { modelPath: '/tree_2.glb', scale: 360, position: [320, 0, 345], rotation: Math.PI },
-        { modelPath: '/rocks.glb', scale: 0.3, position: [315, 0, 345], rotation: Math.PI },
-        { modelPath: '/purple_plant.glb', scale: 35, position: [317, 0, 295], rotation: 0 },
-        { modelPath: '/purple_plant.glb', scale: 35, position: [314, 0, 290], rotation: 0 },
-        { modelPath: '/purple_plant.glb', scale: 35, position: [317, 0, 285], rotation: 0 }
-    ];
 
-    loadAndSetupModels(modelsToLoad);
+   
 }
 
 
@@ -367,7 +281,7 @@ export function loadModels(loader, scene, world, blockWidth) {
     // cloneModel(lionStatueModel, newPosition, newRotation, newScale);
 
     // Call the setup function to set up all stone wall models
-    setupStoneWallModels(loader, scene, world);
+    //   setupStoneWallModels(loader, scene, world);
 
 
     lobby(loader, scene, world);
@@ -406,6 +320,8 @@ export function loadModels(loader, scene, world, blockWidth) {
     texture.matrix = textureMatrix;
     // Apply the texture to the Lambert material
     lambertMaterial.map = texture;
+
+    loadAndSetupModels(loader, scene, world, modelsToLoad);
 
 }
 
