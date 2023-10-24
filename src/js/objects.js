@@ -848,12 +848,12 @@ function sky() {
 function ground() {
     let groundTexture = new THREE.TextureLoader().load(groundImg);
     groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
-    groundTexture.repeat.set(-250, -250);
+    groundTexture.repeat.set(-25, -25);
     groundTexture.anisotropy = 16;
     groundTexture.encoding = THREE.sRGBEncoding;
 
     // Create ground
-    const groundGeo = new THREE.PlaneGeometry(10000, 10000);
+    const groundGeo = new THREE.PlaneGeometry(1000, 1000);
     const groundMat = new THREE.MeshStandardMaterial({
         receiveShadow: true,
         map: groundTexture,
