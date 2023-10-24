@@ -196,18 +196,32 @@ class Gate {
         });
     }
 
-    async opengate(angle) {
+    async opengate(angle, gateNum) {
         // Wait for the model to be loaded before performing any operations on it
         await this.loadModelPromise;
 
         if (this.model) {
+            // Set the hinge point (pivot) at the left vertical edge of the door
+            let hingePoint = new THREE.Vector3(-20, 0, 0); // Adjust the values as needed
+            if (gateNum == 2){
+                hingePoint = new THREE.Vector3(0, 0, -18); // Adjust the values as needed
+            }
+    
             // Calculate the rotation in radians (assuming angle is in degrees)
             const rotationAngle = (Math.PI / 180) * angle;
-
-            // Rotate the Cannon.js body
+    
+            // Step 1: Translate the door to the hinge point
+            const inverseHingePoint = hingePoint.clone().negate();
+            this.model.position.add(inverseHingePoint);
+           
+    
+            // Step 2: Rotate the door
             this.body.quaternion.setFromEuler(0, rotationAngle, 0);
-            this.model.position.copy(this.body.position);
-            this.model.quaternion.copy(this.body.quaternion);
+            this.model.rotation.set(0, rotationAngle, 0); // Update the Three.js rotation
+            this.body.position.copy(this.model.position);
+    
+            // Step 3: Translate the door back to its original position
+          //  this.model.position.sub(inverseHingePoint);
         }
     }
 
@@ -252,11 +266,11 @@ class floorContBody {
 function puzzComplete(puzz) {
     if (puzz == 'Blue') {
 
-        puzz1Gate.opengate(90);
+        puzz1Gate.opengate(90,3);
 
     }
     else if (puzz == 'Red') {
-        puzz2Gate.opengate(0);
+        puzz2Gate.opengate(0, 2);
     }
 
 
@@ -599,14 +613,14 @@ function addWalls() {
     const puzz2Exit = new InnerWall(new CANNON.Vec3(-24.5, 0, -blockWidth), new CANNON.Vec3(0, (Math.PI / 2), 0));
 
    
-    lobbyGate = new Gate(new CANNON.Vec3(blockWidth / 2, 0, blockWidth / 2), new CANNON.Vec3(0, (Math.PI / 1), 0));
-    lobbyGate.opengate(90);
+    lobbyGate = new Gate(new CANNON.Vec3(blockWidth / 2, 0, blockWidth / 2 + 10), new CANNON.Vec3(0, (Math.PI / 1), 0));
+    lobbyGate.opengate(90, 0);
 
-    puzz1Gate = new Gate(new CANNON.Vec3(blockWidth / 2, 0, -blockWidth / 2), new CANNON.Vec3(0, (Math.PI / 1), 0));
-    puzz1Gate.opengate(90);
+    puzz1Gate = new Gate(new CANNON.Vec3(blockWidth / 2, 0, -blockWidth / 2 + 20), new CANNON.Vec3(0, (Math.PI / 1), 0));
+ //   puzz1Gate.opengate(90, 3);
 
-    puzz2Gate = new Gate(new CANNON.Vec3(0, 0, -blockWidth), new CANNON.Vec3(0, (Math.PI / 2), 0));
-    puzz2Gate.opengate(0);
+    puzz2Gate = new Gate(new CANNON.Vec3(-10, 0, -blockWidth + 10), new CANNON.Vec3(0, (Math.PI / 2), 0));
+   // puzz2Gate.opengate(0, 2);
 
 }
 
@@ -1099,7 +1113,6 @@ let lobbyGate;
 let puzz1Gate;
 let puzz2Gate;
 addWalls();
-// lobbyGate.opengate(90);
 
 document.addEventListener('keydown', (event) => {
     if (event.key === 'r') {
