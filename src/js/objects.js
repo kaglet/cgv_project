@@ -473,14 +473,6 @@ function ground() {
 
 }
 
-//Pole properties
-const poleGeometry = new THREE.CylinderGeometry(0.75, 0.75, 35, 50);
-const poleMaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
-const signwallgeometry = new THREE.BoxGeometry(10, 10, 1.4);
-const signmaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
-const PiPBaseGeometry = new THREE.BoxGeometry(7, 7, 0.5);
-const PiPBaseMaterial3 = new THREE.MeshStandardMaterial({ color: 0xFFA500 });
-
 function Level1Primitives() {
     //Loading all Level 1 primitives
     scene.add(floorContainerBlue);
@@ -834,8 +826,13 @@ function mazeReset(){
 }
 
 
-
-// Create material array
+//Pole properties
+const poleGeometry = new THREE.CylinderGeometry(0.75, 0.75, 35, 50);
+const poleMaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
+const signwallgeometry = new THREE.BoxGeometry(10, 10, 1.4);
+const signmaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
+const PiPBaseGeometry = new THREE.BoxGeometry(7, 7, 0.5);
+const PiPBaseMaterial3 = new THREE.MeshStandardMaterial({ color: 0xFFA500 });
 
 const path1 = [1, 2, 3, 12, 21, 30, 39, 48, 57, 66, 75, 76, 77, 78, 79, 70, 61, 52, 43, 42, 41, 32, 23, 24, 25, 26, 27, 36, 45, 54, 63, 72, 81];
 const path2 = [5, 14, 23, 24, 25, 26, 27, 36, 45, 44, 43, 42, 41, 40, 39, 48, 57, 56, 55, 64, 73, 74, 75, 76, 77, 68, 59, 60, 61, 62, 63, 72, 81];
@@ -901,8 +898,6 @@ const extrudeSettings = {
 
 const semicircleGeometry = new THREE.ExtrudeGeometry(semicircleShape, extrudeSettings);
 
-
-
 const tiles = [];
 
 const rotationAngle = (Math.PI / 2);
@@ -912,7 +907,6 @@ export const floorContainerBlue = new THREE.Group();
 export const PiP2 = new THREE.Group();
 export const PiP1 = new THREE.Group();
 export const PiP3 = new THREE.Group();
-//makeMazes();
 
 Level1Primitives();
 addFloorBodies();
@@ -922,8 +916,6 @@ walls.addWalls(assetLoader, scene, world, blockWidth, rotationAngle);
 mazeReset();
 
 export function animate_objects() {
-    // groundMesh.position.copy(groundBody.position);
-    // groundMesh.quaternion.copy(groundBody.quaternion);
     sky.space.rotation.y += -0.0001;
     sky.space.rotation.x += -0.00005;
     sky.space.rotation.z += -0.00005;
@@ -931,15 +923,5 @@ export function animate_objects() {
 }
 
 export function animate_lights() {
-
     tileLights();
-
-
 }
-
-// create instance of GLTF loader and call load on it
-//
-
-// load takes three arguments, path to file, and a callback function, another function that tells about the progress of the loading process (don't need it so set to undefined), foruth parameter is a function we can use to tell if an error occurs
-// use asset loader to load .gltf from path
-// model is stored as property of gltf object whose key is scene

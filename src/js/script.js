@@ -6,9 +6,6 @@ import * as camera from './camera.js';
 
 import * as THREE from 'three';
 
-
-
-
 const listener = new THREE.AudioListener();
 const sound = new THREE.Audio(listener);
 

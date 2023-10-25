@@ -4,7 +4,7 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import ceilingtextureImage from '../img/lambert1_baseColor.png';
 
-const modelsToLoad = []
+let modelsToLoad = []
 
 
 function cloneModel(model, positon, rotation, scale) {
@@ -26,7 +26,7 @@ function generateRandomNumberForVariation() {
 
 
 function trees() {
-    const numTrees = 100;
+    const numTrees = 30;
     const minDistanceFromCenter = 600;
     const maxDistanceFromCenter = 700;
     const center = new THREE.Vector3(-100, 0, 0); // New center position
@@ -132,14 +132,14 @@ function trees() {
 //     });
 // }
 
-function plants(modelsToLoad) {
+function plants() {
     const centers = [];
     const blockWidth = 350;
     centers.push(new THREE.Vector3(blockWidth / 2, 0, blockWidth / 2 - 9));
     centers.push(new THREE.Vector3(blockWidth / 2, 0, -blockWidth / 2 + 9));
     centers.push(new THREE.Vector3(-24.5, 0, -blockWidth));
 
-    const numPlants = 100;
+    const numPlants = 20;
     const minDistanceFromCenter = 0;
     const maxDistanceFromCenter = 350;
 
@@ -153,8 +153,8 @@ function plants(modelsToLoad) {
         { modelPath: './assets/shrub_pack/scene.gltf', scale: 1.5 },
         { modelPath: './assets/tropical_plant/scene.gltf', scale: 2 },
         { modelPath: './assets/tropical_plant_2/scene.gltf', scale: 0.025 },
-        { modelPath: './assets/tropical_plant_monstera_deliciosa/scene.gltf', scale: 6 },
-        { modelPath: './assets/tropical_plant_3/scene.gltf', scale: 6 }
+        { modelPath: './assets/tropical_plant_monstera_deliciosa/scene.gltf', scale: 5 },
+        { modelPath: './assets/tropical_plant_3/scene.gltf', scale: 5 }
     ];
 
     // Loop through the models to load
@@ -175,7 +175,7 @@ function plants(modelsToLoad) {
                     modelPath: modelPath,
                     scale: scale,
                     position: [randomX, 0.1, randomZ],
-                    rotation: randomYRotation,
+                    rotation: randomYRotation
                 });
             }
         }
@@ -192,18 +192,18 @@ function loadAndSetupModels(loader, scene, world, models) {
             model.scale.set(scale, scale, scale);
             model.position.set(...position);
 
-            const boundingBox = new THREE.Box3().setFromObject(model);
-            const width = boundingBox.max.x - boundingBox.min.x;
-            const height = boundingBox.max.y - boundingBox.min.y;
-            const depth = boundingBox.max.z - boundingBox.min.z;
+            // const boundingBox = new THREE.Box3().setFromObject(model);
+            // const width = boundingBox.max.x - boundingBox.min.x;
+            // const height = boundingBox.max.y - boundingBox.min.y;
+            // const depth = boundingBox.max.z - boundingBox.min.z;
 
-            const shape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-            const body = new CANNON.Body({
-                mass: 0,
-                position: new CANNON.Vec3(...position)
-            });
-            body.addShape(shape);
-            world.addBody(body);
+            // const shape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
+            // const body = new CANNON.Body({
+            //     mass: 0,
+            //     position: new CANNON.Vec3(...position)
+            // });
+            // body.addShape(shape);
+            // world.addBody(body);
 
             model.rotation.y = rotation;
             scene.add(model);
@@ -249,7 +249,7 @@ function lobby(loader, scene, world) {
 export function loadModels(loader, scene, world, blockWidth) {
 
     trees();
-    //plants();
+  //  plants();
 
     modelsToLoad.push({ modelPath: '/ground_material.glb', scale: 1, position: [0, -1, 0], rotation: Math.PI / 2 });
     modelsToLoad.push({ modelPath: '/lion_statue.glb', scale: 30, position: [103, -5, 50], rotation: 0 });
