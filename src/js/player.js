@@ -63,7 +63,10 @@ class BasicCharacterController {
     //playerPhysMat.friction = 1000;
     playerBody = new CANNON.Body({
       mass: 100, // Adjust the mass as needed
-      position: new CANNON.Vec3(250, 10, 300),
+       position: new CANNON.Vec3(250, 20, 450),
+     // position: new CANNON.Vec3(10, 10, -300),
+
+      
       material: playerPhysMat
     });
 
@@ -145,9 +148,10 @@ class BasicCharacterController {
 
       //fbx.position.y=-30;
       // fbx.rotation.y=10;
-      fbx.scale.setScalar(0.1);
+      fbx.scale.setScalar(0.1025);
       fbx.traverse(c => {
         c.castShadow = true;
+        c.receiveShadow = true;
       });
 
       // accurate hitbox for the player
@@ -156,7 +160,7 @@ class BasicCharacterController {
       height = boundingBox.max.y - boundingBox.min.y;
       const depth = boundingBox.max.z - boundingBox.min.z;
 
-      const playerShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
+      const playerShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2 - 5 , depth / 2));
 
       playerBody.addShape(playerShape);
 
@@ -244,6 +248,7 @@ class BasicCharacterController {
 
       if (!moveForward){
         velocity.z -= 0.00046*acc.z * timeInSeconds;
+
       }
       if (moveForward) {
         velocity.z += acc.z * timeInSeconds;
@@ -262,10 +267,20 @@ class BasicCharacterController {
              moveDirection.y=(0);
         }else
         {
-            moveDirection.y=3;
+            moveDirection.y=5;
+            velocity.z = 10000;
+            controlObject.position.y += 0.15;
+
             }
             //velocity.y += acc.y* timeInSeconds;
       }
+
+      const maxVelocity = 40; // Define your maximum velocity
+      const minVelocity = -40; // Define your minimum velocity
+      velocity.z = Math.min(maxVelocity, Math.max(minVelocity, velocity.z));
+    velocity.x = Math.min(maxVelocity, Math.max(minVelocity, velocity.x));
+    velocity.y = Math.min(maxVelocity, Math.max(minVelocity , velocity.y));
+
 
 //    if (!moveForward){
 //        velocity.z = 0;
@@ -293,6 +308,7 @@ class BasicCharacterController {
         this._mixer.update(timeInSeconds);
       }
     } else if (camera.currentCamera === camera.topDownCamera) {
+
       savedCharacterOrientation.copy(controlObject.quaternion);
       if (!this._target) {
         return;
@@ -453,14 +469,13 @@ class BasicCharacterControllerInput {
           break;
        case 32: // d
         jumping = true;
-        sound.moveSound.stop();
+        sound.moveSound.pause();
         soundPlaying=false;
         jumpSound.play();
         break;
       }
-      if(onMaze && sound.glass==false){
-        sound.setGlass(true);
-      }else{
+      if(playerBody.position.y<10 && sound.glass===true){
+      console.log(playerBody.position.y);
         sound.setGlass(false);
       }
       if ((moveForward || moveBackward || moveRight || moveLeft) && soundPlaying==false) {
@@ -497,7 +512,7 @@ class BasicCharacterControllerInput {
          break;
     }
     if (!moveForward && !moveBackward && !moveRight && !moveLeft) {
-      sound.moveSound.stop();
+      sound.moveSound.pause();
       soundPlaying=false;
     }
   }

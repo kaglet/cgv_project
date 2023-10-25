@@ -26,7 +26,7 @@ function generateRandomNumberForVariation() {
 
 
 function trees() {
-    const numTrees = 30;
+    const numTrees = 1;
     const minDistanceFromCenter = 600;
     const maxDistanceFromCenter = 700;
     const center = new THREE.Vector3(-100, 0, 0); // New center position
@@ -139,7 +139,7 @@ function plants() {
     centers.push(new THREE.Vector3(blockWidth / 2, 0, -blockWidth / 2 + 9));
     centers.push(new THREE.Vector3(-24.5, 0, -blockWidth));
 
-    const numPlants = 20;
+    const numPlants = 2;
     const minDistanceFromCenter = 0;
     const maxDistanceFromCenter = 350;
 
@@ -183,12 +183,18 @@ function plants() {
 }
 
 
-function loadAndSetupModels(loader, scene, world, models) {
+function loadAndSetupModels(loader, scene, world, models, physics) {
     models.forEach(modelDescription => {
         const { modelPath, scale, position, rotation } = modelDescription;
 
         loader.load(modelPath, function (gltf) {
             const model = gltf.scene;
+            model.traverse(function(node){
+                   if(node.isMesh){
+                                           node.castShadow=true;
+                                           node.receiveShadow = true;
+                                           }
+            });
             model.scale.set(scale, scale, scale);
             model.position.set(...position);
 
@@ -240,7 +246,7 @@ function lobby(loader, scene, world) {
     modelsToLoad.push({ modelPath: '/wall_ruins.glb', scale: 30, position: [278, 0, 416], rotation: Math.PI / 2 });
     modelsToLoad.push({ modelPath: '/wall_ruins.glb', scale: 30, position: [135, 0, 416], rotation: Math.PI / 2 });
 
-   
+
 }
 
 
@@ -252,7 +258,7 @@ export function loadModels(loader, scene, world, blockWidth) {
   //  plants();
 
     modelsToLoad.push({ modelPath: '/ground_material.glb', scale: 1, position: [0, -1, 0], rotation: Math.PI / 2 });
-    modelsToLoad.push({ modelPath: '/lion_statue.glb', scale: 30, position: [103, -5, 50], rotation: 0 });
+   // modelsToLoad.push({ modelPath: '/lion_statue.glb', scale: 30, position: [103, -5, 50], rotation: 0 });
 
     lobby(loader, scene, world);
 
@@ -275,7 +281,8 @@ export function loadModels(loader, scene, world, blockWidth) {
 
     // Loader to load the texture
     const textureLoader = new THREE.TextureLoader();
-    const texture = textureLoader.load('../img/lambert1_baseColor'); // Replace with the path to your texture file
+    const texture = textureLoader.load('../img/lambert1_baseColor');
+
 
     const textureScaleX = 0.1; // Adjust the texture tiling in the X direction
     const textureScaleY = 0.11; // Adjust the texture tiling in the Y direction
@@ -309,7 +316,8 @@ function generateGrassPatches(loader, scene, world, blockWidth, adjustmentInX, a
 
         model.traverse(function (node) {
             if (node.isMesh) {
-                node.castShadow = true;
+             //   node.castShadow = true;
+                node.receiveShadow = true;
             }
         });
 
@@ -369,10 +377,13 @@ function addWallModels(loader, scene, world, blockWidth) {
     for (let i = 0; i < 13; i++) {
         loader.load(pathToWall, (gltf) => {
             const model = gltf.scene;
-            // model.traverse(function (node) {
-            //     if (node.isMesh) { node.castShadow = true; }
-            // });
-            // add to scene and position like any other object
+
+            model.traverse(function(node){
+                   if(node.isMesh){
+                                           node.castShadow=true;
+                                           node.receiveShadow = true;
+                                           }
+            });
             scene.add(model);
             model.scale.set(0.3, generateRandomNumberForVariation(), generateRandomNumberForVariation());
             model.position.set(blockWidth, 0, blockWidth + offsetCurvedEdgesShift + adjustment1);
@@ -393,6 +404,12 @@ function addWallModels(loader, scene, world, blockWidth) {
             // model.traverse(function (node) {
             //     if (node.isMesh) { node.castShadow = true; }
             // });
+            model.traverse(function(node){
+                   if(node.isMesh){
+                                           node.castShadow=true;
+                                           node.receiveShadow = true;
+                                           }
+            });
             scene.add(model);
 
             model.scale.set(0.3, generateRandomNumberForVariation(), generateRandomNumberForVariation());
@@ -412,6 +429,12 @@ function addWallModels(loader, scene, world, blockWidth) {
             //     if (node.isMesh) { node.castShadow = true; }
             // });
             // add to scene and position like any other object
+            model.traverse(function(node){
+                  if(node.isMesh){
+                                          node.castShadow=true;
+                                          node.receiveShadow = true;
+                                          }
+            });
             scene.add(model);
 
             model.scale.set(0.3, generateRandomNumberForVariation(), generateRandomNumberForVariation());
@@ -428,10 +451,12 @@ function addWallModels(loader, scene, world, blockWidth) {
     for (let i = 0; i < 8; i++) {
         loader.load(pathToWall, (gltf) => {
             const model = gltf.scene;
-            // model.traverse(function (node) {
-            //     if (node.isMesh) { node.castShadow = true; }
-            // });
-            // add to scene and position like any other object
+           model.traverse(function(node){
+                 if(node.isMesh){
+                                         node.castShadow=true;
+                                         node.receiveShadow = true;
+                                         }
+           });
             scene.add(model);
 
             model.scale.set(0.3, generateRandomNumberForVariation(), generateRandomNumberForVariation());
@@ -448,10 +473,12 @@ function addWallModels(loader, scene, world, blockWidth) {
     for (let i = 0; i < 3; i++) {
         loader.load(pathToWall, (gltf) => {
             const model = gltf.scene;
-            // model.traverse(function (node) {
-            //     if (node.isMesh) { node.castShadow = true; }
-            // });
-            // add to scene and position like any other object
+            model.traverse(function(node){
+                   if(node.isMesh){
+                                           node.castShadow=true;
+                                           node.receiveShadow = true;
+                                           }
+            });
             scene.add(model);
 
             model.scale.set(0.3, generateRandomNumberForVariation(), generateRandomNumberForVariation());
@@ -468,10 +495,12 @@ function addWallModels(loader, scene, world, blockWidth) {
     for (let i = 0; i < 2; i++) {
         loader.load(pathToWall, (gltf) => {
             const model = gltf.scene;
-            // model.traverse(function (node) {
-            //     if (node.isMesh) { node.castShadow = true; }
-            // });
-            // add to scene and position like any other object
+            model.traverse(function(node){
+                   if(node.isMesh){
+                                           node.castShadow=true;
+                                           node.receiveShadow = true;
+                                           }
+            });
             scene.add(model);
 
             model.scale.set(0.3, generateRandomNumberForVariation(), generateRandomNumberForVariation());
@@ -488,6 +517,12 @@ function addWallModels(loader, scene, world, blockWidth) {
     for (let i = 0; i < 2; i++) {
         loader.load(pathToWall, (gltf) => {
             const modelLeft = gltf.scene;
+            modelLeft.traverse(function(node){
+                   if(node.isMesh){
+                                           node.castShadow=true;
+                                           node.receiveShadow = true;
+                                           }
+            });
             const modelRight = modelLeft.clone();
 
             // modelLeft.traverse(function (node) {
@@ -527,17 +562,14 @@ function addWallModels(loader, scene, world, blockWidth) {
     for (let i = 0; i < 2; i++) {
         loader.load(pathToWall, (gltf) => {
             const modelLeft = gltf.scene;
+            modelLeft.traverse(function(node){
+                   if(node.isMesh){
+                        node.castShadow=true;
+                        node.receiveShadow = true;
+                        }
+            });
             const modelRight = modelLeft.clone();
-            // modelLeft.traverse(function (node) {
-            //     if (node.isMesh) {
-            //         node.castShadow = true;
-            //     }
-            // });
-            // modelRight.traverse(function (node) {
-            //     if (node.isMesh) {
-            //         node.castShadow = true;
-            //     }
-            // });
+
             scene.add(modelLeft);
             scene.add(modelRight);
             // I must position two models at the same place in one coordinate so maybe add model twice or just different variables
@@ -563,6 +595,11 @@ function addWallModels(loader, scene, world, blockWidth) {
     for (let i = 0; i < 2; i++) {
         loader.load(pathToWall, (gltf) => {
             const modelLeft = gltf.scene;
+            modelLeft.traverse(function(node){
+                   if(node.isMesh)
+                        node.castShadow=true;
+                        node.receiveShadow = true;
+            });
             const modelRight = modelLeft.clone();
 
             // modelLeft.traverse(function (node) {

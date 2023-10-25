@@ -4,6 +4,8 @@ import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonCont
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { levelAreas } from './objects';
 import * as player from './player.js';
+import * as effects from './effect.js';
+import * as objects from './objects.js';
 
 // Define the first camera (you can customize its parameters)
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 30000);
@@ -70,8 +72,10 @@ document.addEventListener('keydown', (event) => {
         // Switch between cameras
         if (currentCamera === camera) {
             currentCamera = topDownCamera;
+            objects.scene.fog = null;
         } else {
             currentCamera = camera;
+            objects.scene.fog = effects.fog;
         }
     }
 });
