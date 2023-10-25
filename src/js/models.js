@@ -316,7 +316,7 @@ function generateGrassPatches(loader, scene, world, blockWidth, adjustmentInX, a
 
         model.traverse(function (node) {
             if (node.isMesh) {
-                node.castShadow = true;
+             //   node.castShadow = true;
                 node.receiveShadow = true;
             }
         });
