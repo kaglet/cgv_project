@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import * as CANNON from 'cannon-es';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import ceilingtextureImage from '../img/exosystem/lambert1_baseColor.png';
+import ceilingtextureImage from '../img/lambert1_baseColor.png';
 
 const modelsToLoad = []
 
@@ -275,7 +275,7 @@ export function loadModels(loader, scene, world, blockWidth) {
 
     // Loader to load the texture
     const textureLoader = new THREE.TextureLoader();
-    const texture = textureLoader.load('exosystem_bk.jpg'); // Replace with the path to your texture file
+    const texture = textureLoader.load('../img/lambert1_baseColor'); // Replace with the path to your texture file
 
     const textureScaleX = 0.1; // Adjust the texture tiling in the X direction
     const textureScaleY = 0.11; // Adjust the texture tiling in the Y direction

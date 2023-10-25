@@ -10,17 +10,18 @@ import * as player from './player.js';
 import groundImg from './textures/avinash-kumar-rEIDzqczN7s-unsplash.jpg';
 
 // Import texture images
-import exosystemFtImage from '../img/exosystem/exosystem_ft.jpg';
-import exosystemBkImage from '../img/exosystem/exosystem_bk.jpg';
-import exosystemUpImage from '../img/exosystem/exosystem_up.jpg';
-import exosystemDnImage from '../img/exosystem/exosystem_dn.jpg';
-import exosystemRtImage from '../img/exosystem/exosystem_rt.jpg';
-import exosystemLfImage from '../img/exosystem/exosystem_lf.jpg';
+import spaceFtImage from '../img/space/space_ft.png';
+import spaceBkImage from '../img/space/space_bk.png';
+import spaceUpImage from '../img/space/space_up.png';
+import spaceDnImage from '../img/space/space_dn.png';
+import spaceRtImage from '../img/space/space_rt.png';
+import spaceLfImage from '../img/space/space_lf.png';
 
 // DEFINE GLOBAL VARIABLES
 // Scene
 export const scene = new THREE.Scene();
 export let levelAreas = [];
+let space;
 
 // world - this is for cannon objects
 export var world = new CANNON.World({
@@ -814,12 +815,12 @@ function sky() {
 
 
     // Create texture objects
-    const texture_ft = new THREE.TextureLoader().load(exosystemFtImage);
-    const texture_bk = new THREE.TextureLoader().load(exosystemBkImage);
-    const texture_up = new THREE.TextureLoader().load(exosystemUpImage);
-    const texture_dn = new THREE.TextureLoader().load(exosystemDnImage);
-    const texture_rt = new THREE.TextureLoader().load(exosystemRtImage);
-    const texture_lf = new THREE.TextureLoader().load(exosystemLfImage);
+    const texture_ft = new THREE.TextureLoader().load(spaceFtImage);
+    const texture_bk = new THREE.TextureLoader().load(spaceBkImage);
+    const texture_up = new THREE.TextureLoader().load(spaceUpImage);
+    const texture_dn = new THREE.TextureLoader().load(spaceDnImage);
+    const texture_rt = new THREE.TextureLoader().load(spaceRtImage);
+    const texture_lf = new THREE.TextureLoader().load(spaceLfImage);
 
     // Create material array
     const materialArray = [
@@ -839,8 +840,39 @@ function sky() {
     // Create skybox
     const skyboxGeo = new THREE.BoxGeometry(10000, 10000, 10000);
     const skybox = new THREE.Mesh(skyboxGeo, materialArray);
-    skybox.position.set(0, 200, 0);
+    skybox.position.set(0, 0, 0);
     scene.add(skybox);
+    // Particles
+const particlesGeometry = new THREE.BufferGeometry(); // Geometry for the space
+const particlesCount = 20000; // number of particles to be created
+
+const vertices = new Float32Array(particlesCount); // Float32Array is an array of 32-bit floats. This is used to represent an array of vertices. (we have 3 values for each vertex - coordinates x, y, z)
+
+// Loop through all the vertices and set their random position
+for (let i = 0; i < particlesCount; i++) {
+  vertices[i] = (Math.random() - 0.75) * 9000; // -0.5 to get the range from -0.5 to 0.5 than * 100 to get a range from -50 to 50
+}
+
+particlesGeometry.setAttribute(
+  'position',
+  new THREE.BufferAttribute(vertices, 3) // 3 values for each vertex (x, y, z)
+  // Check the documentation for more info about this.
+);
+
+// Texture
+const textureLoader = new THREE.TextureLoader();
+const particleTexture = textureLoader.load('/particles/star.png'); // Add a texture to the particles
+
+// Material
+const particlesMaterial = new THREE.PointsMaterial({
+  map: particleTexture, // Texture
+  size: Math.random()* 0.5 + 5, // Size of the particles
+  sizeAttenuation: true, // size of the particle will be smaller as it gets further away from the camera, and if it's closer to the camera, it will be bigger
+});
+
+space = new THREE.Points(particlesGeometry, particlesMaterial);
+scene.add(space);
+
 
 }
 
@@ -1228,6 +1260,7 @@ document.addEventListener('keydown', (event) => {
 export function animate_objects() {
     // groundMesh.position.copy(groundBody.position);
     // groundMesh.quaternion.copy(groundBody.quaternion);
+    space.rotation.y += -0.0001;
 
 }
 
