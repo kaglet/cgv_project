@@ -25,7 +25,7 @@ class Wall {
 
         // Create Cannon.js wall
         const wallPhysMat = new CANNON.Material()
-        const wallShape = new CANNON.Box(new CANNON.Vec3(blockWidth / 2, 35, 2.5));
+        const wallShape = new CANNON.Box(new CANNON.Vec3(blockWidth / 2, 35 + 50, 2.5));
         this.body = new CANNON.Body({
             mass: 0,
             shape: wallShape,
@@ -79,8 +79,8 @@ class InnerWall {
         const wallPhysMat = new CANNON.Material();
 
         // Create two Cannon.js boxes for each part of the inner wall
-        const wallShape1 = new CANNON.Box(new CANNON.Vec3(partWidth / 2, 35, 15));
-        const wallShape2 = new CANNON.Box(new CANNON.Vec3(partWidth / 2, 35, 15));
+        const wallShape1 = new CANNON.Box(new CANNON.Vec3(partWidth / 2, 35+ 50, 15));
+        const wallShape2 = new CANNON.Box(new CANNON.Vec3(partWidth / 2, 35+ 50, 15));
 
         // Create Cannon.js bodies for each part
         this.body1 = new CANNON.Body({
@@ -143,7 +143,7 @@ class Gate {
 
         //  Create Cannon.js wall
         const gatePhysMat = new CANNON.Material()
-        const gateShape = new CANNON.Box(new CANNON.Vec3(25 / 2, 35, 1));
+        const gateShape = new CANNON.Box(new CANNON.Vec3(25 / 2, 35+ 50, 1));
         this.body = new CANNON.Body({
             mass: 0,
             shape: gateShape,

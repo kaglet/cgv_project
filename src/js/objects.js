@@ -21,8 +21,26 @@ export let levelAreas = [];
 
 // world - this is for cannon objects
 export var world = new CANNON.World({
-    gravity: new CANNON.Vec3(0, -25, 0)
+    gravity: new CANNON.Vec3(0, -20, 0)
 });
+
+const customMaterial = new CANNON.Material(); // Create a custom material // Adjust this value to control friction (0 to 1)
+
+// Set the friction properties for the custom material
+customMaterial.friction = 1;
+customMaterial.restitution = 0;
+
+// Set the default contact material for the world
+world.defaultContactMaterial = new CANNON.ContactMaterial(
+    customMaterial, // First material (can be the same as the second material)
+    customMaterial, // Second material (can be the same as the first material)
+    {
+        friction: 1, // Set the friction property for the contact material
+        restitution:0, // Set the friction property for the contact material
+    }
+);
+
+
 
 // TODO: Figure out what this does where its exported and why it is required
 export const raycaster = new THREE.Raycaster();
@@ -31,7 +49,7 @@ class floorContBody {
     constructor(container, num) {
         let size = 95;
         if (num == 4){
-            size = 72.5;
+            size = 73;
         }
 
     //    // Create floors bodies
@@ -49,7 +67,7 @@ class floorContBody {
        
         // Physics floor
         const floorContPhysMat = new CANNON.Material();
-        const floorContShape = new CANNON.Box(new CANNON.Vec3(size, size, 1)); // Half of your desired dimensions
+        const floorContShape = new CANNON.Box(new CANNON.Vec3(size, size, 10)); // Half of your desired dimensions
         this.body = new CANNON.Body({
             shape: floorContShape,
             type: CANNON.Body.STATIC,
@@ -58,7 +76,7 @@ class floorContBody {
         });
         this.body.collisionFilterGroup = 2;  // or any other number
         this.body.collisionFilterMask = -1;
-        this.body.position.copy(new CANNON.Vec3(container.position.x - 10, container.position.y - 1, container.position.z - 10));
+        this.body.position.copy(new CANNON.Vec3(container.position.x - 10, container.position.y - 4, container.position.z - 10));
         this.body.quaternion.setFromEuler(rotationAngle, 0, 0);
         world.addBody(this.body);
 
@@ -96,11 +114,11 @@ function createTile(index, round, container) {
         tile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
         // Add cylinders at each corner of the tile
         const cornerCylinderGeometry = new THREE.CylinderGeometry(0.1, 0.1, 5, 32); // Adjusted size
-        const cornerCylinderMaterial = new THREE.MeshStandardMaterial({ color: 0x888888 });
+        const cornerCylinderMaterial = new THREE.MeshStandardMaterial({ color: 0x505050 });
 
         // Add cubes on top of each cylinder
         const cubeGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5); // Cube dimensions
-        const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0x888888 });
+        const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0x505050});
 
         const tilePosition = tile.position.clone();
         const tileCorners = [
@@ -648,7 +666,7 @@ function Level4Primitives(){
     changePathColor(PiP4, pathPiP2AND3, 0x00FFFF);
 
     floorContainerYellow.scale.set(3, 3, 1);
-    floorContainerYellow.position.set(blockWidth / 2, 5, blockWidth - 40);
+    floorContainerYellow.position.set(blockWidth / 2, 6, blockWidth - 40);
     floorContainerYellow.rotation.set(rotationAngle, 0, 0);
 
 
