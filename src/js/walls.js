@@ -187,7 +187,7 @@ class Gate {
             // Set the hinge point (pivot) at the left vertical edge of the door
             let hingePoint = new THREE.Vector3(-20, 0, 0); // Adjust the values as needed
             if (gateNum == 2) {
-                hingePoint = new THREE.Vector3(0, 0, -20); // Adjust the values as needed
+                hingePoint = new THREE.Vector3(0, 0, -18); // Adjust the values as needed
             }
 
             // Calculate the rotation in radians (assuming angle is in degrees)

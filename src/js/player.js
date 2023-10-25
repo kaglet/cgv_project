@@ -63,7 +63,10 @@ class BasicCharacterController {
     //playerPhysMat.friction = 1000;
     playerBody = new CANNON.Body({
       mass: 100, // Adjust the mass as needed
-      position: new CANNON.Vec3(250, 10, 300),
+       position: new CANNON.Vec3(250, 10, 300),
+     // position: new CANNON.Vec3(10, 10, -300),
+
+      
       material: playerPhysMat
     });
 
