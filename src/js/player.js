@@ -35,6 +35,7 @@ let moveBackward = false;
 let moveLeft = false;
 let moveRight = false;
 let jumping=false;
+let onMaze = false;
 export var paused = false;
 
 export let playerBody;
@@ -111,37 +112,51 @@ class BasicCharacterController {
     //     // You can do the same for other axes (e.g., playerBody.velocity.y or playerBody.velocity.z)
     //   }
     // });
-    let onMaze = false;
-//    playerBody.addEventListener('collide', (event) => {
-//      const otherBody = event.body;
-//
-//      if (otherBody.collisionFilterGroup === 2 && !onMaze) {
-//        onMaze = true;
-//
-//        // Calculate the vector from player to otherBody's center
-//        const offset = new CANNON.Vec3();
-//        otherBody.position.vsub(playerBody.position, offset);
-//
-//        // Normalize the offset vector to get the direction
-//        offset.normalize();
-//
-//        // Scale the direction vector by 5 units (or any desired distance)
-//        offset.scale(1);
-//
-//        // Update player's position (x and z) accordingly
-//        playerBody.position.x -= offset.x;
-//        playerBody.position.z -= offset.z;
-//
-//        // Calculate the desired Y position for the player
-//        const desiredY = otherBody.position.y + height + 1; // Adjust as needed
-//        console.log(desiredY);
-//        // Adjust the player's Y position (Cannon.js)
-//        playerBody.position.y = desiredY;
-//        console.log(playerBody.position);
-//      } else if (otherBody.collisionFilterGroup === 1) {
-//        onMaze = false;
-//      }
-//    });
+  //   let onMaze = false;
+  //  playerBody.addEventListener('collide', (event) => {
+  //    const otherBody = event.body;
+
+  //    if (otherBody.collisionFilterGroup === 2 && !onMaze) {
+  //      onMaze = true;
+
+  //      // Calculate the vector from player to otherBody's center
+  //      const offset = new CANNON.Vec3();
+  //      otherBody.position.vsub(playerBody.position, offset);
+
+  //      // Normalize the offset vector to get the direction
+  //      offset.normalize();
+
+  //      // Scale the direction vector by 5 units (or any desired distance)
+  //      offset.scale(1);
+
+  //      // Update player's position (x and z) accordingly
+  //      playerBody.position.x -= offset.x;
+  //      playerBody.position.z -= offset.z;
+
+  //      // Calculate the desired Y position for the player
+  //      const desiredY = otherBody.position.y + height + 1; // Adjust as needed
+  //      console.log(desiredY);
+  //      // Adjust the player's Y position (Cannon.js)
+  //      playerBody.position.y = desiredY;
+  //      console.log(playerBody.position);
+  //    } else if (otherBody.collisionFilterGroup === 1) {
+  //      onMaze = false;
+  //    }
+  //  });
+
+  
+  playerBody.addEventListener('collide', (event) => {
+    const otherBody = event.body;
+
+    if (otherBody.collisionFilterGroup === 2 && !onMaze) {
+      onMaze = true;
+
+
+    } else if (otherBody.collisionFilterGroup === 1) {
+      onMaze = false;
+    }
+  });
+
 
 
   }
@@ -153,6 +168,7 @@ class BasicCharacterController {
 
     loader.load('./alex/ALEX.fbx', (fbx) => {
       characterModel = fbx;
+
       //fbx.position.y=-30;
       // fbx.rotation.y=10;
       fbx.scale.setScalar(0.1);
@@ -272,7 +288,7 @@ class BasicCharacterController {
              moveDirection.y=(0);
         }else
         {
-            moveDirection.y=1;
+            moveDirection.y=3;
             }
             //velocity.y += acc.y* timeInSeconds;
       }
@@ -866,7 +882,15 @@ export function animate_objects() {
   if (characterModel && playerBody) {
 
     characterModel.position.copy(playerBody.position);
-    //playerBody.position.copy(characterModel.position);
-    characterModel.position.y-=2;
+   // playerBody.position.copy(characterModel.position);
+
+    // if (onMaze == true){
+    //   setTimeout(function() {
+    //     characterModel.position.y-=2;
+    //     }, 1000);
+         
+    // }
+
+   // characterModel.position.y-=2;
   }
 }
