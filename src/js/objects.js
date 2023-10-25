@@ -6,6 +6,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { loadModels } from './models.js';
 //import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as camera from './camera.js';
+import * as sound from './sound.js';
 import * as player from './player.js';
 import groundImg from './textures/avinash-kumar-rEIDzqczN7s-unsplash.jpg';
 
@@ -211,21 +212,21 @@ class Gate {
             if (gateNum == 2){
                 hingePoint = new THREE.Vector3(0, 0, -18); // Adjust the values as needed
             }
-    
+
             // Calculate the rotation in radians (assuming angle is in degrees)
             const rotationAngle = angle;
-    
+
             // Step 1: Translate the door to the hinge point
           this.inverseHingePoint = hingePoint.clone().negate();
-           
-        
+
+
             // this.model.rotation.set(0, rotationAngle, 0); // Update the Three.js rotation
             this.startOpeningAnimation(rotationAngle);
             this.model.position.add(this.inverseHingePoint);
 
             this.body.quaternion.setFromEuler(0, rotationAngle, 0);
             this.body.position.copy(this.model.position);
-    
+
             // Step 3: Translate the door back to its original position
           //  this.model.position.sub(this.inverseHingePoint);
         }
@@ -237,7 +238,7 @@ class Gate {
             // If an animation is already in progress, ignore the request
             return;
         }
-        
+
         this.targetAngle += angle;
         this.animateOpen();
     }
@@ -258,7 +259,7 @@ class Gate {
             // Set the position of the model's pivot point
             // this.model.position.copy(this.body.position);
             // this.model.quaternion.copy(this.body.quaternion);
-            this.model.rotation.set(0, this.currentAngle, 0); // 
+            this.model.rotation.set(0, this.currentAngle, 0); //
 
             // Request the next frame
             requestAnimationFrame(() => this.animateOpen());
@@ -309,10 +310,12 @@ function puzzComplete(puzz) {
     if (puzz == 'Blue') {
 
         puzz1Gate.opengate((Math.PI / 2),3);
+        Level2Primitives();
 
     }
     else if (puzz == 'Red') {
         puzz2Gate.opengate((Math.PI / 2), 2);
+        Level3Primitives();
     }
 
 
@@ -395,6 +398,8 @@ function createTile(index, round, container) {
     tile.userData.tileNumber = index; // Store the tile number in user data
     tile.castShadow = true;
     tile.receiveShadow = true;
+    tile.userData.tileVisits = 0;
+    tile.userData.PlayerOnTile = false;
 
 
 
@@ -713,103 +718,6 @@ function helperSquares() {
 
 }
 
-function PiP() {
-
-    // Iterate through all objects in PiP2
-    PiP1.children.forEach((tile) => {
-        tile.material = tile.material.clone();
-        tile.material.transparent = false;
-        tile.material.opacity = 1;
-    });
-
-
-    // Iterate through all objects in PiP2
-    PiP2.children.forEach((tile) => {
-        tile.material = tile.material.clone();
-        tile.material.transparent = false;
-        tile.material.opacity = 1;
-    });
-
-    // Iterate through all objects in PiP2
-    PiP3.children.forEach((tile) => {
-        tile.material = tile.material.clone();
-        tile.material.transparent = false;
-        tile.material.opacity = 1;
-    });
-
-
-
-    //PiP3 Creation
-    PiP3.scale.set(0.12, 0.12, 0.12);
-    PiP3.position.set(blockWidth / 2 + 0.5 + 30, 20, 111);
-    PiP3.rotation.set(Math.PI, 0, 0);
-    //PiP3 Pole
-    const poleGeometry = new THREE.CylinderGeometry(0.75, 0.75, 35, 50);
-    const poleMaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
-    const pole3 = new THREE.Mesh(poleGeometry, poleMaterial);
-    scene.add(pole3);
-    pole3.position.set(175 + 30, 0, 110);
-    //PiP3 Sign
-    const signwallgeometry = new THREE.BoxGeometry(10, 10, 1.4);
-    const signmaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
-    const signwall3 = new THREE.Mesh(signwallgeometry, signmaterial);
-    scene.add(signwall3)
-    signwall3.position.set(175 + 30, 20, 110);
-    //PiP3 base
-    const PiPBaseGeometry = new THREE.BoxGeometry(7, 7, 0.5);
-    const PiPBaseMaterial3 = new THREE.MeshStandardMaterial({ color: 0xFFA500 });
-    const PiPBase3 = new THREE.Mesh(PiPBaseGeometry, PiPBaseMaterial3);
-    scene.add(PiPBase3);
-    PiPBase3.position.set(175 + 30, 20, 110.5);
-
-
-    //PiP1 Creation
-    PiP1.scale.set(0.12, 0.12, 0.12);
-    PiP1.position.set(-blockWidth / 2 + 142.5 - 30, 20, - blockWidth + 0.6 + 7);
-    PiP1.rotation.set(0, -Math.PI / 2, -Math.PI);
-    //PiP1 Pole
-    const pole1 = new THREE.Mesh(poleGeometry, poleMaterial);
-    scene.add(pole1);
-    pole1.position.set(-blockWidth / 2 + 141 - 30, 0, - blockWidth + 0.5 + 7);
-    //PiP1 Sign
-    const signwall1 = new THREE.Mesh(signwallgeometry, signmaterial);
-    scene.add(signwall1);
-    signwall1.position.set(-blockWidth / 2 + 141 - 30, 20, - blockWidth + 0.8 + 7);
-    signwall1.rotation.set(0, Math.PI / 2, 0);
-    //PiP Base 1
-    const PiPBaseMaterial1 = new THREE.MeshStandardMaterial({ color: 0x006400 });
-    const PiPBase1 = new THREE.Mesh(PiPBaseGeometry, PiPBaseMaterial1);
-    scene.add(PiPBase1);
-    PiPBase1.position.set(-blockWidth / 2 + 142 - 30, 20.3, - blockWidth + 0.8 - 0.4 + 7.5);
-    PiPBase1.rotation.set(0, Math.PI / 2, 0);
-    scene.add(PiPBase1);
-
-
-    //PiP2 Creation
-    PiP2.scale.set(0.12, 0.12, 0.12);
-    PiP2.position.set(blockWidth / 2 + 0.65 + 30, 20, -218);
-    PiP2.rotation.set(Math.PI, 0, 0);
-    //PiP2 Pole
-    const pole2 = new THREE.Mesh(poleGeometry, poleMaterial);
-    scene.add(pole2);
-    pole2.position.set(blockWidth / 2 + 0.5 + 30, 0, -220);
-    //PiP2 Sign
-    const signwall2 = new THREE.Mesh(signwallgeometry, signmaterial);
-    scene.add(signwall2);
-    signwall2.position.set(blockWidth / 2 + 0.5 + 30, 20, -220);
-    //PiP Base 2
-    const PiPBaseMaterial2 = new THREE.MeshStandardMaterial({ color: 0xff00ff });
-    const PiPBase2 = new THREE.Mesh(PiPBaseGeometry, PiPBaseMaterial2);
-    scene.add(PiPBase2);
-    PiPBase2.position.set(blockWidth / 2 + 0.3 + 30, 20.2, -219);
-    scene.add(PiPBase2);
-
-    scene.add(PiP1);
-    scene.add(PiP2);
-    scene.add(PiP3);
-
-
-}
 
 function sky() {
 
@@ -911,53 +819,137 @@ function ground() {
 
 }
 
-function makeMazes() {
+//Pole properties
+const poleGeometry = new THREE.CylinderGeometry(0.75, 0.75, 35, 50);
+const poleMaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
+const signwallgeometry = new THREE.BoxGeometry(10, 10, 1.4);
+const signmaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
+const PiPBaseGeometry = new THREE.BoxGeometry(7,7,0.5);
+const PiPBaseMaterial3 = new THREE.MeshStandardMaterial({color: 0xFFA500});
 
-
-    scene.add(floorContainerGreen);
-    scene.add(floorContainerRed);
+function Level1Primitives(){
+    //Loading all Level 1 primitives
     scene.add(floorContainerBlue);
-
-
-    // Call the function to draw the first grid with omissions
-    drawGridWithOmissions(floorContainerGreen, [], 1);
-    drawGridWithOmissions(floorContainerRed, [30, 38, 78], 5);
     drawGridWithOmissions(floorContainerBlue, [28, 30, 42, 52, 76], 19);
 
-    changePathColor(floorContainerGreen, path1, 0x00ff00); // Green
-    changePathColor(floorContainerRed, path2, 0xff0000); // Red
-    changePathColor(floorContainerBlue, path3, 0x0000FF);//blue
+    //Creating PiP
+    drawPiP(PiP3, [], 3);
+    changePathColor(PiP3, pathPiP2AND3, 0xFFA500);
+
+    //Scaling Map
+    floorContainerBlue.scale.set(4, 4, 1);
+    floorContainerBlue.position.set(blockWidth / 2, 5, 0);
+    floorContainerBlue.rotation.set(rotationAngle, 0, 0);
+
+    //Drawing PiP
+    PiP3.children.forEach((tile) => {
+        tile.material = tile.material.clone();
+        tile.material.transparent = false;
+        tile.material.opacity = 1;
+    });
+
+    //PiP3 Creation
+    PiP3.scale.set(0.12, 0.12, 0.12);
+    PiP3.position.set(blockWidth / 2 + 0.5 + 30, 20, 111);
+    PiP3.rotation.set(Math.PI, 0, 0);
+    //PiP3 Pole
+    const pole3 = new THREE.Mesh(poleGeometry, poleMaterial);
+    scene.add(pole3);
+    pole3.position.set(175 + 30, 0, 110);
+    //PiP3 Sign
+    const signwall3 = new THREE.Mesh(signwallgeometry, signmaterial);
+    scene.add(signwall3)
+    signwall3.position.set(175 + 30, 20, 110);
+    //PiP3 base
+    const PiPBase3 = new THREE.Mesh(PiPBaseGeometry,PiPBaseMaterial3);
+    scene.add(PiPBase3);
+    PiPBase3.position.set(175 + 30, 20, 110.5);
+    scene.add(PiP3);
+
+}
+
+function Level2Primitives(){
+    scene.add(floorContainerRed);
+    drawGridWithOmissions(floorContainerRed, [30, 38, 78], 5);
+    drawPiP(PiP2, [], 2);
+    changePathColor(PiP2, pathPiP2AND3, 0xff00ff);
+    floorContainerRed.scale.set(4, 4, 1);
+    floorContainerRed.position.set(blockWidth / 2, 5, - blockWidth);
+    floorContainerRed.rotation.set(rotationAngle, 0, 0);
+
+    // Iterate through all objects in PiP2
+    PiP2.children.forEach((tile) => {
+        tile.material = tile.material.clone();
+        tile.material.transparent = false;
+        tile.material.opacity = 1;
+    });
+
+     //PiP2 Creation
+     PiP2.scale.set(0.12, 0.12, 0.12);
+     PiP2.position.set(blockWidth / 2 + 0.65 + 30, 20, -218);
+     PiP2.rotation.set(Math.PI, 0, 0);
+     //PiP2 Pole
+     const pole2 = new THREE.Mesh(poleGeometry, poleMaterial);
+     scene.add(pole2);
+     pole2.position.set(blockWidth / 2 + 0.5 + 30, 0, -220);
+     //PiP2 Sign
+     const signwall2 = new THREE.Mesh(signwallgeometry, signmaterial);
+     scene.add(signwall2);
+     signwall2.position.set(blockWidth / 2 + 0.5 + 30, 20, -220);
+     //PiP Base 2
+     const PiPBaseMaterial2 = new THREE.MeshStandardMaterial({color: 0xff00ff});
+     const PiPBase2 = new THREE.Mesh(PiPBaseGeometry,PiPBaseMaterial2);
+     scene.add(PiPBase2);
+     PiPBase2.position.set(blockWidth / 2 + 0.3 + 30, 20.2, -219);
+     scene.add(PiPBase2);
+     scene.add(PiP2);
+
+
+}
+
+function Level3Primitives(){
+    scene.add(floorContainerGreen);
+    drawGridWithOmissions(floorContainerGreen, [], 1);
 
     //Draw PiPs
     drawPiP(PiP1, [], 1);
     changePathColor(PiP1, pathPiP2AND3, 0x006400);
-
-    drawPiP(PiP2, [], 2);
-    changePathColor(PiP2, pathPiP2AND3, 0xff00ff);
-
-    drawPiP(PiP3, [], 3);
-    changePathColor(PiP3, pathPiP2AND3, 0xFFA500);
-
-
-
-
-    //scales map path
     floorContainerGreen.scale.set(4, 4, 1);
-    floorContainerRed.scale.set(4, 4, 1);
-    floorContainerBlue.scale.set(4, 4, 1);
+    floorContainerGreen.position.set(-blockWidth / 2, 5, - blockWidth);
+    floorContainerGreen.rotation.set(rotationAngle, 0, 0);
 
-    floorContainerGreen.position.set(-blockWidth / 2, 5, - blockWidth - 22);
-    floorContainerRed.position.set(blockWidth / 2, 5, - blockWidth);
-    floorContainerBlue.position.set(blockWidth / 2, 5, 0);
+    // Iterate through all objects in PiP1
+    PiP1.children.forEach((tile) => {
+        tile.material = tile.material.clone();
+        tile.material.transparent = false;
+        tile.material.opacity = 1;
+    });
 
+     //PiP1 Creation
+     PiP1.scale.set(0.12, 0.12, 0.12);
+     PiP1.position.set(-blockWidth / 2 + 142.5 - 30, 20, - blockWidth + 0.6 + 30);
+     PiP1.rotation.set(-Math.PI / 2, -Math.PI / 2, -Math.PI);
+     //PiP1 Pole
+     const pole1 = new THREE.Mesh(poleGeometry, poleMaterial);
+     scene.add(pole1);
+     pole1.position.set(-blockWidth / 2 + 141 - 30, 0, - blockWidth + 0.5 + 30);
+     //PiP1 Sign
+     const signwall1 = new THREE.Mesh(signwallgeometry, signmaterial);
+     scene.add(signwall1);
+     signwall1.position.set(-blockWidth / 2 + 141 - 30, 20, - blockWidth + 0.8 + 30);
+     signwall1.rotation.set(0, Math.PI / 2, 0);
+     //PiP Base 1
+     const PiPBaseMaterial1 = new THREE.MeshStandardMaterial({color: 0x006400});
+     const PiPBase1 = new THREE.Mesh(PiPBaseGeometry,PiPBaseMaterial1);
+     scene.add(PiPBase1);
+     PiPBase1.position.set(-blockWidth / 2 + 142 - 30, 20.3, - blockWidth + 0.8 - 0.4 + 30);
+     PiPBase1.rotation.set(0, Math.PI / 2, 0);
+     scene.add(PiPBase1);
 
-
-    floorContainerGreen.rotation.set(rotationAngle, 0, -Math.PI / 2);
-
-    floorContainerRed.rotation.set(rotationAngle, 0, 0);
-    floorContainerBlue.rotation.set(rotationAngle, 0, 0);
+     scene.add(PiP1);
 
 }
+
 
 
 function tileLights() {
@@ -979,6 +971,7 @@ function tileLights() {
             let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
 
             if (tile.litUp === false && inXBounds && inZBounds && Math.abs(player.characterModel.position.y - tileWorldPosition.y) < epsilon) {
+                sound.setGlass(true);
                 const tileColor = new THREE.Color(0, 255, 0);
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
@@ -1020,6 +1013,7 @@ function tileLights() {
             let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
 
             if (tile.litUp === false && inXBounds && inZBounds && Math.abs(player.characterModel.position.y - tileWorldPosition.y) < epsilon) {
+                 sound.setGlass(true);
                 const tileColor = new THREE.Color(255, 0, 0);
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
@@ -1047,10 +1041,27 @@ function tileLights() {
             }
         });
 
+        let L3Stack = [];
+        let newTile = 0;
         floorContainerBlue.children.forEach((tile, index) => {
             const epsilon = 3; // Small epsilon value to handle floating point errors
             const tileWorldPosition = new THREE.Vector3();
             tile.getWorldPosition(tileWorldPosition);
+
+        //    let aTile = false;
+        //     let prevTile = undefined;
+        //     if (L3Stack.length != 0){
+        //         prevTile = L3Stack.pop();
+        //         if(prevTile != tile.userData.tileNumber && prevTile!= undefined){
+        //             aTile = true;
+        //         }else{
+        //             aTile = false;
+        //         }
+        //     }else{
+        //         aTile = true;
+        //     }
+
+
 
             let boundingBox = new THREE.Box3().setFromObject(tile);
             let size = new THREE.Vector3();
@@ -1062,11 +1073,15 @@ function tileLights() {
             let inXBounds = tileWorldPosition.x - rangeInX <= player.characterModel.position.x && player.characterModel.position.x <= tileWorldPosition.x + rangeInX;
             let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
 
-            if (tile.litUp === false && inXBounds && inZBounds && Math.abs(player.characterModel.position.y - tileWorldPosition.y) < epsilon) {
-                const tileColor = new THREE.Color(0, 0, 255);
-                // TODO: Change color of all faces of cube to blue currently only default front face is changed
-                tile.material.color.copy(tileColor);
 
+
+
+            newTile = litUpTiles3[litUpTiles3.length - 1];
+            if ( tile.litUp === false && inXBounds && inZBounds && Math.abs(player.characterModel.position.y - tileWorldPosition.y) < epsilon) {
+                 sound.setGlass(true);
+                const tileColor = new THREE.Color(0, 0, 255);
+                tile.material.color.copy(tileColor);
+                L3Stack.push(tile.userData.tileNumber);
                 tile.litUp = true;
                 if (tile.userData.tileNumber == 19) {
                     tile.semicircleMesh3.litUp = true;
@@ -1078,13 +1093,17 @@ function tileLights() {
                     console.log("Path 3 correct.");
                     puzzComplete("Blue");
                 }
-                // TODO: Make tiles sink also upon intersection, just shift slightly in the z
-                // How do I position the tiles, is it within the floor container, using current position -= 1 for z for example or do I do a local transformation in floor?
-                // TODO: Elevate tiles a bit from the ground they are on or simply shift the whole floor container
                 const whiteTile = new THREE.Color(255, 255, 255);
                 PiP3.children[tile.userData.tileNumber - 1].material.color.copy(whiteTile);
+            }/*else if(tile.userData.tileVisits % 2 != 0 && newTile != tile.userData.tileNumber && tile.litUp == true && inXBounds && inZBounds && Math.abs(player.characterModel.position.y - tileWorldPosition.y) < 3){
+                tile.material.copy(tileMaterial);
 
-            }
+                //litUpTiles3 = litUpTiles3.filter(item => item !== tile.userData.tileNumber);
+                tile.litUp =  false;
+                PiP3.children[tile.userData.tileNumber - 1].material.color.set(0x444444);
+            }*/
+
+
         });
     }
 
@@ -1130,7 +1149,7 @@ helperSquares();
 // DEFINE MAZE GRID
 // Define tile size and gap size
 const tileSize = 5; // Adjust the size of each tile
-const gapSize = 0.2; // Adjust the size of the gap
+const gapSize = 0.5; // Adjust the size of the gap
 
 const numRows = 9;
 const numCols = 9;
@@ -1173,13 +1192,13 @@ export const floorContainerBlue = new THREE.Group();
 export const PiP2 = new THREE.Group();
 export const PiP1 = new THREE.Group();
 export const PiP3 = new THREE.Group();
-makeMazes();
+//makeMazes();
 
-
+Level1Primitives();
 addFloorBodies();
 
 
-PiP();
+
 
 
 let lobbyGate;
