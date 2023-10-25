@@ -16,6 +16,7 @@
 
 :root {
     --orange-shade: rgb(214, 140, 2);
+    --orange-shade-translucent: rgb(214, 140, 2, 0.5);
 }
 
 * {
@@ -78,22 +79,24 @@ li {
     font-weight: 800;
     letter-spacing: 0.2rem;
     text-align: center;
-    padding: 0.5rem 0rem;
+    padding: 0.5rem 0.7rem;
+    margin-bottom: 1rem;
 }
 
 /* Give special styling to first list element child */
 li:first-child {
-    border: 1px solid var(--orange-shade);
+    outline: 1px solid var(--orange-shade-translucent);
     color: var(--orange-shade);
 }
 
 li:first-child:hover {
     background-color: var(--orange-shade);
+    outline: 1px solid var(--orange-shade);
     color: rgba(155, 0, 0, 0);
 }
 
 /* Give light special styling to active buttons */
 li.active,
 li:hover {
-
+    outline: 1px solid rgb(245, 245, 245, 0.5);
 }
