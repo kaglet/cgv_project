@@ -69,16 +69,18 @@ function puzzComplete(puzz) {
     else if (puzz == 'Blue') {
 
         walls.puzz1Gate.opengate((Math.PI / 2), 3);
-        Level2Primitives();
-
+        
     }
     else if (puzz == 'Red') {
         walls.puzz2Gate.opengate((Math.PI / 2), 2);
-        Level3Primitives();
+
+        
     }
 
 
 }
+
+
 
 
 function createTile(index, round, container) {
@@ -535,20 +537,20 @@ function Level1Primitives() {
 
     //PiP3 Creation
     PiP3.scale.set(0.12, 0.12, 0.12);
-    PiP3.position.set(blockWidth / 2 + 0.5 + 30, 20, 111);
+    PiP3.position.set(blockWidth / 2 + 0.5 + 110, 20, 91);
     PiP3.rotation.set(Math.PI, 0, 0);
     //PiP3 Pole
     const pole3 = new THREE.Mesh(poleGeometry, poleMaterial);
     scene.add(pole3);
-    pole3.position.set(175 + 30, 0, 110);
+    pole3.position.set(175 + 110, 0, 90);
     //PiP3 Sign
     const signwall3 = new THREE.Mesh(signwallgeometry, signmaterial);
     scene.add(signwall3)
-    signwall3.position.set(175 + 30, 20, 110);
+    signwall3.position.set(175 + 110, 20, 90);
     //PiP3 base
     const PiPBase3 = new THREE.Mesh(PiPBaseGeometry, PiPBaseMaterial3);
     scene.add(PiPBase3);
-    PiPBase3.position.set(175 + 30, 20, 110.5);
+    PiPBase3.position.set(175 + 110, 20, 90.5);
     scene.add(PiP3);
     const floorBody3 = new floorContBody(floorContainerBlue);
 }
@@ -571,21 +573,21 @@ function Level2Primitives() {
 
     //PiP2 Creation
     PiP2.scale.set(0.12, 0.12, 0.12);
-    PiP2.position.set(blockWidth / 2 + 0.65 + 30, 20, -218);
+    PiP2.position.set(blockWidth / 2 + 0.65 + 110, 20, -258);
     PiP2.rotation.set(Math.PI, 0, 0);
     //PiP2 Pole
     const pole2 = new THREE.Mesh(poleGeometry, poleMaterial);
     scene.add(pole2);
-    pole2.position.set(blockWidth / 2 + 0.5 + 30, 0, -220);
+    pole2.position.set(blockWidth / 2 + 0.5 + 110, 0, -260);
     //PiP2 Sign
     const signwall2 = new THREE.Mesh(signwallgeometry, signmaterial);
     scene.add(signwall2);
-    signwall2.position.set(blockWidth / 2 + 0.5 + 30, 20, -220);
+    signwall2.position.set(blockWidth / 2 + 0.5 + 110, 20, -260);
     //PiP Base 2
     const PiPBaseMaterial2 = new THREE.MeshStandardMaterial({ color: 0xff00ff });
     const PiPBase2 = new THREE.Mesh(PiPBaseGeometry, PiPBaseMaterial2);
     scene.add(PiPBase2);
-    PiPBase2.position.set(blockWidth / 2 + 0.3 + 30, 20.2, -219);
+    PiPBase2.position.set(blockWidth / 2 + 0.3 + 110, 20.2, -259);
     scene.add(PiPBase2);
     scene.add(PiP2);
     const floorBody2 = new floorContBody(floorContainerRed);
@@ -613,22 +615,22 @@ function Level3Primitives() {
 
     //PiP1 Creation
     PiP1.scale.set(0.12, 0.12, 0.12);
-    PiP1.position.set(-blockWidth / 2 + 142.5 - 30, 20, - blockWidth + 0.6 + 30);
+    PiP1.position.set(-blockWidth / 2 + 142.5 - 50, 20, - blockWidth + 0.6 + 110);
     PiP1.rotation.set(-Math.PI / 2, -Math.PI / 2, -Math.PI);
     //PiP1 Pole
     const pole1 = new THREE.Mesh(poleGeometry, poleMaterial);
     scene.add(pole1);
-    pole1.position.set(-blockWidth / 2 + 141 - 30, 0, - blockWidth + 0.5 + 30);
+    pole1.position.set(-blockWidth / 2 + 141 - 50, 0, - blockWidth + 0.5 + 110);
     //PiP1 Sign
     const signwall1 = new THREE.Mesh(signwallgeometry, signmaterial);
     scene.add(signwall1);
-    signwall1.position.set(-blockWidth / 2 + 141 - 30, 20, - blockWidth + 0.8 + 30);
+    signwall1.position.set(-blockWidth / 2 + 141 - 50, 20, - blockWidth + 0.8 + 110);
     signwall1.rotation.set(0, Math.PI / 2, 0);
     //PiP Base 1
     const PiPBaseMaterial1 = new THREE.MeshStandardMaterial({ color: 0x006400 });
     const PiPBase1 = new THREE.Mesh(PiPBaseGeometry, PiPBaseMaterial1);
     scene.add(PiPBase1);
-    PiPBase1.position.set(-blockWidth / 2 + 142 - 30, 20.3, - blockWidth + 0.8 - 0.4 + 30);
+    PiPBase1.position.set(-blockWidth / 2 + 142 - 50, 20.3, - blockWidth + 0.8 - 0.4 + 110);
     PiPBase1.rotation.set(0, Math.PI / 2, 0);
     scene.add(PiPBase1);
 

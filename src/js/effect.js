@@ -99,7 +99,7 @@ const _NOISE_GLSL = `
             for (int i = 0; i < 6; ++i) {
                 value += amplitude * snoise(p);
                 p *= 2.0;
-                amplitude *= 0.5;
+                amplitude *= 0.8;
             }
             return value;
             }
@@ -113,15 +113,15 @@ THREE.ShaderChunk.fog_fragment = `
 
       // f(p) = fbm( p + fbm( p ) )
       vec3 noiseSampleCoord = vWorldPosition * 0.00025 + vec3(
-          0.0, 0.0, fogTime * 0.025);
-      float noiseSample = FBM(noiseSampleCoord + FBM(noiseSampleCoord)) * 0.5 + 0.5;
+          0.0, 0.0, fogTime * 0.00025);
+      float noiseSample = FBM(noiseSampleCoord * 2.0 + FBM(noiseSampleCoord)) * 0.9 + 0.9;
       fogDepth *= mix(noiseSample, 1.0, saturate((fogDepth - 5000.0) / 5000.0));
       fogDepth *= fogDepth;
 
       float heightFactor = 0.05;
       float fogFactor = heightFactor * exp(-fogOrigin.y * fogDensity) * (
           1.0 - exp(-fogDepth * fogDirection.y * fogDensity)) / fogDirection.y;
-      fogFactor = saturate(fogFactor);
+      fogFactor = saturate((fogFactor) * 0.7);
 
       gl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, fogFactor );
     #endif`;
@@ -149,6 +149,13 @@ THREE.ShaderChunk.fog_fragment = `
       varying vec3 vWorldPosition;
     #endif`;
 
-   
+    // let shaders = [];
+    // const ModifyShader_ = (s) => {
+    //   shaders.push(s);
+    //   s.uniforms.fogTime = {value: 0.0};
+    // }
+
     
-    export const fog = new THREE.FogExp2(0xDFE9F3,  0.0001);
+    
+    //export const fog = new THREE.FogExp2(0xDFE9F3,  0.0001);  //0xC0C0C0
+    export const fog = new THREE.FogExp2(0xC0C0C0,  0.0001);
