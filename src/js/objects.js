@@ -8,6 +8,7 @@ import { loadModels } from './models.js';
 import * as camera from './camera.js';
 import * as sound from './sound.js';
 import * as player from './player.js';
+import * as effects from './effect.js';
 import * as sky from './sky.js';
 import * as walls from './walls.js';
 import groundImg from './textures/avinash-kumar-rEIDzqczN7s-unsplash.jpg';
@@ -554,7 +555,6 @@ function Level1Primitives() {
     PiPBase3.position.set(175 + 30, 20, 110.5);
     scene.add(PiP3);
     const floorBody3 = new floorContBody(floorContainerBlue);
-
 }
 
 function Level2Primitives() {
@@ -1086,3 +1086,11 @@ export function animate_lights() {
 // load takes three arguments, path to file, and a callback function, another function that tells about the progress of the loading process (don't need it so set to undefined), foruth parameter is a function we can use to tell if an error occurs
 // use asset loader to load .gltf from path
 // model is stored as property of gltf object whose key is scene
+
+//Add Fog
+scene.fog = effects.fog;
+
+
+   
+
+
