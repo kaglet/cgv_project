@@ -118,7 +118,7 @@ THREE.ShaderChunk.fog_fragment = `
       fogDepth *= mix(noiseSample, 1.0, saturate((fogDepth - 5000.0) / 5000.0));
       fogDepth *= fogDepth;
 
-      float heightFactor = 0.05;
+      float heightFactor = 0.03;
       float fogFactor = heightFactor * exp(-fogOrigin.y * fogDensity) * (
           1.0 - exp(-fogDepth * fogDirection.y * fogDensity)) / fogDirection.y;
       fogFactor = saturate((fogFactor) * 0.7);
@@ -158,4 +158,4 @@ THREE.ShaderChunk.fog_fragment = `
     
     
     //export const fog = new THREE.FogExp2(0xDFE9F3,  0.0001);  //0xC0C0C0
-    export const fog = new THREE.FogExp2(0xC0C0C0,  0.0001);
+    export const fog = new THREE.FogExp2(0x9cacd4,  0.0001);

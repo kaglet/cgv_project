@@ -183,7 +183,7 @@ function plants() {
 }
 
 
-function loadAndSetupModels(loader, scene, world, models) {
+function loadAndSetupModels(loader, scene, world, models, physics) {
     models.forEach(modelDescription => {
         const { modelPath, scale, position, rotation } = modelDescription;
 
@@ -252,7 +252,7 @@ export function loadModels(loader, scene, world, blockWidth) {
   //  plants();
 
     modelsToLoad.push({ modelPath: '/ground_material.glb', scale: 1, position: [0, -1, 0], rotation: Math.PI / 2 });
-    modelsToLoad.push({ modelPath: '/lion_statue.glb', scale: 30, position: [103, -5, 50], rotation: 0 });
+   // modelsToLoad.push({ modelPath: '/lion_statue.glb', scale: 30, position: [103, -5, 50], rotation: 0 });
 
     lobby(loader, scene, world);
 

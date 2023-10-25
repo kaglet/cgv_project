@@ -467,7 +467,7 @@ class BasicCharacterControllerInput {
           break;
        case 32: // d
         jumping = true;
-        sound.moveSound.stop();
+        sound.moveSound.pause();
         soundPlaying=false;
         jumpSound.play();
         break;
@@ -511,7 +511,7 @@ class BasicCharacterControllerInput {
          break;
     }
     if (!moveForward && !moveBackward && !moveRight && !moveLeft) {
-      sound.moveSound.stop();
+      sound.moveSound.pause();
       soundPlaying=false;
     }
   }
