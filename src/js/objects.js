@@ -674,9 +674,9 @@ function addWalls() {
 
 function addFloorBodies() {
 
-    const floorBody1 = new floorContBody(floorContainerGreen);
-    const floorBody2 = new floorContBody(floorContainerRed);
-    const floorBody3 = new floorContBody(floorContainerBlue);
+   
+   
+    
 
 
 
@@ -865,6 +865,7 @@ function Level1Primitives(){
     scene.add(PiPBase3);
     PiPBase3.position.set(175 + 30, 20, 110.5);
     scene.add(PiP3);
+    const floorBody3 = new floorContBody(floorContainerBlue);
 
 }
 
@@ -903,8 +904,9 @@ function Level2Primitives(){
      PiPBase2.position.set(blockWidth / 2 + 0.3 + 30, 20.2, -219);
      scene.add(PiPBase2);
      scene.add(PiP2);
-
-
+     const floorBody2 = new floorContBody(floorContainerRed);
+   
+    
 }
 
 function Level3Primitives(){
@@ -947,7 +949,8 @@ function Level3Primitives(){
      scene.add(PiPBase1);
 
      scene.add(PiP1);
-
+     const floorBody1 = new floorContBody(floorContainerGreen);
+    
 }
 
 
