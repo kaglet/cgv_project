@@ -24,10 +24,11 @@ const renderer = new THREE.WebGLRenderer({
   antialias: true,
 });
 
-renderer.outputEncoding = THREE.sRGBEncoding;
-renderer.gammaInput = true;
-renderer.gammaOutput = true;
-renderer.shadowMap.enabled = true;
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
 
 function showStartButton() {
   const startButton = document.getElementById('start-button');
@@ -45,12 +46,8 @@ function _OnWindowResize() {
 window.onload = showStartButton;
 
 function startGame() {
-  
-  renderer.outputEncoding = THREE.sRGBEncoding;
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
+
+
 
   document.body.appendChild(renderer.domElement);
 

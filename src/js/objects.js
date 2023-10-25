@@ -64,7 +64,7 @@ class floorContBody {
     //     this.mesh = new THREE.Mesh(floorContGeo, floorContMat);
     //     scene.add(this.mesh);
 
-       
+
         // Physics floor
         const floorContPhysMat = new CANNON.Material();
         const floorContShape = new CANNON.Box(new CANNON.Vec3(size, size, 10)); // Half of your desired dimensions
@@ -114,6 +114,9 @@ function createTile(index, round, container) {
     if (index != 81) {
 
         tile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
+        tile.material.shadowSide = THREE.FrontSide;
+        tile.receiveShadow=true;
+        tile.castShadow=true;
         // Add cylinders at each corner of the tile
         const cornerCylinderGeometry = new THREE.CylinderGeometry(0.1, 0.1, 5, 32); // Adjusted size
         const cornerCylinderMaterial = new THREE.MeshStandardMaterial({ color: 0x505050 });
@@ -139,6 +142,7 @@ function createTile(index, round, container) {
             semicircleMesh1.rotation.x = Math.PI;
             // Add the semicircle to your scene
             tile.add(semicircleMesh1);
+
             tile.semicircleMesh1 = semicircleMesh1;
         }
         if (index == 5 && container == floorContainerRed) {
@@ -420,6 +424,10 @@ function drawGridWithOmissions(container, omittedTiles = [], round) {
                     const yOffset = (j - numCols / 2) * (tileSize + gapSize);
                     tile.name = 'tile';
                     tile.litUp = false;
+                    const tileColor = new THREE.Color(0, 0, 0, 0);
+                    if(tileNumber !=81){
+                        tile.material.color.copy(tileColor);
+                    }
                     tile.position.set(xOffset, yOffset, 0);
                     tile.updateWorldMatrix(true, false);
                     container.add(tile);                    // Add the tile to the specified container
@@ -510,12 +518,14 @@ function ground() {
     // Create ground
     const groundGeo = new THREE.PlaneGeometry(1500, 1500);
     const groundMat = new THREE.MeshStandardMaterial({
+        castShadow:true,
         receiveShadow: true,
         map: groundTexture,
         side: THREE.DoubleSide,
     });
 
     const groundMesh = new THREE.Mesh(groundGeo, groundMat);
+    groundMesh.receiveShadow=true;
     scene.add(groundMesh);
 
     const groundPhysMat = new CANNON.Material();
@@ -557,20 +567,24 @@ function Level1Primitives() {
 
     //PiP3 Creation
     PiP3.scale.set(0.12, 0.12, 0.12);
-    PiP3.position.set(blockWidth / 2 + 100, 20, 101);
+    PiP3.position.set(blockWidth / 2 + 0.5 + 110, 20, 91);
     PiP3.rotation.set(Math.PI, 0, 0);
     //PiP3 Pole
     const pole3 = new THREE.Mesh(poleGeometry, poleMaterial);
+    pole3.castShadow = true;
+    pole3.receiveShadow = true;
     scene.add(pole3);
-    pole3.position.set(175 + 100, 0, 100);
+    pole3.position.set(175 + 110, 0, 90);
     //PiP3 Sign
     const signwall3 = new THREE.Mesh(signwallgeometry, signmaterial);
+    signwall3.castShadow = true;
+    signwall3.receiveShadow = true;
     scene.add(signwall3)
-    signwall3.position.set(175 + 100, 20, 100);
+    signwall3.position.set(175 + 110, 20, 90);
     //PiP3 base
     const PiPBase3 = new THREE.Mesh(PiPBaseGeometry, PiPBaseMaterial3);
     scene.add(PiPBase3);
-    PiPBase3.position.set(175 + 100, 20, 100.5);
+    PiPBase3.position.set(175 + 110, 20, 90.5);
     scene.add(PiP3);
     const floorBody3 = new floorContBody(floorContainerBlue,1);
 }
@@ -593,21 +607,25 @@ function Level2Primitives() {
 
     //PiP2 Creation
     PiP2.scale.set(0.12, 0.12, 0.12);
-    PiP2.position.set(blockWidth / 2 + 0.65 + 100, 20, -248);
+    PiP2.position.set(blockWidth / 2 + 0.65 + 110, 20, -258);
     PiP2.rotation.set(Math.PI, 0, 0);
     //PiP2 Pole
     const pole2 = new THREE.Mesh(poleGeometry, poleMaterial);
+    pole2.castShadow = true;
+    pole2.receiveShadow = true;
     scene.add(pole2);
-    pole2.position.set(blockWidth / 2 + 0.5 + 100, 0, -250);
+    pole2.position.set(blockWidth / 2 + 0.5 + 110, 0, -260);
     //PiP2 Sign
     const signwall2 = new THREE.Mesh(signwallgeometry, signmaterial);
+    signwall2.castShadow = true;
+    signwall2.receiveShadow = true;
     scene.add(signwall2);
-    signwall2.position.set(blockWidth / 2 + 0.5 + 100, 20, -250);
+    signwall2.position.set(blockWidth / 2 + 0.5 + 110, 20, -260);
     //PiP Base 2
     const PiPBaseMaterial2 = new THREE.MeshStandardMaterial({ color: 0xff00ff });
     const PiPBase2 = new THREE.Mesh(PiPBaseGeometry, PiPBaseMaterial2);
     scene.add(PiPBase2);
-    PiPBase2.position.set(blockWidth / 2 + 0.3 + 100, 20.2, -249);
+    PiPBase2.position.set(blockWidth / 2 + 0.3 + 110, 20.2, -259);
     scene.add(PiPBase2);
     scene.add(PiP2);
     const floorBody2 = new floorContBody(floorContainerRed,2);
@@ -635,22 +653,26 @@ function Level3Primitives() {
 
     //PiP1 Creation
     PiP1.scale.set(0.12, 0.12, 0.12);
-    PiP1.position.set(-blockWidth / 2 + 112.5 - 30, 20, - blockWidth + 0.6 + 100);
+    PiP1.position.set(-blockWidth / 2 + 142.5 - 50, 20, - blockWidth + 0.6 + 110);
     PiP1.rotation.set(-Math.PI / 2, -Math.PI / 2, -Math.PI);
     //PiP1 Pole
     const pole1 = new THREE.Mesh(poleGeometry, poleMaterial);
+    pole1.castShadow = true;
+    pole1.receiveShadow = true;
     scene.add(pole1);
-    pole1.position.set(-blockWidth / 2 + 111 - 30, 0, - blockWidth + 0.5 + 100);
+    pole1.position.set(-blockWidth / 2 + 141 - 50, 0, - blockWidth + 0.5 + 110);
     //PiP1 Sign
     const signwall1 = new THREE.Mesh(signwallgeometry, signmaterial);
+    signwall1.castShadow = true;
+    signwall1.receiveShadow = true;
     scene.add(signwall1);
-    signwall1.position.set(-blockWidth / 2 + 111 - 30, 20, - blockWidth + 0.8 + 100);
+    signwall1.position.set(-blockWidth / 2 + 141 - 50, 20, - blockWidth + 0.8 + 110);
     signwall1.rotation.set(0, Math.PI / 2, 0);
     //PiP Base 1
     const PiPBaseMaterial1 = new THREE.MeshStandardMaterial({ color: 0x006400 });
     const PiPBase1 = new THREE.Mesh(PiPBaseGeometry, PiPBaseMaterial1);
     scene.add(PiPBase1);
-    PiPBase1.position.set(-blockWidth / 2 + 112 - 30, 20.3, - blockWidth + 0.8 - 0.4 + 100);
+    PiPBase1.position.set(-blockWidth / 2 + 142 - 50, 20.3, - blockWidth + 0.8 - 0.4 + 110);
     PiPBase1.rotation.set(0, Math.PI / 2, 0);
     scene.add(PiPBase1);
 
@@ -659,7 +681,7 @@ function Level3Primitives() {
 
 }
 
-function Level4Primitives(){ 
+function Level4Primitives(){
 
     scene.add(floorContainerYellow);
     drawGridWithOmissions(floorContainerYellow, [], 1);
@@ -728,6 +750,7 @@ function tileLights() {
             let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
 
             if (tile.litUp === false && inXBounds && inZBounds) {
+            sound.setGlass(true);
                 const tileColor = new THREE.Color(0, 255, 0);
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
@@ -769,6 +792,7 @@ function tileLights() {
             let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
 
             if (tile.litUp === false && inXBounds && inZBounds) {
+            sound.setGlass(true);
                 const tileColor = new THREE.Color(255, 0, 0);
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
@@ -833,6 +857,7 @@ function tileLights() {
 
             newTile = litUpTiles3[litUpTiles3.length - 1];
             if (tile.litUp === false && inXBounds && inZBounds) {
+            sound.setGlass(true);
                 const tileColor = new THREE.Color(0, 0, 255);
                 tile.material.color.copy(tileColor);
                 L3Stack.push(tile.userData.tileNumber);
@@ -913,16 +938,16 @@ function mazeReset(){
             levelAreas.forEach((area, index) => {
                 let rangeInX = area.sizeFromBoundingBox.x / 2;
                 let rangeInZ = area.sizeFromBoundingBox.z / 2;
-    
+
                 const areaWorldPosition = new THREE.Vector3();
                 area.getWorldPosition(areaWorldPosition);
-    
+
                 let inXBounds = areaWorldPosition.x - rangeInX <= player.characterModel.position.x && player.characterModel.position.x <= areaWorldPosition.x + rangeInX;
                 let inZBounds = areaWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= areaWorldPosition.z + rangeInZ;
-    
+
                 if (inXBounds && inZBounds) {
                     if (index == 0) {
-    
+
                         litUpTiles1 = [];
                         PiP1.children.forEach((tile) => {
                             tile.material.color.set(0x444444);
@@ -937,7 +962,7 @@ function mazeReset(){
                             }
                         });
                     } else if (index == 3) {
-    
+
                         litUpTiles2 = [];
                         PiP2.children.forEach((tile) => {
                             tile.material.color.set(0x444444);
@@ -1046,6 +1071,7 @@ const tileMaterial = new THREE.MeshStandardMaterial({
     color: 0xffffff,
     opacity: 0.5,
     transparent: true,
+
 });
 
 const radius = 2.5; // Radius of the semicircle
@@ -1115,6 +1141,6 @@ export function animate_lights() {
 scene.fog = effects.fog;
 
 
-   
+
 
 
