@@ -6,23 +6,6 @@ import * as camera from './camera.js';
 
 import * as THREE from 'three';
 
-
-
-
-const listener = new THREE.AudioListener();
-const sound = new THREE.Audio(listener);
-
-const audioLoader = new THREE.AudioLoader();
-audioLoader.load('/Audio/BetterBackground.mp3', function (buffer) {
-    sound.setBuffer(buffer);
-    sound.setLoop(true);
-    sound.setVolume(0.5);
-    sound.play();
-});
-
-
-//camera.camera.add(listener);
-
 const renderer = new THREE.WebGLRenderer({
   antialias: true,
 });
@@ -31,31 +14,14 @@ renderer.outputEncoding = THREE.sRGBEncoding;
 renderer.gammaInput = true;
 renderer.gammaOutput = true;
 renderer.shadowMap.enabled = true;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(window.innerWidth, window.innerHeight);
 
-function showStartButton() {
-  const startButton = document.getElementById('start-button');
-  startButton.style.display = 'block';
-}
-
-function _OnWindowResize() {
-  camera.currentCamera.aspect = window.innerWidth / window.innerHeight;
-  camera.currentCamera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-}
-
-
-// Add an event listener to execute the function after everything has loaded
-window.onload = showStartButton;
+document.body.appendChild(renderer.domElement);
 
 function startGame() {
-  
-  renderer.outputEncoding = THREE.sRGBEncoding;
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-
-  document.body.appendChild(renderer.domElement);
 
   window.addEventListener('resize', _OnWindowResize, false);
 
@@ -73,8 +39,6 @@ function startGame() {
       }
 
       if (!player.paused) {
-
-
         objects.world.step(1/60);
         objects.animate_objects();
         player.animate_objects();
@@ -100,21 +64,37 @@ function startGame() {
     }
   }
 
-  function hideTitleScreen() {
-    const titleScreen = document.getElementById('title-screen');
-    titleScreen.style.display = 'none';
-
-    // Start your game here (e.g., initializing the game components)
-
-    _RAF();
-  }
-
-  // Add a click event listener to the start button
-  const startButton = document.getElementById('start-button');
-  startButton.addEventListener('click', hideTitleScreen);
-
   _RAF();
   player._LoadAnimatedModel();
 }
 
-window.addEventListener('load', startGame);
+function hideTitleScreen() {
+  const titleScreen = document.getElementById('title-screen');
+  titleScreen.style.display = 'none';
+}
+
+function _OnWindowResize() {
+  camera.currentCamera.aspect = window.innerWidth / window.innerHeight;
+  camera.currentCamera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+window.addEventListener('load', () => {
+  startGame();
+  // once loading is done show start button
+  const startButton = document.getElementById('start-button');
+  startButton.style.display = 'block';
+  startButton.addEventListener('click', hideTitleScreen);
+});
+
+const listener = new THREE.AudioListener();
+const sound = new THREE.Audio(listener);
+
+const audioLoader = new THREE.AudioLoader();
+audioLoader.load('/Audio/BetterBackground.mp3', function (buffer) {
+    sound.setBuffer(buffer);
+    sound.setLoop(true);
+    sound.setVolume(0.5);
+    sound.play();
+});
+
