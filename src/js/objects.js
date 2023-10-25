@@ -69,16 +69,18 @@ function puzzComplete(puzz) {
     else if (puzz == 'Blue') {
 
         walls.puzz1Gate.opengate((Math.PI / 2), 3);
-        Level2Primitives();
-
+        
     }
     else if (puzz == 'Red') {
         walls.puzz2Gate.opengate((Math.PI / 2), 2);
-        Level3Primitives();
+
+        
     }
 
 
 }
+
+
 
 
 function createTile(index, round, container) {
