@@ -21,12 +21,11 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 
 document.body.appendChild(renderer.domElement);
 
-function startGame() {
-  window.addEventListener('resize', _OnWindowResize, false);
-
+function runGame() {
   const _mixers = [];
   let _previousRAF = null;
 
+  // TODO: Consider why the crosshairs needs to be appended to document
   const crosshairs = document.getElementById('crosshairs');
   document.body.appendChild(crosshairs);
   crosshairs.style.display = 'block';
@@ -79,12 +78,14 @@ function _OnWindowResize() {
 }
 
 window.addEventListener('load', () => {
-  startGame();
+  runGame();
   // once loading is done show start button
   const startButton = document.getElementById('start-button');
   startButton.style.display = 'block';
   startButton.addEventListener('click', hideTitleScreen);
 });
+
+window.addEventListener('resize', _OnWindowResize, false);
 
 const listener = new THREE.AudioListener();
 const sound = new THREE.Audio(listener);
