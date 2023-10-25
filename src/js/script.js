@@ -67,7 +67,7 @@ function runGame() {
 }
 
 function hideTitleScreen() {
-  const titleScreen = document.getElementById('title-screen');
+  const titleScreen = document.getElementById('start-menu');
   titleScreen.style.display = 'none';
 }
 
@@ -80,8 +80,7 @@ function _OnWindowResize() {
 window.addEventListener('load', () => {
   runGame();
   // once loading is done show start button
-  const startButton = document.getElementById('start-button');
-  startButton.style.display = 'block';
+  const startButton = document.querySelector('.start-button');
   startButton.addEventListener('click', hideTitleScreen);
 });
 
