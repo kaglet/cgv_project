@@ -21,7 +21,7 @@ export let levelAreas = [];
 
 // world - this is for cannon objects
 export var world = new CANNON.World({
-    gravity: new CANNON.Vec3(0, -30, 0)
+    gravity: new CANNON.Vec3(0, -25, 0)
 });
 
 // TODO: Figure out what this does where its exported and why it is required
@@ -62,7 +62,11 @@ class floorContBody {
 }
 
 function puzzComplete(puzz) {
-    if (puzz == 'Blue') {
+    if (puzz == 'Yellow') {
+        walls.lobbyGate.opengate((Math.PI / 2), 3);
+        Level1Primitives();
+    }
+    else if (puzz == 'Blue') {
 
         walls.puzz1Gate.opengate((Math.PI / 2), 3);
         Level2Primitives();
@@ -1051,11 +1055,13 @@ export const PiP4 = new THREE.Group();
 
 //makeMazes();
 
-Level1Primitives();
+ Level1Primitives();
 Level4Primitives();
 addFloorBodies();
 
 walls.addWalls(assetLoader, scene, world, blockWidth, rotationAngle);
+walls.lobbyGate.opengate((Math.PI / 2), 3);
+walls.puzz1Gate.opengate((Math.PI / 2), 3);
 
 mazeReset();
 
