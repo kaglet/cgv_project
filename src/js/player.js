@@ -151,7 +151,6 @@ class BasicCharacterController {
     if (otherBody.collisionFilterGroup === 2 && !onMaze) {
       onMaze = true;
 
-
     } else if (otherBody.collisionFilterGroup === 1) {
       onMaze = false;
     }
@@ -485,8 +484,9 @@ class BasicCharacterControllerInput {
         jumpSound.play();
         break;
       }
-      if(playerBody.position.y<5 && sound.glass===true){
-      console.log(playerBody.position.y);
+      if(onMaze && sound.glass==false){
+        sound.setGlass(true);
+      }else{
         sound.setGlass(false);
       }
       if ((moveForward || moveBackward || moveRight || moveLeft) && soundPlaying==false) {
