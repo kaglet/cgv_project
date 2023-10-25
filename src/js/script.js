@@ -22,7 +22,6 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 function startGame() {
-
   window.addEventListener('resize', _OnWindowResize, false);
 
   const _mixers = [];
