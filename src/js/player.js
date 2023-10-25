@@ -3,7 +3,7 @@ import * as CANNON from 'cannon-es';
 import * as script from './script.js'
 import * as objects from './objects.js';
 import * as camera from './camera.js';
-
+import * as sound from './sound.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 //import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
@@ -16,17 +16,16 @@ export const controls = new PointerLockControls(camera.currentCamera, document.b
 let raycaster = objects.raycaster;
 
 //const moveForwardSoundPlaying = false; // Add a flag to track if the sound is already playing
-
-let sound=false;
-const listener = new THREE.AudioListener();
-//camera.add( listener );
-const moveSound = new THREE.Audio(listener);
-const moveSoundLoader = new THREE.AudioLoader();
-moveSoundLoader.load('Audio/footsteps-dirt-gravel-6823.mp3', function (buffer) {
-  moveSound.setBuffer(buffer);
-  moveSound.setLoop( true );
-  moveSound.setVolume(1); // Set the volume as needed
+let soundPlaying=false;
+const listener1 = new THREE.AudioListener();
+const jumpSound = new THREE.Audio(listener1);
+const jumpSoundLoader = new THREE.AudioLoader();
+jumpSoundLoader.load('Audio/jump.mp3', function (buffer) {
+  jumpSound.setBuffer(buffer);
+  jumpSound.setLoop( false );
+  jumpSound.setVolume(0.5); // Set the volume as needed
 });
+
 
 let velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
@@ -36,12 +35,12 @@ let moveBackward = false;
 let moveLeft = false;
 let moveRight = false;
 let jumping=false;
+let onMaze = false;
 export var paused = false;
 
 export let playerBody;
 export let characterModel = null;
 let height;
-// export let playerPhysMat = new CANNON.Material();
 
 class BasicCharacterControllerProxy {
   constructor(animations) {
@@ -61,16 +60,10 @@ class BasicCharacterController {
 
     // Create a Cannon.js body for the player character
     let playerPhysMat = new CANNON.Material();
-    playerPhysMat.friction = 1000;
+    //playerPhysMat.friction = 1000;
     playerBody = new CANNON.Body({
       mass: 100, // Adjust the mass as needed
-      // TODO: Check why this shape was commented out and only added in later
-      //     shape: new CANNON.Box(new CANNON.Vec3(1, 5, 1)),
-//<<<<<<< HEAD
-      position: new CANNON.Vec3(300, 10, 300),
-//=======
-     // position: new CANNON.Vec3(200, 10, -400),
-//>>>>>>> new_b
+      position: new CANNON.Vec3(250, 10, 300),
       material: playerPhysMat
     });
 
@@ -83,7 +76,7 @@ class BasicCharacterController {
   _Init(params) {
     this._params = params;
     this._decceleration = new THREE.Vector3(-5.0, -9.8, -5.0);
-    this._acceleration = new THREE.Vector3(200, 80, 200);
+    this._acceleration = new THREE.Vector3(200, 800, 200);
     this._velocity = new THREE.Vector3(0, 0, 0);
 
     this._animations = {};
@@ -93,55 +86,51 @@ class BasicCharacterController {
 
     this._LoadModels();
 
-    // playerBody.addEventListener('collide', (event) => {
-    //   console.log("collide")
-    //   // Handle collisions here
 
-    //   // Access the other body involved in the collision
-    //   const otherBody = event.body;
+  //   let onMaze = false;
+  //  playerBody.addEventListener('collide', (event) => {
+  //    const otherBody = event.body;
 
-    //   // Check if the collision involves a specific type of object
-    //   // You might want to check the type or some property of the other body
-    //   if (otherBody.userData && otherBody.userData.type === 'obstacle') {
-    //     // If it's an obstacle, prevent the player from moving further in that direction
-    //     // For example, if you want to prevent movement in the X direction:
-    //     playerBody.velocity.x = 0;
-    //     playerBody.velocity.z = 0;
-    //     playerBody.velocity.y = 0;
+  //    if (otherBody.collisionFilterGroup === 2 && !onMaze) {
+  //      onMaze = true;
 
-    //     // You can do the same for other axes (e.g., playerBody.velocity.y or playerBody.velocity.z)
-    //   }
-    // });
-    let onMaze = false;
-    playerBody.addEventListener('collide', (event) => {
-      const otherBody = event.body;
+  //      // Calculate the vector from player to otherBody's center
+  //      const offset = new CANNON.Vec3();
+  //      otherBody.position.vsub(playerBody.position, offset);
 
-      if (otherBody.collisionFilterGroup === 2 && !onMaze) {
-        onMaze = true;
+  //      // Normalize the offset vector to get the direction
+  //      offset.normalize();
 
-        // Calculate the vector from player to otherBody's center
-        const offset = new CANNON.Vec3();
-        otherBody.position.vsub(playerBody.position, offset);
+  //      // Scale the direction vector by 5 units (or any desired distance)
+  //      offset.scale(1);
 
-        // Normalize the offset vector to get the direction
-        offset.normalize();
+  //      // Update player's position (x and z) accordingly
+  //      playerBody.position.x -= offset.x;
+  //      playerBody.position.z -= offset.z;
 
-        // Scale the direction vector by 5 units (or any desired distance)
-        offset.scale(1);
+  //      // Calculate the desired Y position for the player
+  //      const desiredY = otherBody.position.y + height + 1; // Adjust as needed
+  //      console.log(desiredY);
+  //      // Adjust the player's Y position (Cannon.js)
+  //      playerBody.position.y = desiredY;
+  //      console.log(playerBody.position);
+  //    } else if (otherBody.collisionFilterGroup === 1) {
+  //      onMaze = false;
+  //    }
+  //  });
 
-        // Update player's position (x and z) accordingly
-        playerBody.position.x -= offset.x;
-        playerBody.position.z -= offset.z;
+  
+  playerBody.addEventListener('collide', (event) => {
+    const otherBody = event.body;
 
-        // Calculate the desired Y position for the player
-        const desiredY = otherBody.position.y + height + 1; // Adjust as needed
+    if (otherBody.collisionFilterGroup === 2 && !onMaze) {
+      onMaze = true;
 
-        // Adjust the player's Y position (Cannon.js)
-        playerBody.position.y = desiredY;
-      } else if (otherBody.collisionFilterGroup === 1) {
-        onMaze = false;
-      }
-    });
+    } else if (otherBody.collisionFilterGroup === 1) {
+      onMaze = false;
+    }
+  });
+
 
 
   }
@@ -153,6 +142,7 @@ class BasicCharacterController {
 
     loader.load('./alex/ALEX.fbx', (fbx) => {
       characterModel = fbx;
+
       //fbx.position.y=-30;
       // fbx.rotation.y=10;
       fbx.scale.setScalar(0.1);
@@ -268,7 +258,13 @@ class BasicCharacterController {
         velocity.x += acc.x * timeInSeconds;
       }
       if(jumping){
-        velocity.y +=acc.y*timeInSeconds;
+        if(moveBackward){
+             moveDirection.y=(0);
+        }else
+        {
+            moveDirection.y=3;
+            }
+            //velocity.y += acc.y* timeInSeconds;
       }
 
 //    if (!moveForward){
@@ -340,6 +336,10 @@ class BasicCharacterController {
         _R.multiply(_Q);
       }
        if(jumping){
+            const desiredY = 20; // Adjust as needed
+
+            playerBody.position.x += desiredY;
+
           velocity.y +=acc.y*timeInSeconds;
         }
 
@@ -380,6 +380,7 @@ class BasicCharacterController {
 function handleSpacebarPress() {
 
         setTimeout(function() {
+        jumpSound.stop();
             jumping = false;
         }, 1000); // 1000 milliseconds (1 second)
 
@@ -451,11 +452,19 @@ class BasicCharacterControllerInput {
           break;
        case 32: // d
         jumping = true;
+        sound.moveSound.stop();
+        soundPlaying=false;
+        jumpSound.play();
         break;
       }
-      if ((moveForward || moveBackward || moveRight || moveLeft) && sound==false) {
-      sound=true;
-        moveSound.play();
+      if(onMaze && sound.glass==false){
+        sound.setGlass(true);
+      }else{
+        sound.setGlass(false);
+      }
+      if ((moveForward || moveBackward || moveRight || moveLeft) && soundPlaying==false) {
+      soundPlaying=true;
+        sound.moveSound.play();
       }
     }
   };
@@ -487,8 +496,8 @@ class BasicCharacterControllerInput {
          break;
     }
     if (!moveForward && !moveBackward && !moveRight && !moveLeft) {
-      moveSound.stop();
-      sound=false;
+      sound.moveSound.stop();
+      soundPlaying=false;
     }
   }
 };
@@ -557,7 +566,6 @@ class State {
   Exit() { }
   Update() { }
 };
-
 
 class JumpState extends State {
   constructor(parent) {
@@ -845,7 +853,17 @@ export function _LoadAnimatedModel() {
 
 export function animate_objects() {
   if (characterModel && playerBody) {
+
     characterModel.position.copy(playerBody.position);
-    characterModel.position.y-=2;
+   // playerBody.position.copy(characterModel.position);
+
+    // if (onMaze == true){
+    //   setTimeout(function() {
+    //     characterModel.position.y-=2;
+    //     }, 1000);
+         
+    // }
+
+   // characterModel.position.y-=2;
   }
 }
