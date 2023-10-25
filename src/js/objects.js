@@ -115,8 +115,8 @@ function createTile(index, round, container) {
 
         tile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
         tile.material.shadowSide = THREE.FrontSide;
-        tile.receiveShadow=true;
-        tile.castShadow=true;
+       // tile.receiveShadow=true;
+       // tile.castShadow=true;
         // Add cylinders at each corner of the tile
         const cornerCylinderGeometry = new THREE.CylinderGeometry(0.1, 0.1, 5, 32); // Adjusted size
         const cornerCylinderMaterial = new THREE.MeshStandardMaterial({ color: 0x505050 });
@@ -198,8 +198,8 @@ function createTile(index, round, container) {
         tile.rotation.x = Math.PI / 2;
     }
     tile.userData.tileNumber = index; // Store the tile number in user data
-    tile.castShadow = true;
-    tile.receiveShadow = true;
+   // tile.castShadow = true;
+  //  tile.receiveShadow = true;
     tile.userData.tileVisits = 0;
     tile.userData.PlayerOnTile = false;
 
@@ -218,8 +218,8 @@ function createPiPTile(index, PiP) {
     }
 
     tile.userData.tileNumber = index; // Store the tile number in user data
-    tile.castShadow = true;
-    tile.receiveShadow = true;
+   // tile.castShadow = true;
+   // tile.receiveShadow = true;
 
     // Add cylinders at each corner of the tile
     const cornerCylinderGeometry = new THREE.CylinderGeometry(0.1, 0.1, 5, 32); // Adjusted size
