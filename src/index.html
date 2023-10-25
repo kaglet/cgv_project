@@ -24,16 +24,44 @@
 
 <canvas class="webgl"></canvas>
 
-<div id="start-menu">
-    <!-- Add your title screen content here -->
-    <h1>Welcome to PUZZLE GAME</h1>
-    <p>Made by US</p>
-    <button class="start-button">Start Game</button>
+<div class="start menu screen">
+    <h1>THE <p>E</p>NIGMA <p>E</p>SCAPE</h1>
+    <h3>LOST MEMORIES</h3>
+    <div class="start-menu">
+        <ul class="options">
+            <li class="start-button">PLAY</li>
+            <li class="credits-button">CREDITS</li>
+            <li class="quit-button">QUIT</li>
+        </ul>
+    </div>
+</div>
+
+<div class="loading screen" style="display: none;">
+    <div class="loading container">
+        <h3>LOADING</h3>
+        <p class="loading message">
+            please wait...
+        </p>
+    </div>
 </div>
 
 <div id="paused-screen" style="display: none;">
-    <h1>Paused</h1>
-    <p>Click to Resume</p>
+    <div class="pause container">
+        <h3>PAUSED</h3>
+        <div class="pause-menu">
+            <ul class="options">
+                <li class="resume-button">RESUME</li>
+                <li class="restart-button">RESTART</li>
+                <li class="quit-button">QUIT</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="tip">
+    <p>
+        HI: I am a tooltip. 
+    </p>
 </div>
 
 <div id="blocker">

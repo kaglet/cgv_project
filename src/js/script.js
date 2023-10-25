@@ -67,8 +67,19 @@ function runGame() {
 }
 
 function hideTitleScreen() {
-  const titleScreen = document.getElementById('start-menu');
+  let titleScreen = document.querySelector('.start.menu.screen');
+  // by default display is block I haven't touched that so will use that in conjuction with positioning to get element to show again
   titleScreen.style.display = 'none';
+}
+
+function showLoadingScreen() {
+    let loadingScreen = document.querySelector('.loading.screen');
+    loadingScreen.style.display = 'flex';
+}
+
+function hideLoadingScreen() {
+  let loadingScreen = document.querySelector('.loading.screen');
+  loadingScreen.style.display = 'none';
 }
 
 function _OnWindowResize() {
@@ -81,7 +92,11 @@ window.addEventListener('load', () => {
   runGame();
   // once loading is done show start button
   const startButton = document.querySelector('.start-button');
-  startButton.addEventListener('click', hideTitleScreen);
+  startButton.addEventListener('click', () => {
+    hideTitleScreen();
+    showLoadingScreen();
+    setTimeout(hideLoadingScreen, 10000);
+  });
 });
 
 window.addEventListener('resize', _OnWindowResize, false);

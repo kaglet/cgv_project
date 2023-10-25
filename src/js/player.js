@@ -406,7 +406,7 @@ class BasicCharacterControllerInput {
       controls.lock();
     });
 
-
+    // resume
     controls.addEventListener('lock', function () {
       paused=false;
       instructions.style.display = 'none';
@@ -414,9 +414,10 @@ class BasicCharacterControllerInput {
       pausedScreen.style.display = 'none';
     });
 
+    // pause
     controls.addEventListener('unlock', function () {
       paused=true;
-      pausedScreen.style.display = 'block';
+      pausedScreen.style.display = 'flex';
       blocker.style.display = 'block';
       instructions.style.display = '';
       moveForward=false;
