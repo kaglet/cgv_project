@@ -8,21 +8,15 @@ import { loadModels } from './models.js';
 import * as camera from './camera.js';
 import * as sound from './sound.js';
 import * as player from './player.js';
+import * as sky from './sky.js';
+import * as walls from './walls.js';
 import groundImg from './textures/avinash-kumar-rEIDzqczN7s-unsplash.jpg';
-
-// Import texture images
-import spaceFtImage from '../img/space/space_ft.png';
-import spaceBkImage from '../img/space/space_bk.png';
-import spaceUpImage from '../img/space/space_up.png';
-import spaceDnImage from '../img/space/space_dn.png';
-import spaceRtImage from '../img/space/space_rt.png';
-import spaceLfImage from '../img/space/space_lf.png';
 
 // DEFINE GLOBAL VARIABLES
 // Scene
 export const scene = new THREE.Scene();
 export let levelAreas = [];
-let space;
+
 
 // world - this is for cannon objects
 export var world = new CANNON.World({
@@ -31,246 +25,6 @@ export var world = new CANNON.World({
 
 // TODO: Figure out what this does where its exported and why it is required
 export const raycaster = new THREE.Raycaster();
-
-class Wall {
-
-    constructor(position, rotation) {
-        // Create Three.js wall
-        // const wallGeometry = new THREE.BoxGeometry(blockWidth, 70, 5);
-        // const wallMaterial = new THREE.MeshStandardMaterial({
-        //     color: "#DEC4B0",
-        //     side: THREE.DoubleSide,
-        //     wireframe: true,
-        // });
-
-        // this.mesh = new THREE.Mesh(wallGeometry, wallMaterial);
-        // scene.add(this.mesh);
-
-        // Create Cannon.js wall
-        const wallPhysMat = new CANNON.Material()
-        const wallShape = new CANNON.Box(new CANNON.Vec3(blockWidth / 2, 35, 2.5));
-        this.body = new CANNON.Body({
-            mass: 0,
-            shape: wallShape,
-            material: wallPhysMat,
-        });
-
-        // Set the initial position and rotation for the Cannon.js body
-        this.body.position.copy(position);
-        this.body.quaternion.setFromEuler(rotation.x, rotation.y, rotation.z);
-
-        // Add the Cannon.js body to the world
-        world.addBody(this.body);
-
-        // Update the Three.js mesh position and rotation based on the Cannon.js body
-        // this.mesh.position.copy(this.body.position);
-        // this.mesh.quaternion.copy(this.body.quaternion);
-    }
-}
-
-class InnerWall {
-    constructor(position, rotation) {
-        // Calculate the total width of the inner wall (including the gap)
-        const totalWidth = blockWidth;
-        const gapWidth = 50;
-
-
-        // Calculate the width of each part of the inner wall
-        const partWidth = (totalWidth - gapWidth) / 2;
-
-        // // Create Three.js inner wall parts and materials
-        // const wallGeometry1 = new THREE.BoxGeometry(partWidth, 70, 5);
-        // const wallMaterial1 = new THREE.MeshStandardMaterial({
-        //     color: "#DEC4B0",
-        //     side: THREE.DoubleSide,
-        //     wireframe: true,
-        // });
-        // this.mesh1 = new THREE.Mesh(wallGeometry1, wallMaterial1);
-
-        // const wallGeometry2 = new THREE.BoxGeometry(partWidth, 70, 5);
-        // const wallMaterial2 = new THREE.MeshStandardMaterial({
-        //     color: "#DEC4B0",
-        //     side: THREE.DoubleSide,
-        //     wireframe: true,
-        // });
-        // this.mesh2 = new THREE.Mesh(wallGeometry2, wallMaterial2);
-
-        // scene.add(this.mesh1);
-        // scene.add(this.mesh2);
-
-        // Create Cannon.js inner wall
-        const wallPhysMat = new CANNON.Material();
-
-        // Create two Cannon.js boxes for each part of the inner wall
-        const wallShape1 = new CANNON.Box(new CANNON.Vec3(partWidth / 2, 35, 15));
-        const wallShape2 = new CANNON.Box(new CANNON.Vec3(partWidth / 2, 35, 15));
-
-        // Create Cannon.js bodies for each part
-        this.body1 = new CANNON.Body({
-            mass: 0,
-            shape: wallShape1,
-            material: wallPhysMat,
-        });
-        this.body2 = new CANNON.Body({
-            mass: 0,
-            shape: wallShape2,
-            material: wallPhysMat,
-        });
-
-        let position1;
-        let position2;
-        if (rotation.y == (Math.PI / 2)) {
-            // Set the initial position for each Cannon.js body
-            position1 = new CANNON.Vec3(position.x, position.y, position.z - partWidth / 2 - gapWidth / 2);
-            position2 = new CANNON.Vec3(position.x, position.y, position.z + partWidth / 2 + gapWidth / 2);
-        }
-        else {
-            // Set the initial position for each Cannon.js body
-            position1 = new CANNON.Vec3(position.x - partWidth / 2 - gapWidth / 2, position.y, position.z);
-            position2 = new CANNON.Vec3(position.x + partWidth / 2 + gapWidth / 2, position.y, position.z);
-        }
-
-
-
-        this.body1.position.copy(position1);
-        this.body2.position.copy(position2);
-
-        // Set the same rotation for both Cannon.js bodies
-        const initialRotation = new CANNON.Quaternion();
-        initialRotation.setFromEuler(rotation.x, rotation.y, rotation.z);
-        this.body1.quaternion.copy(initialRotation);
-        this.body2.quaternion.copy(initialRotation);
-
-        // Add the Cannon.js bodies to the world
-        world.addBody(this.body1);
-        world.addBody(this.body2);
-
-        // // Update the Three.js mesh position and rotation based on the Cannon.js bodies
-        // this.mesh1.position.copy(position1);
-        // this.mesh2.position.copy(position2);
-
-        // this.mesh1.quaternion.copy(initialRotation);
-        // this.mesh2.quaternion.copy(initialRotation);
-        //const loader = new THREE.GLTFLoader();
-
-    }
-}
-
-
-class Gate {
-    constructor(position, rotation) {
-        this.open = false;
-        this.currentAngle = rotation.y;       // Current angle of the door
-        this.targetAngle = rotation.y;        // Target angle for the door
-        this.isAnimating = false;    // Flag to track if the door is currently animating
-
-        //  Create Cannon.js wall
-        const gatePhysMat = new CANNON.Material()
-        const gateShape = new CANNON.Box(new CANNON.Vec3(25 / 2, 35, 1));
-        this.body = new CANNON.Body({
-            mass: 0,
-            shape: gateShape,
-            material: gatePhysMat,
-        });
-
-        // Set the initial position and rotation for the Cannon.js body
-        this.body.position.copy(position);
-        this.body.quaternion.setFromEuler(rotation.x, rotation.y, rotation.z);
-
-        // Add the Cannon.js body to the world
-        world.addBody(this.body);
-
-        // Return a promise that resolves when the model is loaded
-        this.loadModelPromise = new Promise((resolve) => {
-            assetLoader.load('./assets/medieval_arched_wooden_door/scene.gltf', (gltf) => {
-                this.model = gltf.scene.clone();
-                this.model.scale.set(0.6, 0.25, 0.25);
-
-                // Set the initial position and rotation of the model
-                this.model.position.copy(position);
-                this.model.rotation.set(rotation.x, rotation.y, rotation.z);
-
-                // Update the Three.js model position and rotation based on the Cannon.js body
-                this.model.position.copy(this.body.position);
-                this.model.quaternion.copy(this.body.quaternion);
-
-                // Add the gate model to the scene
-                scene.add(this.model);
-
-                resolve(); // Resolve the promise when the model is loaded
-            });
-        });
-    }
-
-    async opengate(angle, gateNum) {
-        // Wait for the model to be loaded before performing any operations on it
-        await this.loadModelPromise;
-
-        if (this.model && (!this.open)) {
-            // Set the hinge point (pivot) at the left vertical edge of the door
-            let hingePoint = new THREE.Vector3(-20, 0, 0); // Adjust the values as needed
-            if (gateNum == 2) {
-                hingePoint = new THREE.Vector3(0, 0, -18); // Adjust the values as needed
-            }
-
-            // Calculate the rotation in radians (assuming angle is in degrees)
-            const rotationAngle = angle;
-
-            // Step 1: Translate the door to the hinge point
-            this.inverseHingePoint = hingePoint.clone().negate();
-
-
-            // this.model.rotation.set(0, rotationAngle, 0); // Update the Three.js rotation
-            this.startOpeningAnimation(rotationAngle);
-            this.model.position.add(this.inverseHingePoint);
-
-            this.body.quaternion.setFromEuler(0, rotationAngle, 0);
-            this.body.position.copy(this.model.position);
-
-            // Step 3: Translate the door back to its original position
-            //  this.model.position.sub(this.inverseHingePoint);
-        }
-    }
-
-    // New method to start the opening animation
-    startOpeningAnimation(angle) {
-        if (this.isAnimating) {
-            // If an animation is already in progress, ignore the request
-            return;
-        }
-
-        this.targetAngle += angle;
-        this.animateOpen();
-    }
-
-    // Animation loop to gradually open the door
-    animateOpen() {
-        this.isAnimating = true;
-
-        // Calculate the rotation increment per frame
-        const increment = (this.targetAngle - this.currentAngle) * 0.015;  // Adjust the speed as needed
-
-        if (Math.abs(increment) > 0.0025) {
-            // Continue opening the door
-            this.currentAngle += increment;
-
-            // Rotate the Cannon.js body
-
-            // Set the position of the model's pivot point
-            // this.model.position.copy(this.body.position);
-            // this.model.quaternion.copy(this.body.quaternion);
-            this.model.rotation.set(0, this.currentAngle, 0); //
-
-            // Request the next frame
-            requestAnimationFrame(() => this.animateOpen());
-        } else {
-            this.isAnimating = false;
-        }
-    }
-
-}
-
-
 
 class floorContBody {
     constructor(container) {
@@ -309,12 +63,12 @@ class floorContBody {
 function puzzComplete(puzz) {
     if (puzz == 'Blue') {
 
-        puzz1Gate.opengate((Math.PI / 2), 3);
+        walls.puzz1Gate.opengate((Math.PI / 2), 3);
         Level2Primitives();
 
     }
     else if (puzz == 'Red') {
-        puzz2Gate.opengate((Math.PI / 2), 2);
+        walls.puzz2Gate.opengate((Math.PI / 2), 2);
         Level3Primitives();
     }
 
@@ -639,37 +393,6 @@ function changePathColor(container, path, color) {
     });
 }
 
-function addWalls() {
-
-    const wallSpawnRight = new Wall(new CANNON.Vec3(blockWidth, 0, blockWidth), new CANNON.Vec3(0, rotationAngle, 0));
-    const wallSpawnLeft = new Wall(new CANNON.Vec3(0, 0, blockWidth), new CANNON.Vec3(0, rotationAngle, 0));
-    const wallSpawnBack = new Wall(scene, world, new CANNON.Vec3(blockWidth / 2, 0, blockWidth * 1.5), new CANNON.Vec3(0, (Math.PI / 1), 0));
-
-    const wallPuzz1Right = new Wall(new CANNON.Vec3(blockWidth, 0, 0), new CANNON.Vec3(0, rotationAngle, 0));
-    const wallPuzz1Left = new Wall(new CANNON.Vec3(0, 0, 0), new CANNON.Vec3(0, rotationAngle, 0));
-
-    const wallPuzz2Back = new Wall(new CANNON.Vec3(blockWidth / 2, 0, -blockWidth * 1.5), new CANNON.Vec3(0, (Math.PI / 1), 0));
-    const wallPuzz2Right = new Wall(new CANNON.Vec3(blockWidth, 0, -blockWidth), new CANNON.Vec3(0, rotationAngle, 0));
-
-    const wallPuzz3Right = new Wall(new CANNON.Vec3(-blockWidth / 2, 0, -blockWidth * 1.5), new CANNON.Vec3(0, (Math.PI / 1), 0));
-    const wallPuzz3Left = new Wall(new CANNON.Vec3(-blockWidth / 2, 0, -blockWidth / 2), new CANNON.Vec3(0, (Math.PI / 1), 0));
-    const wallPuzz3back = new Wall(new CANNON.Vec3(-blockWidth, 0, -blockWidth), new CANNON.Vec3(0, rotationAngle, 0));
-
-    const lobbyExit = new InnerWall(new CANNON.Vec3(blockWidth / 2, 0, blockWidth / 2 - 9), new CANNON.Vec3(0, (Math.PI / 1), 0));
-    const puzz1Exit = new InnerWall(new CANNON.Vec3(blockWidth / 2, 0, -blockWidth / 2 + 9), new CANNON.Vec3(0, (Math.PI / 1), 0));
-    const puzz2Exit = new InnerWall(new CANNON.Vec3(-24.5, 0, -blockWidth), new CANNON.Vec3(0, (Math.PI / 2), 0));
-
-
-    lobbyGate = new Gate(new CANNON.Vec3(blockWidth / 2, 0, blockWidth / 2 + 10), new CANNON.Vec3(0, 0, 0));
-    lobbyGate.opengate((Math.PI / 2), 0);
-
-    puzz1Gate = new Gate(new CANNON.Vec3(blockWidth / 2, 0, -blockWidth / 2 + 20), new CANNON.Vec3(0, 0, 0));
-    // puzz1Gate.opengate(90, 3);
-
-    puzz2Gate = new Gate(new CANNON.Vec3(-10, 0, -blockWidth + 10), new CANNON.Vec3(0, (Math.PI / 2), 0));
-    //  puzz2Gate.opengate(90, 2);
-
-}
 
 
 function addFloorBodies() {
@@ -684,7 +407,7 @@ function helperSquares() {
 
 
     const planeGeometry = new THREE.PlaneGeometry(gridSizeX * blockWidth, gridSizeZ * blockDepth);
-    const planeMaterial = new THREE.MeshBasicMaterial({ opacity: 0.0, transparent: true }); // White color
+    const planeMaterial = new THREE.MeshBasicMaterial(); // White color
 
     const plane = new THREE.Mesh(planeGeometry, planeMaterial);
     plane.rotation.x = -Math.PI / 2; // Rotate it to be horizontal
@@ -695,8 +418,7 @@ function helperSquares() {
     // Create alternating grey and white blocks
     for (let i = 0; i < gridSizeX; i++) {
         for (let j = 0; j < gridSizeZ; j++) {
-            const color = (i + j) % 2 === 0 ? 0x808080 : 0xffffff; // Alternating grey and white
-            const blockMaterial = new THREE.MeshBasicMaterial({ color });
+            const blockMaterial = new THREE.MeshBasicMaterial();
             const blockGeometry = new THREE.BoxGeometry(blockWidth, 1, blockDepth);
             const blockMesh = new THREE.Mesh(blockGeometry, blockMaterial);
             blockMesh.position.set((i - gridSizeX / 2 + 0.5) * blockWidth, -30, (j - gridSizeZ / 2 + 0.5) * blockDepth);
@@ -715,87 +437,6 @@ function helperSquares() {
 }
 
 
-function sky() {
-
-
-    // Create texture objects
-    const texture_ft = new THREE.TextureLoader().load(spaceFtImage);
-    const texture_bk = new THREE.TextureLoader().load(spaceBkImage);
-    const texture_up = new THREE.TextureLoader().load(spaceUpImage);
-    const texture_dn = new THREE.TextureLoader().load(spaceDnImage);
-    const texture_rt = new THREE.TextureLoader().load(spaceRtImage);
-    const texture_lf = new THREE.TextureLoader().load(spaceLfImage);
-
-    // Create material array
-    const materialArray = [
-        new THREE.MeshBasicMaterial({ map: texture_ft }),
-        new THREE.MeshBasicMaterial({ map: texture_bk }),
-        new THREE.MeshBasicMaterial({ map: texture_up }),
-        new THREE.MeshBasicMaterial({ map: texture_dn }),
-        new THREE.MeshBasicMaterial({ map: texture_rt }),
-        new THREE.MeshBasicMaterial({ map: texture_lf })
-    ];
-
-    // Set material side to backside
-    materialArray.forEach((material) => {
-        material.side = THREE.BackSide;
-    });
-
-    // Create skybox
-    const skyboxGeo = new THREE.BoxGeometry(10000, 10000, 10000);
-    const skybox = new THREE.Mesh(skyboxGeo, materialArray);
-    skybox.position.set(0, 0, 0);
-    scene.add(skybox);
-
-
-    // Particles
-    const particlesGeometry = new THREE.BufferGeometry(); // Geometry for the space
-    const particlesCount = 15000; // number of particles to be created
-    const minDistance = 1000; // minimum distance from the origin (0,0,0)
-    
-    const vertices = new Float32Array(particlesCount * 3); // Three values for each vertex (x, y, z)
-    
-    for (let i = 0; i < particlesCount; i++) {
-        let x, y, z;
-        let distance;
-    
-        do {
-            x = (Math.random() - 0.5) * 6000;
-            y = (Math.random() - 0.5) * 6000;
-            z = (Math.random() - 0.5) * 6000;
-    
-            // Calculate the distance from the origin
-            distance = Math.sqrt(x * x + y * y + z * z);
-        } while (distance < minDistance);
-    
-        vertices[i * 3] = x;
-        vertices[i * 3 + 1] = y;
-        vertices[i * 3 + 2] = z;
-    }
-    
-
-    particlesGeometry.setAttribute(
-        'position',
-        new THREE.BufferAttribute(vertices, 3) // 3 values for each vertex (x, y, z)
-        // Check the documentation for more info about this.
-    );
-
-    // Texture
-    const textureLoader = new THREE.TextureLoader();
-    const particleTexture = textureLoader.load('/particles/star.png'); // Add a texture to the particles
-
-    // Material
-    const particlesMaterial = new THREE.PointsMaterial({
-        map: particleTexture, // Texture
-        size: Math.random() * 0.5 + 5, // Size of the particles
-        sizeAttenuation: true, // size of the particle will be smaller as it gets further away from the camera, and if it's closer to the camera, it will be bigger
-    });
-
-    space = new THREE.Points(particlesGeometry, particlesMaterial);
-    scene.add(space);
-
-
-}
 
 
 function ground() {
@@ -806,7 +447,7 @@ function ground() {
     groundTexture.encoding = THREE.sRGBEncoding;
 
     // Create ground
-    const groundGeo = new THREE.PlaneGeometry(1000, 1000);
+    const groundGeo = new THREE.PlaneGeometry(1500, 1500);
     const groundMat = new THREE.MeshStandardMaterial({
         receiveShadow: true,
         map: groundTexture,
@@ -1123,6 +764,76 @@ function tileLights() {
 }
 
 
+function mazeReset(){
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'r') {
+            const tileColor = 0xffffff;
+            levelAreas.forEach((area, index) => {
+                let rangeInX = area.sizeFromBoundingBox.x / 2;
+                let rangeInZ = area.sizeFromBoundingBox.z / 2;
+    
+                const areaWorldPosition = new THREE.Vector3();
+                area.getWorldPosition(areaWorldPosition);
+    
+                let inXBounds = areaWorldPosition.x - rangeInX <= player.characterModel.position.x && player.characterModel.position.x <= areaWorldPosition.x + rangeInX;
+                let inZBounds = areaWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= areaWorldPosition.z + rangeInZ;
+    
+                if (inXBounds && inZBounds) {
+                    if (index == 0) {
+    
+                        litUpTiles1 = [];
+                        PiP1.children.forEach((tile) => {
+                            tile.material.color.set(0x444444);
+                        });
+                        changePathColor(PiP1, pathPiP2AND3, 0x006400);
+                        floorContainerGreen.children.forEach((tile) => {
+                            tile.material.color.set(tileColor);
+                            tile.litUp = false;
+                            if (tile.userData.tileNumber == 1) {
+                                tile.semicircleMesh1.litUp = false;
+                                tile.semicircleMesh1.material.color.set(tileColor);
+                            }
+                        });
+                    } else if (index == 3) {
+    
+                        litUpTiles2 = [];
+                        PiP2.children.forEach((tile) => {
+                            tile.material.color.set(0x444444);
+                        });
+                        changePathColor(PiP2, pathPiP2AND3, 0xff00ff);
+                        floorContainerRed.children.forEach((tile) => {
+                            tile.material.color.set(tileColor);
+                            tile.litUp = false;
+                            if (tile.userData.tileNumber == 5) {
+                                tile.semicircleMesh.litUp = false;
+                                tile.semicircleMesh.material.color.set(tileColor);
+                            }
+                        });
+                    } else if (index == 4) {
+    
+                        litUpTiles3 = [];
+                        PiP3.children.forEach((tile) => {
+                            tile.material.color.set(0x444444);
+                        });
+                        changePathColor(PiP3, pathPiP2AND3, 0xFFA500);
+                        floorContainerBlue.children.forEach((tile) => {
+                            tile.material.color.set(tileColor);
+                            tile.litUp = false;
+                            if (tile.userData.tileNumber == 19) {
+                                tile.semicircleMesh3.litUp = false;
+                                tile.semicircleMesh3.material.color.set(tileColor);
+                            }
+                        });
+    
+                    }
+                }
+            });
+        }
+    });
+    
+}
+
+
 
 // Create material array
 
@@ -1147,16 +858,12 @@ let assetLoader = new GLTFLoader();
 loadModels(assetLoader, scene, world, blockWidth);
 
 
-sky();
-
-
-
+sky.setSky(scene);
 
 ground();
 
 
 helperSquares();
-
 
 
 // DEFINE MAZE GRID
@@ -1210,91 +917,16 @@ export const PiP3 = new THREE.Group();
 Level1Primitives();
 addFloorBodies();
 
+walls.addWalls(assetLoader, scene, world, blockWidth, rotationAngle);
 
-
-
-
-let lobbyGate;
-let puzz1Gate;
-let puzz2Gate;
-addWalls();
-
-document.addEventListener('keydown', (event) => {
-    if (event.key === 'r') {
-        const tileColor = 0xffffff;
-        levelAreas.forEach((area, index) => {
-            let rangeInX = area.sizeFromBoundingBox.x / 2;
-            let rangeInZ = area.sizeFromBoundingBox.z / 2;
-
-            const areaWorldPosition = new THREE.Vector3();
-            area.getWorldPosition(areaWorldPosition);
-
-            let inXBounds = areaWorldPosition.x - rangeInX <= player.characterModel.position.x && player.characterModel.position.x <= areaWorldPosition.x + rangeInX;
-            let inZBounds = areaWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= areaWorldPosition.z + rangeInZ;
-
-            if (inXBounds && inZBounds) {
-                if (index == 0) {
-
-                    litUpTiles1 = [];
-                    PiP1.children.forEach((tile) => {
-                        tile.material.color.set(0x444444);
-                    });
-                    changePathColor(PiP1, pathPiP2AND3, 0x006400);
-                    floorContainerGreen.children.forEach((tile) => {
-                        tile.material.color.set(tileColor);
-                        tile.litUp = false;
-                        if (tile.userData.tileNumber == 1) {
-                            tile.semicircleMesh1.litUp = false;
-                            tile.semicircleMesh1.material.color.set(tileColor);
-                        }
-                    });
-                } else if (index == 3) {
-
-                    litUpTiles2 = [];
-                    PiP2.children.forEach((tile) => {
-                        tile.material.color.set(0x444444);
-                    });
-                    changePathColor(PiP2, pathPiP2AND3, 0xff00ff);
-                    floorContainerRed.children.forEach((tile) => {
-                        tile.material.color.set(tileColor);
-                        tile.litUp = false;
-                        if (tile.userData.tileNumber == 5) {
-                            tile.semicircleMesh.litUp = false;
-                            tile.semicircleMesh.material.color.set(tileColor);
-                        }
-                    });
-                } else if (index == 4) {
-
-                    litUpTiles3 = [];
-                    PiP3.children.forEach((tile) => {
-                        tile.material.color.set(0x444444);
-                    });
-                    changePathColor(PiP3, pathPiP2AND3, 0xFFA500);
-                    floorContainerBlue.children.forEach((tile) => {
-                        tile.material.color.set(tileColor);
-                        tile.litUp = false;
-                        if (tile.userData.tileNumber == 19) {
-                            tile.semicircleMesh3.litUp = false;
-                            tile.semicircleMesh3.material.color.set(tileColor);
-                        }
-                    });
-
-                }
-            }
-        });
-    }
-});
-
-
-
-
+mazeReset();
 
 export function animate_objects() {
     // groundMesh.position.copy(groundBody.position);
     // groundMesh.quaternion.copy(groundBody.quaternion);
-    space.rotation.y += -0.0001;
-    space.rotation.x += -0.00005;
-    space.rotation.z += -0.00005;
+    sky.space.rotation.y += -0.0001;
+    sky.space.rotation.x += -0.00005;
+    sky.space.rotation.z += -0.00005;
 
 }
 

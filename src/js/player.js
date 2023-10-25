@@ -41,7 +41,6 @@ export var paused = false;
 export let playerBody;
 export let characterModel = null;
 let height;
-// export let playerPhysMat = new CANNON.Material();
 
 class BasicCharacterControllerProxy {
   constructor(animations) {
@@ -64,13 +63,7 @@ class BasicCharacterController {
     //playerPhysMat.friction = 1000;
     playerBody = new CANNON.Body({
       mass: 100, // Adjust the mass as needed
-      // TODO: Check why this shape was commented out and only added in later
-      //     shape: new CANNON.Box(new CANNON.Vec3(1, 5, 1)),
-//<<<<<<< HEAD
       position: new CANNON.Vec3(250, 10, 300),
-//=======
-     // position: new CANNON.Vec3(200, 10, -400),
-//>>>>>>> new_b
       material: playerPhysMat
     });
 
@@ -93,25 +86,7 @@ class BasicCharacterController {
 
     this._LoadModels();
 
-    // playerBody.addEventListener('collide', (event) => {
-    //   console.log("collide")
-    //   // Handle collisions here
 
-    //   // Access the other body involved in the collision
-    //   const otherBody = event.body;
-
-    //   // Check if the collision involves a specific type of object
-    //   // You might want to check the type or some property of the other body
-    //   if (otherBody.userData && otherBody.userData.type === 'obstacle') {
-    //     // If it's an obstacle, prevent the player from moving further in that direction
-    //     // For example, if you want to prevent movement in the X direction:
-    //     playerBody.velocity.x = 0;
-    //     playerBody.velocity.z = 0;
-    //     playerBody.velocity.y = 0;
-
-    //     // You can do the same for other axes (e.g., playerBody.velocity.y or playerBody.velocity.z)
-    //   }
-    // });
   //   let onMaze = false;
   //  playerBody.addEventListener('collide', (event) => {
   //    const otherBody = event.body;
@@ -361,8 +336,6 @@ class BasicCharacterController {
         _R.multiply(_Q);
       }
        if(jumping){
-       const offset = new CANNON.Vec3();
-
             const desiredY = 20; // Adjust as needed
 
             playerBody.position.x += desiredY;
