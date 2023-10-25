@@ -7,7 +7,13 @@ import * as camera from './camera.js';
 import * as THREE from 'three';
 
 
+function hideTitleScreen() {
+  const titleScreen = document.getElementById('title-screen');
+  titleScreen.style.display = 'none';
 
+  // Start your game here (e.g., initializing the game components)
+  _RAF();
+}
 
 const listener = new THREE.AudioListener();
 const sound = new THREE.Audio(listener);
@@ -19,9 +25,6 @@ audioLoader.load('/Audio/BetterBackground.mp3', function (buffer) {
     sound.setVolume(0.5);
     sound.play();
 });
-
-
-//camera.camera.add(listener);
 
 const renderer = new THREE.WebGLRenderer({
   antialias: true,
@@ -98,15 +101,6 @@ function startGame() {
     if (player._controls) {
       player._controls.Update(timeElapsedS);
     }
-  }
-
-  function hideTitleScreen() {
-    const titleScreen = document.getElementById('title-screen');
-    titleScreen.style.display = 'none';
-
-    // Start your game here (e.g., initializing the game components)
-
-    _RAF();
   }
 
   // Add a click event listener to the start button
