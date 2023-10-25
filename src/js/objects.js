@@ -28,22 +28,28 @@ export var world = new CANNON.World({
 export const raycaster = new THREE.Raycaster();
 
 class floorContBody {
-    constructor(container) {
-        // Create floors bodies
-        // const floorContGeo = new THREE.PlaneGeometry(190, 190);
-        // const floorContMat = new THREE.MeshStandardMaterial({
-        //     color: 0x78BE21,
-        //     side: THREE.DoubleSide,
-        //     wireframe: false
-        // });
+    constructor(container, num) {
+        let size = 95;
+        if (num == 4){
+            size = 72.5;
+        }
+
+    //    // Create floors bodies
+    //     const floorContGeo = new THREE.PlaneGeometry(2*size, 2*size);
+    //     const floorContMat = new THREE.MeshStandardMaterial({
+    //         color: 0x78BE21,
+    //         side: THREE.DoubleSide,
+    //         wireframe: true
+    //     });
 
 
-        // this.mesh = new THREE.Mesh(floorContGeo, floorContMat);
-        // scene.add(this.mesh);
+    //     this.mesh = new THREE.Mesh(floorContGeo, floorContMat);
+    //     scene.add(this.mesh);
 
+       
         // Physics floor
         const floorContPhysMat = new CANNON.Material();
-        const floorContShape = new CANNON.Box(new CANNON.Vec3(95, 95, 1)); // Half of your desired dimensions
+        const floorContShape = new CANNON.Box(new CANNON.Vec3(size, size, 1)); // Half of your desired dimensions
         this.body = new CANNON.Body({
             shape: floorContShape,
             type: CANNON.Body.STATIC,
@@ -56,8 +62,8 @@ class floorContBody {
         this.body.quaternion.setFromEuler(rotationAngle, 0, 0);
         world.addBody(this.body);
 
-        // this.mesh.position.copy(this.body.position);
-        // this.mesh.quaternion.copy(this.body.quaternion);
+        //  this.mesh.position.copy(this.body.position);
+        //  this.mesh.quaternion.copy(this.body.quaternion);
     }
 }
 
@@ -436,12 +442,6 @@ function changePathColor(container, path, color) {
 
 
 
-function addFloorBodies() {
-
-
-
-}
-
 function helperSquares() {
 
     //white and gray squares (will be removed later)
@@ -552,7 +552,7 @@ function Level1Primitives() {
     scene.add(PiPBase3);
     PiPBase3.position.set(175 + 100, 20, 100.5);
     scene.add(PiP3);
-    const floorBody3 = new floorContBody(floorContainerBlue);
+    const floorBody3 = new floorContBody(floorContainerBlue,1);
 }
 
 function Level2Primitives() {
@@ -590,7 +590,7 @@ function Level2Primitives() {
     PiPBase2.position.set(blockWidth / 2 + 0.3 + 100, 20.2, -249);
     scene.add(PiPBase2);
     scene.add(PiP2);
-    const floorBody2 = new floorContBody(floorContainerRed);
+    const floorBody2 = new floorContBody(floorContainerRed,2);
 
 
 }
@@ -635,7 +635,7 @@ function Level3Primitives() {
     scene.add(PiPBase1);
 
     scene.add(PiP1);
-    const floorBody1 = new floorContBody(floorContainerGreen);
+    const floorBody1 = new floorContBody(floorContainerGreen,3);
 
 }
 
@@ -682,6 +682,8 @@ function Level4Primitives(){
     scene.add(PiPBase4);
 
     scene.add(PiP4);
+
+    const floorBody4 = new floorContBody(floorContainerYellow,4);
 
 }
 
@@ -1061,7 +1063,6 @@ export const PiP4 = new THREE.Group();
  Level2Primitives();
  Level3Primitives();
 Level4Primitives();
-addFloorBodies();
 
 walls.addWalls(assetLoader, scene, world, blockWidth, rotationAngle);
 walls.lobbyGate.opengate((Math.PI / 2), 3);
@@ -1091,7 +1092,7 @@ export function animate_lights() {
 // model is stored as property of gltf object whose key is scene
 
 //Add Fog
-scene.fog = effects.fog;
+//scene.fog = effects.fog;
 
 
    
