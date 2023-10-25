@@ -1,25 +1,44 @@
-*
-{
+@font-face {
+    font-family: Pangolin;
+    src: url(./fonts/Pangolin/Pangolin-Regular.ttf);
+}
+
+@font-face {
+    font-family: Frozito;
+    src: url(./fonts/frozito-font/Frozito-eZ99g.ttf);
+}
+
+
+@font-face {
+    font-family: Quicksand;
+    src: url(./fonts/Quicksand/Quicksand-VariableFont_wght.ttf);
+}
+
+:root {
+    --orange-shade: rgb(214, 140, 2);
+    --orange-shade-translucent: rgb(214, 140, 2, 0.5);
+    --system-default-font: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
-html,
-body
-{
+body {
     height: 100vh;
-    font-family: 'Poppins';
-    caret-color: transparent;
+    font-family: var(--system-default-font);
+    position: relative;
+    color: azure;
 }
 
-.webgl
-{
-    position: fixed;
+.webgl {
+    position: absolute;
     top: 0;
     left: 0;
     outline: none;
 }
-
 
 #crosshairs {
     position: fixed;
@@ -33,69 +52,188 @@ body
     pointer-events: none;
     cursor: pointer;
     caret: none;
-
 }
 
-#title-screen {
-    position: fixed;
+/* STYLES FOR START MENU LAYER */
+.start.menu.screen {
+    height: 100vh;
     width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 1);
+    padding: 4rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(rgba(18, 18, 18, 0.9), rgba(68, 68, 68, 0.6));
+    background-size: 100% 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+.start.menu.screen h1 {
+    margin-bottom: 1rem;
+    letter-spacing: 2.2rem;
+    font-size: 4rem;
+    font-style: normal;
+    font-family: Frozito;
+    position: relative;
+}
+
+.start.menu.screen p {
+    color: var(--orange-shade);
+    font-size: 6rem;
+    top: 30px;
+    left: 0px;
+    display: inline-block;
+    position: relative;
+    top: 0.8rem;
+}
+
+.start.menu.screen h3 {
+    margin-bottom: 9rem;
+    font-size: 3.4rem;
+    letter-spacing: 0.6rem;
+    font-family: Pangolin;
+    font-weight: 0;
+}
+
+.start.menu.screen ul {
+    list-style: none;
+}
+
+.start.menu.screen li {
+    font-size: 2.4rem;
+    font-family: Quicksand;
+    font-weight: 800;
+    letter-spacing: 0.2rem;
+    text-align: center;
+    padding: 0.5rem 0.7rem;
+    margin-bottom: 1rem;
+}
+
+/* Give special styling to first list element child */
+.start.menu.screen li:first-child {
+    outline: 1px solid var(--orange-shade-translucent);
+    color: var(--orange-shade);
+}
+
+.start.menu.screen li:first-child:hover {
+    background-color: var(--orange-shade);
+    outline: 1px solid var(--orange-shade);
+    color: rgba(155, 0, 0, 0);
+}
+
+/* Give light special styling to active buttons */
+.start.menu.screen li.active,
+.start.menu.screen li:hover {
+    outline: 1px solid rgb(245, 245, 245, 0.5);
+}
+
+/* CONTENT OF LOADING SCREEN LAYER */
+
+.loading.screen {
+    height: 100vh;
+    width: 100%;
+    padding: 4rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: end;
+    background: linear-gradient(rgba(18, 18, 18, 0.9), rgba(68, 68, 68, 0.6));
+    background-size: 100% 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.loading.message {
+    font-size: 2.4rem;
+    letter-spacing: 0.6rem;
+    font-family: Pangolin;
+    font-weight: 0;
+}
+
+.loading.screen h3 {
+    margin-bottom: 0.2rem;
+    font-size: 3.4rem;
+    letter-spacing: 0.6rem;
+    font-family: Pangolin;
+    font-weight: 0;
+}
+
+/* CONTENT OF PAUSE MENU LAYER */
+#paused-screen {
+    height: 100vh;
+    width: 100%;
+    padding: 4rem 1rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 999;
+    background: linear-gradient(rgba(18, 18, 18, 0.9), rgba(68, 68, 68, 0.6));
+    background-size: 100% 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
 }
 
-.loader {
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #3498db;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 2s linear infinite;
+#paused-screen h3 {
+    margin-bottom: 1.9rem;
+    font-size: 3.7rem;
+    letter-spacing: 0.6rem;
+    font-family: Pangolin;
+    font-weight: 0;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+#paused-screen ul {
+    list-style: none;
 }
 
-#title-screen h1 {
-    font-size: 36px;
-    color: white;
-    margin-bottom: 20px;
-}
-
-#title-screen p {
-    font-size: 18px;
-    color: white;
-    margin-bottom: 30px;
-}
-
-
-#paused-screen {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 1);
-    color: white;
+#paused-screen li {
+    font-size: 2.4rem;
+    font-family: Quicksand;
+    font-weight: 800;
+    letter-spacing: 0.2rem;
     text-align: center;
-    padding: 20px;
-    border-radius: 10px;
-    display: none; /* Initially hide the pause screen */
-    z-index: 1000; /* Ensure it's on top of other elements */
+    padding: 0.5rem 0.7rem;
+    margin-bottom: 1rem;
 }
 
-#paused-screen h1 {
-    font-size: 36px;
-    margin-bottom: 10px;
+/* Give special styling to first list element child */
+#paused-screen li:first-child {
+    outline: 1px solid var(--orange-shade-translucent);
+    color: var(--orange-shade);
 }
 
-#paused-screen p {
-    font-size: 18px;
-    margin-top: 0;
+#paused-screen li:first-child:hover {
+    background-color: var(--orange-shade);
+    outline: 1px solid var(--orange-shade);
+    color: rgba(155, 0, 0, 0);
 }
 
+/* Give light special styling to active buttons */
+#paused-screen li.active,
+#paused-screen li:hover {
+    outline: 1px solid rgb(245, 245, 245, 0.5);
+}
+
+.notDisplayed {
+    display: none;
+}
+
+/* CONTENT OF TIP */
+
+.tip {
+    padding: 1.2rem 1.3rem;
+    font-size: 2.4rem;
+    letter-spacing: 0.3rem;
+    position: absolute;
+    right: 0;
+    font-family: var(--system-default-font);
+    background-color: rgb(0, 0, 0, 0.9);
+    border-radius: 1.9rem 0px 0px 1.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+}

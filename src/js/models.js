@@ -254,7 +254,7 @@ function lobby(loader, scene, world) {
 
 export function loadModels(loader, scene, world, blockWidth) {
 
-    trees();
+    // trees();
   //  plants();
 
     modelsToLoad.push({ modelPath: '/ground_material.glb', scale: 1, position: [0, -1, 0], rotation: Math.PI / 2 });
