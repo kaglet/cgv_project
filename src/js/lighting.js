@@ -4,23 +4,26 @@ import * as objects from './objects.js'
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 objects.scene.add(ambientLight);
 
-// Add lighting (point light)
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
-objects.scene.add(directionalLight);
+// Add lighting (directional light)
+const directionalLight = new THREE.SpotLight(0xFFFFFF, 2);
+
 directionalLight.castShadow = true;
+directionalLight.shadow.camera.near = 100;
+directionalLight.shadow.camera.far = 4000;
+objects.scene.add(directionalLight);
 
-// adjust position for the angle it will strike 0, 0, 0 at if it was the sun
-directionalLight.position.set(-200, 400, 60);
-// You can adjust the edges of the shadow camera to capture a wider area where shadows are rendered
-directionalLight.shadow.camera.bottom = -500;
-directionalLight.shadow.camera.top = 500;
-directionalLight.shadow.camera.left = -3000;
-directionalLight.shadow.camera.right = 3000;
 
-// const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 5);
-// objects.scene.add(directionalLightHelper);
+// Adjust the position of the light
+const targetObject = new THREE.Object3D();
+targetObject.position.set(50, 0, 0);
+objects.scene.add(targetObject);
+directionalLight.position.set(100, 800, 700);
 
-// The object that casts a shadow has an implicit shadow camera setup
-// Different light types have different camera types
-// const directionalLightShadowHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
-// objects.scene.add(directionalLightShadowHelper);
+directionalLight.target = targetObject;
+
+directionalLight.angle = 0.5;
+// Configure the shadow map size and camera near/far
+const lighHelper=new THREE.SpotLightHelper(directionalLight);
+objects.scene.add(lighHelper);
+var helper = new THREE.CameraHelper( directionalLight.shadow.camera );
+objects.scene.add( helper );

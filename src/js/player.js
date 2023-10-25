@@ -151,6 +151,7 @@ class BasicCharacterController {
       fbx.scale.setScalar(0.1025);
       fbx.traverse(c => {
         c.castShadow = true;
+        c.receiveShadow = true;
       });
 
       // accurate hitbox for the player
@@ -247,7 +248,7 @@ class BasicCharacterController {
 
       if (!moveForward){
         velocity.z -= 0.00046*acc.z * timeInSeconds;
-    
+
       }
       if (moveForward) {
         velocity.z += acc.z * timeInSeconds;
@@ -472,9 +473,8 @@ class BasicCharacterControllerInput {
         jumpSound.play();
         break;
       }
-      if(onMaze && sound.glass==false){
-        sound.setGlass(true);
-      }else{
+      if(playerBody.position.y<10 && sound.glass===true){
+      console.log(playerBody.position.y);
         sound.setGlass(false);
       }
       if ((moveForward || moveBackward || moveRight || moveLeft) && soundPlaying==false) {
