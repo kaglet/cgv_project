@@ -25,6 +25,8 @@ function runGame() {
   const _mixers = [];
   let _previousRAF = null;
 
+  let frameCounter = 0;
+
   function _RAF() {
     requestAnimationFrame((t) => {
       if (_previousRAF === null) {
@@ -38,6 +40,22 @@ function runGame() {
         objects.animate_lights();
         renderer.render(objects.scene, camera.currentCamera);
         step(t - _previousRAF);
+      }
+
+      if (frameCounter % 50 === 0) {
+        const playerPosition = new THREE.Vector3(player.playerBody.position.x, player.playerBody.position.y, player.playerBody.position.z);
+        const targetCoordinates = new THREE.Vector3(207, 4, 408); // Replace with your target coordinates
+
+        // Define the maximum range (e.g., 5 units)
+        const maxRange = 10;
+
+        // Calculate the distance between the player and the target coordinates
+        const distance = playerPosition.distanceTo(targetCoordinates);
+
+        // Check if the player is within the specified range
+        if (distance <= maxRange) {
+          console.log('Player in front of sign');
+        } 
       }
 
       _previousRAF = t;
