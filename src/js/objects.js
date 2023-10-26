@@ -11,6 +11,7 @@ import * as player from './player.js';
 import * as effects from './effect.js';
 import * as sky from './sky.js';
 import * as walls from './walls.js';
+import * as models from './models.js';
 import groundImg from './textures/avinash-kumar-rEIDzqczN7s-unsplash.jpg';
 
 // DEFINE GLOBAL VARIABLES
@@ -90,19 +91,25 @@ function puzzComplete(puzz) {
         walls.lobbyGate.opengate((Math.PI / 2), 3);
         // Close the current tab or window
 
+        models.loadLevel1Models(assetLoader, scene, world);
         Level1Primitives();
     }
     else if (puzz == 'Blue') {
 
         walls.puzz1Gate.opengate((Math.PI / 2), 3);
+        models.loadLevel2Models(assetLoader, scene, world);
         Level2Primitives();
 
     }
     else if (puzz == 'Red') {
         walls.puzz2Gate.opengate((Math.PI / 2), 2);
+        models.loadLevel3Models(assetLoader, scene, world);
         Level3Primitives();
 
 
+    }
+    else if (puzz == 'Green'){
+        //Win screen
     }
 
 
@@ -863,7 +870,6 @@ function tileLights() {
 
             newTile = litUpTiles3[litUpTiles3.length - 1];
             if (tile.litUp === false && inXBounds && inZBounds) {
-                sound.setGlass(true);
                 const tileColor = new THREE.Color(0, 0, 255);
                 tile.material.color.copy(tileColor);
                 L3Stack.push(tile.userData.tileNumber);
@@ -890,6 +896,7 @@ function tileLights() {
 
 
         });
+
 
         floorContainerYellow.children.forEach((tile, index) => {
             const epsilon = 3; // Small epsilon value to handle floating point errors
