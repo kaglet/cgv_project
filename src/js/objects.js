@@ -12,6 +12,7 @@ import * as effects from './effect.js';
 import * as sky from './sky.js';
 import * as walls from './walls.js';
 import * as models from './models.js';
+import * as lighting from './lighting.js';
 import groundImg from './textures/avinash-kumar-rEIDzqczN7s-unsplash.jpg';
 
 // DEFINE GLOBAL VARIABLES
@@ -1082,8 +1083,6 @@ let assetLoader = new GLTFLoader();
 loadModels(assetLoader, scene, world, blockWidth);
 
 
-sky.setSky(scene);
-
 ground();
 
 
@@ -1151,6 +1150,10 @@ walls.addWalls(assetLoader, scene, world, blockWidth, rotationAngle);
 // walls.puzz2Gate.opengate((Math.PI / 2), 2);
 
 mazeReset();
+
+
+sky.setSky(scene);
+lighting.addLights(scene);
 
 export function animate_objects() {
 
