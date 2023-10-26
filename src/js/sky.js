@@ -103,7 +103,7 @@ const gltfLoader = new GLTFLoader();
 
 gltfLoader.load('./assets/moon/scene.gltf', (gltf) => {
     moonMesh = gltf.scene;
-    moonMesh.scale.set(1.5, 1.5, 1.5); // Adjust the scale as needed
+    moonMesh.scale.set(2, 2, 2); // Adjust the scale as needed
 
     // Create a group for the moon to orbit around the world center
     
