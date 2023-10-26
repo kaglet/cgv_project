@@ -1147,9 +1147,14 @@ walls.addWalls(assetLoader, scene, world, blockWidth, rotationAngle);
 mazeReset();
 
 export function animate_objects() {
-    sky.space.rotation.y += -0.0001;
+
     sky.space.rotation.x += -0.00005;
+    sky.space.rotation.y += -0.0001;
     sky.space.rotation.z += -0.00005;
+
+    
+
+    sky.moonOrbitGroup.rotation.set( sky.space.rotation.x,sky.space.rotation.y,sky.space.rotation.z);
 
 }
 

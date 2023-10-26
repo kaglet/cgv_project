@@ -12,6 +12,8 @@ import spaceRtImage from '../img/space/space_rt.png';
 import spaceLfImage from '../img/space/space_lf.png';
 
 export let space;
+let moonMesh;
+export let moonOrbitGroup =new THREE.Object3D();;
 
 
 export function setSky(scene) {
@@ -96,17 +98,24 @@ export function setSky(scene) {
 //Moon
 
 const gltfLoader = new GLTFLoader();
-let moonMesh;
+
 
 gltfLoader.load('./assets/moon/scene.gltf', (gltf) => {
     moonMesh = gltf.scene;
-    moonMesh.scale.set(1, 1, 1); // Adjust the scale as needed
-    moonMesh.position.set(0, 3000, 0); // Adjust the initial position
-    moonMesh.rotation.x = 3*Math.PI/2 // Adjust the initial position
-    moonMesh.rotation.z = 3*Math.PI/2 // Adjust the initial position
+    moonMesh.scale.set(1.5, 1.5, 1.5); // Adjust the scale as needed
 
-    // Add the moon mesh to the scene
-    scene.add(moonMesh);
+    // Create a group for the moon to orbit around the world center
+    
+    moonOrbitGroup.position.set(0, 0, 0); // World center position (0,0,0)
+
+    // Set the moon's initial position relative to the world center
+    moonMesh.position.set(-4000, 4000,0); // Adjust the initial position
+
+    // Add the moon mesh as a child of the orbit group
+    moonOrbitGroup.add(moonMesh);
+
+    // Add the moon orbit group to the scene
+    scene.add(moonOrbitGroup);
 });
 
 
