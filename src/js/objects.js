@@ -935,6 +935,9 @@ function tileLights() {
                 tile.material.color.copy(tileColor);
 
                 tile.litUp = true;
+                if (tile.userData.tileNumber == 81) {
+                    console.log("Start Tile litUp");
+                }
                 if (tile.userData.tileNumber == 1) {
                     tile.semicircleMesh4.litUp = true;
                     tile.semicircleMesh4.material.color.copy(tileColor);
@@ -944,6 +947,9 @@ function tileLights() {
                 if (haveSameValues) {
                     console.log("Path 4 correct.");
                     puzzComplete("Yellow");
+                }
+                if(tile.userData.tileNumber == 1 && !haveSameValues){
+                    console.log("Incorrect Path");
                 }
                 // TODO: Make tiles sink also upon intersection, just shift slightly in the z
                 // How do I position the tiles, is it within the floor container, using current position -= 1 for z for example or do I do a local transformation in floor?
