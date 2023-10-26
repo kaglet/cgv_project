@@ -23,7 +23,7 @@ directionalLight.target = targetObject;
 
 directionalLight.angle = 0.5;
 // Configure the shadow map size and camera near/far
-const lighHelper=new THREE.SpotLightHelper(directionalLight);
-objects.scene.add(lighHelper);
-var helper = new THREE.CameraHelper( directionalLight.shadow.camera );
-objects.scene.add( helper );
+// const lighHelper=new THREE.SpotLightHelper(directionalLight);
+// objects.scene.add(lighHelper);
+// var helper = new THREE.CameraHelper( directionalLight.shadow.camera );
+// objects.scene.add( helper );
