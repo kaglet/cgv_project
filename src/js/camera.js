@@ -11,6 +11,9 @@ import * as objects from './objects.js';
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 30000);
 camera.position.set(0, -10, 0);
 
+const initialPitch = -Math.PI / 4; // Adjust the pitch angle as needed
+camera.rotation.set(initialPitch, 0, 0);
+
 const width = window.innerWidth;
 const height = window.innerHeight;
 
