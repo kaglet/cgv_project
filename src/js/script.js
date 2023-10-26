@@ -80,6 +80,10 @@ function hideLoadingScreen() {
   const crosshairs = document.getElementById('crosshairs');
   document.body.appendChild(crosshairs);
   crosshairs.style.display = 'block';
+
+  document.addEventListener('click', function () {
+    player.controls.lock();
+  });
 }
 
 
@@ -97,7 +101,7 @@ window.addEventListener('load', () => {
   startButton.addEventListener('click', () => {
     hideTitleScreen();
     showLoadingScreen();
-    setTimeout(hideLoadingScreen, 10000);
+    setTimeout(hideLoadingScreen, 5000);
   });
 });
 

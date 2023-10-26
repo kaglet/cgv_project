@@ -418,10 +418,6 @@ class BasicCharacterControllerInput {
     const instructions = document.getElementById('instructions');
     const pausedScreen = document.getElementById('paused-screen');
 
-    document.addEventListener('click', function () {
-      controls.lock();
-    });
-
     // resume
     controls.addEventListener('lock', function () {
       paused=false;
