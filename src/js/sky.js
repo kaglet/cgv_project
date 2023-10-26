@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import * as CANNON from 'cannon-es';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import * as models from './models.js';
 
 
 // Import texture images
@@ -98,7 +99,7 @@ export function setSky(scene) {
 //Moon
 
 const gltfLoader = new GLTFLoader();
-
+// modelsToLoad.push({ modelPath: '/openlvl2(48.5mb).glb', scale: 1.05, position: [217, 2, -358], rotation:0 });
 
 gltfLoader.load('./assets/moon/scene.gltf', (gltf) => {
     moonMesh = gltf.scene;
