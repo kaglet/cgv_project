@@ -90,7 +90,6 @@ function puzzComplete(puzz) {
     if (puzz == 'Yellow') {
         walls.lobbyGate.opengate((Math.PI / 2), 3);
         // Close the current tab or window
-
         models.loadLevel1Models(assetLoader, scene, world);
         Level1Primitives();
     }
@@ -936,6 +935,9 @@ function tileLights() {
                 tile.material.color.copy(tileColor);
 
                 tile.litUp = true;
+                if (tile.userData.tileNumber == 81) {
+                    console.log("Start Tile litUp");
+                }
                 if (tile.userData.tileNumber == 1) {
                     tile.semicircleMesh4.litUp = true;
                     tile.semicircleMesh4.material.color.copy(tileColor);
@@ -945,6 +947,9 @@ function tileLights() {
                 if (haveSameValues) {
                     console.log("Path 4 correct.");
                     puzzComplete("Yellow");
+                }
+                if(tile.userData.tileNumber == 1 && !haveSameValues){
+                    console.log("Incorrect Path");
                 }
                 // TODO: Make tiles sink also upon intersection, just shift slightly in the z
                 // How do I position the tiles, is it within the floor container, using current position -= 1 for z for example or do I do a local transformation in floor?
@@ -1148,9 +1153,14 @@ walls.addWalls(assetLoader, scene, world, blockWidth, rotationAngle);
 mazeReset();
 
 export function animate_objects() {
-    sky.space.rotation.y += -0.0001;
+
     sky.space.rotation.x += -0.00005;
+    sky.space.rotation.y += -0.0001;
     sky.space.rotation.z += -0.00005;
+
+    
+
+    sky.moonOrbitGroup.rotation.set( sky.space.rotation.x,sky.space.rotation.y,sky.space.rotation.z);
 
 }
 
