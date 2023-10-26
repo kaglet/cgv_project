@@ -989,7 +989,7 @@ function mazeReset() {
                         });
                         changePathColor(PiP1, pathPiP2AND3, 0x006400);
                         floorContainerGreen.children.forEach((tile) => {
-                            if(tile.userData.tileNumber!=81){
+                            if(tile.userData.tileNumber==81){
 
                                 tile.material.color.copy(tileColor);
                            }else{
@@ -1009,7 +1009,7 @@ function mazeReset() {
                         });
                         changePathColor(PiP2, pathPiP2AND3, 0xff00ff);
                         floorContainerRed.children.forEach((tile) => {
-                            if(tile.userData.tileNumber!=81){
+                            if(tile.userData.tileNumber==81){
 
                                 tile.material.color.copy(tileColor);
                            }else{
@@ -1029,7 +1029,7 @@ function mazeReset() {
                         });
                         changePathColor(PiP3, pathPiP2AND3, 0xFFA500);
                         floorContainerBlue.children.forEach((tile) => {
-                            if(tile.userData.tileNumber!=81){
+                            if(tile.userData.tileNumber==81){
 
                                 tile.material.color.copy(tileColor);
                            }else{
