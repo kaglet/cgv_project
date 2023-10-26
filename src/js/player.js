@@ -36,10 +36,6 @@ let moveLeft = false;
 let moveRight = false;
 let jumping=false;
 let onMaze = false;
-let wPressed = false;
-let aPressed = false;
-let sPressed = false;
-let dPressed = false;
 export var paused = false;
 var disable=true;
 
@@ -463,19 +459,15 @@ class BasicCharacterControllerInput {
       switch (event.keyCode) {
         case 87: // w
           moveForward = true;
-          wPressed = true;
           break;
         case 65: // a
           moveLeft = true;
-          aPressed = true;
           break;
         case 83: // s
           moveBackward = true;
-          sPressed = true;
           break;
         case 68: // d
           moveRight = true;
-          dPressed = true;
           break;
        case 32: // d
         jumping = true;
@@ -488,10 +480,6 @@ class BasicCharacterControllerInput {
       if ((moveForward || moveBackward || moveRight || moveLeft) && soundPlaying==false) {
       soundPlaying=true;
         sound.moveSound.play();
-      }
-
-      if (wPressed && aPressed && sPressed && dPressed) {
-        console.log('W, A, S, and D keys have all been pressed at least once.');
       }
     }
   };
