@@ -1144,7 +1144,7 @@ export function animate_lights() {
 // model is stored as property of gltf object whose key is scene
 
 //Add Fog
-// scene.fog = effects.fog;
+scene.fog = effects.fog;
 
 
 

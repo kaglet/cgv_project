@@ -15,8 +15,8 @@
 }
 
 :root {
-    --orange-shade: rgb(214, 140, 2);
-    --orange-shade-translucent: rgb(214, 140, 2, 0.5);
+    --main-font-shade: rgb(214, 140, 2);
+    --main-border-shade-translucent: rgb(214, 140, 2, 0.5);
     --system-default-font: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
@@ -38,6 +38,7 @@ body {
     top: 0;
     left: 0;
     outline: none;
+    z-index: 1;
 }
 
 #crosshairs {
@@ -47,7 +48,7 @@ body {
     transform: translate(-50%, -50%);
     width: 20px;
     height: 20px;
-    border: 2px solid red;
+    border: 2px solid rgb(225, 173, 67);
     border-radius: 50%;
     pointer-events: none;
     cursor: pointer;
@@ -62,7 +63,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: linear-gradient(rgba(18, 18, 18, 0.9), rgba(68, 68, 68, 0.6));
+    background: linear-gradient(to bottom, rgba(18, 18, 18, 0.3), rgba(18, 18, 18, 0.3)), url(./img/space/main-menu-background.jpg);
     background-size: 100% 100%;
     position: absolute;
     top: 0;
@@ -80,7 +81,7 @@ body {
 }
 
 .start.menu.screen p {
-    color: var(--orange-shade);
+    color: var(--main-font-shade);
     font-size: 6rem;
     top: 30px;
     left: 0px;
@@ -113,13 +114,13 @@ body {
 
 /* Give special styling to first list element child */
 .start.menu.screen li:first-child {
-    outline: 1px solid var(--orange-shade-translucent);
-    color: var(--orange-shade);
+    outline: 1px solid var(--main-border-shade-translucent);
+    color: var(--main-font-shade);
 }
 
 .start.menu.screen li:first-child:hover {
-    background-color: var(--orange-shade);
-    outline: 1px solid var(--orange-shade);
+    background-color: var(--main-font-shade);
+    outline: 1px solid var(--main-font-shade);
     color: rgba(155, 0, 0, 0);
 }
 
@@ -139,12 +140,13 @@ body {
     flex-direction: column;
     justify-content: flex-end;
     align-items: end;
-    background: linear-gradient(rgba(18, 18, 18, 0.9), rgba(68, 68, 68, 0.6));
+    background: linear-gradient(rgba(9, 1, 35, 1), rgba(9, 1, 35, 1));
+    background-image: url(./img/space/main-menu-background.jpg);
     background-size: 100% 100%;
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 1;
+    z-index: 0;
 }
 
 .loading.message {
@@ -171,12 +173,12 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(rgba(18, 18, 18, 0.9), rgba(68, 68, 68, 0.6));
+    background-color: rgba(18, 18, 18, 0.9);
     background-size: 100% 100%;
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 1;
+    z-index: 0;
 }
 
 #paused-screen h3 {
@@ -203,13 +205,13 @@ body {
 
 /* Give special styling to first list element child */
 #paused-screen li:first-child {
-    outline: 1px solid var(--orange-shade-translucent);
-    color: var(--orange-shade);
+    outline: 1px solid var(--main-border-shade-translucent);
+    color: var(--main-font-shade);
 }
 
 #paused-screen li:first-child:hover {
-    background-color: var(--orange-shade);
-    outline: 1px solid var(--orange-shade);
+    background-color: var(--main-font-shade);
+    outline: 1px solid var(--main-font-shade);
     color: rgba(155, 0, 0, 0);
 }
 
@@ -226,14 +228,14 @@ body {
 /* CONTENT OF TIP */
 
 .tip {
-    padding: 1.2rem 1.3rem;
-    font-size: 2.4rem;
+    padding: 1rem 1.3rem;
+    font-size: 1.2rem;
     letter-spacing: 0.3rem;
     position: absolute;
     right: 0;
     font-family: var(--system-default-font);
     background-color: rgb(0, 0, 0, 0.9);
-    border-radius: 1.9rem 0px 0px 1.9rem;
+    border-radius: 1.5rem 0px 0px 1.9rem;
     top: 50%;
     transform: translateY(-50%);
 }

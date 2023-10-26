@@ -25,11 +25,6 @@ function runGame() {
   const _mixers = [];
   let _previousRAF = null;
 
-  // TODO: Consider why the crosshairs needs to be appended to document
-  const crosshairs = document.getElementById('crosshairs');
-  document.body.appendChild(crosshairs);
-  crosshairs.style.display = 'block';
-
   function _RAF() {
     requestAnimationFrame((t) => {
       if (_previousRAF === null) {
@@ -80,6 +75,11 @@ function showLoadingScreen() {
 function hideLoadingScreen() {
   let loadingScreen = document.querySelector('.loading.screen');
   loadingScreen.style.display = 'none';
+
+  // TODO: Consider why the crosshairs needs to be appended to document
+  const crosshairs = document.getElementById('crosshairs');
+  document.body.appendChild(crosshairs);
+  crosshairs.style.display = 'block';
 }
 
 
