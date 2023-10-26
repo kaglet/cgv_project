@@ -41,16 +41,23 @@ function runGame(steps, tipDisplay) {
         renderer.render(objects.scene, camera.currentCamera);
         step(t - _previousRAF);
         // if steps are not emptied out then show tips
-        if (steps.length != 0 && gameIsLoaded === true) {
+        if (steps.length !== 0 && gameIsLoaded === true) {
           tipDisplay.style.display = 'block';
+
           if (steps[0].checkStepComplete() === true) {
+            console.log('removed step 1');
             steps.shift();
+            console.log(steps.length);
           } else {
             // display text for top most step
             tipDisplay.textContent = steps[0].text;
           }
+        } else if (steps.length === 0) {
+          // set display back to none once all tips are shown
+          console.log('length is 0 now remove');
+          tipDisplay.style.display = 'none';
         }
-      }
+      } 
 
       _previousRAF = t;
       _RAF();
@@ -130,13 +137,29 @@ function createTutorialSteps() {
   let step7Text = "The door has opened indicating you completed the puzzle.";
   
   // when called it run setTimeout repeatedly which will run anonymous function until 10 seconds have elapsed. 
-  let checkStep1Complete = () => setTimeout(function() {
-    // Your code to execute after 10 seconds goes here
-}, 10000);
+  // assume function can be unbundled for spontaneous variables
+  // spontaneous variables can be handled same as any other variable within function like this. anything
+  let checkStep1Complete = function() {
+    if (this.startTime === undefined) {
+      this.startTime = new Date().getTime();
+    }
+
+    // console.log(new Date().getTime());
+
+    this.endTime = new Date().getTime();
+    console.log(this.endTime - this.startTime);
+    
+    if ((this.endTime - this.startTime) / 1000 >= 5) {
+      return true;
+    }
+  }
+
+  let checkStep2Complete = checkStep1Complete;
+
   // check this.start and this.end for step1 as they are updated. They are initialized on construction and checked on loop run.
   // start is filled and never filled again, end is refilled, their difference is checked.
   let step1 =  new Step(step1Text, checkStep1Complete);
-  // let step2 =  new Step(step2Text, checkStep2Complete);
+  let step2 =  new Step(step2Text, checkStep2Complete);
   // let step3 =  new Step(step3Text, checkStep3Complete);
   // let step4 =  new Step(step4Text, checkStep4Complete);
   // let step5 =  new Step(step5Text, checkStep5Complete);
@@ -145,7 +168,7 @@ function createTutorialSteps() {
   
   let steps = [
     step1,
-    // step2,
+    step2,
     // step3,
     // step4,
     // step5,
