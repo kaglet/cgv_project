@@ -11,6 +11,7 @@ import * as player from './player.js';
 import * as effects from './effect.js';
 import * as sky from './sky.js';
 import * as walls from './walls.js';
+import * as models from './models.js';
 import groundImg from './textures/avinash-kumar-rEIDzqczN7s-unsplash.jpg';
 
 // DEFINE GLOBAL VARIABLES
@@ -90,19 +91,25 @@ function puzzComplete(puzz) {
         walls.lobbyGate.opengate((Math.PI / 2), 3);
         // Close the current tab or window
 
+        models.loadLevel1Models(assetLoader, scene, world);
         Level1Primitives();
     }
     else if (puzz == 'Blue') {
 
         walls.puzz1Gate.opengate((Math.PI / 2), 3);
+        models.loadLevel2Models(assetLoader, scene, world);
         Level2Primitives();
 
     }
     else if (puzz == 'Red') {
         walls.puzz2Gate.opengate((Math.PI / 2), 2);
+        models.loadLevel3Models(assetLoader, scene, world);
         Level3Primitives();
 
 
+    }
+    else if (puzz == 'Green'){
+        //Win screen
     }
 
 
@@ -117,7 +124,7 @@ function createTile(index, round, container) {
 
         tile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
         tile.material.shadowSide = THREE.FrontSide;
-        // tile.receiveShadow=true;
+        tile.receiveShadow=true;
         // tile.castShadow=true;
         // Add cylinders at each corner of the tile
         const cornerCylinderGeometry = new THREE.CylinderGeometry(0.1, 0.1, 5, 32); // Adjusted size
@@ -189,12 +196,16 @@ function createTile(index, round, container) {
         tileCorners.forEach((corner) => {
             // Create the corner cylinder
             const cornerCylinder = new THREE.Mesh(cornerCylinderGeometry, cornerCylinderMaterial);
+            cornerCylinder.castShadow=true;
+            cornerCylinder.receiveShadow=true;
             cornerCylinder.position.copy(corner).add(new THREE.Vector3(0, 0, halfCylinderHeight));
             cornerCylinder.rotation.x = Math.PI / 2; // Rotate 90 degrees around the x-axis
             tile.add(cornerCylinder); // Add the cylinder as a child of the tile
 
             // Create the cube on top of the cylinder
             const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+            cube.castShadow=true;
+            cube.receiveShadow=true;
             cube.position.copy(corner).add(new THREE.Vector3(0, 0, -halfCylinderHeight + 2)); // Adjusted position
             tile.add(cube); // Add the cube as a child of the tile
         });
@@ -428,6 +439,10 @@ function drawGridWithOmissions(container, omittedTiles = [], round) {
                     const yOffset = (j - numCols / 2) * (tileSize + gapSize);
                     tile.name = 'tile';
                     tile.litUp = false;
+                    const tileColor = new THREE.Color(0, 0, 0, 0);
+                    if(tileNumber !=81){
+                          tile.material.color.copy(tileColor);
+                    }
                     tile.playerWithinBounds = false;
                     tile.position.set(xOffset, yOffset, 0);
                     tile.updateWorldMatrix(true, false);
@@ -752,8 +767,9 @@ function tileLights() {
             let inXBounds = tileWorldPosition.x - rangeInX <= player.characterModel.position.x && player.characterModel.position.x <= tileWorldPosition.x + rangeInX;
             let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
 
-            if (tile.litUp === false && inXBounds && inZBounds) {
-                sound.setGlass(true);
+            if ( inXBounds && inZBounds) {
+            sound.setGlass(true);
+            if(tile.litUp === false){
                 const tileColor = new THREE.Color(0, 255, 0);
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
@@ -774,6 +790,7 @@ function tileLights() {
                 // TODO: Elevate tiles a bit from the ground they are on or simply shift the whole floor container
                 const whiteTile = new THREE.Color(255, 255, 255);
                 PiP1.children[tile.userData.tileNumber - 1].material.color.copy(whiteTile);
+            }
             }
         });
 
@@ -796,8 +813,9 @@ function tileLights() {
             let inXBounds = tileWorldPosition.x - rangeInX <= player.characterModel.position.x && player.characterModel.position.x <= tileWorldPosition.x + rangeInX;
             let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
 
-            if (tile.litUp === false && inXBounds && inZBounds) {
-                sound.setGlass(true);
+          if ( inXBounds && inZBounds) {
+                  sound.setGlass(true);
+                      if(tile.litUp === false){
                 const tileColor = new THREE.Color(255, 0, 0);
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
@@ -822,7 +840,7 @@ function tileLights() {
                 PiP2.children[tile.userData.tileNumber - 1].material.color.copy(whiteTile);
 
 
-
+                }
             }
         });
 
@@ -862,8 +880,10 @@ function tileLights() {
 
 
             newTile = litUpTiles3[litUpTiles3.length - 1];
-            if (tile.litUp === false && inXBounds && inZBounds) {
-                sound.setGlass(true);
+            if ( inXBounds && inZBounds) {
+            sound.setGlass(true);
+            if(tile.litUp === false){
+
                 const tileColor = new THREE.Color(0, 0, 255);
                 tile.material.color.copy(tileColor);
                 L3Stack.push(tile.userData.tileNumber);
@@ -880,6 +900,7 @@ function tileLights() {
                 }
                 const whiteTile = new THREE.Color(255, 255, 255);
                 PiP3.children[tile.userData.tileNumber - 1].material.color.copy(whiteTile);
+                }
             }/*else if(tile.userData.tileVisits % 2 != 0 && newTile != tile.userData.tileNumber && tile.litUp == true && inXBounds && inZBounds && Math.abs(player.characterModel.position.y - tileWorldPosition.y) < 3){
                 tile.material.copy(tileMaterial);
 
@@ -890,6 +911,7 @@ function tileLights() {
 
 
         });
+
 
         floorContainerYellow.children.forEach((tile, index) => {
             const epsilon = 3; // Small epsilon value to handle floating point errors
@@ -906,8 +928,9 @@ function tileLights() {
             let inXBounds = tileWorldPosition.x - rangeInX <= player.characterModel.position.x && player.characterModel.position.x <= tileWorldPosition.x + rangeInX;
             let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
 
-            if (tile.litUp === false && inXBounds && inZBounds) {
-                sound.setGlass(true);
+            if ( inXBounds && inZBounds) {
+            sound.setGlass(true);
+                        if(tile.litUp === false){
                 const tileColor = new THREE.Color(1, 1, 0);
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
@@ -929,6 +952,7 @@ function tileLights() {
                 const whiteTile = new THREE.Color(255, 255, 255);
                 PiP4.children[tile.userData.tileNumber - 1].material.color.copy(whiteTile);
 
+            }
             }
 
         });
@@ -1111,15 +1135,15 @@ export const PiP4 = new THREE.Group();
 
 //makeMazes();
 
-Level1Primitives();
-Level2Primitives();
-Level3Primitives();
+//Level1Primitives();
+// Level2Primitives();
+// Level3Primitives();
 Level4Primitives();
 
 walls.addWalls(assetLoader, scene, world, blockWidth, rotationAngle);
-walls.lobbyGate.opengate((Math.PI / 2), 3);
-walls.puzz1Gate.opengate((Math.PI / 2), 3);
-walls.puzz2Gate.opengate((Math.PI / 2), 2);
+// walls.lobbyGate.opengate((Math.PI / 2), 3);
+// walls.puzz1Gate.opengate((Math.PI / 2), 3);
+// walls.puzz2Gate.opengate((Math.PI / 2), 2);
 
 mazeReset();
 
@@ -1144,7 +1168,7 @@ export function animate_lights() {
 // model is stored as property of gltf object whose key is scene
 
 //Add Fog
-scene.fog = effects.fog;
+//scene.fog = effects.fog;
 
 
 

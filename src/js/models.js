@@ -189,21 +189,27 @@ function loadAndSetupModels(loader, scene, world, models) {
 
         loader.load(modelPath, function (gltf) {
             const model = gltf.scene;
+            model.traverse(function(node){
+               if(node.isMesh){
+                   node.castShadow=true;
+                   node.receiveShadow = true;
+                   }
+                });
             model.scale.set(scale, scale, scale);
             model.position.set(...position);
 
-            const boundingBox = new THREE.Box3().setFromObject(model);
-            const width = boundingBox.max.x - boundingBox.min.x;
-            const height = boundingBox.max.y - boundingBox.min.y;
-            const depth = boundingBox.max.z - boundingBox.min.z;
+            // const boundingBox = new THREE.Box3().setFromObject(model);
+            // const width = boundingBox.max.x - boundingBox.min.x;
+            // const height = boundingBox.max.y - boundingBox.min.y;
+            // const depth = boundingBox.max.z - boundingBox.min.z;
 
-            const shape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-            const body = new CANNON.Body({
-                mass: 0,
-                position: new CANNON.Vec3(...position)
-            });
-            body.addShape(shape);
-            world.addBody(body);
+            // const shape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
+            // const body = new CANNON.Body({
+            //     mass: 0,
+            //     position: new CANNON.Vec3(...position)
+            // });
+            // body.addShape(shape);
+            // world.addBody(body);
 
             model.rotation.y = rotation;
             scene.add(model);
@@ -216,32 +222,60 @@ function loadAndSetupModels(loader, scene, world, models) {
 
 function lobby(loader, scene, world) {
     modelsToLoad.push({ modelPath: 'open3.glb', scale: 1, position: [200, 0,2], rotation:0 });
-    // modelsToLoad.push({ modelPath: '/dungeon.glb', scale: 15, position: [106, 17, 487], rotation: Math.PI / 2 });
-    // modelsToLoad.push({ modelPath: '/dungeon.glb', scale: 15, position: [245, 17, 487], rotation: Math.PI / 2 });
-    // modelsToLoad.push({ modelPath: '/watch_tower.glb', scale: 0.2, position: [18, 2, 507], rotation: Math.PI / 2 });
-    // modelsToLoad.push({ modelPath: '/bench.glb', scale: 14, position: [172, 3.5, 435], rotation: 0 });
-    // modelsToLoad.push({ modelPath: '/barrels.glb', scale: 4, position: [334, 0, 427], rotation: 0 });
-    // modelsToLoad.push({ modelPath: '/bush.glb', scale: 8, position: [50, 1.2, 258], rotation: 0 });
-    // modelsToLoad.push({ modelPath: '/coconut_palm.glb', scale: 14, position: [300, 0, 200], rotation: 0 });
-    // modelsToLoad.push({ modelPath: '/coconut.glb', scale: 2, position: [285, 2.5, 205], rotation: 0 });
-    // modelsToLoad.push({ modelPath: '/small_trees.glb', scale: 12, position: [40, 0, 320], rotation: 0 });
-    // modelsToLoad.push({ modelPath: '/bird_bath.glb', scale: 12, position: [40, 0, 370], rotation: 0 });
-    // modelsToLoad.push({ modelPath: '/fern.glb', scale: 1.6, position: [46, 0, 376], rotation: 0 });
-    // modelsToLoad.push({ modelPath: '/well.glb', scale: 15, position: [-205, 15, -380], rotation: 0 });
-    // modelsToLoad.push({ modelPath: '/boer_war_statue.glb', scale: 1.5, position: [-205, -10, -300], rotation: 0 });
-    // modelsToLoad.push({ modelPath: '/wooden_crate.glb', scale: 10, position: [336, 0, 413], rotation: Math.PI / 2 });
-    // modelsToLoad.push({ modelPath: '/tree_1.glb', scale: 360, position: [320, 0, 290], rotation: Math.PI });
-    // modelsToLoad.push({ modelPath: '/tree_2.glb', scale: 360, position: [320, 0, 345], rotation: Math.PI });
-    // modelsToLoad.push({ modelPath: '/rocks.glb', scale: 0.3, position: [315, 0, 345], rotation: Math.PI });
-    // modelsToLoad.push({ modelPath: '/purple_plant.glb', scale: 35, position: [317, 0, 295], rotation: 0 });
-    // modelsToLoad.push({ modelPath: '/purple_plant.glb', scale: 35, position: [314, 0, 290], rotation: 0 });
-    // modelsToLoad.push({ modelPath: '/purple_plant.glb', scale: 35, position: [317, 0, 285], rotation: 0 });
-    // modelsToLoad.push({ modelPath: '/wall_ruins.glb', scale: 30, position: [-6, 0, 416], rotation: Math.PI / 2 });
-    // modelsToLoad.push({ modelPath: '/wall_ruins.glb', scale: 30, position: [278, 0, 416], rotation: Math.PI / 2 });
-    // modelsToLoad.push({ modelPath: '/wall_ruins.glb', scale: 30, position: [135, 0, 416], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: '/dungeon.glb', scale: 15, position: [106, 17, 487], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: '/dungeon.glb', scale: 15, position: [245, 17, 487], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: '/watch_tower.glb', scale: 0.2, position: [18, 2, 507], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: '/bench.glb', scale: 14, position: [172, 3.5, 435], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/barrels.glb', scale: 4, position: [334, 0, 427], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/bush.glb', scale: 8, position: [50, 1.2, 258], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/coconut_palm.glb', scale: 14, position: [300, 0, 200], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/coconut.glb', scale: 2, position: [285, 2.5, 205], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/small_trees.glb', scale: 12, position: [40, 0, 320], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/bird_bath.glb', scale: 12, position: [40, 0, 370], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/fern.glb', scale: 1.6, position: [46, 0, 376], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/well.glb', scale: 15, position: [-205, 15, -380], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/boer_war_statue.glb', scale: 1.5, position: [-205, -10, -300], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/wooden_crate.glb', scale: 10, position: [336, 0, 413], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: '/tree_1.glb', scale: 360, position: [320, 0, 290], rotation: Math.PI });
+    modelsToLoad.push({ modelPath: '/tree_2.glb', scale: 360, position: [320, 0, 345], rotation: Math.PI });
+    modelsToLoad.push({ modelPath: '/rocks.glb', scale: 0.3, position: [315, 0, 345], rotation: Math.PI });
+    modelsToLoad.push({ modelPath: '/purple_plant.glb', scale: 35, position: [317, 0, 295], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/purple_plant.glb', scale: 35, position: [314, 0, 290], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/purple_plant.glb', scale: 35, position: [317, 0, 285], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/wall_ruins.glb', scale: 30, position: [-6, 0, 416], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: '/wall_ruins.glb', scale: 30, position: [278, 0, 416], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: '/wall_ruins.glb', scale: 30, position: [135, 0, 416], rotation: Math.PI / 2 });
 
 
 }
+
+function loadLevel4Models(){
+    modelsToLoad.push({ modelPath: '/tut1(49.4mb).glb', scale: 0.95, position: [195, 0, 340], rotation:0});
+}
+
+export function loadLevel1Models(loader, scene, world){
+    modelsToLoad.length = 0;
+    modelsToLoad.push({ modelPath: '/open3(48.5mb).glb', scale: 1.1, position: [203, 2, 10], rotation: 0 });
+    loadAndSetupModels(loader, scene, world, modelsToLoad);
+}
+
+
+
+export function loadLevel2Models(loader, scene, world){
+    modelsToLoad.length = 0;
+    modelsToLoad.push({ modelPath: '/openlvl2(48.5mb).glb', scale: 1.05, position: [217, 2, -358], rotation:0 });
+    loadAndSetupModels(loader, scene, world, modelsToLoad);
+}
+
+
+export function loadLevel3Models(loader, scene, world){
+    modelsToLoad.length = 0;
+    modelsToLoad.push({ modelPath: '/openlevel3(46mb).glb', scale: 1.1, position: [-200, 0, -345], rotation: 0 });
+    loadAndSetupModels(loader, scene, world, modelsToLoad);
+}
+
+
+
 
 
 
@@ -254,43 +288,16 @@ export function loadModels(loader, scene, world, blockWidth) {
     // modelsToLoad.push({ modelPath: '/ground_material.glb', scale: 1, position: [0, -1, 0], rotation: Math.PI / 2 });
     // modelsToLoad.push({ modelPath: '/lion_statue.glb', scale: 30, position: [103, -5, 50], rotation: 0 });
 
-    // lobby(loader, scene, world);
-    // Create a new loader instance
-    //const loader = new THREE.GLTFLoader();
+     lobby(loader, scene, world);
+     loadLevel4Models();
+     loadAndSetupModels(loader, scene, world, modelsToLoad);
 
-// Path to your GLB/GLTF model file
-    const modelPath = '/open3(48.5mb).glb';
-    const modelPath2 = '/openlvl2(48.5mb).glb';
-    const modelPath3 = '/openlevel3(46mb).glb';
-    const modelPath4 = '/tut1(49.4mb).glb';
 
-// Function to be called when the model is loaded successfully
-    function onLoad(gltf, position, scale) {
-        // Your logic when the model is loaded
-        gltf.scene.position.set(position.x, position.y, position.z);
-        gltf.scene.scale.set(scale.x, scale.y, scale.z);
-        scene.add(gltf.scene);
-        console.log('Model Loaded Successfully:', gltf);
-    }
 
-    function onProgress(xhr) {
-        // Calculate the loading progress in percentage
-        if (xhr.lengthComputable) {
-            const percentComplete = (xhr.loaded / xhr.total) * 100;
-            console.log(`Model Loading: ${percentComplete.toFixed(2)}% loaded`);
-        } else {
-            console.log('Model Loading: Progress information not available');
-        }
-    }
 
-    function onError(error) {
-        console.error('Error loading the model', error);
-    }
 
-    loader.load(modelPath, (gltf) => onLoad(gltf, { x: 203, y: 2, z: 10 }, { x: 1.1, y: 1.1, z: 1.1000 }), onProgress, onError);
-    loader.load(modelPath2, (gltf) => onLoad(gltf, { x: 217, y: 2, z: -358 }, { x: 1.05, y: 1.05, z: 1.05 }), onProgress, onError);
-    loader.load(modelPath3, (gltf) => onLoad(gltf, { x: -200, y: 0, z: -345 }, { x: 1.1, y: 1.1, z: 1.1 }), onProgress, onError);
-    loader.load(modelPath4, (gltf) => onLoad(gltf, { x: 195, y: 0, z: 340 }, { x: 0.95, y: 0.95, z: 0.95 }), onProgress, onError);
+
+
 
 //   }  addWallModels(loader, scene, world, blockWidth);
 //
@@ -336,46 +343,46 @@ export function loadModels(loader, scene, world, blockWidth) {
 //
 // function generateGrassPatches(loader, scene, world, blockWidth, adjustmentInX, adjustmentInY, adjustmentInZ, startX, startY, startZ) {
 //     let pathToGrassPatch = 'assets/grass_patches_02/scene.gltf';
-//
+
 //     loader.load(pathToGrassPatch, (gltf) => {
 //         const model = gltf.scene;
-//
-//
+
+
 //         model.traverse(function (node) {
 //             if (node.isMesh) {
 //                 node.castShadow = true;
 //             }
 //         });
-//
+
 //         scene.add(model);
-//
+
 //         model.scale.set(5, 7, 5);
 //         model.position.set(startX, startY, startZ);
-//
+
 //         let posInX = startX + adjustmentInX;
 //         let posInY = startY + adjustmentInY;
 //         let posInZ = startZ + adjustmentInZ;
-//
+
 //         const numClones = 10;
-//
+
 //         // Create a seeded random number generator
 //         function seededRandom(seed) {
 //             let x = Math.sin(seed) * 10000;
 //             return x - Math.floor(x);
 //         }
-//
+
 //         for (let j = 0; j < numClones; j++) {
 //             const clonedModel = model.clone();
-//
+
 //             // Use the seeded random function to generate consistent random positions
 //             const randomSeed = j * 10; // Adjust as needed
 //             const randomAdjustmentX = seededRandom(randomSeed) * adjustmentInX;
 //             const randomAdjustmentY = seededRandom(randomSeed) * adjustmentInY;
 //             const randomAdjustmentZ = seededRandom(randomSeed) * adjustmentInZ;
-//
+
 //             clonedModel.position.set(posInX + randomAdjustmentX, posInY + randomAdjustmentY, posInZ + randomAdjustmentZ);
 //             scene.add(clonedModel);
-//
+
 //             posInX += adjustmentInX;
 //             posInY += adjustmentInY;
 //             posInZ += adjustmentInZ;
@@ -384,266 +391,6 @@ export function loadModels(loader, scene, world, blockWidth) {
 //         console.log(error);
 //     });
 // }
-//
-//
-// function addWallModels(loader, scene, world, blockWidth) {
-//     // For variation adjust scaling in z, y, x for narrower/extended walls or taller/shotter walls
-//     let pathToWall = 'assets/mossy_stone_wall/scene.gltf';
-//     let baselineShift = 25;
-//     let offsetCurvedEdgesShift = 27;
-//     // for wall spawn right
-//     let adjustment1 = 0;
-//     // Calculate the total width of the inner wall (including the gap)
-//     const totalWidth = blockWidth;
-//     const gapWidth = 50;
-//
-//     // Calculate the width of each part of the inner wall
-//     const partWidth = (totalWidth - gapWidth) / 2;
-//
-//     for (let i = 0; i < 13; i++) {
-//         loader.load(pathToWall, (gltf) => {
-//             const model = gltf.scene;
-//             // model.traverse(function (node) {
-//             //     if (node.isMesh) { node.castShadow = true; }
-//             // });
-//             // add to scene and position like any other object
-//             scene.add(model);
-//             model.scale.set(0.3, generateRandomNumberForVariation(), generateRandomNumberForVariation());
-//             model.position.set(blockWidth, 0, blockWidth + offsetCurvedEdgesShift + adjustment1);
-//             adjustment1 -= 67.5;
-//             model.rotateY(-Math.PI / 2);
-//         }, undefined, (error) => {
-//             console.log(error);
-//         });
-//     }
-//
-//
-//     // // for wall spawn back
-//     let adjustment2 = 0;
-//     for (let i = 0; i < 3; i++) {
-//         loader.load(pathToWall, (gltf) => {
-//             const model = gltf.scene;
-//             // add to scene and position like any other object
-//             // model.traverse(function (node) {
-//             //     if (node.isMesh) { node.castShadow = true; }
-//             // });
-//             scene.add(model);
-//
-//             model.scale.set(0.3, generateRandomNumberForVariation(), generateRandomNumberForVariation());
-//             model.position.set(blockWidth / 2 + 25 + adjustment2, 0, blockWidth * 1.5 + baselineShift);
-//             adjustment2 -= 62;
-//         }, undefined, (error) => {
-//             console.log(error);
-//         });
-//     }
-//     // // TODO: Merge them differently by setting adjustment to a random number but definitely make sure iteration number allows it to definitely be filled even if minimum value is used
-//     // // for wall spawn left
-//     let adjustment3 = 0;
-//     for (let i = 0; i < 7; i++) {
-//         loader.load(pathToWall, (gltf) => {
-//             const model = gltf.scene;
-//             // model.traverse(function (node) {
-//             //     if (node.isMesh) { node.castShadow = true; }
-//             // });
-//             // add to scene and position like any other object
-//             scene.add(model);
-//
-//             model.scale.set(0.3, generateRandomNumberForVariation(), generateRandomNumberForVariation());
-//             model.position.set(-baselineShift, 0, blockWidth + offsetCurvedEdgesShift + adjustment3);
-//             adjustment3 -= 75;
-//             model.rotateY(-Math.PI / 2);
-//         }, undefined, (error) => {
-//             console.log(error);
-//         });
-//     }
-//
-//     // // for puzz 2 back
-//     let adjustment4 = 0;
-//     for (let i = 0; i < 8; i++) {
-//         loader.load(pathToWall, (gltf) => {
-//             const model = gltf.scene;
-//             // model.traverse(function (node) {
-//             //     if (node.isMesh) { node.castShadow = true; }
-//             // });
-//             // add to scene and position like any other object
-//             scene.add(model);
-//
-//             model.scale.set(0.3, generateRandomNumberForVariation(), generateRandomNumberForVariation());
-//             model.position.set(blockWidth / 2 + offsetCurvedEdgesShift + adjustment4, 0, -blockWidth * 1.5);
-//             adjustment4 -= 68;
-//             // model.rotateY(-Math.PI / 2);
-//         }, undefined, (error) => {
-//             console.log(error);
-//         });
-//     }
-//
-//     // // for puzz 3 left
-//     let adjustment6 = 0;
-//     for (let i = 0; i < 3; i++) {
-//         loader.load(pathToWall, (gltf) => {
-//             const model = gltf.scene;
-//             // model.traverse(function (node) {
-//             //     if (node.isMesh) { node.castShadow = true; }
-//             // });
-//             // add to scene and position like any other object
-//             scene.add(model);
-//
-//             model.scale.set(0.3, generateRandomNumberForVariation(), generateRandomNumberForVariation());
-//             model.position.set(-blockWidth / 2 + adjustment6, 0, -blockWidth / 2 + baselineShift);
-//             adjustment6 -= 50;
-//             // model.rotateY(-Math.PI / 2);
-//         }, undefined, (error) => {
-//             console.log(error);
-//         });
-//     }
-//
-//     // // for puzz 3 back
-//     let adjustment7 = 0;
-//     for (let i = 0; i < 2; i++) {
-//         loader.load(pathToWall, (gltf) => {
-//             const model = gltf.scene;
-//             // model.traverse(function (node) {
-//             //     if (node.isMesh) { node.castShadow = true; }
-//             // });
-//             // add to scene and position like any other object
-//             scene.add(model);
-//
-//             model.scale.set(0.3, generateRandomNumberForVariation(), generateRandomNumberForVariation());
-//             model.position.set(-blockWidth - baselineShift, 0, -blockWidth + offsetCurvedEdgesShift + adjustment7);
-//             adjustment7 -= 120;
-//             model.rotateY(-Math.PI / 2);
-//         }, undefined, (error) => {
-//             console.log(error);
-//         });
-//     }
-//
-//     // lobby exit
-//     let adjustment8 = 0;
-//     for (let i = 0; i < 2; i++) {
-//         loader.load(pathToWall, (gltf) => {
-//             const modelLeft = gltf.scene;
-//             const modelRight = modelLeft.clone();
-//
-//             // modelLeft.traverse(function (node) {
-//             //     if (node.isMesh) {
-//             //         node.castShadow = true;
-//             //     }
-//             // });
-//             // modelRight.traverse(function (node) {
-//             //     if (node.isMesh) {
-//             //         node.castShadow = true;
-//             //     }
-//             // });
-//
-//             scene.add(modelLeft);
-//             scene.add(modelRight);
-//             // I must position two models at the same place in one coordinate so maybe add model twice or just different variables
-//             // try work on one side for now before other side
-//             let height = generateRandomNumberForVariation();
-//             let depth = generateRandomNumberForVariation();
-//             let positionX = blockWidth / 2;
-//             let positionY = 0;
-//             let positionZ = blockWidth / 2;
-//             modelLeft.scale.set(0.2, height, depth);
-//             modelLeft.position.set((positionX - partWidth / 2 - gapWidth / 2) - offsetCurvedEdgesShift - 35 - adjustment8, positionY, positionZ);
-//
-//             modelRight.scale.set(0.2, height, depth);
-//             modelRight.position.set((positionX - partWidth / 2 + gapWidth / 2) + offsetCurvedEdgesShift + 139 + adjustment8, positionY, positionZ);
-//
-//             adjustment8 -= 18.7;
-//             // model.rotateY(-Math.PI / 2);
-//         }, undefined, (error) => {
-//             console.log(error);
-//         });
-//     }
-//     // puzzle 1 exit
-//     let adjustment9 = 0;
-//     for (let i = 0; i < 2; i++) {
-//         loader.load(pathToWall, (gltf) => {
-//             const modelLeft = gltf.scene;
-//             const modelRight = modelLeft.clone();
-//             // modelLeft.traverse(function (node) {
-//             //     if (node.isMesh) {
-//             //         node.castShadow = true;
-//             //     }
-//             // });
-//             // modelRight.traverse(function (node) {
-//             //     if (node.isMesh) {
-//             //         node.castShadow = true;
-//             //     }
-//             // });
-//             scene.add(modelLeft);
-//             scene.add(modelRight);
-//             // I must position two models at the same place in one coordinate so maybe add model twice or just different variables
-//             // try work on one side for now before other side
-//             let height = generateRandomNumberForVariation();
-//             let depth = generateRandomNumberForVariation();
-//             let positionX = blockWidth / 2;
-//             let positionY = 0;
-//             let positionZ = - blockWidth / 2;
-//             modelLeft.scale.set(0.2, height, depth);
-//             modelLeft.position.set((positionX - partWidth / 2 - gapWidth / 2) - offsetCurvedEdgesShift - 35 - adjustment9, positionY, positionZ + 20);
-//
-//             modelRight.scale.set(0.2, height, depth);
-//             modelRight.position.set((positionX - partWidth / 2 + gapWidth / 2) + offsetCurvedEdgesShift + 139 + adjustment9, positionY, positionZ + 20);
-//
-//             adjustment9 -= 18.7;
-//         }, undefined, (error) => {
-//             console.log(error);
-//         });
-//     }
-//     // puzzle 2 exit
-//     let adjustment10 = 0;
-//     for (let i = 0; i < 2; i++) {
-//         loader.load(pathToWall, (gltf) => {
-//             const modelLeft = gltf.scene;
-//             const modelRight = modelLeft.clone();
-//
-//             // modelLeft.traverse(function (node) {
-//             //     if (node.isMesh) {
-//             //         node.castShadow = true;
-//             //     }
-//             // });
-//             // modelRight.traverse(function (node) {
-//             //     if (node.isMesh) {
-//             //         node.castShadow = true;
-//             //     }
-//             // });
-//
-//             scene.add(modelLeft);
-//             scene.add(modelRight);
-//             // I must position two models at the same place in one coordinate so maybe add model twice or just different variables
-//             // try work on one side for now before other side
-//             let height = generateRandomNumberForVariation();
-//             let depth = generateRandomNumberForVariation();
-//             let positionX = 0;
-//             let positionY = 0;
-//             let positionZ = - blockWidth;
-//             modelLeft.scale.set(0.2, height, depth);
-//             modelLeft.position.set(positionX - 33.5, positionY, positionZ - offsetCurvedEdgesShift - partWidth / 2 - gapWidth / 2);
-//
-//
-//             modelRight.scale.set(0.2, height, depth);
-//             modelRight.position.set(positionX - 33.5, positionY, positionZ + partWidth / 2 + gapWidth / 2);
-//
-//             adjustment10 -= 18.7;
-//
-//             // export function loadModels(loader, scene, world, blockWidth) {
-//
-//             //     // loader.load('/ground_material.glb', function (gltf) {
-//             //     //     gltf.scene.rotation.y = Math.PI / 2;
-//             //     //     gltf.scene.scale.set(1, 1, 1);
-//             //     //     gltf.scene.position.y = -1;
-//             //     //     gltf.scene.position.x = 0;
-//             //     //     gltf.scene.position.z = 0;
-//             //     //     scene.add(gltf.scene);
-//
-//
-//             modelLeft.rotateY(-Math.PI / 2);
-//             modelRight.rotateY(-Math.PI / 2);
-//         }, undefined, (error) => {
-//             console.log(error);
-//         });
 
 }
 
