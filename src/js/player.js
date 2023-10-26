@@ -37,6 +37,7 @@ let moveRight = false;
 let jumping=false;
 let onMaze = false;
 export var paused = false;
+var disable=true;
 
 export let playerBody;
 export let characterModel = null;
@@ -418,10 +419,11 @@ class BasicCharacterControllerInput {
     const instructions = document.getElementById('instructions');
     const pausedScreen = document.getElementById('paused-screen');
     const crosshairs = document.getElementById('crosshairs');
-
+    
     // resume
     controls.addEventListener('lock', function () {
       paused=false;
+      disable=false;
       instructions.style.display = 'none';
       blocker.style.display = 'none';
       pausedScreen.style.display = 'none';
@@ -452,7 +454,7 @@ class BasicCharacterControllerInput {
   //moveForwardSoundPlaying = false ;
 
   _onKeyDown(event) {
-    if (!paused) {
+    if (!paused && !disable) {
       // Play the sound for all directions
       switch (event.keyCode) {
         case 87: // w
@@ -474,10 +476,7 @@ class BasicCharacterControllerInput {
         jumpSound.play();
         break;
       }
-      if(playerBody.position.y<10 && sound.glass===true){
-      console.log(playerBody.position.y);
-        sound.setGlass(false);
-      }
+
       if ((moveForward || moveBackward || moveRight || moveLeft) && soundPlaying==false) {
       soundPlaying=true;
         sound.moveSound.play();
@@ -869,7 +868,10 @@ export function _LoadAnimatedModel() {
 
 export function animate_objects() {
   if (characterModel && playerBody) {
-
+    if(playerBody.position.y<8 && sound.glass===true){
+          console.log(playerBody.position.y);
+            sound.setGlass(false);
+          }
     characterModel.position.copy(playerBody.position);
    // playerBody.position.copy(characterModel.position);
 
