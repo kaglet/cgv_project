@@ -930,15 +930,13 @@ function tileLights() {
 
             if ( inXBounds && inZBounds) {
             sound.setGlass(true);
-                        if(tile.litUp === false){
+                if(tile.litUp === false){
                 const tileColor = new THREE.Color(1, 1, 0);
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
 
                 tile.litUp = true;
-                if (tile.userData.tileNumber == 81) {
-                    console.log("Start Tile litUp");
-                }
+            
                 if (tile.userData.tileNumber == 1) {
                     tile.semicircleMesh4.litUp = true;
                     tile.semicircleMesh4.material.color.copy(tileColor);
@@ -1064,12 +1062,12 @@ const PiPBaseMaterial3 = new THREE.MeshStandardMaterial({ color: 0xFFA500 });
 const path1 = [1, 2, 3, 12, 21, 30, 39, 48, 57, 66, 75, 76, 77, 78, 79, 70, 61, 52, 43, 42, 41, 32, 23, 24, 25, 26, 27, 36, 45, 54, 63, 72, 81];
 const path2 = [5, 14, 23, 24, 25, 26, 27, 36, 45, 44, 43, 42, 41, 40, 39, 48, 57, 56, 55, 64, 73, 74, 75, 76, 77, 68, 59, 60, 61, 62, 63, 72, 81];
 const path3 = [19, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 18, 27, 36, 45, 44, 43, 34, 25, 24, 23, 32, 41, 40, 39, 38, 37, 46, 55, 64, 73, 74, 75, 66, 57, 58, 59, 68, 77, 78, 79, 80, 81];
-const path4 = [1, 10, 19, 28, 37, 46, 55, 64, 73, 74, 75, 76, 77, 78, 79, 80, 81];
+export const path4 = [1, 10, 19, 28, 37, 46, 55, 64, 73, 74, 75, 76, 77, 78, 79, 80, 81];
 
 let litUpTiles1 = [];
 let litUpTiles2 = [];
 let litUpTiles3 = [];
-let litUpTiles4 = [];
+export let litUpTiles4 = [];
 
 const pathPiP2AND3 = [11, 13, 15, 17, 29, 31, 33, 35, 47, 49, 51, 53, 65, 67, 69, 71]
 
@@ -1160,8 +1158,6 @@ export function animate_objects() {
     sky.space.rotation.x += -0.00005;
     sky.space.rotation.y += -0.0001;
     sky.space.rotation.z += -0.00005;
-
-    
 
     sky.moonOrbitGroup.rotation.set( sky.space.rotation.x,sky.space.rotation.y,sky.space.rotation.z);
 
