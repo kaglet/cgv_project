@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import * as CANNON from 'cannon-es';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 
 // Import texture images
@@ -91,6 +92,22 @@ export function setSky(scene) {
 
     space = new THREE.Points(particlesGeometry, particlesMaterial);
     scene.add(space);
+
+//Moon
+
+const gltfLoader = new GLTFLoader();
+let moonMesh;
+
+gltfLoader.load('./assets/moon/scene.gltf', (gltf) => {
+    moonMesh = gltf.scene;
+    moonMesh.scale.set(1, 1, 1); // Adjust the scale as needed
+    moonMesh.position.set(0, 3000, 0); // Adjust the initial position
+    moonMesh.rotation.x = 3*Math.PI/2 // Adjust the initial position
+    moonMesh.rotation.z = 3*Math.PI/2 // Adjust the initial position
+
+    // Add the moon mesh to the scene
+    scene.add(moonMesh);
+});
 
 
 }

@@ -160,7 +160,7 @@ class Gate {
         this.loadModelPromise = new Promise((resolve) => {
             assetLoader.load('./assets/medieval_arched_wooden_door/scene.gltf', (gltf) => {
                 this.model = gltf.scene.clone();
-                this.model.scale.set(0.6, 0.25, 0.25);
+                this.model.scale.set(0.75, 0.3, 0.3);
 
                 // Set the initial position and rotation of the model
                 this.model.position.copy(position);

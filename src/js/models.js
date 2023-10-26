@@ -4,7 +4,7 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import ceilingtextureImage from '../img/lambert1_baseColor.png';
 
-const modelsToLoad = []
+export const modelsToLoad = []
 
 
 function cloneModel(model, positon, rotation, scale) {

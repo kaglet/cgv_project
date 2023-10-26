@@ -90,7 +90,6 @@ function puzzComplete(puzz) {
     if (puzz == 'Yellow') {
         walls.lobbyGate.opengate((Math.PI / 2), 3);
         // Close the current tab or window
-
         models.loadLevel1Models(assetLoader, scene, world);
         Level1Primitives();
     }
