@@ -75,18 +75,26 @@ function showLoadingScreen() {
 function hideLoadingScreen() {
   let loadingScreen = document.querySelector('.loading.screen');
   loadingScreen.style.display = 'none';
+}
 
+function showCrosshair() {
   // TODO: Consider why the crosshairs needs to be appended to document
   const crosshairs = document.getElementById('crosshairs');
   document.body.appendChild(crosshairs);
   crosshairs.style.display = 'block';
+}
 
+function resumeGameControls() {
   document.addEventListener('click', function () {
     player.controls.lock();
   });
 }
 
-
+function startGame() {
+  hideLoadingScreen();
+  showCrosshair();
+  resumeGameControls();
+}
 
 function _OnWindowResize() {
   camera.currentCamera.aspect = window.innerWidth / window.innerHeight;
@@ -101,7 +109,7 @@ window.addEventListener('load', () => {
   startButton.addEventListener('click', () => {
     hideTitleScreen();
     showLoadingScreen();
-    setTimeout(hideLoadingScreen, 5000);
+    setTimeout(startGame, 5000);
   });
 });
 
