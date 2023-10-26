@@ -833,52 +833,6 @@ function tileLights() {
             }
         });
 
-        // floorContainerBlue.children.forEach((tile, semicircleMesh, index) => {
-        //     tile.playerWithinBounds = false;
-        //     const epsilon = 3; // Small epsilon value to handle floating point errors
-        //     const tileWorldPosition = new THREE.Vector3();
-        //     tile.getWorldPosition(tileWorldPosition);
-
-
-        //     let boundingBox = new THREE.Box3().setFromObject(tile);
-        //     let size = new THREE.Vector3();
-        //     boundingBox.getSize(size);
-
-        //     let rangeInX = size.x / 2;
-        //     let rangeInZ = size.z / 2;
-
-        //     let inXBounds = tileWorldPosition.x - rangeInX <= player.characterModel.position.x && player.characterModel.position.x <= tileWorldPosition.x + rangeInX;
-        //     let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
-
-        //     if (tile.litUp === false && inXBounds && inZBounds) {
-        //         sound.setGlass(true);
-        //         const tileColor = new THREE.Color(255, 0, 0);
-        //         // TODO: Change color of all faces of cube to blue currently only default front face is changed
-        //         tile.material.color.copy(tileColor);
-        //         tile.litUp = true;
-        //         tile.playerWithinBounds = true;
-        //         if (tile.userData.tileNumber == 5) {
-        //             tile.semicircleMesh.litUp = true;
-        //             tile.semicircleMesh.material.color.copy(tileColor);
-        //         }
-        //         litUpTiles3.push(tile.userData.tileNumber);
-
-        //         const haveSameValues = path3.every(value => litUpTiles3.includes(value) && litUpTiles3.length === path3.length);
-        //         if (haveSameValues) {
-        //             console.log("Path 3 correct.");
-        //             puzzComplete("Blue");
-        //         }
-        //         // TODO: Make tiles sink also upon intersection, just shift slightly in the z
-        //         // How do I position the tiles, is it within the floor container, using current position -= 1 for z for example or do I do a local transformation in floor?
-        //         // TODO: Elevate tiles a bit from the ground they are on or simply shift the whole floor container
-        //         //Light up PiP2 tiles:
-        //         const whiteTile = new THREE.Color(255, 255, 255);
-        //         PiP3.children[tile.userData.tileNumber - 1].material.color.copy(whiteTile);
-
-
-
-        //     }
-        // });
 
         let L3Stack = [];
         let newTile = 0;
@@ -1165,15 +1119,15 @@ export const PiP4 = new THREE.Group();
 
 //makeMazes();
 
-Level1Primitives();
+//Level1Primitives();
 // Level2Primitives();
 // Level3Primitives();
 Level4Primitives();
 
 walls.addWalls(assetLoader, scene, world, blockWidth, rotationAngle);
-walls.lobbyGate.opengate((Math.PI / 2), 3);
-walls.puzz1Gate.opengate((Math.PI / 2), 3);
-walls.puzz2Gate.opengate((Math.PI / 2), 2);
+// walls.lobbyGate.opengate((Math.PI / 2), 3);
+// walls.puzz1Gate.opengate((Math.PI / 2), 3);
+// walls.puzz2Gate.opengate((Math.PI / 2), 2);
 
 mazeReset();
 
