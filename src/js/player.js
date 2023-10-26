@@ -418,7 +418,7 @@ class BasicCharacterControllerInput {
     const instructions = document.getElementById('instructions');
     const pausedScreen = document.getElementById('paused-screen');
     const crosshairs = document.getElementById('crosshairs');
-
+    
     // resume
     controls.addEventListener('lock', function () {
       paused=false;
@@ -431,25 +431,15 @@ class BasicCharacterControllerInput {
 
     // pause
     controls.addEventListener('unlock', function () {
-      if (script.gameRunning) {
-        paused=true;
-        pausedScreen.style.display = 'flex';
-        blocker.style.display = 'block';
-        instructions.style.display = '';
-        crosshairs.style.display = 'none';
-        moveForward=false;
-        moveBackward=false;
-        moveRight=false;
-        moveLeft=false;
-      } else {
-        paused=true;
-        crosshairs.style.display = 'none';
-        moveForward=false;
-        moveBackward=false;
-        moveRight=false;
-        moveLeft=false;
-      }
-
+      paused=true;
+      pausedScreen.style.display = 'flex';
+      blocker.style.display = 'block';
+      instructions.style.display = '';
+      crosshairs.style.display = 'none';
+      moveForward=false;
+      moveBackward=false;
+      moveRight=false;
+      moveLeft=false;
     });
 
     objects.scene.add(controls.getObject());

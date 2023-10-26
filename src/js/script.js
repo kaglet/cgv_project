@@ -21,8 +21,6 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 
 document.body.appendChild(renderer.domElement);
 
-export let gameRunning = false;
-
 function runGame() {
   const _mixers = [];
   let _previousRAF = null;
@@ -96,7 +94,6 @@ function startGame() {
   hideLoadingScreen();
   showCrosshair();
   resumeGameControls();
-  gameRunning = true;
 }
 
 function _OnWindowResize() {
@@ -112,7 +109,7 @@ window.addEventListener('load', () => {
   startButton.addEventListener('click', () => {
     hideTitleScreen();
     showLoadingScreen();
-    setTimeout(() => startGame(), 5000);
+    setTimeout(startGame, 5000);
   });
 });
 
