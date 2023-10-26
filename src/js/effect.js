@@ -121,7 +121,7 @@ THREE.ShaderChunk.fog_fragment = `
       float heightFactor = 0.03;
       float fogFactor = heightFactor * exp(-fogOrigin.y * fogDensity) * (
           1.0 - exp(-fogDepth * fogDirection.y * fogDensity)) / fogDirection.y;
-      fogFactor = saturate((fogFactor) * 0.7);
+      fogFactor = saturate((fogFactor) * 0.9);
 
       gl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, fogFactor );
     #endif`;
