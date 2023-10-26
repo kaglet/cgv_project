@@ -189,12 +189,12 @@ function loadAndSetupModels(loader, scene, world, models) {
 
         loader.load(modelPath, function (gltf) {
             const model = gltf.scene;
-            gltf.scene.traverse(function(node){
-                if(node.isMesh){
-                    node.castShadow=true;
-                    node.receiveShadow = true;
-                    }
-                 });
+            model.traverse(function(node){
+               if(node.isMesh){
+                   node.castShadow=true;
+                   node.receiveShadow = true;
+                   }
+                });
             model.scale.set(scale, scale, scale);
             model.position.set(...position);
 
@@ -291,10 +291,10 @@ export function loadModels(loader, scene, world, blockWidth) {
      lobby(loader, scene, world);
      loadLevel4Models();
      loadAndSetupModels(loader, scene, world, modelsToLoad);
-    
-     
-   
-   
+
+
+
+
 
 
 
