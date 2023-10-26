@@ -221,7 +221,7 @@ function loadAndSetupModels(loader, scene, world, models) {
 
 
 function lobby(loader, scene, world) {
-    modelsToLoad.push({ modelPath: 'open3.glb', scale: 1, position: [200, 0,2], rotation:0 });
+  //  modelsToLoad.push({ modelPath: 'open3.glb', scale: 1, position: [200, 0,2], rotation:0 });
     modelsToLoad.push({ modelPath: '/dungeon.glb', scale: 15, position: [106, 17, 487], rotation: Math.PI / 2 });
     modelsToLoad.push({ modelPath: '/dungeon.glb', scale: 15, position: [245, 17, 487], rotation: Math.PI / 2 });
     modelsToLoad.push({ modelPath: '/watch_tower.glb', scale: 0.2, position: [18, 2, 507], rotation: Math.PI / 2 });
@@ -250,12 +250,14 @@ function lobby(loader, scene, world) {
 }
 
 function loadLevel4Models(){
-    modelsToLoad.push({ modelPath: '/tut1(49.4mb).glb', scale: 0.95, position: [195, 0, 340], rotation:0});
+    modelsToLoad.push({ modelPath: '/tut1(12).glb', scale: 0.95, position: [195, 0, 350], rotation:0});
+   // modelsToLoad.push({ modelPath: '/openlvl3(3).glb', scale: 1.1, position: [-200, 0, -350], rotation: 0 });
+  //  modelsToLoad.push({ modelPath: '/openlvl2(3).glb', scale: 1.1, position: [230, 0, -348], rotation:0 });
 }
 
 export function loadLevel1Models(loader, scene, world){
     modelsToLoad.length = 0;
-    modelsToLoad.push({ modelPath: '/open3(48.5mb).glb', scale: 1.1, position: [203, 2, 10], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/open(32).glb', scale: 1.05, position: [203, 2, 10], rotation: 0 });
     loadAndSetupModels(loader, scene, world, modelsToLoad);
 }
 
@@ -263,14 +265,16 @@ export function loadLevel1Models(loader, scene, world){
 
 export function loadLevel2Models(loader, scene, world){
     modelsToLoad.length = 0;
-    modelsToLoad.push({ modelPath: '/openlvl2(48.5mb).glb', scale: 1.05, position: [217, 2, -358], rotation:0 });
+    //modelsToLoad.push({ modelPath: '/openlvl2(3).glb', scale: 1.05, position: [200, 2, -353], rotation:0 });
+    modelsToLoad.push({ modelPath: '/openlvl2(3).glb', scale: 1.1, position: [235, 0, -340], rotation:0 });
     loadAndSetupModels(loader, scene, world, modelsToLoad);
 }
 
 
 export function loadLevel3Models(loader, scene, world){
     modelsToLoad.length = 0;
-    modelsToLoad.push({ modelPath: '/openlevel3(46mb).glb', scale: 1.1, position: [-200, 0, -345], rotation: 0 });
+   // modelsToLoad.push({ modelPath: '/openlvl3(3).glb', scale: 1.1, position: [-200, 0, -350], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/openlvl3(3).glb', scale: 1.1, position: [-200, 0, -350], rotation: 0 });
     loadAndSetupModels(loader, scene, world, modelsToLoad);
 }
 
@@ -291,6 +295,173 @@ export function loadModels(loader, scene, world, blockWidth) {
      lobby(loader, scene, world);
      loadLevel4Models();
      loadAndSetupModels(loader, scene, world, modelsToLoad);
+    loader.load('/luffy.glb', function (gltf) {
+        const luffyModel = gltf.scene;
+        luffyModel.rotation.y = -Math.PI / 4;
+        luffyModel.scale.set(0.15, 0.15, 0.15);
+        luffyModel.position.set(225, -2, -385);
+
+        const textureLoader = new THREE.TextureLoader();
+        const texture = textureLoader.load(ceilingtextureImage); // Replace with the path to your PNG texture file
+
+// Create a material using the loaded texture
+        const pngMaterial = new THREE.MeshLambertMaterial({ map: texture });
+        console.log(pngMaterial);
+        luffyModel.traverse(function (child) {
+            if (child.isMesh) {
+                child.material = pngMaterial;
+            }
+        });
+
+        // Calculate dimensions of the Luffy model
+        const boundingBox = new THREE.Box3().setFromObject(luffyModel);
+        const width = boundingBox.max.x - boundingBox.min.x;
+        const height = boundingBox.max.y - boundingBox.min.y;
+        const depth = boundingBox.max.z - boundingBox.min.z;
+
+        // Create Cannon.js body shape for Luffy model
+        const luffyShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
+
+        // Create Cannon.js body for Luffy model
+        const luffyBody = new CANNON.Body({
+            mass: 0, // Adjust mass as needed
+            position: new CANNON.Vec3(225, -2, -385) // Initial position of the model
+        });
+        luffyBody.addShape(luffyShape);
+        world.addBody(luffyBody);
+
+        scene.add(luffyModel);
+
+        // Print the size of the Luffy model
+        console.log('Luffy Model Size - Width:', width, 'Height:', height, 'Depth:', depth);
+
+        // Create wireframe mesh for visualization
+        // const wireframeGeometry = new THREE.BoxGeometry(width, height, depth);
+        // const wireframeMaterial = new THREE.MeshBasicMaterial({
+        //     color: 0x00ff00,
+        //     wireframe: true
+        // });
+        // const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
+        //
+        // // Position the wireframe mesh at the same position as the model
+        // wireframeMesh.position.set(0, 10, -40);
+        //
+        // // Add the wireframe mesh to the scene
+        scene.add(wireframeMesh);
+    }, undefined, function (error) {
+        console.error(error);
+    });
+    loader.load('/zeus_statue.glb', function (gltf) {
+        const luffyModel = gltf.scene;
+        luffyModel.rotation.y = -Math.PI ;
+        luffyModel.scale.set(1, 1, 1);
+        luffyModel.position.set(145, -2, -400);
+
+        const textureLoader = new THREE.TextureLoader();
+        const texture = textureLoader.load(ceilingtextureImage); // Replace with the path to your PNG texture file
+
+// Create a material using the loaded texture
+        const pngMaterial = new THREE.MeshLambertMaterial({ map: texture });
+        console.log(pngMaterial);
+        luffyModel.traverse(function (child) {
+            if (child.isMesh) {
+                child.material = pngMaterial;
+            }
+        });
+
+        // Calculate dimensions of the Luffy model
+        const boundingBox = new THREE.Box3().setFromObject(luffyModel);
+        const width = boundingBox.max.x - boundingBox.min.x;
+        const height = boundingBox.max.y - boundingBox.min.y;
+        const depth = boundingBox.max.z - boundingBox.min.z;
+
+        // Create Cannon.js body shape for Luffy model
+        const luffyShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
+
+        // Create Cannon.js body for Luffy model
+        const luffyBody = new CANNON.Body({
+            mass: 0, // Adjust mass as needed
+            position: new CANNON.Vec3(145, -2, -400) // Initial position of the model
+        });
+        luffyBody.addShape(luffyShape);
+        world.addBody(luffyBody);
+
+        scene.add(luffyModel);
+
+        // Print the size of the Luffy model
+        console.log('Luffy Model Size - Width:', width, 'Height:', height, 'Depth:', depth);
+
+        // Create wireframe mesh for visualization
+        // const wireframeGeometry = new THREE.BoxGeometry(width, height, depth);
+        // const wireframeMaterial = new THREE.MeshBasicMaterial({
+        //     color: 0x00ff00,
+        //     wireframe: true
+        // });
+        // const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
+        //
+        // // Position the wireframe mesh at the same position as the model
+        // wireframeMesh.position.set(0, 10, -40);
+        //
+        // // Add the wireframe mesh to the scene
+        // scene.add(wireframeMesh);
+    }, undefined, function (error) {
+        console.error(error);
+    });
+//     loader.load('/lucy.glb', function (gltf) {
+//         const lucyModel = gltf.scene;
+//        // lucyModel.rotation.y = Math.PI ;
+//         lucyModel.scale.set(30, 30, 30);
+//         lucyModel.position.set(100, -5, -310);
+//
+//         const textureLoader = new THREE.TextureLoader();
+//         const texture = textureLoader.load(ceilingtextureImage); // Replace with the path to your PNG texture file
+//
+// // Create a material using the loaded texture
+//         const pngMaterial = new THREE.MeshLambertMaterial({ map: texture });
+//         console.log(pngMaterial);
+//         lucyModel.traverse(function (child) {
+//             if (child.isMesh) {
+//                 child.material = pngMaterial;
+//             }
+//         });
+//         // Calculate dimensions of the Luffy model
+//         const boundingBox = new THREE.Box3().setFromObject(lucyModel);
+//         const width = boundingBox.max.x - boundingBox.min.x;
+//         const height = boundingBox.max.y - boundingBox.min.y;
+//         const depth = boundingBox.max.z - boundingBox.min.z;
+//
+//         // Create Cannon.js body shape for Luffy model
+//         const lucyShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
+//
+//         // Create Cannon.js body for Luffy model
+//         const lucyBody = new CANNON.Body({
+//             mass: 0, // Adjust mass as needed
+//             position: new CANNON.Vec3(100, -5, -300) // Initial position of the model
+//         });
+//         lucyBody.addShape(lucyShape);
+//         world.addBody(lucyBody);
+//
+//         scene.add(lucyModel);
+//
+//         // Print the size of the Luffy model
+//         console.log('Luffy Model Size - Width:', width, 'Height:', height, 'Depth:', depth);
+//
+//         // Create wireframe mesh for visualization
+//         const wireframeGeometry = new THREE.BoxGeometry(width, height, depth);
+//         const wireframeMaterial = new THREE.MeshBasicMaterial({
+//             color: 0x00ff00,
+//             wireframe: true
+//         });
+//         const wireframeMesh = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
+//
+//         // Position the wireframe mesh at the same position as the model
+//         wireframeMesh.position.set(0, 10, -40);
+//
+//         // Add the wireframe mesh to the scene
+//         scene.add(wireframeMesh);
+//     }, undefined, function (error) {
+//         console.error(error);
+//     });
 
 
 
