@@ -86,6 +86,8 @@ function hideLoadingScreen() {
   });
 }
 
+
+
 function _OnWindowResize() {
   camera.currentCamera.aspect = window.innerWidth / window.innerHeight;
   camera.currentCamera.updateProjectionMatrix();
@@ -115,4 +117,6 @@ audioLoader.load('/Audio/BetterBackground.mp3', function (buffer) {
     sound.setVolume(0.5);
     sound.play();
 });
+
+document.querySelector('.pause.container resume-button')
 

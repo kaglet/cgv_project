@@ -36,7 +36,7 @@ world.defaultContactMaterial = new CANNON.ContactMaterial(
     customMaterial, // Second material (can be the same as the first material)
     {
         friction: 1, // Set the friction property for the contact material
-        restitution:0, // Set the friction property for the contact material
+        restitution: 0, // Set the friction property for the contact material
     }
 );
 
@@ -48,21 +48,21 @@ export const raycaster = new THREE.Raycaster();
 class floorContBody {
     constructor(container, num) {
         let size = 95;
-        if (num == 4){
+        if (num == 4) {
             size = 73;
         }
 
-    //    // Create floors bodies
-    //     const floorContGeo = new THREE.PlaneGeometry(2*size, 2*size);
-    //     const floorContMat = new THREE.MeshStandardMaterial({
-    //         color: 0x78BE21,
-    //         side: THREE.DoubleSide,
-    //         wireframe: true
-    //     });
+        //    // Create floors bodies
+        //     const floorContGeo = new THREE.PlaneGeometry(2*size, 2*size);
+        //     const floorContMat = new THREE.MeshStandardMaterial({
+        //         color: 0x78BE21,
+        //         side: THREE.DoubleSide,
+        //         wireframe: true
+        //     });
 
 
-    //     this.mesh = new THREE.Mesh(floorContGeo, floorContMat);
-    //     scene.add(this.mesh);
+        //     this.mesh = new THREE.Mesh(floorContGeo, floorContMat);
+        //     scene.add(this.mesh);
 
 
         // Physics floor
@@ -88,19 +88,21 @@ class floorContBody {
 function puzzComplete(puzz) {
     if (puzz == 'Yellow') {
         walls.lobbyGate.opengate((Math.PI / 2), 3);
+        // Close the current tab or window
+
         Level1Primitives();
     }
     else if (puzz == 'Blue') {
 
         walls.puzz1Gate.opengate((Math.PI / 2), 3);
         Level2Primitives();
-        
+
     }
     else if (puzz == 'Red') {
         walls.puzz2Gate.opengate((Math.PI / 2), 2);
         Level3Primitives();
 
-        
+
     }
 
 
@@ -115,15 +117,15 @@ function createTile(index, round, container) {
 
         tile = new THREE.Mesh(tileGeometry, tileMaterial.clone());
         tile.material.shadowSide = THREE.FrontSide;
-        tile.receiveShadow=true;
-        tile.castShadow=true;
+        // tile.receiveShadow=true;
+        // tile.castShadow=true;
         // Add cylinders at each corner of the tile
         const cornerCylinderGeometry = new THREE.CylinderGeometry(0.1, 0.1, 5, 32); // Adjusted size
         const cornerCylinderMaterial = new THREE.MeshStandardMaterial({ color: 0x505050 });
 
         // Add cubes on top of each cylinder
         const cubeGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5); // Cube dimensions
-        const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0x505050});
+        const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0x505050 });
 
         const tilePosition = tile.position.clone();
         const tileCorners = [
@@ -201,8 +203,8 @@ function createTile(index, round, container) {
         tile.rotation.x = Math.PI / 2;
     }
     tile.userData.tileNumber = index; // Store the tile number in user data
-    tile.castShadow = true;
-    tile.receiveShadow = true;
+    // tile.castShadow = true;
+    //  tile.receiveShadow = true;
     tile.userData.tileVisits = 0;
     tile.userData.PlayerOnTile = false;
 
@@ -220,8 +222,8 @@ function createPiPTile(index, PiP) {
     }
 
     tile.userData.tileNumber = index; // Store the tile number in user data
-    tile.castShadow = true;
-    tile.receiveShadow = true;
+    // tile.castShadow = true;
+    // tile.receiveShadow = true;
 
     // Add cylinders at each corner of the tile
     const cornerCylinderGeometry = new THREE.CylinderGeometry(0.1, 0.1, 5, 32); // Adjusted size
@@ -363,7 +365,7 @@ function createPiPTile(index, PiP) {
         }
     }
     if (PiP == 4) {
-        if ([1,10,19,28,37,46,55,64,73,74,75,76,77,78,79,80].includes(index)) {
+        if ([1, 10, 19, 28, 37, 46, 55, 64, 73, 74, 75, 76, 77, 78, 79, 80].includes(index)) {
             // Create a rounded square
             const squareGeometry = new THREE.BoxGeometry(1.5, 1.5, 5); // Adjust the size and depth
             const squareMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
@@ -517,14 +519,14 @@ function ground() {
     // Create ground
     const groundGeo = new THREE.PlaneGeometry(1500, 1500);
     const groundMat = new THREE.MeshStandardMaterial({
-        castShadow:true,
+        castShadow: true,
         receiveShadow: true,
         map: groundTexture,
         side: THREE.DoubleSide,
     });
 
     const groundMesh = new THREE.Mesh(groundGeo, groundMat);
-    groundMesh.receiveShadow=true;
+    groundMesh.receiveShadow = true;
     scene.add(groundMesh);
 
     const groundPhysMat = new CANNON.Material();
@@ -585,7 +587,7 @@ function Level1Primitives() {
     scene.add(PiPBase3);
     PiPBase3.position.set(175 + 110, 20, 90.5);
     scene.add(PiP3);
-    const floorBody3 = new floorContBody(floorContainerBlue,1);
+    const floorBody3 = new floorContBody(floorContainerBlue, 1);
 }
 
 function Level2Primitives() {
@@ -627,7 +629,7 @@ function Level2Primitives() {
     PiPBase2.position.set(blockWidth / 2 + 0.3 + 110, 20.2, -259);
     scene.add(PiPBase2);
     scene.add(PiP2);
-    const floorBody2 = new floorContBody(floorContainerRed,2);
+    const floorBody2 = new floorContBody(floorContainerRed, 2);
 
 
 }
@@ -676,11 +678,11 @@ function Level3Primitives() {
     scene.add(PiPBase1);
 
     scene.add(PiP1);
-    const floorBody1 = new floorContBody(floorContainerGreen,3);
+    const floorBody1 = new floorContBody(floorContainerGreen, 3);
 
 }
 
-function Level4Primitives(){
+function Level4Primitives() {
 
     scene.add(floorContainerYellow);
     drawGridWithOmissions(floorContainerYellow, [], 1);
@@ -704,12 +706,12 @@ function Level4Primitives(){
     PiP4.position.set(blockWidth / 2 + 0.65 + 30, 20, 390);
     PiP4.rotation.set(Math.PI, 0, 0);
     //PiP4 Pole
-    const poleMaterial = new THREE.MeshStandardMaterial({ color: 0x6E260E});
+    const poleMaterial = new THREE.MeshStandardMaterial({ color: 0x6E260E });
     const pole4 = new THREE.Mesh(poleGeometry, poleMaterial);
     scene.add(pole4);
     pole4.position.set(blockWidth / 2 + 0.5 + 30, 0, 388);
     //PiP4 Sign
-    const signmaterial = new THREE.MeshStandardMaterial({ color: 0x6E260E});
+    const signmaterial = new THREE.MeshStandardMaterial({ color: 0x6E260E });
     const signwall4 = new THREE.Mesh(signwallgeometry, signmaterial);
     scene.add(signwall4);
     signwall4.position.set(blockWidth / 2 + 0.5 + 30, 20, 388);
@@ -724,7 +726,7 @@ function Level4Primitives(){
 
     scene.add(PiP4);
 
-    const floorBody4 = new floorContBody(floorContainerYellow,4);
+    const floorBody4 = new floorContBody(floorContainerYellow, 4);
 
 }
 
@@ -751,7 +753,7 @@ function tileLights() {
             let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
 
             if (tile.litUp === false && inXBounds && inZBounds) {
-            sound.setGlass(true);
+                sound.setGlass(true);
                 const tileColor = new THREE.Color(0, 255, 0);
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
@@ -795,7 +797,7 @@ function tileLights() {
             let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
 
             if (tile.litUp === false && inXBounds && inZBounds) {
-            sound.setGlass(true);
+                sound.setGlass(true);
                 const tileColor = new THREE.Color(255, 0, 0);
                 // TODO: Change color of all faces of cube to blue currently only default front face is changed
                 tile.material.color.copy(tileColor);
@@ -861,7 +863,7 @@ function tileLights() {
 
             newTile = litUpTiles3[litUpTiles3.length - 1];
             if (tile.litUp === false && inXBounds && inZBounds) {
-            sound.setGlass(true);
+                sound.setGlass(true);
                 const tileColor = new THREE.Color(0, 0, 255);
                 tile.material.color.copy(tileColor);
                 L3Stack.push(tile.userData.tileNumber);
@@ -904,29 +906,19 @@ function tileLights() {
             let inXBounds = tileWorldPosition.x - rangeInX <= player.characterModel.position.x && player.characterModel.position.x <= tileWorldPosition.x + rangeInX;
             let inZBounds = tileWorldPosition.z - rangeInZ <= player.characterModel.position.z && player.characterModel.position.z <= tileWorldPosition.z + rangeInZ;
 
-            // on encounter of tile light or unlight
-            if (inXBounds && inZBounds && Math.abs(player.characterModel.position.y - tileWorldPosition.y) < epsilon) {
-                if (tile.litUp === true && tile.playerWithinBounds === false) {
-                    const tileColor = new THREE.Color(0, 0, 0, 0);
-                    // TODO: Change color of all faces of cube to blue currently only default front face is changed
-                    tile.material.color.copy(tileColor);
-                    tile.litUp === false;
-                } else if (tile.litUp === false && tile.playerWithinBounds === false) {
-                    const tileColor = new THREE.Color(0, 0, 255);
-                    // TODO: Change color of all faces of cube to blue currently only default front face is changed
-                    tile.material.color.copy(tileColor);
-                    tile.litUp = true;
-                }
-                tile.playerWithinBounds = true;
+            if (tile.litUp === false && inXBounds && inZBounds) {
+                sound.setGlass(true);
+                const tileColor = new THREE.Color(1, 1, 0);
+                // TODO: Change color of all faces of cube to blue currently only default front face is changed
+                tile.material.color.copy(tileColor);
 
-                if (tile.userData.tileNumber == 19) {
-                    tile.semicircleMesh3.litUp = true;
-                    tile.semicircleMesh3.material.color.copy(tileColor);
+                tile.litUp = true;
+                if (tile.userData.tileNumber == 1) {
+                    tile.semicircleMesh4.litUp = true;
+                    tile.semicircleMesh4.material.color.copy(tileColor);
                 }
-                litUpTiles3.push(tile.userData.tileNumber);
-
-                // TODO: This might be causing more lag for double loop per tile
-                const haveSameValues = path3.every(value => litUpTiles3.includes(value) && litUpTiles3.length === path3.length);
+                litUpTiles4.push(tile.userData.tileNumber);
+                const haveSameValues = path4.every(value => litUpTiles4.includes(value) && litUpTiles4.length === path4.length);
                 if (haveSameValues) {
                     console.log("Path 4 correct.");
                     puzzComplete("Yellow");
@@ -937,16 +929,15 @@ function tileLights() {
                 const whiteTile = new THREE.Color(255, 255, 255);
                 PiP4.children[tile.userData.tileNumber - 1].material.color.copy(whiteTile);
 
-            } else {
-                tile.playerWithinBounds = false;
             }
+
         });
     }
 
 }
 
 
-function mazeReset(){
+function mazeReset() {
     document.addEventListener('keydown', (event) => {
         if (event.key === 'r') {
             const tileColor = 0xffffff;
@@ -992,7 +983,7 @@ function mazeReset(){
                             }
                         });
                     } else if (index == 4) {
-    
+
                         litUpTiles3 = [];
                         PiP3.children.forEach((tile) => {
                             tile.material.color.set(0x444444);
@@ -1006,7 +997,7 @@ function mazeReset(){
                                 tile.semicircleMesh3.material.color.set(tileColor);
                             }
                         });
-    
+
                     }
                     else if (index == 5) {
 
@@ -1023,12 +1014,12 @@ function mazeReset(){
                                 tile.semicircleMesh4.material.color.set(tileColor);
                             }
                         });
-                }
+                    }
                 }
             });
         }
     });
-    
+
 }
 
 
@@ -1043,7 +1034,7 @@ const PiPBaseMaterial3 = new THREE.MeshStandardMaterial({ color: 0xFFA500 });
 const path1 = [1, 2, 3, 12, 21, 30, 39, 48, 57, 66, 75, 76, 77, 78, 79, 70, 61, 52, 43, 42, 41, 32, 23, 24, 25, 26, 27, 36, 45, 54, 63, 72, 81];
 const path2 = [5, 14, 23, 24, 25, 26, 27, 36, 45, 44, 43, 42, 41, 40, 39, 48, 57, 56, 55, 64, 73, 74, 75, 76, 77, 68, 59, 60, 61, 62, 63, 72, 81];
 const path3 = [19, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 18, 27, 36, 45, 44, 43, 34, 25, 24, 23, 32, 41, 40, 39, 38, 37, 46, 55, 64, 73, 74, 75, 66, 57, 58, 59, 68, 77, 78, 79, 80, 81];
-const path4 = [1,10,19,28,37,46,55,64,73,74,75,76,77,78,79,80,81];
+const path4 = [1, 10, 19, 28, 37, 46, 55, 64, 73, 74, 75, 76, 77, 78, 79, 80, 81];
 
 let litUpTiles1 = [];
 let litUpTiles2 = [];
@@ -1120,9 +1111,9 @@ export const PiP4 = new THREE.Group();
 
 //makeMazes();
 
- Level1Primitives();
- Level2Primitives();
- Level3Primitives();
+Level1Primitives();
+Level2Primitives();
+Level3Primitives();
 Level4Primitives();
 
 walls.addWalls(assetLoader, scene, world, blockWidth, rotationAngle);
