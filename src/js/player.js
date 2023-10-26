@@ -417,6 +417,8 @@ class BasicCharacterControllerInput {
     const blocker = document.getElementById('blocker');
     const instructions = document.getElementById('instructions');
     const pausedScreen = document.getElementById('paused-screen');
+    const crosshairs = document.getElementById('crosshairs');
+
 
     document.addEventListener('click', function () {
       controls.lock();
@@ -428,6 +430,8 @@ class BasicCharacterControllerInput {
       instructions.style.display = 'none';
       blocker.style.display = 'none';
       pausedScreen.style.display = 'none';
+      crosshairs.style.display = 'block';
+      document.body.appendChild(crosshairs);
     });
 
     // pause
@@ -435,6 +439,7 @@ class BasicCharacterControllerInput {
       paused=true;
       pausedScreen.style.display = 'flex';
       blocker.style.display = 'block';
+      crosshairs.style.display = 'none';
       instructions.style.display = '';
       moveForward=false;
       moveBackward=false;
