@@ -2,14 +2,13 @@ import * as THREE from 'three'
 import * as objects from './objects.js'
 import * as sky from './sky.js';
 
-export let spotLight;
 
 export function addLights(scene) {
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
     scene.add(ambientLight);
 
     // Add lighting (directional light)
-     spotLight = new THREE.SpotLight(0xFFFFFF, 1.2);
+    const spotLight = new THREE.SpotLight(0xFFFFFF, 1.2);
 
     spotLight.castShadow = true;
     spotLight.shadow.camera.near = 100;
@@ -31,6 +30,8 @@ export function addLights(scene) {
     scene.add(lighHelper);
     var helper = new THREE.CameraHelper(spotLight.shadow.camera);
     scene.add(helper);
+
+    sky.moonOrbitGroup.add(spotLight);
 
 }
 
