@@ -869,7 +869,7 @@ export function _LoadAnimatedModel() {
 export function animate_objects() {
   if (characterModel && playerBody) {
     if(playerBody.position.y<8 && sound.glass===true){
-          console.log(playerBody.position.y);
+          //console.log(playerBody.position.y);
             sound.setGlass(false);
           }
     characterModel.position.copy(playerBody.position);

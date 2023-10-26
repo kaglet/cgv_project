@@ -35,8 +35,8 @@ function runGame(steps, tipDisplay) {
         _previousRAF = t;
       }
 
-      if (!player.paused) {
-        objects.world.step(1/60);
+      if (!player.paused) { 
+        objects.world.step(1 / 60);
         objects.animate_objects();
         player.animate_objects();
         objects.animate_lights();
@@ -45,21 +45,56 @@ function runGame(steps, tipDisplay) {
         // if steps are not emptied out then show tips
         if (steps.length !== 0 && gameIsLoaded === true) {
           tipDisplay.style.display = 'block';
+          if (steps[0].text === "The door has opened indicating you completed the puzzle.") {
+            console.log(steps);
+            // check if they finally won and satisfied steps[0] win condition. If not try again next time in RAF.
+            if (objects.path4.every(value => objects.litUpTiles4.includes(value) && objects.litUpTiles4.length === objects.path4.length)) {
+              console.log("You won and step array looks like this: ");
+              console.log(steps);
+              tipDisplay.textContent = "The door has opened indicating you completed the puzzle.";
+              steps.shift();
+            } 
+          } else if (steps[0].checkStepComplete() === true) { // else if a regular step not the last step detected check and pop as normal
 
-          if (steps[0].checkStepComplete() === true) {
-            console.log('removed step 1');
+            if (steps[0].text === "Use your solution to get to the end, the semi-circular tile.") {
+              let pathCorrect = objects.path4.every(value => objects.litUpTiles4.includes(value) && objects.litUpTiles4.length === objects.path4.length);
+              if (pathCorrect === true) {
+                // take care of win case with timer 
+                // display tip on timer
+                tipDisplay.textContent = "The door has opened indicating you completed the puzzle.";
+                steps.shift();
+              } else {
+                console.log('Hi from path incorrect!');
+                tipDisplay.textContent = "You got the path wrong, try again. Go back and press R to reset puzzle.";
+                document.addEventListener('keydown', (e) => {
+                  if (e.keyCode === 82) {
+                    // console.log('R is clicked');
+                    // tipDisplay.style.display = 'none';
+                    tipDisplay.textContent = "Find a new solution to help complete the puzzle.";
+                  }
+                });
+
+              }
+            }
+
             steps.shift();
+            // if (steps[0].text === "Use your solution to get to the end, the semi-circular tile.") {
+            //   console.log(steps);
+            // }
+
           } else {
             // display text for top most step
             tipDisplay.textContent = steps[0].text;
           }
         } else if (steps.length === 0) {
           // set display back to none once all tips are shown
-          if (tipDisplay.style.display !== 'none') {
-            tipDisplay.style.display = 'none';
-          }
+          setTimeout(() => {
+            if (tipDisplay.style.display !== 'none') {
+              tipDisplay.style.display = 'none';
+            }
+          }, 5000);
         }
-      } 
+      }
 
       _previousRAF = t;
       _RAF();
@@ -89,8 +124,8 @@ function hideTitleScreen() {
 }
 
 function showLoadingScreen() {
-    let loadingScreen = document.querySelector('.loading.screen');
-    loadingScreen.style.display = 'flex';
+  let loadingScreen = document.querySelector('.loading.screen');
+  loadingScreen.style.display = 'flex';
 }
 
 function hideLoadingScreen() {
@@ -137,11 +172,11 @@ function createTutorialSteps() {
   let step5Text = "Jump onto the start tile with spacebar.";
   let step6Text = "Use your solution to get to the end, the semi-circular tile.";
   let step7Text = "The door has opened indicating you completed the puzzle.";
-  
+
   // when called it run setTimeout repeatedly which will run anonymous function until 10 seconds have elapsed. 
   // assume function can be unbundled for spontaneous variables
   // spontaneous variables can be handled same as any other variable within function like this. anything
-  let checkStep1Complete = function() {
+  let checkStep1Complete = function () {
 
     if (this.wPressed === undefined) {
       this.wPressed = false;
@@ -174,17 +209,17 @@ function createTutorialSteps() {
           // console.log(this.wPressed);
           break;
       }
-  
+
       this.allKeysPressed = this.wPressed && this.aPressed && this.sPressed && this.dPressed;
     });
 
 
-    console.log(this.allKeysPressed);
+    //console.log(this.allKeysPressed);
 
     return this.allKeysPressed;
   };
 
-  let checkStep2Complete = function() {
+  let checkStep2Complete = function () {
     this.playerPosition = new THREE.Vector3(player.playerBody.position.x, player.playerBody.position.y, player.playerBody.position.z);
     this.targetCoordinates = new THREE.Vector3(207, 4, 408); // Replace with your target coordinates
 
@@ -197,12 +232,12 @@ function createTutorialSteps() {
     // Check if the player is within the specified range
     if (this.distance <= this.maxRange) {
       return true;
-    } 
-    
+    }
+
     return false;
   };
 
-  let checkStep3Complete = function() {
+  let checkStep3Complete = function () {
     if (this.startTime === undefined) {
       this.startTime = new Date().getTime();
     }
@@ -210,14 +245,13 @@ function createTutorialSteps() {
     // console.log(new Date().getTime());
 
     this.endTime = new Date().getTime();
-    console.log(this.endTime - this.startTime);
-    
+
     if ((this.endTime - this.startTime) / 1000 >= 2) {
       return true;
     }
   };
 
-  let checkStep4Complete = function() {
+  let checkStep4Complete = function () {
     this.playerPosition = new THREE.Vector3(player.playerBody.position.x, player.playerBody.position.y, player.playerBody.position.z);
     this.targetCoordinates = new THREE.Vector3(235, 4, 388); // Replace with your target coordinates
 
@@ -230,16 +264,16 @@ function createTutorialSteps() {
     // Check if the player is within the specified range
     if (this.distance <= this.maxRange) {
       return true;
-    } 
-    
+    }
+
     return false;
   };
 
-  let checkStep5Complete = function() {
+  let checkStep5Complete = function () {
     return objects.floorContainerYellow.children[64].litUp;
   };
 
-  let checkStep6Complete = function() {
+  let checkStep6Complete = function () {
     return objects.floorContainerYellow.children[0].litUp;
   };
 
@@ -251,8 +285,7 @@ function createTutorialSteps() {
     // console.log(new Date().getTime());
 
     this.endTime = new Date().getTime();
-    console.log(this.endTime - this.startTime);
-    
+
     if (objects.path4.every(value => objects.litUpTiles4.includes(value) && objects.litUpTiles4.length === objects.path4.length)) {
       this.pathCorrect = true;
     }
@@ -267,14 +300,14 @@ function createTutorialSteps() {
 
   // check this.start and this.end for step1 as they are updated. They are initialized on construction and checked on loop run.
   // start is filled and never filled again, end is refilled, their difference is checked.
-  let step1 =  new Step(step1Text, checkStep1Complete);
-  let step2 =  new Step(step2Text, checkStep2Complete);
-  let step3 =  new Step(step3Text, checkStep3Complete);
-  let step4 =  new Step(step4Text, checkStep4Complete);
-  let step5 =  new Step(step5Text, checkStep5Complete);
-  let step6 =  new Step(step6Text, checkStep6Complete);
+  let step1 = new Step(step1Text, checkStep1Complete);
+  let step2 = new Step(step2Text, checkStep2Complete);
+  let step3 = new Step(step3Text, checkStep3Complete);
+  let step4 = new Step(step4Text, checkStep4Complete);
+  let step5 = new Step(step5Text, checkStep5Complete);
+  let step6 = new Step(step6Text, checkStep6Complete);
   let step7 =  new Step(step7Text, checkStep7Complete);
-  
+
   let steps = [
     step1,
     step2,
@@ -284,7 +317,7 @@ function createTutorialSteps() {
     step6,
     step7,
   ];
-
+  console.log(steps);
   return steps;
 }
 
@@ -309,10 +342,10 @@ const sound = new THREE.Audio(listener);
 
 const audioLoader = new THREE.AudioLoader();
 audioLoader.load('/Audio/BetterBackground.mp3', function (buffer) {
-    sound.setBuffer(buffer);
-    sound.setLoop(true);
-    sound.setVolume(0.5);
-    sound.play();
+  sound.setBuffer(buffer);
+  sound.setLoop(true);
+  sound.setVolume(0.5);
+  sound.play();
 });
 
 document.querySelector('.pause.container resume-button');
