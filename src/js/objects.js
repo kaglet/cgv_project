@@ -967,7 +967,9 @@ function tileLights() {
 function mazeReset() {
     document.addEventListener('keydown', (event) => {
         if (event.key === 'r') {
-            const tileColor = 0xffffff;
+            const tileColor = new THREE.Color(255, 255, 255, 0);
+             const clearColor = new THREE.Color(0, 0, 0, 0);
+
             levelAreas.forEach((area, index) => {
                 let rangeInX = area.sizeFromBoundingBox.x / 2;
                 let rangeInZ = area.sizeFromBoundingBox.z / 2;
@@ -987,7 +989,12 @@ function mazeReset() {
                         });
                         changePathColor(PiP1, pathPiP2AND3, 0x006400);
                         floorContainerGreen.children.forEach((tile) => {
-                            tile.material.color.set(tileColor);
+                            if(tile.userData.tileNumber!=81){
+
+                                tile.material.color.copy(tileColor);
+                           }else{
+                                tile.material.color.copy(clearColor);
+                           }
                             tile.litUp = false;
                             if (tile.userData.tileNumber == 1) {
                                 tile.semicircleMesh1.litUp = false;
@@ -1002,7 +1009,12 @@ function mazeReset() {
                         });
                         changePathColor(PiP2, pathPiP2AND3, 0xff00ff);
                         floorContainerRed.children.forEach((tile) => {
-                            tile.material.color.set(tileColor);
+                            if(tile.userData.tileNumber!=81){
+
+                                tile.material.color.copy(tileColor);
+                           }else{
+                                tile.material.color.copy(clearColor);
+                           }
                             tile.litUp = false;
                             if (tile.userData.tileNumber == 5) {
                                 tile.semicircleMesh.litUp = false;
@@ -1017,7 +1029,12 @@ function mazeReset() {
                         });
                         changePathColor(PiP3, pathPiP2AND3, 0xFFA500);
                         floorContainerBlue.children.forEach((tile) => {
-                            tile.material.color.set(tileColor);
+                            if(tile.userData.tileNumber!=81){
+
+                                tile.material.color.copy(tileColor);
+                           }else{
+                                tile.material.color.copy(clearColor);
+                           }
                             tile.litUp = false;
                             if (tile.userData.tileNumber == 19) {
                                 tile.semicircleMesh3.litUp = false;
@@ -1034,7 +1051,14 @@ function mazeReset() {
                         });
                         changePathColor(PiP4, pathPiP2AND3, 0xFFFF00);
                         floorContainerYellow.children.forEach((tile) => {
-                            tile.material.color.set(tileColor);
+
+                           if(tile.userData.tileNumber!=81){
+                                tile.material.color.copy(clearColor);
+
+                           }else{
+                                 tile.material.color.copy(tileColor);
+                           }
+
                             tile.litUp = false;
                             if (tile.userData.tileNumber == 1) {
                                 tile.semicircleMesh4.litUp = false;

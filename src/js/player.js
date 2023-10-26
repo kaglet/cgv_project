@@ -57,7 +57,7 @@ class BasicCharacterControllerProxy {
 class BasicCharacterController {
   constructor(params) {
 
-//    params.world.gravity.set(0, -9.81, 0);
+    params.world.gravity.set(0, -50, 0);
 
     // Create a Cannon.js body for the player character
     let playerPhysMat = new CANNON.Material();
@@ -79,8 +79,8 @@ class BasicCharacterController {
 
   _Init(params) {
     this._params = params;
-    this._decceleration = new THREE.Vector3(-5.0, -9.8, -5.0);
-    this._acceleration = new THREE.Vector3(200, 800, 200);
+    this._decceleration = new THREE.Vector3(-5.0, -20.0, -5.0);
+    this._acceleration = new THREE.Vector3(200, 200, 200);
     this._velocity = new THREE.Vector3(0, 0, 0);
 
     this._animations = {};
@@ -268,9 +268,10 @@ class BasicCharacterController {
              moveDirection.y=(0);
         }else
         {
-            moveDirection.y=5;
-            velocity.z = 10000;
-            controlObject.position.y += 0.15;
+            moveDirection.y=1;
+            velocity.y += acc.y;
+            velocity.z= 50;
+            //controlObject.position.y += 0.15;
 
             }
             //velocity.y += acc.y* timeInSeconds;
