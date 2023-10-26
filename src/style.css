@@ -48,7 +48,7 @@ body {
     transform: translate(-50%, -50%);
     width: 20px;
     height: 20px;
-    border: 2px solid red;
+    border: 2px solid rgb(225, 173, 67);
     border-radius: 50%;
     pointer-events: none;
     cursor: pointer;
