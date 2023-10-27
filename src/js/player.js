@@ -775,7 +775,7 @@ class BackState extends State {
       this._parent.SetState('jump');
     } else
       if (moveBackward) {
-
+        
         return;
       }
 
