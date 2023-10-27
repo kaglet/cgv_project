@@ -31,7 +31,7 @@ export function addLights(scene) {
     var helper = new THREE.CameraHelper(spotLight.shadow.camera);
     scene.add(helper);
 
-    sky.moonOrbitGroup.add(spotLight);
+ //   sky.moonOrbitGroup.add(spotLight);
 
 }
 
