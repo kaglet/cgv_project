@@ -24,7 +24,7 @@ const right = width / 2 / zoomFactor;
 const top = height / 2 / zoomFactor;
 const bottom = -height / 2 / zoomFactor;
 const near = 0.1;
-const far = 1000;
+const far = 1100;
 
 // Create an orthographic camera
 const topDownCamera = new THREE.OrthographicCamera(left, right, top, bottom, near, far);
@@ -56,20 +56,21 @@ document.addEventListener('keydown', (event) => {
                 // can set camera based off this square's coordinates or simply from known coordinates from knowing if square 1 needs certain coordinates
                 // calculate position of topDownCamera from here
 
-                if (index==0){
+                console.log(index)
+                if (index == 0) {
                     topDownCamera.position.set(-180, 1000, -360);
                     topDownCamera.lookAt(-180, 0, -360);
-                }else if(index==3){
+                } else if (index == 3) {
                     topDownCamera.position.set(170, 1000, -360);
                     topDownCamera.lookAt(170, 0, -360);
-                }else if(index==4){
-                     topDownCamera.position.set(170, 1000, -10);
-                     topDownCamera.lookAt(170, 0, -10);
-                 }else if(index==5){
-                      topDownCamera.position.set(170, 1000, 340);
-                      topDownCamera.lookAt(170, 0, 340);
-                  }
-                  return;
+                } else if (index == 4) {
+                    topDownCamera.position.set(170, 1000, -10);
+                    topDownCamera.lookAt(170, 0, -10);
+                } else if (index == 5) {
+                    topDownCamera.position.set(170, 1000, 320);
+                    topDownCamera.lookAt(170, 0, 320);
+                }
+                return;
             }
         });
         // Switch between cameras
@@ -83,10 +84,10 @@ document.addEventListener('keydown', (event) => {
     }
 });
 const listener = new THREE.AudioListener();
-camera.add( listener );
+camera.add(listener);
 
 // create a global audio source
-const sound = new THREE.Audio( listener );
+const sound = new THREE.Audio(listener);
 
 // load a sound and set it as the Audio object's buffer
 // const audioLoader = new THREE.AudioLoader();
