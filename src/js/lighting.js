@@ -26,10 +26,10 @@ export function addLights(scene) {
 
     spotLight.angle = 0.5;
     // Configure the shadow map size and camera near/far
-    const lighHelper = new THREE.SpotLightHelper(spotLight);
-    scene.add(lighHelper);
-    var helper = new THREE.CameraHelper(spotLight.shadow.camera);
-    scene.add(helper);
+    // const lighHelper = new THREE.SpotLightHelper(spotLight);
+    // scene.add(lighHelper);
+    // var helper = new THREE.CameraHelper(spotLight.shadow.camera);
+    // scene.add(helper);
 
  //   sky.moonOrbitGroup.add(spotLight);
 
