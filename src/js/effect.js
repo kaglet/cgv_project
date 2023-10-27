@@ -139,7 +139,7 @@ THREE.ShaderChunk.fog_fragment = `
       fogDepth *= mix(noiseSample, 1.0, saturate((fogDepth - 5000.0) / 5000.0));
       fogDepth *= fogDepth;
 
-      float heightFactor = 0.07;
+      float heightFactor = 0.05;
       //This calculation is used to modulate the fog colour in the final rendering
       float fogFactor = heightFactor * exp(-fogOrigin.y * fogDensity) * (
           1.0 - exp(-fogDepth * fogDirection.y * fogDensity)) / fogDirection.y;
