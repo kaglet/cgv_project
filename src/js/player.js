@@ -38,6 +38,9 @@ let jumping=false;
 let onMaze = false;
 export var paused = false;
 var disable=true;
+let waking=true;
+let clicked=false;
+
 
 export let playerBody;
 export let characterModel = null;
@@ -57,7 +60,7 @@ class BasicCharacterControllerProxy {
 class BasicCharacterController {
   constructor(params) {
 
-//    params.world.gravity.set(0, -9.81, 0);
+    params.world.gravity.set(0, -50, 0);
 
     // Create a Cannon.js body for the player character
     let playerPhysMat = new CANNON.Material();
@@ -79,8 +82,8 @@ class BasicCharacterController {
 
   _Init(params) {
     this._params = params;
-    this._decceleration = new THREE.Vector3(-5.0, -9.8, -5.0);
-    this._acceleration = new THREE.Vector3(200, 800, 200);
+    this._decceleration = new THREE.Vector3(-5.0, -20.0, -5.0);
+    this._acceleration = new THREE.Vector3(200, 200, 200);
     this._velocity = new THREE.Vector3(0, 0, 0);
 
     this._animations = {};
@@ -194,6 +197,7 @@ class BasicCharacterController {
       loader.load('./alex/WalkLeft.fbx', (a) => { _OnLoad('left', a); });
       loader.load('./alex/WalkRight.fbx', (a) => { _OnLoad('right', a); });
       loader.load('./alex/Jumping.fbx', (a) => { _OnLoad('jump', a); });
+      loader.load('./alex/StandingUp.fbx', (a) => { _OnLoad('wake', a); });
     });
   }
 
@@ -268,9 +272,10 @@ class BasicCharacterController {
              moveDirection.y=(0);
         }else
         {
-            moveDirection.y=5;
-            velocity.z = 10000;
-            controlObject.position.y += 0.15;
+            moveDirection.y=1;
+            velocity.y += acc.y;
+            velocity.z= 50;
+            //controlObject.position.y += 0.15;
 
             }
             //velocity.y += acc.y* timeInSeconds;
@@ -422,8 +427,16 @@ class BasicCharacterControllerInput {
     
     // resume
     controls.addEventListener('lock', function () {
+    clicked=true;
+    if(waking){
+         setTimeout(function() {
+            waking = false;
+             disable=false;
+        }, 10000);
+    }
+
       paused=false;
-      disable=false;
+
       instructions.style.display = 'none';
       blocker.style.display = 'none';
       pausedScreen.style.display = 'none';
@@ -567,6 +580,7 @@ class CharacterFSM extends FiniteStateMachine {
     this._AddState('left', LeftState);
     this._AddState('right', RightState);
     this._AddState('jump', JumpState);
+    this._AddState('wake', WakeState);
 
   }
 };
@@ -580,6 +594,61 @@ class State {
   Enter() { }
   Exit() { }
   Update() { }
+};
+
+
+class WakeState extends State {
+  constructor(parent) {
+    super(parent);
+  }
+
+  get Name() {
+    return 'wake';
+  }
+
+  Enter(prevState) {
+    const curAction = this._parent._proxy._animations['wake'].action;
+    if (prevState) {
+      const prevAction = this._parent._proxy._animations[prevState.Name].action;
+
+      curAction.enabled = true;
+
+
+      curAction.time = 0.0;
+      curAction.setEffectiveTimeScale(1.0);
+      curAction.setEffectiveWeight(1.0);
+
+
+      curAction.crossFadeFrom(prevAction, 0.5, true);
+         curAction.play();
+      if(!clicked){
+        curAction.paused=true;
+      }
+    } else {
+    if(!clicked){
+        curAction.paused=true;
+      }else{
+      curAction.paused=false;
+         curAction.play();
+      }
+
+    }
+  }
+
+  Exit() {
+  }
+
+  Update(timeElapsed, input) {
+  const curAction = this._parent._proxy._animations['wake'].action;
+    if (waking ) {
+        if(clicked){
+            curAction.paused=false;
+        }
+      return;
+    }
+
+    this._parent.SetState('idle');
+  }
 };
 
 class JumpState extends State {
@@ -848,6 +917,10 @@ class IdleState extends State {
     if (jumping) {
           this._parent.SetState('jump');
         }
+    if(waking){
+     this._parent.SetState('wake');
+    }
+
   }
 };
 
@@ -869,7 +942,7 @@ export function _LoadAnimatedModel() {
 export function animate_objects() {
   if (characterModel && playerBody) {
     if(playerBody.position.y<8 && sound.glass===true){
-          console.log(playerBody.position.y);
+          //console.log(playerBody.position.y);
             sound.setGlass(false);
           }
     characterModel.position.copy(playerBody.position);
