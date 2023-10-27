@@ -56,8 +56,7 @@ document.addEventListener('keydown', (event) => {
                 // can set camera based off this square's coordinates or simply from known coordinates from knowing if square 1 needs certain coordinates
                 // calculate position of topDownCamera from here
 
-                console.log(index)
-                if (index == 0) {
+                if (index==0){
                     topDownCamera.position.set(-180, 1000, -360);
                     topDownCamera.lookAt(-180, 0, -360);
                 } else if (index == 3) {

@@ -325,19 +325,19 @@ class BasicCharacterController {
       const acc = this._acceleration.clone();
 
       if (moveForward) {
-        velocity.z += acc.z * timeInSeconds;
+        velocity.z += 100 * timeInSeconds;
       }
       if (moveBackward) {
-        velocity.z -= acc.z * timeInSeconds;
+        velocity.z -= 100 * timeInSeconds;
       }
       if (moveLeft) {
         _A.set(0, 1, 0);
-        _Q.setFromAxisAngle(_A, 4.0 * Math.PI * timeInSeconds * (this._acceleration.y * 0.5));
+        _Q.setFromAxisAngle(_A, 4.0 * Math.PI * timeInSeconds * (1 * 0.5));
         _R.multiply(_Q);
       }
       if (moveRight) {
         _A.set(0, 1, 0);
-        _Q.setFromAxisAngle(_A, 4.0 * -Math.PI * timeInSeconds * (this._acceleration.y * 0.5));
+        _Q.setFromAxisAngle(_A, 4.0 * -Math.PI * timeInSeconds * (1 * 0.5));
         _R.multiply(_Q);
       }
       if (jumping) {
@@ -387,7 +387,7 @@ function handleSpacebarPress() {
     setTimeout(function () {
       jumpSound.stop();
       jumping = false;
-    }, 1000); 
+    }, 1000);
       setTimeout(function () {
     afterjumping = false;// 1000 milliseconds (1 second)
   }, 1000);
