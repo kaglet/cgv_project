@@ -3,6 +3,8 @@ import * as CANNON from 'cannon-es';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 
+
+
 // Import texture images
 import spaceFtImage from '../img/space/space_ft.png';
 import spaceBkImage from '../img/space/space_bk.png';
@@ -98,11 +100,11 @@ export function setSky(scene) {
 //Moon
 
 const gltfLoader = new GLTFLoader();
+// modelsToLoad.push({ modelPath: '/openlvl2(48.5mb).glb', scale: 1.05, position: [217, 2, -358], rotation:0 });
 
-
-gltfLoader.load('./assets/moon/scene.gltf', (gltf) => {
+gltfLoader.load('./assets/misc/moon/scene.gltf', (gltf) => {
     moonMesh = gltf.scene;
-    moonMesh.scale.set(1.5, 1.5, 1.5); // Adjust the scale as needed
+    moonMesh.scale.set(2, 2, 2); // Adjust the scale as needed
 
     // Create a group for the moon to orbit around the world center
     
@@ -117,6 +119,8 @@ gltfLoader.load('./assets/moon/scene.gltf', (gltf) => {
     // Add the moon orbit group to the scene
     scene.add(moonOrbitGroup);
 });
+
+
 
 
 }

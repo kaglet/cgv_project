@@ -31,6 +31,7 @@ body {
     font-family: var(--system-default-font);
     position: relative;
     color: azure;
+    caret: none;
 }
 
 .webgl {
@@ -69,6 +70,7 @@ body {
     top: 0;
     left: 0;
     z-index: 0;
+    caret: none;
 }
 
 .start.menu.screen h1 {
@@ -178,6 +180,7 @@ body {
     top: 0;
     left: 0;
     z-index: 0;
+    caret: none;
 }
 
 #paused-screen h3 {
