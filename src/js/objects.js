@@ -99,14 +99,17 @@ function puzzComplete(puzz) {
         //Win screen
         let endCompleteScreen = document.querySelector('.story-text.end.container');
         let creditsScreen = document.querySelector('.credits.screen');
-        endCompleteScreen.style.display = 'block';
-        document.addEventListener('click', () => {
-          endCompleteScreen.style.display = 'none';
-          creditsScreen.style.display = 'block';
-          setTimeout(() => {
-            location.reload();
-          }, 25000);
-        });
+        
+        setTimeout(() => {
+            endCompleteScreen.style.display = 'block';
+            document.addEventListener('click', () => {
+              endCompleteScreen.style.display = 'none';
+              creditsScreen.style.display = 'block';
+              setTimeout(() => {
+                location.reload();
+              }, 25000);
+            });
+        }, 5000);
     }
 }
 
