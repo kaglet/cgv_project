@@ -4,14 +4,14 @@ import ceilingtextureImage from '../img/lambert1_baseColor.png';
 
 export const modelsToLoad = []
 
-function plants(modelsToLoad) {
+function plants() {
     const centers = [];
     const blockWidth = 350;
     centers.push(new THREE.Vector3(blockWidth / 2, 0, blockWidth / 2 - 9));
     centers.push(new THREE.Vector3(blockWidth / 2, 0, -blockWidth / 2 + 9));
     centers.push(new THREE.Vector3(-24.5, 0, -blockWidth));
 
-    const numPlants = 2;
+    const numPlants = 20;
     const minDistanceFromCenter = 0;
     const maxDistanceFromCenter = 350;
 
@@ -269,7 +269,7 @@ function statues(loader, scene, world) {
 
 export function loadModels(loader, scene, world, blockWidth) {
 
-    //plants();
+  //  plants();
     // modelsToLoad.push({ modelPath: '/ground_material.glb', scale: 1, position: [0, -1, 0], rotation: Math.PI / 2 });
     // modelsToLoad.push({ modelPath: '/lion_statue.glb', scale: 30, position: [103, -5, 50], rotation: 0 });
 
