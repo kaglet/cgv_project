@@ -159,7 +159,14 @@ class Gate {
         // Return a promise that resolves when the model is loaded
         this.loadModelPromise = new Promise((resolve) => {
             assetLoader.load('./assets/medieval_arched_wooden_door/scene.gltf', (gltf) => {
+
                 this.model = gltf.scene.clone();
+                this.model.traverse(function (node) {
+                    if (node.isMesh) {
+                        node.castShadow = true;
+                        node.receiveShadow = true;
+                    }
+                });
                 this.model.scale.set(0.75, 0.3, 0.3);
 
                 // Set the initial position and rotation of the model
