@@ -39,7 +39,8 @@ let onMaze = false;
 export var paused = false;
 var disable=true;
 let waking=true;
-let clicked=false;
+export let clicked=false;
+export let startToShowTips = false;
 
 
 export let playerBody;
@@ -424,6 +425,15 @@ class BasicCharacterControllerInput {
     const instructions = document.getElementById('instructions');
     const pausedScreen = document.getElementById('paused-screen');
     const crosshairs = document.getElementById('crosshairs');
+    let startStoryText = document.querySelector('.story-text.start');
+    const restartButton = document.querySelector('#paused-screen .restart-button');
+    const quitButton = document.querySelector('#paused-screen .quit-button');
+    quitButton.addEventListener('click', () => {
+      window.close();
+    });
+    restartButton.addEventListener('click', () => {
+      location.reload();
+    });
     
     // resume
     controls.addEventListener('lock', function () {
@@ -432,6 +442,10 @@ class BasicCharacterControllerInput {
          setTimeout(function() {
             waking = false;
              disable=false;
+             startStoryText.style.display = 'block';
+             document.addEventListener('click', () => {
+               startToShowTips = true;
+             });
         }, 10000);
     }
 
@@ -439,7 +453,9 @@ class BasicCharacterControllerInput {
 
       instructions.style.display = 'none';
       blocker.style.display = 'none';
+
       pausedScreen.style.display = 'none';
+      startStoryText.style.display = 'none';
       // document.body.appendChild(crosshairs);
       crosshairs.style.display = 'block';
     });

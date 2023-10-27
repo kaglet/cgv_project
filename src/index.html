@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
     <meta charset="UTF-8">
@@ -8,66 +9,138 @@
     <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="./menus.css">
 </head>
+
 <body>
-<script type="importmap">
+    <script type="importmap">
         {
             "imports": {
                 "three": "https://unpkg.com/three@0.138.3/build/three.module.js"
             }
         }
     </script>
-<script src="./js/script.js" type="module"></script>
+    <script src="./js/script.js" type="module"></script>
 
 
-<canvas class="webgl"></canvas>
+    <canvas class="webgl"></canvas>
 
-<div class="start menu screen">
-    <h1><p>F</p>ORGOTTEN <p>I</p>SLAND</h1>
-    <h3>MAKE YOUR ESCAPE</h3>
-    <div class="start-menu">
-        <ul class="options">
-            <li class="start-button">PLAY</li>
-            <li class="credits-button">CREDITS</li>
-            <li class="quit-button">QUIT</li>
-        </ul>
-    </div>
-</div>
-
-<div class="loading screen" style="display: none;">
-    <div class="loading container">
-        <h3>LOADING</h3>
-        <p class="loading message">
-            please wait...
-        </p>
-    </div>
-</div>
-
-<div id="paused-screen" style="display: none;">
-    <div class="pause container">
-        <h3>PAUSED</h3>
-        <div class="pause-menu">
+    <div class="start menu screen">
+        <h1>
+            <p>F</p>ORGOTTEN <p>I</p>SLAND
+        </h1>
+        <h3>MAKE YOUR ESCAPE</h3>
+        <div class="start-menu">
             <ul class="options">
-                <li class="resume-button">RESUME</li>
-                <li class="restart-button">RESTART</li>
+                <li class="start-button">PLAY</li>
+                <li class="credits-button">CREDITS</li>
                 <li class="quit-button">QUIT</li>
             </ul>
         </div>
     </div>
-</div>
 
-<div class="tip" style="display: none;">
-    <p>
-        Hi! I am a tooltip. 
-    </p>
-</div>
-
-<div id="blocker">
-    <div id="instructions">
-        <div id="crosshairs" style="display: none;">
-
+    <div class="loading screen" style="display: none;">
+        <div class="loading container">
+            <h3>LOADING</h3>
+            <p class="loading message">
+                please wait...
+            </p>
         </div>
     </div>
-</div>
+
+    <div id="paused-screen" style="display: none;">
+        <div class="pause container">
+            <h3>PAUSED</h3>
+            <div class="pause-menu">
+                <ul class="options">
+                    <li class="resume-button">RESUME</li>
+                    <li class="restart-button">RESTART</li>
+                    <li class="quit-button">QUIT</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="tip" style="display: none;">
+        <p>
+            Hi! I am a tooltip.
+        </p>
+    </div>
+
+    <div class="story-text start" style="display: none;">
+        <h4>You have woken up</h4>
+        <p>You look around and find yourself in an unfamiliar place, in a courtyard of sorts.
+            You don't remember how you got here. Behind you is a closed gate leading to a prison.
+            Ahead of you is a strange set of tiles and a closed door. The walls are too high to scale,
+            the giant door too tough to break open. You have to figure out how to escape this room.
+        </p>
+        <button class="continue" type="button">Left Click to Continue</button>
+    </div>
+
+    <div class="story-text stage one" style="display: none;">
+        <h4>You have completed the first stage</h4>
+        <p>You may proceed to the next stage. 
+        </p>
+        <button class="continue" type="button">Left Click to Continue</button>
+    </div>
+
+    <div class="story-text stage two" style="display: none;">
+        <h4>You have completed the second stage</h4>
+        <p>You may proceed to the next stage. 
+        </p>
+        <button class="continue" type="button">Left Click to Continue</button>
+    </div>
+    <div class="story-text end container" style="display: none;">
+        <div class="story-text end">
+            <h4>You have escaped</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt 
+                ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in 
+                voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, 
+                sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </p>
+            <button class="continue" type="button">Left Click to Continue</button>
+        </div>
+    </div>
+
+    <div class="credits screen" style="display: none;">
+        <div class="scrollable-text">
+            <h3>CREDITS</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt 
+                ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in 
+                voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, 
+                sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </p>
+            <p>Lorem ipsum dolor sit amet</p>
+            <p>Lorem ipsum dolor sit amet</p>
+            <p>Lorem ipsum dolor sit amet</p>
+            <p>Lorem ipsum dolor sit amet</p>
+            <p>Lorem ipsum dolor sit amet</p>
+            <p>Lorem ipsum dolor sit amet</p>
+            <p>Lorem ipsum dolor sit amet</p>
+            <p>Lorem ipsum dolor sit amet</p>
+            <p>Lorem ipsum dolor sit amet</p>
+            <p>Lorem ipsum dolor sit amet</p>
+            <p>Lorem ipsum dolor sit amet</p>
+            <p>Lorem ipsum dolor sit amet</p>
+            <p>Lorem ipsum dolor sit amet</p>
+            <p>Lorem ipsum dolor sit amet</p>
+            <p>Lorem ipsum dolor sit amet</p>
+            <p>Lorem ipsum dolor sit amet</p>
+            <p>Lorem ipsum dolor sit amet</p>
+            <p>Lorem ipsum dolor sit amet</p>
+            <p>Lorem ipsum dolor sit amet</p>
+            <p>Lorem ipsum dolor sit amet</p>
+        </div>
+    </div>
+
+    <div id="blocker">
+        <div id="instructions">
+            <div id="crosshairs" style="display: none;">
+
+            </div>
+        </div>
+    </div>
 
 </body>
+
 </html>

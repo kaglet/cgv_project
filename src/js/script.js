@@ -35,64 +35,65 @@ function runGame(steps, tipDisplay) {
         _previousRAF = t;
       }
 
-      if (!player.paused) { 
+      if (!player.paused) {
         objects.world.step(1 / 60);
         objects.animate_objects();
         player.animate_objects();
         objects.animate_lights();
         renderer.render(objects.scene, camera.currentCamera);
         step(t - _previousRAF);
-        // if steps are not emptied out then show tips
-        if (steps.length !== 0 && gameIsLoaded === true) {
-          tipDisplay.style.display = 'block';
-          if (steps[0].text === "The door has opened indicating you completed the puzzle.") {
-            console.log(steps);
-            // check if they finally won and satisfied steps[0] win condition. If not try again next time in RAF.
-            if (objects.path4.every(value => objects.litUpTiles4.includes(value) && objects.litUpTiles4.length === objects.path4.length)) {
-              console.log("You won and step array looks like this: ");
+        if (player.startToShowTips === true) {
+          // if steps are not emptied out then show tips
+          if (steps.length !== 0 && gameIsLoaded === true) {
+            tipDisplay.style.display = 'block';
+            if (steps[0].text === "The door has opened indicating you completed the puzzle.") {
               console.log(steps);
-              tipDisplay.textContent = "The door has opened indicating you completed the puzzle.";
-              steps.shift();
-            } 
-          } else if (steps[0].checkStepComplete() === true) { // else if a regular step not the last step detected check and pop as normal
-
-            if (steps[0].text === "Use your solution to get to the end, the semi-circular tile.") {
-              let pathCorrect = objects.path4.every(value => objects.litUpTiles4.includes(value) && objects.litUpTiles4.length === objects.path4.length);
-              if (pathCorrect === true) {
-                // take care of win case with timer 
-                // display tip on timer
+              // check if they finally won and satisfied steps[0] win condition. If not try again next time in RAF.
+              if (objects.path4.every(value => objects.litUpTiles4.includes(value) && objects.litUpTiles4.length === objects.path4.length)) {
+                console.log("You won and step array looks like this: ");
+                console.log(steps);
                 tipDisplay.textContent = "The door has opened indicating you completed the puzzle.";
                 steps.shift();
-              } else {
-                console.log('Hi from path incorrect!');
-                tipDisplay.textContent = "You got the path wrong, try again. Go back and press R to reset puzzle.";
-                document.addEventListener('keydown', (e) => {
-                  if (e.keyCode === 82) {
-                    // console.log('R is clicked');
-                    // tipDisplay.style.display = 'none';
-                    tipDisplay.textContent = "Find a new solution to help complete the puzzle.";
-                  }
-                });
-
               }
+            } else if (steps[0].checkStepComplete() === true) { // else if a regular step not the last step detected check and pop as normal
+
+              if (steps[0].text === "Use your solution to get to the end, the semi-circular tile.") {
+                let pathCorrect = objects.path4.every(value => objects.litUpTiles4.includes(value) && objects.litUpTiles4.length === objects.path4.length);
+                if (pathCorrect === true) {
+                  // take care of win case with timer 
+                  // display tip on timer
+                  tipDisplay.textContent = "The door has opened indicating you completed the puzzle.";
+                  steps.shift();
+                } else {
+                  console.log('Hi from path incorrect!');
+                  tipDisplay.textContent = "You got the path wrong, try again. Go back and press R to reset puzzle.";
+                  document.addEventListener('keydown', (e) => {
+                    if (e.keyCode === 82) {
+                      // console.log('R is clicked');
+                      // tipDisplay.style.display = 'none';
+                      tipDisplay.textContent = "Find a new solution to help complete the puzzle.";
+                    }
+                  });
+                }
+              }
+
+              steps.shift();
+              // if (steps[0].text === "Use your solution to get to the end, the semi-circular tile.") {
+              //   console.log(steps);
+              // }
+
+            } else {
+              // display text for top most step
+              tipDisplay.textContent = steps[0].text;
             }
-
-            steps.shift();
-            // if (steps[0].text === "Use your solution to get to the end, the semi-circular tile.") {
-            //   console.log(steps);
-            // }
-
-          } else {
-            // display text for top most step
-            tipDisplay.textContent = steps[0].text;
+          } else if (steps.length === 0) {
+            // set display back to none once all tips are shown
+            setTimeout(() => {
+              if (tipDisplay.style.display !== 'none') {
+                tipDisplay.style.display = 'none';
+              }
+            }, 5000);
           }
-        } else if (steps.length === 0) {
-          // set display back to none once all tips are shown
-          setTimeout(() => {
-            if (tipDisplay.style.display !== 'none') {
-              tipDisplay.style.display = 'none';
-            }
-          }, 5000);
         }
       }
 
@@ -141,10 +142,19 @@ function showCrosshair() {
   crosshairs.style.display = 'block';
 }
 
+function resumeGameControlsAnonFunction() {
+  player.controls.lock();
+}
+
 function resumeGameControls() {
-  document.addEventListener('click', function () {
-    player.controls.lock();
-  });
+  if (player.clicked === false) {
+    document.addEventListener('click', resumeGameControlsAnonFunction, false);
+  } else if (player.clicked === true) {
+    document.removeEventListener('click', resumeGameControlsAnonFunction, false);
+    const resumeButton = document.querySelector('#paused-screen .resume-button');
+    resumeButton.addEventListener('click', () => player.controls.lock);
+  }
+  // document.addEventListener('click', player.controls.lock);
 }
 
 function startGame() {
@@ -277,7 +287,7 @@ function createTutorialSteps() {
     return objects.floorContainerYellow.children[0].litUp;
   };
 
-  let checkStep7Complete = function() {
+  let checkStep7Complete = function () {
     if (this.startTime === undefined) {
       this.startTime = new Date().getTime();
     }
@@ -306,7 +316,7 @@ function createTutorialSteps() {
   let step4 = new Step(step4Text, checkStep4Complete);
   let step5 = new Step(step5Text, checkStep5Complete);
   let step6 = new Step(step6Text, checkStep6Complete);
-  let step7 =  new Step(step7Text, checkStep7Complete);
+  let step7 = new Step(step7Text, checkStep7Complete);
 
   let steps = [
     step1,
@@ -323,6 +333,23 @@ function createTutorialSteps() {
 
 let steps = createTutorialSteps();
 let tipDisplay = document.querySelector('.tip');
+
+let quit = document.querySelector('.quit-button');
+let credits = document.querySelector('.credits-button');
+
+quit.addEventListener('click', () => {
+  window.close();
+});
+
+credits.addEventListener('click', () => {
+  let startScreen = document.querySelector('.start.menu.screen');
+  let creditsScreen = document.querySelector('.credits.screen');
+  startScreen.style.display = 'none';
+  creditsScreen.style.display = 'block';
+  setTimeout(() => {
+    location.reload();
+  }, 25000);
+});
 
 window.addEventListener('load', () => {
   runGame(steps, tipDisplay);

@@ -87,6 +87,7 @@ class floorContBody {
 }
 
 function puzzComplete(puzz) {
+    puzz = "Green";
     if (puzz == 'Yellow') {
         walls.lobbyGate.opengate((Math.PI / 2), 3);
         // Close the current tab or window
@@ -94,28 +95,33 @@ function puzzComplete(puzz) {
         Level1Primitives();
     }
     else if (puzz == 'Blue') {
-
         walls.puzz1Gate.opengate((Math.PI / 2), 3);
         models.loadLevel2Models(assetLoader, scene, world);
         Level2Primitives();
-
+        let puzz1CompleteText = document.querySelector('.one');
+        puzz1CompleteText.style.display = 'block';
     }
     else if (puzz == 'Red') {
         walls.puzz2Gate.opengate((Math.PI / 2), 2);
         models.loadLevel3Models(assetLoader, scene, world);
         Level3Primitives();
-
-
+        let puzz2CompleteText = document.querySelector('.two');
+        puzz2CompleteText.style.display = 'block';
     }
     else if (puzz == 'Green'){
         //Win screen
+        let endCompleteScreen = document.querySelector('.story-text.end.container');
+        let creditsScreen = document.querySelector('.credits.screen');
+        endCompleteScreen.style.display = 'block';
+        document.addEventListener('click', () => {
+          endCompleteScreen.style.display = 'none';
+          creditsScreen.style.display = 'block';
+          setTimeout(() => {
+            location.reload();
+          }, 25000);
+        });
     }
-
-
 }
-
-
-
 
 function createTile(index, round, container) {
     let tile;
@@ -1186,8 +1192,6 @@ export function animate_objects() {
 
 export function animate_lights() {
     tileLights();
-
-
 }
 
 // create instance of GLTF loader and call load on it
