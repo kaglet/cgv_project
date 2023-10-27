@@ -2,7 +2,10 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import * as objects from './objects.js';
 
+//This const variable is a OpenGL Shading Language (GLSL) used to generate procedural noise that will simulate Mist and fog.
+//I implemented Perlin noise because of its smooth, continuous and random patterns which gives a natural foggy effect.
 const _NOISE_GLSL = `
+            //mod289 is a utility function that ensures all values fall within the range [0,289] which makes results of calculations manageable
             vec3 mod289(vec3 x) {
             return x - floor(x * (1.0 / 289.0)) * 289.0;
             }
@@ -11,15 +14,22 @@ const _NOISE_GLSL = `
             return x - floor(x * (1.0 / 289.0)) * 289.0;
             }
 
+            //permute is another utility function that reorders values in a way to introduce pseudo-randomness. 
+            //It takes a vec4 and applies some mathematical operations to shuffle its components.
             vec4 permute(vec4 x) {
                 return mod289(((x*34.0)+1.0)*x);
             }
 
+            //taylorInvSqrt calculates an approximation of the inverse square root of a vec4 using the Taylor series expansion.
+            //It's an optimization for fast square root calculations in the noise generation process.
             vec4 taylorInvSqrt(vec4 r)
             {
             return 1.79284291400159 - 0.85373472095314 * r;
             }
 
+            //Simplex Noise function
+            //It takes 3D vector (vec3 v) as input and uses various mathematical operations and gradients to produce a noise value.
+            //It calculates noise at a specific 3D position in space. The constants C and D are used to determine the shape of the noise pattern.
             float snoise(vec3 v)
             {
             const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;
@@ -92,6 +102,9 @@ const _NOISE_GLSL = `
                                             dot(p2,x2), dot(p3,x3) ) );
             }
 
+            //Fractal Brownian Motion
+            //The idea is to combine multiple layers of noise to create complex fractal patterns.
+            //It calls snoise iteratively at different scales and combines the results with varying amplitudes to create a final noise value.
             float FBM(vec3 p) {
             float value = 0.0;
             float amplitude = 0.5;
@@ -105,20 +118,29 @@ const _NOISE_GLSL = `
             }
     `;
 
+  //The idea is to moidfy the predefined GLSL fog code chunks and use them as a building block in order to achieve
+  //a more realistic and natural fog effect that even wraps around objects like walls and trees.
 THREE.ShaderChunk.fog_fragment = `
+    //This if statement is a preprocessor directive that checks if fog is enabled within the scene
     #ifdef USE_FOG
+      //The fog origin take the value of the camera position in the 3D worlsd as we need a reference point for the fog.
       vec3 fogOrigin = cameraPosition;
       vec3 fogDirection = normalize(vWorldPosition - fogOrigin);
+
+      //Euclidean distance computation that represents how far the fragment is from the camera.
       float fogDepth = distance(vWorldPosition, fogOrigin);
 
-      // f(p) = fbm( p + fbm( p ) )
+      //The noiseSampleCoord is calculated as a combination of vWorldPosition and fogTime, which provides an evolving noise pattern over time.
       vec3 noiseSampleCoord = vWorldPosition * 0.00025 + vec3(
           0.0, 0.0, fogTime * 0.00025);
+      
+      //The noise sample is calculated using the Fractal Brownian Motion function. We are computing the intensity of the fog at the current fragment.
       float noiseSample = FBM(noiseSampleCoord * 2.0 + FBM(noiseSampleCoord)) * 0.9 + 0.9;
       fogDepth *= mix(noiseSample, 1.0, saturate((fogDepth - 5000.0) / 5000.0));
       fogDepth *= fogDepth;
 
       float heightFactor = 0.03;
+      //This calculation is used to modulate the fog colour in the final rendering
       float fogFactor = heightFactor * exp(-fogOrigin.y * fogDensity) * (
           1.0 - exp(-fogDepth * fogDirection.y * fogDensity)) / fogDirection.y;
       fogFactor = saturate((fogFactor) * 0.9);
@@ -126,19 +148,27 @@ THREE.ShaderChunk.fog_fragment = `
       gl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, fogFactor );
     #endif`;
     
+    //The .fog_pars_fragment ensures that the code chunk will be included in the fragment shader of a material.
+    //The NOISE_GLSL is included for the noise generation
     THREE.ShaderChunk.fog_pars_fragment = _NOISE_GLSL + `
     #ifdef USE_FOG
       uniform float fogTime;
       uniform vec3 fogColor;
       varying vec3 vWorldPosition;
+      //This if statement checks if the exponential fog has been enabled/added to the scene. Which uses the aformentioned calculation techniques to generate the fog.
       #ifdef FOG_EXP2
+        //This controls how quickly fog thickens as we move away from the camera
         uniform float fogDensity;
       #else
+      //If linear fog is used, they represent the near and far fog distances
         uniform float fogNear;
         uniform float fogFar;
       #endif
     #endif`;
     
+    //The next 2 shader chunks handle the processing of vertex positions in the presence of fog.
+    // If fog is enabled (USE_FOG is defined), they calculate the world position of vertices in the vertex shader and pass this information to the fragment shader through the varying variable vWorldPosition. 
+    //The fragment shader can then use vWorldPosition to calculate fog effects based on the position of each fragment in the world.
     THREE.ShaderChunk.fog_vertex = `
     #ifdef USE_FOG
       vWorldPosition = worldPosition.xyz;
@@ -149,13 +179,6 @@ THREE.ShaderChunk.fog_fragment = `
       varying vec3 vWorldPosition;
     #endif`;
 
-    // let shaders = [];
-    // const ModifyShader_ = (s) => {
-    //   shaders.push(s);
-    //   s.uniforms.fogTime = {value: 0.0};
-    // }
-
     
-    
-    //export const fog = new THREE.FogExp2(0xDFE9F3,  0.0001);  //0xC0C0C0
-    export const fog = new THREE.FogExp2(0x9cacd4,  0.0001);
+  //Exporting the fog so that it is available on all other pages 
+  export const fog = new THREE.FogExp2(0x9cacd4,  0.0001);
