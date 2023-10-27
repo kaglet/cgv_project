@@ -16,13 +16,13 @@ export const controls = new PointerLockControls(camera.currentCamera, document.b
 let raycaster = objects.raycaster;
 
 //const moveForwardSoundPlaying = false; // Add a flag to track if the sound is already playing
-let soundPlaying=false;
+let soundPlaying = false;
 const listener1 = new THREE.AudioListener();
 const jumpSound = new THREE.Audio(listener1);
 const jumpSoundLoader = new THREE.AudioLoader();
 jumpSoundLoader.load('Audio/jump.mp3', function (buffer) {
   jumpSound.setBuffer(buffer);
-  jumpSound.setLoop( false );
+  jumpSound.setLoop(false);
   jumpSound.setVolume(0.5); // Set the volume as needed
 });
 
@@ -34,12 +34,15 @@ let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
 let moveRight = false;
-let jumping=false;
+let jumping = false;
+let afterjumping = false;
 let onMaze = false;
 export var paused = false;
-var disable=true;
-let waking=true;
-let clicked=false;
+var disable = true;
+let waking = true;
+let clicked = false;
+
+
 
 
 export let playerBody;
@@ -67,10 +70,10 @@ class BasicCharacterController {
     //playerPhysMat.friction = 1000;
     playerBody = new CANNON.Body({
       mass: 100, // Adjust the mass as needed
-       position: new CANNON.Vec3(250, 20, 450),
-     // position: new CANNON.Vec3(10, 10, -300),
+      position: new CANNON.Vec3(250, 20, 450),
+      // position: new CANNON.Vec3(10, 10, -300),
 
-      
+
       material: playerPhysMat
     });
 
@@ -89,54 +92,42 @@ class BasicCharacterController {
     this._animations = {};
     this._input = new BasicCharacterControllerInput();
     this._stateMachine = new CharacterFSM(
-        new BasicCharacterControllerProxy(this._animations));
+      new BasicCharacterControllerProxy(this._animations));
 
     this._LoadModels();
 
 
-  //   let onMaze = false;
-  //  playerBody.addEventListener('collide', (event) => {
-  //    const otherBody = event.body;
+    playerBody.addEventListener('collide', (event) => {
+      const otherBody = event.body;
 
-  //    if (otherBody.collisionFilterGroup === 2 && !onMaze) {
-  //      onMaze = true;
+      if (otherBody.collisionFilterGroup === 2 && !onMaze && afterjumping) {
+        onMaze = true;
 
-  //      // Calculate the vector from player to otherBody's center
-  //      const offset = new CANNON.Vec3();
-  //      otherBody.position.vsub(playerBody.position, offset);
+        // Calculate the vector from player to otherBody's center
+        const offset = new CANNON.Vec3();
+        otherBody.position.vsub(playerBody.position, offset);
 
-  //      // Normalize the offset vector to get the direction
-  //      offset.normalize();
+        // Normalize the offset vector to get the direction
+        offset.normalize();
 
-  //      // Scale the direction vector by 5 units (or any desired distance)
-  //      offset.scale(1);
+        // Scale the direction vector by 5 units (or any desired distance)
+        offset.scale(1);
 
-  //      // Update player's position (x and z) accordingly
-  //      playerBody.position.x -= offset.x;
-  //      playerBody.position.z -= offset.z;
+        // Update player's position (x and z) accordingly
+        playerBody.position.x -= offset.x;
+        playerBody.position.z -= offset.z;
 
-  //      // Calculate the desired Y position for the player
-  //      const desiredY = otherBody.position.y + height + 1; // Adjust as needed
-  //      console.log(desiredY);
-  //      // Adjust the player's Y position (Cannon.js)
-  //      playerBody.position.y = desiredY;
-  //      console.log(playerBody.position);
-  //    } else if (otherBody.collisionFilterGroup === 1) {
-  //      onMaze = false;
-  //    }
-  //  });
+        // Calculate the desired Y position for the player
+        const desiredY = otherBody.position.y + height + 1; // Adjust as needed
+        console.log(desiredY);
+        // Adjust the player's Y position (Cannon.js)
+        playerBody.position.y = desiredY;
+        console.log(playerBody.position);
+      } else if (otherBody.collisionFilterGroup === 1) {
+        onMaze = false;
+      }
+    });
 
-  
-  playerBody.addEventListener('collide', (event) => {
-    const otherBody = event.body;
-
-    if (otherBody.collisionFilterGroup === 2 && !onMaze) {
-      onMaze = true;
-
-    } else if (otherBody.collisionFilterGroup === 1) {
-      onMaze = false;
-    }
-  });
 
 
 
@@ -164,7 +155,7 @@ class BasicCharacterController {
       height = boundingBox.max.y - boundingBox.min.y;
       const depth = boundingBox.max.z - boundingBox.min.z;
 
-      const playerShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2 - 5 , depth / 2));
+      const playerShape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2 - 5, depth / 2));
 
       playerBody.addShape(playerShape);
 
@@ -222,13 +213,13 @@ class BasicCharacterController {
 
       velocity = this._velocity;
       const frameDecceleration = new THREE.Vector3(
-          velocity.x * this._decceleration.x,
-          velocity.y * this._decceleration.y,
-          velocity.z * this._decceleration.z
+        velocity.x * this._decceleration.x,
+        velocity.y * this._decceleration.y,
+        velocity.z * this._decceleration.z
       );
       frameDecceleration.multiplyScalar(timeInSeconds);
       frameDecceleration.z = Math.sign(frameDecceleration.z) * Math.min(
-          Math.abs(frameDecceleration.z), Math.abs(velocity.z)
+        Math.abs(frameDecceleration.z), Math.abs(velocity.z)
       );
 
       velocity.add(frameDecceleration);
@@ -245,14 +236,14 @@ class BasicCharacterController {
       // Calculate movement direction based on camera's direction
       const moveDirection = new THREE.Vector3();
       moveDirection.copy(cameraDirection);
-      moveDirection.y=(0);
+      moveDirection.y = (0);
       // Separate vector for left and right movement
       const strafeDirection = new THREE.Vector3(cameraDirection.z, 0, -cameraDirection.x);
 
       // Where movement is done
 
-      if (!moveForward){
-        velocity.z -= 0.00046*acc.z * timeInSeconds;
+      if (!moveForward) {
+        velocity.z -= 0.00046 * acc.z * timeInSeconds;
 
       }
       if (moveForward) {
@@ -267,31 +258,23 @@ class BasicCharacterController {
       if (moveLeft) {
         velocity.x += acc.x * timeInSeconds;
       }
-      if(jumping){
-        if(moveBackward){
-             moveDirection.y=(0);
-        }else
-        {
-            moveDirection.y=1;
-            velocity.y += acc.y;
-            velocity.z= 50;
-            //controlObject.position.y += 0.15;
+      if (jumping) {
+        if (moveBackward) {
+          moveDirection.y = (0);
+        } else {
+          moveDirection.y = 1;
+          velocity.y += acc.y;
+        //  velocity.z = 50;
+          //controlObject.position.y += 0.15;
 
-            }
-            //velocity.y += acc.y* timeInSeconds;
+        }
+        //velocity.y += acc.y* timeInSeconds;
       }
 
-      const maxVelocity = 40; // Define your maximum velocity
-      const minVelocity = -40; // Define your minimum velocity
-      velocity.z = Math.min(maxVelocity, Math.max(minVelocity, velocity.z));
-    velocity.x = Math.min(maxVelocity, Math.max(minVelocity, velocity.x));
-    velocity.y = Math.min(maxVelocity, Math.max(minVelocity , velocity.y));
-
-
-//    if (!moveForward){
-//        velocity.z = 0;
-//        velocity.x = 0;
-//    }
+      //    if (!moveForward){
+      //        velocity.z = 0;
+      //        velocity.x = 0;
+      //    }
       // Apply movement direction to character's position
       controlObject.position.add(moveDirection.normalize().multiplyScalar(velocity.z * timeInSeconds));
       controlObject.position.add(strafeDirection.normalize().multiplyScalar(velocity.x * timeInSeconds));
@@ -324,13 +307,13 @@ class BasicCharacterController {
 
       const velocity = this._velocity;
       const frameDecceleration = new THREE.Vector3(
-          velocity.x * this._decceleration.x,
-          velocity.y * this._decceleration.y,
-          velocity.z * this._decceleration.z
+        velocity.x * this._decceleration.x,
+        velocity.y * this._decceleration.y,
+        velocity.z * this._decceleration.z
       );
       frameDecceleration.multiplyScalar(timeInSeconds);
       frameDecceleration.z = Math.sign(frameDecceleration.z) * Math.min(
-          Math.abs(frameDecceleration.z), Math.abs(velocity.z));
+        Math.abs(frameDecceleration.z), Math.abs(velocity.z));
 
       velocity.add(frameDecceleration);
 
@@ -357,13 +340,13 @@ class BasicCharacterController {
         _Q.setFromAxisAngle(_A, 4.0 * -Math.PI * timeInSeconds * (this._acceleration.y * 0.5));
         _R.multiply(_Q);
       }
-       if(jumping){
-            const desiredY = 20; // Adjust as needed
+      if (jumping) {
+        const desiredY = 20; // Adjust as needed
 
-            playerBody.position.x += desiredY;
+        playerBody.position.x += desiredY;
 
-          velocity.y +=acc.y*timeInSeconds;
-        }
+        velocity.y += acc.y * timeInSeconds;
+      }
 
       controlObject.quaternion.copy(_R);
 
@@ -400,12 +383,13 @@ class BasicCharacterController {
 
 };
 function handleSpacebarPress() {
-
-        setTimeout(function() {
-        jumpSound.stop();
-            jumping = false;
-        }, 1000); // 1000 milliseconds (1 second)
-
+  setTimeout(function () {
+    afterjumping = false;
+    setTimeout(function () {
+      jumpSound.stop();
+      jumping = false;
+    }, 1000); // 1000 milliseconds (1 second)
+  }, 1000);
 }
 class BasicCharacterControllerInput {
   //const  moveForwardSoundPlaying = false;
@@ -424,18 +408,18 @@ class BasicCharacterControllerInput {
     const instructions = document.getElementById('instructions');
     const pausedScreen = document.getElementById('paused-screen');
     const crosshairs = document.getElementById('crosshairs');
-    
+
     // resume
     controls.addEventListener('lock', function () {
-    clicked=true;
-    if(waking){
-         setTimeout(function() {
-            waking = false;
-             disable=false;
+      clicked = true;
+      if (waking) {
+        setTimeout(function () {
+          waking = false;
+          disable = false;
         }, 10000);
-    }
+      }
 
-      paused=false;
+      paused = false;
 
       instructions.style.display = 'none';
       blocker.style.display = 'none';
@@ -446,15 +430,15 @@ class BasicCharacterControllerInput {
 
     // pause
     controls.addEventListener('unlock', function () {
-      paused=true;
+      paused = true;
       pausedScreen.style.display = 'flex';
       blocker.style.display = 'block';
       instructions.style.display = '';
       crosshairs.style.display = 'none';
-      moveForward=false;
-      moveBackward=false;
-      moveRight=false;
-      moveLeft=false;
+      moveForward = false;
+      moveBackward = false;
+      moveRight = false;
+      moveLeft = false;
     });
 
     objects.scene.add(controls.getObject());
@@ -482,16 +466,17 @@ class BasicCharacterControllerInput {
         case 68: // d
           moveRight = true;
           break;
-       case 32: // d
-        jumping = true;
-        sound.moveSound.pause();
-        soundPlaying=false;
-        jumpSound.play();
-        break;
+        case 32: // d
+          afterjumping = true;
+          jumping = true;
+          sound.moveSound.pause();
+          soundPlaying = false;
+          jumpSound.play();
+          break;
       }
 
-      if ((moveForward || moveBackward || moveRight || moveLeft) && soundPlaying==false) {
-      soundPlaying=true;
+      if ((moveForward || moveBackward || moveRight || moveLeft) && soundPlaying == false) {
+        soundPlaying = true;
         sound.moveSound.play();
       }
     }
@@ -499,33 +484,33 @@ class BasicCharacterControllerInput {
 
   _onKeyUp(event) {
     //moveSound.stop();
-   // this._checkAndPlayMoveSound();
+    // this._checkAndPlayMoveSound();
     switch (event.keyCode) {
       case 87: // w
         moveForward = false;
-       // Stop the move sound
+        // Stop the move sound
 
         // this.moveForwardSoundPlaying = false;
         break;
       case 65: // a
         moveLeft = false;
-       // moveSound.stop();
+        // moveSound.stop();
         break;
       case 83: // s
         moveBackward = false;
-       // moveSound.stop();
+        // moveSound.stop();
         break;
       case 68: // d
         moveRight = false;
-       // moveSound.stop();
+        // moveSound.stop();
         break;
       case 32: // d
         handleSpacebarPress();
-         break;
+        break;
     }
     if (!moveForward && !moveBackward && !moveRight && !moveLeft) {
       sound.moveSound.pause();
-      soundPlaying=false;
+      soundPlaying = false;
     }
   }
 };
@@ -620,16 +605,16 @@ class WakeState extends State {
 
 
       curAction.crossFadeFrom(prevAction, 0.5, true);
-         curAction.play();
-      if(!clicked){
-        curAction.paused=true;
+      curAction.play();
+      if (!clicked) {
+        curAction.paused = true;
       }
     } else {
-    if(!clicked){
-        curAction.paused=true;
-      }else{
-      curAction.paused=false;
-         curAction.play();
+      if (!clicked) {
+        curAction.paused = true;
+      } else {
+        curAction.paused = false;
+        curAction.play();
       }
 
     }
@@ -639,11 +624,11 @@ class WakeState extends State {
   }
 
   Update(timeElapsed, input) {
-  const curAction = this._parent._proxy._animations['wake'].action;
-    if (waking ) {
-        if(clicked){
-            curAction.paused=false;
-        }
+    const curAction = this._parent._proxy._animations['wake'].action;
+    if (waking) {
+      if (clicked) {
+        curAction.paused = false;
+      }
       return;
     }
 
@@ -727,9 +712,9 @@ class WalkState extends State {
   }
 
   Update(timeElapsed, input) {
-  if (jumping) {
-        this._parent.SetState('jump');
-      }else if (moveForward) {
+    if (jumping) {
+      this._parent.SetState('jump');
+    } else if (moveForward) {
 
       return;
     }
@@ -771,13 +756,13 @@ class BackState extends State {
   }
 
   Update(timeElapsed, input) {
-  if (jumping) {
-            this._parent.SetState('jump');
-          }else
-    if (moveBackward) {
+    if (jumping) {
+      this._parent.SetState('jump');
+    } else
+      if (moveBackward) {
 
-      return;
-    }
+        return;
+      }
 
     this._parent.SetState('idle');
   }
@@ -816,13 +801,13 @@ class LeftState extends State {
   }
 
   Update(timeElapsed, input) {
-  if (jumping) {
-            this._parent.SetState('jump');
-          }else
-    if (moveLeft) {
+    if (jumping) {
+      this._parent.SetState('jump');
+    } else
+      if (moveLeft) {
 
-      return;
-    }
+        return;
+      }
 
     this._parent.SetState('idle');
   }
@@ -861,13 +846,13 @@ class RightState extends State {
   }
 
   Update(timeElapsed, input) {
-  if (jumping) {
-            this._parent.SetState('jump');
-          }else
-    if (moveRight) {
+    if (jumping) {
+      this._parent.SetState('jump');
+    } else
+      if (moveRight) {
 
-      return;
-    }
+        return;
+      }
 
     this._parent.SetState('idle');
   }
@@ -915,10 +900,10 @@ class IdleState extends State {
       this._parent.SetState('left');
     }
     if (jumping) {
-          this._parent.SetState('jump');
-        }
-    if(waking){
-     this._parent.SetState('wake');
+      this._parent.SetState('jump');
+    }
+    if (waking) {
+      this._parent.SetState('wake');
     }
 
   }
@@ -941,20 +926,20 @@ export function _LoadAnimatedModel() {
 
 export function animate_objects() {
   if (characterModel && playerBody) {
-    if(playerBody.position.y<8 && sound.glass===true){
-          //console.log(playerBody.position.y);
-            sound.setGlass(false);
-          }
+    if (playerBody.position.y < 8 && sound.glass === true) {
+      //console.log(playerBody.position.y);
+      sound.setGlass(false);
+    }
     characterModel.position.copy(playerBody.position);
-   // playerBody.position.copy(characterModel.position);
+    // playerBody.position.copy(characterModel.position);
 
     // if (onMaze == true){
     //   setTimeout(function() {
     //     characterModel.position.y-=2;
     //     }, 1000);
-         
+
     // }
 
-   // characterModel.position.y-=2;
+    // characterModel.position.y-=2;
   }
 }
