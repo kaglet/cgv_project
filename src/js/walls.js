@@ -167,7 +167,7 @@ class Gate {
                         node.receiveShadow = true;
                     }
                 });
-                this.model.scale.set(0.75, 0.3, 0.3);
+                this.model.scale.set(0.9, 0.3, 0.3);
 
                 // Set the initial position and rotation of the model
                 this.model.position.copy(position);
