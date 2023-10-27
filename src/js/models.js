@@ -295,6 +295,8 @@ export function loadModels(loader, scene, world, blockWidth) {
      lobby(loader, scene, world);
      loadLevel4Models();
      loadAndSetupModels(loader, scene, world, modelsToLoad);
+
+     
     const modelsData = [
         { path: '/luffy.glb', position: new THREE.Vector3(225, -2, -385), scale: new THREE.Vector3(0.15, 0.15, 0.15) },
         { path: '/zeus_statue.glb', position: new THREE.Vector3(145, -2, -400), scale: new THREE.Vector3(1, 1, 1) },

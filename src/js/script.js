@@ -45,13 +45,13 @@ function runGame(steps, tipDisplay) {
         // if steps are not emptied out then show tips
         if (steps.length !== 0 && gameIsLoaded === true) {
           tipDisplay.style.display = 'block';
-          if (steps[0].text === "The door has opened indicating you completed the puzzle.") {
+          if (steps[0].text === "Congrats! The door has opened, you completed the puzzle.") {
             console.log(steps);
             // check if they finally won and satisfied steps[0] win condition. If not try again next time in RAF.
             if (objects.path4.every(value => objects.litUpTiles4.includes(value) && objects.litUpTiles4.length === objects.path4.length)) {
               console.log("You won and step array looks like this: ");
               console.log(steps);
-              tipDisplay.textContent = "The door has opened indicating you completed the puzzle.";
+              tipDisplay.textContent = "Congrats! The door has opened, you completed the puzzle.";
               steps.shift();
             } 
           } else if (steps[0].checkStepComplete() === true) { // else if a regular step not the last step detected check and pop as normal
@@ -61,7 +61,7 @@ function runGame(steps, tipDisplay) {
               if (pathCorrect === true) {
                 // take care of win case with timer 
                 // display tip on timer
-                tipDisplay.textContent = "The door has opened indicating you completed the puzzle.";
+                tipDisplay.textContent = "Congrats! The door has opened, you completed the puzzle.";
                 steps.shift();
               } else {
                 console.log('Hi from path incorrect!');
@@ -171,7 +171,7 @@ function createTutorialSteps() {
   let step4Text = "Walk to start of puzzle: the circular tile.";
   let step5Text = "Jump onto the start tile with spacebar.";
   let step6Text = "Use your solution to get to the end, the semi-circular tile.";
-  let step7Text = "The door has opened indicating you completed the puzzle.";
+  let step7Text = "Congrats! The door has opened, you completed the puzzle.";
 
   // when called it run setTimeout repeatedly which will run anonymous function until 10 seconds have elapsed. 
   // assume function can be unbundled for spontaneous variables
@@ -181,7 +181,7 @@ function createTutorialSteps() {
     if (this.wPressed === undefined) {
       this.wPressed = false;
       this.aPressed = false;
-      this.sPressed = false;
+      this.sPressed = true;
       this.dPressed = false;
       this.allKeysPressed = false;
     }
