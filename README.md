@@ -1,17 +1,7 @@
-# Three.js Starter
-Courtesy of Bruno Simon of https://threejs-journey.xyz/
-
-## Setup
-Download [Node.js](https://nodejs.org/en/download/).
-Run this followed commands:
-
-``` bash
-# Install dependencies (only the first time)
-npm install
-
-# Run the local server at localhost:8080
-npm run dev
-
-# Build for production in the dist/ directory
-npm run build
-```
+Forgotten Island
+This is a game. There are puzzles. You figure them out.
+You get joy from solving. We get joy from you playing.
+Win Win
+Be sure to comment, like and subscribe as that would help us out.
+Tell a friend
+owo
