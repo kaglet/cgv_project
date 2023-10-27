@@ -383,12 +383,13 @@ class BasicCharacterController {
 
 };
 function handleSpacebarPress() {
-  setTimeout(function () {
-    afterjumping = false;
+
     setTimeout(function () {
       jumpSound.stop();
       jumping = false;
-    }, 1000); // 1000 milliseconds (1 second)
+    }, 1000); 
+      setTimeout(function () {
+    afterjumping = false;// 1000 milliseconds (1 second)
   }, 1000);
 }
 class BasicCharacterControllerInput {
