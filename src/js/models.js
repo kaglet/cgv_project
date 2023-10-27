@@ -183,7 +183,7 @@ function generateGrassPatches(loader, scene, world, blockWidth, adjustmentInX, a
             const clonedModel = model.clone();
 
             // Use the seeded random function to generate consistent random positions
-            const randomSeed = j * 10; // Adjust as needed
+            const randomSeed = j * 10; // Adjust as 0needed
             const randomAdjustmentX = seededRandom(randomSeed) * adjustmentInX;
             const randomAdjustmentY = seededRandom(randomSeed) * adjustmentInY;
             const randomAdjustmentZ = seededRandom(randomSeed) * adjustmentInZ;
