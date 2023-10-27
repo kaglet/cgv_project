@@ -13,15 +13,15 @@ class Wall {
 
     constructor(scene,world, position, rotation) {
         // Create Three.js wall
-        const wallGeometry = new THREE.BoxGeometry(blockWidth, 70, 5);
-        const wallMaterial = new THREE.MeshStandardMaterial({
-            color: "#DEC4B0",
-            side: THREE.DoubleSide,
-            wireframe: true,
-        });
+        // const wallGeometry = new THREE.BoxGeometry(blockWidth, 70, 5);
+        // const wallMaterial = new THREE.MeshStandardMaterial({
+        //     color: "#DEC4B0",
+        //     side: THREE.DoubleSide,
+        //     wireframe: true,
+        // });
 
-        this.mesh = new THREE.Mesh(wallGeometry, wallMaterial);
-        scene.add(this.mesh);
+        // this.mesh = new THREE.Mesh(wallGeometry, wallMaterial);
+        // scene.add(this.mesh);
 
         // Create Cannon.js wall
         const wallPhysMat = new CANNON.Material()
@@ -40,8 +40,8 @@ class Wall {
         world.addBody(this.body);
 
         // Update the Three.js mesh position and rotation based on the Cannon.js body
-        this.mesh.position.copy(this.body.position);
-        this.mesh.quaternion.copy(this.body.quaternion);
+        // this.mesh.position.copy(this.body.position);
+        // this.mesh.quaternion.copy(this.body.quaternion);
     }
 }
 
@@ -55,25 +55,25 @@ class InnerWall {
         // Calculate the width of each part of the inner wall
         const partWidth = (totalWidth - gapWidth) / 2;
 
-        // Create Three.js inner wall parts and materials
-        const wallGeometry1 = new THREE.BoxGeometry(partWidth, 70, 5);
-        const wallMaterial1 = new THREE.MeshStandardMaterial({
-            color: "#DEC4B0",
-            side: THREE.DoubleSide,
-            wireframe: true,
-        });
-        this.mesh1 = new THREE.Mesh(wallGeometry1, wallMaterial1);
+        // // Create Three.js inner wall parts and materials
+        // const wallGeometry1 = new THREE.BoxGeometry(partWidth, 70, 5);
+        // const wallMaterial1 = new THREE.MeshStandardMaterial({
+        //     color: "#DEC4B0",
+        //     side: THREE.DoubleSide,
+        //     wireframe: true,
+        // });
+        // this.mesh1 = new THREE.Mesh(wallGeometry1, wallMaterial1);
 
-        const wallGeometry2 = new THREE.BoxGeometry(partWidth, 70, 5);
-        const wallMaterial2 = new THREE.MeshStandardMaterial({
-            color: "#DEC4B0",
-            side: THREE.DoubleSide,
-            wireframe: true,
-        });
-        this.mesh2 = new THREE.Mesh(wallGeometry2, wallMaterial2);
+        // const wallGeometry2 = new THREE.BoxGeometry(partWidth, 70, 5);
+        // const wallMaterial2 = new THREE.MeshStandardMaterial({
+        //     color: "#DEC4B0",
+        //     side: THREE.DoubleSide,
+        //     wireframe: true,
+        // });
+        // this.mesh2 = new THREE.Mesh(wallGeometry2, wallMaterial2);
 
-        scene.add(this.mesh1);
-        scene.add(this.mesh2);
+        // scene.add(this.mesh1);
+        // scene.add(this.mesh2);
 
         // Create Cannon.js inner wall
         const wallPhysMat = new CANNON.Material();
@@ -122,12 +122,12 @@ class InnerWall {
         world.addBody(this.body1);
         world.addBody(this.body2);
 
-        // Update the Three.js mesh position and rotation based on the Cannon.js bodies
-        this.mesh1.position.copy(position1);
-        this.mesh2.position.copy(position2);
+        // // Update the Three.js mesh position and rotation based on the Cannon.js bodies
+        // this.mesh1.position.copy(position1);
+        // this.mesh2.position.copy(position2);
 
-        this.mesh1.quaternion.copy(initialRotation);
-        this.mesh2.quaternion.copy(initialRotation);
+        // this.mesh1.quaternion.copy(initialRotation);
+        // this.mesh2.quaternion.copy(initialRotation);
        
     }
 }
