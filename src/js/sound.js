@@ -12,7 +12,7 @@ function loadSound() {
     moveSoundLoader.load('Audio/glassWalking.mp3', function (buffer) {
       moveSound.setBuffer(buffer);
       moveSound.setLoop(true);
-      moveSound.setVolume(0.8);
+      moveSound.setVolume(0.5);
     });
   } else {
     moveSoundLoader.load('Audio/footsteps-dirt-gravel-6823.mp3', function (buffer) {
