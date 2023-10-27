@@ -1,136 +1,8 @@
 import * as THREE from 'three';
 import * as CANNON from 'cannon-es';
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import ceilingtextureImage from '../img/lambert1_baseColor.png';
 
 export const modelsToLoad = []
-
-
-function cloneModel(model, positon, rotation, scale) {
-    const clonedModel = model.clone();
-    clonedModel.scale.set(scale);
-    clonedModel.position.set(position);
-    clonedModel.rotation.set(rotation)
-
-    scene.add(clonedModel);
-}
-
-function generateRandomNumberForVariation() {
-    // Generate a random nubmer between 0.1 and 0.3
-    return Math.random() * 0.1 + 0.2;
-}
-
-
-
-
-
-function trees() {
-    const numTrees = 2;
-    const minDistanceFromCenter = 600;
-    const maxDistanceFromCenter = 700;
-    const center = new THREE.Vector3(-100, 0, 0); // New center position
-    const randomSeed1 = 3; // Your chosen random seed
-    const randomSeed2 = 50; // Your chosen random seed
-
-    // Create a seeded random number generator
-    function seededRandom(seed) {
-        let x = Math.sin(seed) * 10000;
-        return x - Math.floor(x);
-    }
-
-    const totalModels = 2; // The total number of models to load (2 in this case)
-
-    function generateTreePositions(modelPath, scale, num) {
-        const positions = [];
-
-        for (let i = 0; i < numTrees; i++) {
-            const randomAngle = seededRandom(num + i) * Math.PI * 2;
-            const randomDistance = minDistanceFromCenter + (seededRandom(num - i) * (maxDistanceFromCenter - minDistanceFromCenter));
-            const randomYRotation = Math.random() * Math.PI * 2;
-            const randomX = center.x + randomDistance * Math.cos(randomAngle);
-            const randomZ = center.z + randomDistance * Math.sin(randomAngle);
-
-            positions.push({
-                modelPath: modelPath,
-                scale: scale,
-                position: [randomX, 0, randomZ],
-                rotation: randomYRotation,
-            });
-        }
-
-        return positions;
-    }
-
-    const coconutTreePositions = generateTreePositions('./coconut_tree/scene.gltf', 0.1, randomSeed1);
-    const bendedCoconutTreePositions = generateTreePositions('./bended_coconut_tree/scene.gltf', 0.1, randomSeed2);
-
-    modelsToLoad.push(...coconutTreePositions, ...bendedCoconutTreePositions);
-}
-
-
-// function plants(loader, scene, world) {
-//     const centers = [];
-//     const blockWidth = 350;
-//     centers.push(new THREE.Vector3(blockWidth / 2, 0, blockWidth / 2 - 9));
-//     centers.push(new THREE.Vector3(blockWidth / 2, 0, -blockWidth / 2 + 9));
-//     centers.push(new THREE.Vector3(-24.5, 0, -blockWidth));
-
-//     const numPlants = 100;
-//     const minDistanceFromCenter = 0;
-//     const maxDistanceFromCenter = 350;
-
-//     // Create a seeded random number generator
-//     function seededRandom(seed) {
-//         let x = Math.sin(seed) * 10000;
-//         return x - Math.floor(x);
-//     }
-
-//     const modelsToLoad = [
-//         './assets/shrub_pack/scene.gltf',
-//         './assets/tropical_plant/scene.gltf',
-//         './assets/tropical_plant_2/scene.gltf',
-//         './assets/tropical_plant_monstera_deliciosa/scene.gltf',
-//         './assets/tropical_plant_3/scene.gltf'
-//     ];
-
-//     // Load all models first
-//     const loadedModels = [];
-//     const loadModelPromises = modelsToLoad.map((modelPath) => {
-//         return new Promise((resolve) => {
-//             loader.load(modelPath, (gltf) => {
-//                 const model = gltf.scene;
-//                 loadedModels.push(model);
-//                 resolve();
-//             });
-//         });
-//     });
-
-//     Promise.all(loadModelPromises).then(() => {
-//         // Loop through the loaded models
-//         loadedModels.forEach((model, modelIndex) => {
-//             const scaleFactors = [1.5, 2, 0.025, 6, 6]; // Modify scale factors accordingly
-
-//             for (let centerIndex = 0; centerIndex < centers.length; centerIndex++) {
-//                 for (let i = 0; i < numPlants; i++) {
-//                     const plantModel = model.clone();
-//                     const randomAngle = seededRandom(100 * (modelIndex + 1) + i) * Math.PI * 2;
-//                     const randomDistance = minDistanceFromCenter + (seededRandom(100 * (modelIndex + 1) - i) * (maxDistanceFromCenter - minDistanceFromCenter));
-//                     const randomYRotation = Math.random() * Math.PI * 2;
-//                     const randomX = centers[centerIndex].x + randomDistance * Math.cos(randomAngle);
-//                     const randomZ = centers[centerIndex].z + randomDistance * Math.sin(randomAngle);
-//                     const groundHeight = 0.1;
-
-//                     plantModel.scale.set(scaleFactors[modelIndex], scaleFactors[modelIndex], scaleFactors[modelIndex]);
-//                     plantModel.position.set(randomX, groundHeight, randomZ);
-//                     plantModel.rotation.y = randomYRotation;
-
-//                     scene.add(plantModel);
-//                 }
-//             }
-//         });
-//     });
-// }
 
 function plants(modelsToLoad) {
     const centers = [];
@@ -181,7 +53,6 @@ function plants(modelsToLoad) {
         }
     });
 }
-
 
 function loadAndSetupModels(loader, scene, world, models) {
     models.forEach(modelDescription => {
@@ -398,9 +269,7 @@ function statues(loader, scene, world) {
 
 export function loadModels(loader, scene, world, blockWidth) {
 
-    // trees();
-    // //plants();
-    //
+    //plants();
     // modelsToLoad.push({ modelPath: '/ground_material.glb', scale: 1, position: [0, -1, 0], rotation: Math.PI / 2 });
     // modelsToLoad.push({ modelPath: '/lion_statue.glb', scale: 30, position: [103, -5, 50], rotation: 0 });
 
