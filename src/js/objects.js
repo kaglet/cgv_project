@@ -1,19 +1,16 @@
 import * as THREE from 'three';
-
 import * as CANNON from 'cannon-es';
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { loadModels } from './models.js';
-//import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as camera from './camera.js';
 import * as sound from './sound.js';
 import * as player from './player.js';
 import * as effects from './effect.js';
 import * as sky from './sky.js';
+import * as ground from './ground.js';
 import * as walls from './walls.js';
 import * as models from './models.js';
 import * as lighting from './lighting.js';
-import groundImg from './textures/avinash-kumar-rEIDzqczN7s-unsplash.jpg';
 
 // DEFINE GLOBAL VARIABLES
 // Scene
@@ -44,7 +41,6 @@ world.defaultContactMaterial = new CANNON.ContactMaterial(
 
 
 
-// TODO: Figure out what this does where its exported and why it is required
 export const raycaster = new THREE.Raycaster();
 
 class floorContBody {
@@ -53,19 +49,6 @@ class floorContBody {
         if (num == 4) {
             size = 73;
         }
-
-        //    // Create floors bodies
-        //     const floorContGeo = new THREE.PlaneGeometry(2*size, 2*size);
-        //     const floorContMat = new THREE.MeshStandardMaterial({
-        //         color: 0x78BE21,
-        //         side: THREE.DoubleSide,
-        //         wireframe: true
-        //     });
-
-
-        //     this.mesh = new THREE.Mesh(floorContGeo, floorContMat);
-        //     scene.add(this.mesh);
-
 
         // Physics floor
         const floorContPhysMat = new CANNON.Material();
@@ -76,14 +59,12 @@ class floorContBody {
             material: floorContPhysMat,
 
         });
-        this.body.collisionFilterGroup = 2;  // or any other number
+        this.body.collisionFilterGroup = 2;  
         this.body.collisionFilterMask = -1;
         this.body.position.copy(new CANNON.Vec3(container.position.x - 10, container.position.y - 4, container.position.z - 10));
         this.body.quaternion.setFromEuler(rotationAngle, 0, 0);
         world.addBody(this.body);
 
-        //  this.mesh.position.copy(this.body.position);
-        //  this.mesh.quaternion.copy(this.body.quaternion);
     }
 }
 
@@ -114,9 +95,6 @@ function puzzComplete(puzz) {
 
 
 }
-
-
-
 
 function createTile(index, round, container) {
     let tile;
@@ -488,11 +466,8 @@ function changePathColor(container, path, color) {
 
 function helperSquares() {
 
-    //white and gray squares (will be removed later)
-
-
     const planeGeometry = new THREE.PlaneGeometry(gridSizeX * blockWidth, gridSizeZ * blockDepth);
-    const planeMaterial = new THREE.MeshBasicMaterial(); // White color
+    const planeMaterial = new THREE.MeshBasicMaterial();
 
     const plane = new THREE.Mesh(planeGeometry, planeMaterial);
     plane.rotation.x = -Math.PI / 2; // Rotate it to be horizontal
@@ -500,7 +475,6 @@ function helperSquares() {
 
     scene.add(plane);
 
-    // Create alternating grey and white blocks
     for (let i = 0; i < gridSizeX; i++) {
         for (let j = 0; j < gridSizeZ; j++) {
             const blockMaterial = new THREE.MeshBasicMaterial();
@@ -522,43 +496,6 @@ function helperSquares() {
 }
 
 
-
-
-function ground() {
-    let groundTexture = new THREE.TextureLoader().load(groundImg);
-    groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
-    groundTexture.repeat.set(-25, -25);
-    groundTexture.anisotropy = 16;
-    groundTexture.encoding = THREE.sRGBEncoding;
-
-    // Create ground
-    const groundGeo = new THREE.PlaneGeometry(1500, 1500);
-    const groundMat = new THREE.MeshStandardMaterial({
-        castShadow: true,
-        receiveShadow: true,
-        map: groundTexture,
-        side: THREE.DoubleSide,
-    });
-
-    const groundMesh = new THREE.Mesh(groundGeo, groundMat);
-    groundMesh.receiveShadow = true;
-    scene.add(groundMesh);
-
-    const groundPhysMat = new CANNON.Material();
-    // physics ground
-    const groundBody = new CANNON.Body({
-        shape: new CANNON.Plane(),
-        type: CANNON.Body.STATIC,
-        material: groundPhysMat
-    });
-
-    // Transform ground body by rotation
-    groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-    world.addBody(groundBody);
-    groundMesh.position.copy(groundBody.position);
-    groundMesh.quaternion.copy(groundBody.quaternion);
-
-}
 
 function Level1Primitives() {
     //Loading all Level 1 primitives
@@ -1105,7 +1042,7 @@ let assetLoader = new GLTFLoader();
 loadModels(assetLoader, scene, world, blockWidth);
 
 
-ground();
+ground.setGround(scene, world);
 
 
 helperSquares();
