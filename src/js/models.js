@@ -121,7 +121,7 @@ function lobby(loader, scene, world) {
 }
 
 function loadLevel4Models() {
-    modelsToLoad.push({ modelPath: 'assets/levels/tut12.glb', scale: 0.95, position: [195, 0, 350], rotation:0});
+    modelsToLoad.push({ modelPath: 'assets/levels/tut12.glb', scale: 0.950, position: [195, 0, 350], rotation:0});
     // modelsToLoad.push({ modelPath: '/openlvl3(3).glb', scale: 1.1, position: [-200, 0, -350], rotation: 0 });
     //  modelsToLoad.push({ modelPath: '/openlvl2(3).glb', scale: 1.1, position: [230, 0, -348], rotation:0 });
 }
