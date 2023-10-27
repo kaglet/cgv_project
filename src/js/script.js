@@ -90,7 +90,7 @@ function runGame(steps, tipDisplay) {
             // extra tips shown
             setTimeout(() => {
               tipDisplay.textContent = "Some extra tips to help you escape: 1) Press C to change the camera's POV. 2) Press R to reset your puzzle's path. Good Luck! ";
-            }, 5000);
+            }, 7000);
             // set display back to none once all tips are shown
             setTimeout(() => {
               if (tipDisplay.style.display !== 'none') {
@@ -260,7 +260,7 @@ function createTutorialSteps() {
 
     this.endTime = new Date().getTime();
 
-    if ((this.endTime - this.startTime) / 1000 >= 2) {
+    if ((this.endTime - this.startTime) / 1000 >= 7) {
       return true;
     }
   };

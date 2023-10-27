@@ -107,7 +107,7 @@ function puzzComplete(puzz) {
               creditsScreen.style.display = 'block';
               setTimeout(() => {
                 location.reload();
-              }, 25000);
+              }, 28000);
             });
         }, 5000);
     }
