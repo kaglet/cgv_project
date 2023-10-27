@@ -235,6 +235,7 @@ body {
     border-radius: 1.5rem 0px 0px 1.9rem;
     top: 50%;
     transform: translateY(-50%);
+    max-width: 50%;
 }
 
 /*CONTENT OF START AND END AND IN-BETWEEN LEVELS STORY TEXT*/
