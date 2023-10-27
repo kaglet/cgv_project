@@ -69,7 +69,6 @@ class floorContBody {
 }
 
 function puzzComplete(puzz) {
-    puzz = "Green";
     if (puzz == 'Yellow') {
         walls.lobbyGate.opengate((Math.PI / 2), 3);
         // Close the current tab or window
@@ -82,6 +81,9 @@ function puzzComplete(puzz) {
         Level2Primitives();
         let puzz1CompleteText = document.querySelector('.one');
         puzz1CompleteText.style.display = 'block';
+        document.addEventListener('click', () => {
+            puzz1CompleteText.style.display = 'none';
+        });
     }
     else if (puzz == 'Red') {
         walls.puzz2Gate.opengate((Math.PI / 2), 2);
@@ -89,6 +91,9 @@ function puzzComplete(puzz) {
         Level3Primitives();
         let puzz2CompleteText = document.querySelector('.two');
         puzz2CompleteText.style.display = 'block';
+        document.addEventListener('click', () => {
+            puzz2CompleteText.style.display = 'none';
+        });
     }
     else if (puzz == 'Green'){
         //Win screen

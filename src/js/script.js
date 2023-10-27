@@ -87,12 +87,16 @@ function runGame(steps, tipDisplay) {
               tipDisplay.textContent = steps[0].text;
             }
           } else if (steps.length === 0) {
+            // extra tips shown
+            setTimeout(() => {
+              tipDisplay.textContent = "Some extra tips to help you escape: 1) Press C to change the camera's POV. 2) Press R to reset your puzzle's path. Good Luck! ";
+            }, 5000);
             // set display back to none once all tips are shown
             setTimeout(() => {
               if (tipDisplay.style.display !== 'none') {
                 tipDisplay.style.display = 'none';
               }
-            }, 5000);
+            }, 18000);
           }
         }
       }
