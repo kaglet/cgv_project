@@ -85,7 +85,7 @@ export function setSky(scene) {
 
     // Texture
     const textureLoader = new THREE.TextureLoader();
-    const particleTexture = textureLoader.load('/particles/star.png'); // Add a texture to the particles
+    const particleTexture = textureLoader.load('particles/star.png'); // Add a texture to the particles
 
     // Material
     const particlesMaterial = new THREE.PointsMaterial({

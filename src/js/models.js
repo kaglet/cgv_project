@@ -203,10 +203,10 @@ function generateGrassPatches(loader, scene, world, blockWidth, adjustmentInX, a
 function statues(loader, scene, world) {
 
     const modelsData = [
-        { path: '/assets/statues/luffy.glb', position: new THREE.Vector3(225, -2, -385), scale: new THREE.Vector3(0.15, 0.15, 0.15) },
-        { path: '/assets/statues/zeus_statue.glb', position: new THREE.Vector3(145, -2, -400), scale: new THREE.Vector3(1, 1, 1) },
-        { path: '/assets/statues/lion_statue.glb', position: new THREE.Vector3(103, -5, 50), scale: new THREE.Vector3(30, 30, 30) },
-        { path: '/assets/statues/batman.glb', position: new THREE.Vector3(227, 0, -71), scale: new THREE.Vector3(15, 15, 15) }
+        { path: 'assets/statues/luffy.glb', position: new THREE.Vector3(225, -2, -385), scale: new THREE.Vector3(0.15, 0.15, 0.15) },
+        { path: 'assets/statues/zeus_statue.glb', position: new THREE.Vector3(145, -2, -400), scale: new THREE.Vector3(1, 1, 1) },
+        { path: 'assets/statues/lion_statue.glb', position: new THREE.Vector3(103, -5, 50), scale: new THREE.Vector3(30, 30, 30) },
+        { path: 'assets/statues/batman.glb', position: new THREE.Vector3(227, 0, -71), scale: new THREE.Vector3(15, 15, 15) }
     ];
 
     const modelPromises = [];
