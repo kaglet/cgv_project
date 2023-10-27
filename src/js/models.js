@@ -143,7 +143,7 @@ export function loadLevel2Models(loader, scene, world) {
 export function loadLevel3Models(loader, scene, world) {
     modelsToLoad.length = 0;
     // modelsToLoad.push({ modelPath: '/openlvl3(3).glb', scale: 1.1, position: [-200, 0, -350], rotation: 0 });
-    modelsToLoad.push({ modelPath: 'assets/levels/openlvl3(4).glb', scale: 1.10, position: [-210, -3, -350], rotation: 0 });
+    modelsToLoad.push({ modelPath: 'assets/levels/openlvl3(4).glb', scale: 1.10, position: [-210, -1, -350], rotation: 0 });
     loadAndSetupModels(loader, scene, world, modelsToLoad);
 }
 
