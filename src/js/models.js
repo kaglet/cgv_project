@@ -22,11 +22,11 @@ function plants() {
     }
 
     const models = [
-        { modelPath: './assets/shrub_pack/scene.gltf', scale: 1.5 },
-        { modelPath: './assets/tropical_plant/scene.gltf', scale: 2 },
-        { modelPath: './assets/tropical_plant_2/scene.gltf', scale: 0.025 },
-        { modelPath: './assets/tropical_plant_monstera_deliciosa/scene.gltf', scale: 6 },
-        { modelPath: './assets/tropical_plant_3/scene.gltf', scale: 6 }
+        { modelPath: './assets/misc/shrub_pack/scene.gltf', scale: 1.5 },
+        { modelPath: './assets/misc/tropical_plant/scene.gltf', scale: 2 },
+        { modelPath: './assets/misc/tropical_plant_2/scene.gltf', scale: 0.025 },
+        { modelPath: './assets/misc/tropical_plant_monstera_deliciosa/scene.gltf', scale: 6 },
+        { modelPath: './assets/misc/tropical_plant_3/scene.gltf', scale: 6 }
     ];
 
     // Loop through the models to load
@@ -93,51 +93,49 @@ function loadAndSetupModels(loader, scene, world, models) {
 
 function lobby(loader, scene, world) {
     //  modelsToLoad.push({ modelPath: 'open3.glb', scale: 1, position: [200, 0,2], rotation:0 });
-    modelsToLoad.push({ modelPath: '/dungeon.glb', scale: 15, position: [106, 17, 487], rotation: Math.PI / 2 });
-    modelsToLoad.push({ modelPath: '/dungeon.glb', scale: 15, position: [245, 17, 487], rotation: Math.PI / 2 });
-    modelsToLoad.push({ modelPath: '/watch_tower.glb', scale: 0.2, position: [18, 2, 507], rotation: Math.PI / 2 });
-    modelsToLoad.push({ modelPath: '/bench.glb', scale: 14, position: [172, 3.5, 435], rotation: 0 });
-    modelsToLoad.push({ modelPath: '/barrels.glb', scale: 4, position: [334, 0, 427], rotation: 0 });
-    modelsToLoad.push({ modelPath: '/bush.glb', scale: 8, position: [50, 1.2, 258], rotation: 0 });
-    modelsToLoad.push({ modelPath: '/coconut_palm.glb', scale: 14, position: [300, 0, 200], rotation: 0 });
-    modelsToLoad.push({ modelPath: '/coconut.glb', scale: 2, position: [285, 2.5, 205], rotation: 0 });
-    modelsToLoad.push({ modelPath: '/small_trees.glb', scale: 12, position: [40, 0, 320], rotation: 0 });
-    modelsToLoad.push({ modelPath: '/bird_bath.glb', scale: 12, position: [40, 0, 370], rotation: 0 });
-    modelsToLoad.push({ modelPath: '/fern.glb', scale: 1.6, position: [46, 0, 376], rotation: 0 });
-    modelsToLoad.push({ modelPath: '/well.glb', scale: 15, position: [-205, 15, -380], rotation: 0 });
-    modelsToLoad.push({ modelPath: '/boer_war_statue.glb', scale: 1.5, position: [-205, -10, -300], rotation: 0 });
-    modelsToLoad.push({ modelPath: '/wooden_crate.glb', scale: 10, position: [336, 0, 413], rotation: Math.PI / 2 });
-    modelsToLoad.push({ modelPath: '/tree_1.glb', scale: 360, position: [320, 0, 290], rotation: Math.PI });
-    modelsToLoad.push({ modelPath: '/tree_2.glb', scale: 360, position: [320, 0, 345], rotation: Math.PI });
-    modelsToLoad.push({ modelPath: '/rocks.glb', scale: 0.3, position: [315, 0, 345], rotation: Math.PI });
-    modelsToLoad.push({ modelPath: '/purple_plant.glb', scale: 35, position: [317, 0, 295], rotation: 0 });
-    modelsToLoad.push({ modelPath: '/purple_plant.glb', scale: 35, position: [314, 0, 290], rotation: 0 });
-    modelsToLoad.push({ modelPath: '/purple_plant.glb', scale: 35, position: [317, 0, 285], rotation: 0 });
-    modelsToLoad.push({ modelPath: '/wall_ruins.glb', scale: 30, position: [-6, 0, 416], rotation: Math.PI / 2 });
-    modelsToLoad.push({ modelPath: '/wall_ruins.glb', scale: 30, position: [278, 0, 416], rotation: Math.PI / 2 });
-    modelsToLoad.push({ modelPath: '/wall_ruins.glb', scale: 30, position: [135, 0, 416], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: 'assets/lobby/dungeon.glb', scale: 15, position: [106, 17, 487], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: 'assets/lobby/dungeon.glb', scale: 15, position: [245, 17, 487], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: 'assets/lobby/watch_tower.glb', scale: 0.2, position: [18, 2, 507], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: 'assets/lobby/bench.glb', scale: 14, position: [172, 3.5, 435], rotation: 0 });
+    modelsToLoad.push({ modelPath: 'assets/lobby/barrels.glb', scale: 4, position: [334, 0, 427], rotation: 0 });
+    modelsToLoad.push({ modelPath: 'assets/lobby/bush.glb', scale: 8, position: [50, 1.2, 258], rotation: 0 });
+    modelsToLoad.push({ modelPath: 'assets/lobby/coconut_palm.glb', scale: 14, position: [300, 0, 200], rotation: 0 });
+    modelsToLoad.push({ modelPath: 'assets/lobby/coconut.glb', scale: 2, position: [285, 2.5, 205], rotation: 0 });
+    modelsToLoad.push({ modelPath: 'assets/lobby/small_trees.glb', scale: 12, position: [40, 0, 320], rotation: 0 });
+    modelsToLoad.push({ modelPath: 'assets/lobby/bird_bath.glb', scale: 12, position: [40, 0, 370], rotation: 0 });
+    modelsToLoad.push({ modelPath: 'assets/lobby/fern.glb', scale: 1.6, position: [46, 0, 376], rotation: 0 });
+    modelsToLoad.push({ modelPath: 'assets/lobby/well.glb', scale: 15, position: [-205, 15, -380], rotation: 0 });
+   // modelsToLoad.push({ modelPath: 'assets/lobby/boer_war_statue.glb', scale: 1.5, position: [-205, -10, -300], rotation: 0 });
+    modelsToLoad.push({ modelPath: 'assets/lobby/wooden_crate.glb', scale: 10, position: [336, 0, 413], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: 'assets/lobby/tree_1.glb', scale: 360, position: [320, 0, 290], rotation: Math.PI });
+    modelsToLoad.push({ modelPath: 'assets/lobby/tree_2.glb', scale: 360, position: [320, 0, 345], rotation: Math.PI });
+    modelsToLoad.push({ modelPath: 'assets/lobby/rocks.glb', scale: 0.3, position: [315, 0, 345], rotation: Math.PI });
+    modelsToLoad.push({ modelPath: 'assets/lobby/purple_plant.glb', scale: 35, position: [317, 0, 295], rotation: 0 });
+    modelsToLoad.push({ modelPath: 'assets/lobby/purple_plant.glb', scale: 35, position: [314, 0, 290], rotation: 0 });
+    modelsToLoad.push({ modelPath: 'assets/lobby/purple_plant.glb', scale: 35, position: [317, 0, 285], rotation: 0 });
+    modelsToLoad.push({ modelPath: 'assets/lobby/wall_ruins.glb', scale: 30, position: [-6, 0, 416], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: 'assets/lobby/wall_ruins.glb', scale: 30, position: [278, 0, 416], rotation: Math.PI / 2 });
+    modelsToLoad.push({ modelPath: 'assets/lobby/wall_ruins.glb', scale: 30, position: [135, 0, 416], rotation: Math.PI / 2 });
 
 
 }
 
 function loadLevel4Models() {
-    modelsToLoad.push({ modelPath: '/tut1(12).glb', scale: 0.95, position: [195, 0, 350], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/assets/levels/tut1(12).glb', scale: 0.95, position: [195, 0, 350], rotation: 0 });
     // modelsToLoad.push({ modelPath: '/openlvl3(3).glb', scale: 1.1, position: [-200, 0, -350], rotation: 0 });
     //  modelsToLoad.push({ modelPath: '/openlvl2(3).glb', scale: 1.1, position: [230, 0, -348], rotation:0 });
 }
 
 export function loadLevel1Models(loader, scene, world) {
     modelsToLoad.length = 0;
-    modelsToLoad.push({ modelPath: '/open(32).glb', scale: 1.05, position: [203, 2, 10], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/assets/levels/open(32).glb', scale: 1.05, position: [203, 2, 10], rotation: 0 });
     loadAndSetupModels(loader, scene, world, modelsToLoad);
 }
-
-
 
 export function loadLevel2Models(loader, scene, world) {
     modelsToLoad.length = 0;
     //modelsToLoad.push({ modelPath: '/openlvl2(3).glb', scale: 1.05, position: [200, 2, -353], rotation:0 });
-    modelsToLoad.push({ modelPath: '/openlvl2(3).glb', scale: 1.1, position: [235, 0, -340], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/assets/levels/openlvl2(3).glb', scale: 1.1, position: [235, 0, -340], rotation: 0 });
     loadAndSetupModels(loader, scene, world, modelsToLoad);
 }
 
@@ -145,14 +143,14 @@ export function loadLevel2Models(loader, scene, world) {
 export function loadLevel3Models(loader, scene, world) {
     modelsToLoad.length = 0;
     // modelsToLoad.push({ modelPath: '/openlvl3(3).glb', scale: 1.1, position: [-200, 0, -350], rotation: 0 });
-    modelsToLoad.push({ modelPath: '/openlvl3(3).glb', scale: 1.1, position: [-210, 0, -350], rotation: 0 });
+    modelsToLoad.push({ modelPath: '/assets/levels/openlvl3(3).glb', scale: 1.1, position: [-210, 0, -350], rotation: 0 });
     loadAndSetupModels(loader, scene, world, modelsToLoad);
 }
 
 
 
 function generateGrassPatches(loader, scene, world, blockWidth, adjustmentInX, adjustmentInY, adjustmentInZ, startX, startY, startZ) {
-    let pathToGrassPatch = 'assets/grass_patches_02/scene.gltf';
+    let pathToGrassPatch = 'assets/misc/grass_patches_02/scene.gltf';
 
     loader.load(pathToGrassPatch, (gltf) => {
         const model = gltf.scene;
@@ -205,10 +203,10 @@ function generateGrassPatches(loader, scene, world, blockWidth, adjustmentInX, a
 function statues(loader, scene, world) {
 
     const modelsData = [
-        { path: '/luffy.glb', position: new THREE.Vector3(225, -2, -385), scale: new THREE.Vector3(0.15, 0.15, 0.15) },
-        { path: '/zeus_statue.glb', position: new THREE.Vector3(145, -2, -400), scale: new THREE.Vector3(1, 1, 1) },
-        { path: '/lion_statue.glb', position: new THREE.Vector3(103, -5, 50), scale: new THREE.Vector3(30, 30, 30) },
-        { path: '/batman.glb', position: new THREE.Vector3(227, 0, -71), scale: new THREE.Vector3(15, 15, 15) }
+        { path: '/assets/statues/luffy.glb', position: new THREE.Vector3(225, -2, -385), scale: new THREE.Vector3(0.15, 0.15, 0.15) },
+        { path: '/assets/statues/zeus_statue.glb', position: new THREE.Vector3(145, -2, -400), scale: new THREE.Vector3(1, 1, 1) },
+        { path: '/assets/statues/lion_statue.glb', position: new THREE.Vector3(103, -5, 50), scale: new THREE.Vector3(30, 30, 30) },
+        { path: '/assets/statues/batman.glb', position: new THREE.Vector3(227, 0, -71), scale: new THREE.Vector3(15, 15, 15) }
     ];
 
     const modelPromises = [];
@@ -269,7 +267,7 @@ function statues(loader, scene, world) {
 
 export function loadModels(loader, scene, world, blockWidth) {
 
-  //  plants();
+    plants();
     // modelsToLoad.push({ modelPath: '/ground_material.glb', scale: 1, position: [0, -1, 0], rotation: Math.PI / 2 });
     // modelsToLoad.push({ modelPath: '/lion_statue.glb', scale: 30, position: [103, -5, 50], rotation: 0 });
 

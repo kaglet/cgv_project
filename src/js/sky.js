@@ -102,7 +102,7 @@ export function setSky(scene) {
 const gltfLoader = new GLTFLoader();
 // modelsToLoad.push({ modelPath: '/openlvl2(48.5mb).glb', scale: 1.05, position: [217, 2, -358], rotation:0 });
 
-gltfLoader.load('./assets/moon/scene.gltf', (gltf) => {
+gltfLoader.load('./assets/misc/moon/scene.gltf', (gltf) => {
     moonMesh = gltf.scene;
     moonMesh.scale.set(2, 2, 2); // Adjust the scale as needed
 
