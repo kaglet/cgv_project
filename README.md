@@ -19,7 +19,7 @@ This is a full three.js puzzle game project with 3 levels made as part of the co
 * Models cast shadows. 
 
 ### Demo
-*Click the thumbnail picture of the video to take you to the full video.*
+*Click the thumbnail picture of the video to take you to the full demo video.*
 
 #### Part 1
 [<img src="https://img.youtube.com/vi/uu_NpRTx4VY/maxresdefault.jpg" width="50%">](https://youtu.be/uu_NpRTx4VY)
