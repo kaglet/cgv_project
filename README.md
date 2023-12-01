@@ -29,5 +29,5 @@ This is a full three.js puzzle game project with 3 levels made as part of the co
 
 ### Credits
 
-A major inspiration credit for our puzzles is owed to the game [The Witness](https://www.youtube.com/watch?v=ul7kNFD6noU). More credits can be found in-game in the main menu and at the end of the game. 
+A major source of inspiration for our puzzles is owed to the game [The Witness](https://www.youtube.com/watch?v=ul7kNFD6noU). More credits can be found in-game in the main menu and at the end of the game. 
 
