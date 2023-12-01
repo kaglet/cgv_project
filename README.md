@@ -22,10 +22,10 @@ This is a full three.js puzzle game project with 3 levels made as part of the co
 
 #### Part 1
 
-<div class="iframe-container" style="width: 600px; height: 300px"><video width="100%" height="100%" src="https://youtu.be/uu_NpRTx4VY?si=lGfQvB2GPoLfYnew"/></div>
+<video width="600px" height="350px" src="https://youtu.be/uu_NpRTx4VY?si=lGfQvB2GPoLfYnew"/>
 
 #### Part 2
-<div class="iframe-container" style="width: 600px; height: 300px"><video width="100%" height="100%" src="https://youtu.be/RC5-ZdALhDg?si=CN3Z7D1t_Etw4qku"/></div>
+<video width="600px" height="350px" src="https://youtu.be/RC5-ZdALhDg?si=CN3Z7D1t_Etw4qku"/>
 
 ### Credits
 
