@@ -22,7 +22,7 @@ This is a full three.js puzzle game project with 3 levels made as part of the co
 
 #### Part 1
 
-<video width="600px" height="350px" src="https://youtu.be/uu_NpRTx4VY?si=lGfQvB2GPoLfYnew"/>
+[<img src="https://img.youtube.com/vi/uu_NpRTx4VY /maxresdefault.jpg" width="50%">](https://youtu.be/uu_NpRTx4VY )
 
 #### Part 2
 <video width="600px" height="350px" src="https://youtu.be/RC5-ZdALhDg?si=CN3Z7D1t_Etw4qku"/>
