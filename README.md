@@ -7,6 +7,9 @@ This is a full three.js puzzle game project with 3 levels made as part of the co
 - CSS
 - JavaScript
 
+## Libraries
+- [Three.js](https://threejs.org/)
+
 ## Main highlights
 * Lobby and tutorial starting area with conditional tutorial tips.
 * Physics on bodies and collisions with walls.
