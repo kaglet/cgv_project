@@ -13,7 +13,7 @@ This is a full three.js puzzle game project with 3 levels made as part of the co
 ## Main highlights
 * Lobby and tutorial starting area with conditional tutorial tips.
 * Physics on bodies and collisions with walls.
-* Fog, star particles in night sky, and animated moon.
+* Fog effects, star particles in night sky, and animated moon.
 * Different UI menus and screens. 
 * Switch from 3rd person camera to top down view of puzzles. 
 * Various animations on player character. 
